@@ -94,12 +94,22 @@ if ! shopt -oq posix; then
 		. /usr/local/etc/bash_completion
 	fi
 fi
+
+have()
+{
+    unset -v have
+    _have $1 && have=yes
+}
+
 if [[ -d /etc/bash_completion.d/ ]]; then
 	for file in /etc/bash_completion.d/* ; do
 		# shellcheck source=/dev/null
 		source "$file"
 	done
 fi
+
+unset -f have
+unset have
 
 # Start the gpg-agent if not already running
 if ! pgrep -x -u "${USER}" gpg-agent >/dev/null 2>&1; then
