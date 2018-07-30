@@ -40,13 +40,12 @@
 *background:            S_base04
 URxvt*background:       [90]S_base04
 *foreground:            S_base00
-*depth:                 32
+URxvt.depth: 32
 *fading:                40
 *fadeColor:             S_base03
 *cursorColor:           S_base1
 *pointerColorBackground:S_base01
 *pointerColorForeground:S_base1
-
 
 !! black dark/light
 *color0:                S_base02
