@@ -3,6 +3,7 @@
 # Make vim the default editor
 export EDITOR=/usr/bin/nvim;
 export TERMINAL="urxvt";
+export VISUAL=$EDITOR
 
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=50000000;
