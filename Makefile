@@ -24,7 +24,6 @@ dotfiles: ## Installs the dotfiles.
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	git update-index --skip-worktree $(CURDIR)/.gitconfig;
 	mkdir -p $(HOME)/.config;
-	# ln -snf $(CURDIR)/.i3 $(HOME)/.config/sway;
 	# mkdir -p $(HOME)/.local/share;
 	# ln -snf $(CURDIR)/.fonts $(HOME)/.local/share/fonts;
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
