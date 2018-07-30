@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# update path
+export PATH=/usr/local/bin:${PATH}:/sbin
+
+# The next line updates PATH for the Google Cloud SDK.
+# shellcheck source=/dev/null
+if [ -f "${HOME}/google-cloud-sdk/path.bash.inc" ]; then source "${HOME}/google-cloud-sdk/path.bash.inc"; fi
+
+# The next line enables shell command completion for gcloud.
+# shellcheck source=/dev/null
+if [ -f "${HOME}/google-cloud-sdk/completion.bash.inc" ]; then source "${HOME}/google-cloud-sdk/completion.bash.inc"; fi
+
+# update path for gnu coreutils, make & find on darwin
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:${PATH}
+export MANPATH=/usr/local/opt/coreutils/libexec/gnuman:${MANPATH}
+export PATH=/usr/local/opt/make/libexec/gnubin:${PATH}
+export MANPATH=/usr/local/opt/make/libexec/gnuman:${MANPATH}
+export PATH=/usr/local/opt/findutils/libexec/gnubin:${PATH}
+export MANPATH=/usr/local/opt/findutils/libexec/gnuman:${MANPATH}
