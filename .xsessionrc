@@ -23,9 +23,9 @@ fi
 # run Xmodmap
 [ -f ~/.Xmodmap ] && xmodmap ~/.Xmodmap
 
-# run local xhost
+# allow the root user to run GUI applications
 xhost local:root
 
 # uncomment this if not using a login manager
 # so i3 will start correctly
-exec i3 -V >> ~/.i3/logfile 2>&1
+# exec i3 -V >> ~/.i3/logfile 2>&1
