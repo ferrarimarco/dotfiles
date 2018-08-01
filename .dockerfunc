@@ -48,6 +48,7 @@ atom(){
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}:/root/host_home" \
+		-v "${HOME}/.atom:/root/.atom" \
 		-e "DISPLAY=unix${DISPLAY}" \
 		-e QT_DEVICE_PIXEL_RATIO \
 		--device /dev/dri \

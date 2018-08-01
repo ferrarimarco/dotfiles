@@ -1,0 +1,8 @@
+"*":
+  core:
+    disabledPackages: [
+      "metrics"
+    ]
+    telemetryConsent: "no"
+  welcome:
+    showOnStartup: false
