@@ -50,7 +50,7 @@ atom(){
 		-v "${HOME}:/root/host_home" \
 		-v "${HOME}/.atom:/root/.atom" \
 		-e "DISPLAY=unix${DISPLAY}" \
-		-e QT_DEVICE_PIXEL_RATIO \
+		-e "QT_X11_NO_MITSHM=1" \
 		--device /dev/dri \
 		--name atom \
 		${DOCKER_REPO_PREFIX}/atom
