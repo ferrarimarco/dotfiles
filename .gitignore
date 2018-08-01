@@ -17,15 +17,3 @@ Session.vim
 
 .extra
 .gitconfig
-.gnupg
-!.gnupg/gpg*.conf
-.i3/logfile
-.irssi/away.log
-.irssi/config*
-.irssi/nicknames_whitelist
-.irssi/otr
-.irssi/saved_colors
-.irssi/scripts/autorun/blocker.pl
-.irssi/startup
-.rainbow_oauth
-.nginx/conf.d/*
