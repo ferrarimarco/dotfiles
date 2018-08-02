@@ -48,7 +48,7 @@ atom(){
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}:/root/host_home" \
-		-v "${HOME}/.atom:/root/.atom" \
+		-v "${HOME}/.atom/config.cson:/root/.atom/config.cson" \
 		-e "DISPLAY=unix${DISPLAY}" \
 		-e "QT_X11_NO_MITSHM=1" \
 		--device /dev/dri \
