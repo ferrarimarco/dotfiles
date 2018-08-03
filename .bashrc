@@ -95,7 +95,7 @@ fi
 have()
 {
     unset -v have
-    _have $1 && have=yes
+    _have "$1"
 }
 
 if [[ -d /etc/bash_completion.d/ ]]; then
@@ -153,6 +153,7 @@ done
 	tr ' ' '\n')" scp sftp ssh
 
 # This loads nvm and nvm bash_completion
+# shellcheck source=/dev/null
 [[ -e "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm" \
   && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
   && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
