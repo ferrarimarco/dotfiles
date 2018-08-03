@@ -16,3 +16,7 @@ Write your values in the [`.extra`](.extra) file.
 - `make`: install dotfiles, bins and configuration files
 - `make help`: shows the help text
 - `make test`: run tests
+
+# Thanks
+
+- [Jessie Frazelle](https://blog.jessfraz.com/) for her awesome [.dotfiles](https://github.com/jessfraz/dotfiles) and [dockerfiles](https://github.com/jessfraz/dockerfiles) repos.
