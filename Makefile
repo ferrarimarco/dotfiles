@@ -55,12 +55,13 @@ endif
 
 .PHONY: shellcheck
 shellcheck: ## Runs the shellcheck tests on the scripts.
+	docker build -t ferrarimarco/shellcheck-alpine:latest --file Dockerfile-shellcheck .
 	docker run --rm -i $(DOCKER_FLAGS) \
 		--entrypoint /usr/src/test.sh \
 		--name df-shellcheck \
 		-v $(CURDIR):/usr/src:ro \
 		--workdir /usr/src \
-		koalaman/shellcheck-alpine
+		ferrarimarco/shellcheck-alpine:latest
 
 .PHONY: help
 help:
