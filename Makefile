@@ -54,14 +54,11 @@ ifeq ($(INTERACTIVE), 1)
 endif
 
 .PHONY: shellcheck
-shellcheck: ## Runs the shellcheck tests on the scripts.
-	docker build -t ferrarimarco/shellcheck-alpine:latest .
+shellcheck: ## Runs shellcheck tests on the scripts.
 	docker run --rm -i $(DOCKER_FLAGS) \
-		--entrypoint /usr/src/test.sh \
 		--name df-shellcheck \
 		-v $(CURDIR):/usr/src:ro \
-		--workdir /usr/src \
-		ferrarimarco/shellcheck-alpine:latest
+		ferrarimarco/shellcheck
 
 .PHONY: help
 help:
