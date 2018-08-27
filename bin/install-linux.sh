@@ -2,6 +2,8 @@
 set -e
 set -o pipefail
 
+DEBIAN_FRONTEND=noninteractive
+
 # install-linux.sh
 #	This script installs my basic setup for a linux workstation
 
