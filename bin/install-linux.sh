@@ -183,6 +183,7 @@ base_debian() {
 		automake \
 		bash-completion \
 		bc \
+    bmon \
 		bridge-utils \
 		bzip2 \
 		coreutils \
@@ -193,15 +194,18 @@ base_debian() {
 		fwupdate \
 		gcc \
 		git \
+    glogg \
 		gnupg \
 		gnupg-agent \
 		google-chrome-stable \
 		grep \
 		gzip \
 		hostname \
+    imagemagick \
 		indent \
 		iptables \
 		iwd \
+    jmeter \
 		jq \
 		less \
 		libapparmor-dev \
@@ -213,7 +217,10 @@ base_debian() {
 		locales \
 		lsof \
 		make \
+    maven \
 		mount \
+    nano \
+    nethogs \
 		net-tools \
 		pinentry-curses \
 		rxvt-unicode-256color \
@@ -225,6 +232,7 @@ base_debian() {
 		tar \
 		tree \
 		tzdata \
+    ubuntu-desktop \
 		unzip \
 		usbmuxd \
 		xclip \
