@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-# install.sh
+# install-linux.sh
 #	This script installs my basic setup for a linux workstation
 
 # Choose a user account to use for this installation
@@ -31,6 +31,75 @@ check_is_sudo() {
 		echo "Please run as root."
 		exit
 	fi
+}
+
+# install/update golang from source
+install_golang() {
+	export GO_VERSION
+	GO_VERSION=$(curl -sSL "https://golang.org/VERSION?m=text")
+	export GO_SRC=/usr/local/go
+
+	# if we are passing the version
+	if [[ ! -z "$1" ]]; then
+		GO_VERSION=$1
+	fi
+
+	# purge old src
+	if [[ -d "$GO_SRC" ]]; then
+		sudo rm -rf "$GO_SRC"
+		sudo rm -rf "$GOPATH"
+	fi
+
+	GO_VERSION=${GO_VERSION#go}
+
+	# subshell
+	(
+	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
+	curl -sSL "https://storage.googleapis.com/golang/go${GO_VERSION}.${kernel}-amd64.tar.gz" | sudo tar -v -C /usr/local -xz
+	local user="$USER"
+	# rebuild stdlib for faster builds
+	sudo chown -R "${user}" /usr/local/go/pkg
+	CGO_ENABLED=0 go install -a -installsuffix cgo std
+	)
+
+	# get commandline tools
+	(
+	set -x
+	set +e
+
+	go get github.com/genuinetools/certok
+	go get github.com/genuinetools/reg
+  )
+	# symlink weather binary for motd
+	sudo ln -snf "${GOPATH}/bin/weather" /usr/local/bin/weather
+}
+
+# install custom scripts/binaries
+install_scripts() {
+	# install speedtest
+	curl -sSL https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py  > /usr/local/bin/speedtest
+	chmod +x /usr/local/bin/speedtest
+}
+
+# sets up apt sources
+setup_debian_sources() {
+	apt-get update || true
+	apt-get install -y \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		dirmngr \
+		gnupg2 \
+		lsb-release \
+		--no-install-recommends
+
+	# Add the Google Chrome distribution URI as a package source
+	cat <<-EOF > /etc/apt/sources.list.d/google-chrome.list
+	deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+	EOF
+
+	# Import the Google Chrome public key
+	curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
 }
 
 setup_docker(){
@@ -63,8 +132,14 @@ setup_dotfiles() {
 
 	# installs all the things
 	make
-	)
 
+	# enable dbus for the user session
+	# systemctl --user enable dbus.socket
+
+	sudo systemctl enable systemd-networkd systemd-resolved
+	sudo systemctl start systemd-networkd systemd-resolved
+
+	)
 }
 
 # setup sudo for a user
@@ -92,11 +167,80 @@ setup_user() {
   mkdir -p "/home/$TARGET_USER/Pictures/Screenshots"
 }
 
+base_debian() {
+	apt-get update || true
+	apt-get -y upgrade
+
+	apt-get install -y \
+		adduser \
+		alsa-utils \
+		apparmor \
+		automake \
+		bash-completion \
+		bc \
+		bridge-utils \
+		bzip2 \
+		coreutils \
+		dnsutils \
+		file \
+		findutils \
+		fwupd \
+		fwupdate \
+		gcc \
+		git \
+		gnupg \
+		gnupg-agent \
+		google-chrome-stable \
+		grep \
+		gzip \
+		hostname \
+		indent \
+		iptables \
+		iwd \
+		jq \
+		less \
+		libapparmor-dev \
+		libc6-dev \
+		libimobiledevice6 \
+		libltdl-dev \
+		libpam-systemd \
+		libseccomp-dev \
+		locales \
+		lsof \
+		make \
+		mount \
+		net-tools \
+		pinentry-curses \
+		rxvt-unicode-256color \
+		scdaemon \
+		ssh \
+		strace \
+		sudo \
+		systemd \
+		tar \
+		tree \
+		tzdata \
+		unzip \
+		usbmuxd \
+		xclip \
+		xcompmgr \
+		xz-utils \
+		zip \
+		--no-install-recommends
+
+	apt-get autoremove
+	apt-get autoclean
+	apt-get clean
+}
+
 usage() {
-	echo -e "install.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
+	echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
 	echo "Usage:"
 	echo "  base                                - setup sudo, user and docker"
-	echo "  dotfiles                            - get dotfiles"
+  echo "  debian-base                         - install base packages on a Debian system"
+  echo "  dotfiles                            - get dotfiles"
+  echo "  golang                              - install golang and packages"
+  echo "  scripts                             - install scripts"
 }
 
 main() {
@@ -113,9 +257,18 @@ main() {
     setup_sudo
     setup_user
     setup_docker
-	elif [[ $cmd == "dotfiles" ]]; then
+  elif [[ $cmd == "debian-base" ]]; then
+    check_is_sudo
+		get_user
+		setup_debian_sources
+		base_debian
+  elif [[ $cmd == "dotfiles" ]]; then
 		get_user
 		setup_dotfiles
+  elif [[ $cmd == "golang" ]]; then
+		install_golang "$2"
+  elif [[ $cmd == "scripts" ]]; then
+		install_scripts
 	else
 		usage
 	fi
