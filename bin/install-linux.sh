@@ -268,7 +268,8 @@ main() {
   elif [[ $cmd == "golang" ]]; then
 		install_golang "$2"
   elif [[ $cmd == "scripts" ]]; then
-		install_scripts
+    check_is_sudo
+    install_scripts
 	else
 		usage
 	fi
