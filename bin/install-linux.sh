@@ -83,6 +83,11 @@ install_scripts() {
 
 # sets up apt sources
 setup_debian_sources() {
+  add-apt-repository main
+  add-apt-repository universe
+  add-apt-repository multiverse
+  add-apt-repository restricted
+
 	apt-get update || true
 	apt-get install -y \
 		apt-transport-https \
