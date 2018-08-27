@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <channel name="thunar" version="1.0">
-  <property name="last-view" type="string" value="ThunarDetailsView"/>
-  <property name="last-icon-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_NORMAL"/>
-  <property name="last-show-hidden" type="bool" value="true"/>
-  <property name="last-window-maximized" type="bool" value="true"/>
-  <property name="last-side-pane" type="string" value="ThunarTreePane"/>
-  <property name="last-details-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_SMALLER"/>
   <property name="last-details-view-column-widths" type="string" value="50,164,50,50,702,50,50,114,604"/>
+  <property name="last-details-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_SMALLER"/>
+  <property name="last-icon-view-zoom-level" type="string" value="THUNAR_ZOOM_LEVEL_NORMAL"/>
   <property name="last-separator-position" type="int" value="331"/>
+  <property name="last-show-hidden" type="bool" value="true"/>
+  <property name="last-side-pane" type="string" value="ThunarTreePane"/>
   <property name="last-sort-column" type="string" value="THUNAR_COLUMN_NAME"/>
   <property name="last-sort-order" type="string" value="GTK_SORT_ASCENDING"/>
+  <property name="last-view" type="string" value="ThunarDetailsView"/>
+  <property name="last-window-maximized" type="bool" value="true"/>
 </channel>
