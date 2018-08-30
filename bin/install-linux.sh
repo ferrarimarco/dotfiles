@@ -212,7 +212,6 @@ base_debian() {
     imagemagick \
 		indent \
 		iptables \
-		iwd \
     jmeter \
 		jq \
 		less \
