@@ -141,7 +141,7 @@ setup_dotfiles() {
 	make
 
 	# enable dbus for the user session
-	# systemctl --user enable dbus.socket
+	systemctl --user enable dbus.socket
 
 	sudo systemctl enable systemd-networkd systemd-resolved
 	sudo systemctl start systemd-networkd systemd-resolved
