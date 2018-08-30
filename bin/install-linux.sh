@@ -112,7 +112,7 @@ setup_debian_sources() {
 	fi
 
 	# Import the Google Chrome public key
-	curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+	curl -s https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
 }
 
 setup_docker(){
@@ -126,7 +126,7 @@ setup_docker(){
     echo "Docker Compose is already installed"
   else
     docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" |  grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
-    curl -L https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
+    curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
     chmod a+x /usr/local/bin/docker-compose
   fi
 }
