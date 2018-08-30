@@ -169,10 +169,13 @@ setup_sudo() {
 	getent group docker >/dev/null 2>&1 || groupadd docker
 	gpasswd -a "$TARGET_USER" docker
 
-	{ \
-		echo -e "${TARGET_USER} ALL=(ALL) NOPASSWD:ALL"; \
-		echo -e "${TARGET_USER} ALL=NOPASSWD: /sbin/ifconfig, /sbin/ifup, /sbin/ifdown, /sbin/ifquery"; \
-	} >> /etc/sudoers
+	SUDOERS_FILE_PATH="/etc/sudoers"
+	if ! grep -q "${TARGET_USER}" "$SUDOERS_FILE_PATH"; then
+		{ \
+			echo -e "${TARGET_USER} ALL=(ALL) NOPASSWD:ALL"; \
+			echo -e "${TARGET_USER} ALL=NOPASSWD: /sbin/ifconfig, /sbin/ifup, /sbin/ifdown, /sbin/ifquery"; \
+		} >> "$SUDOERS_FILE_PATH"
+	fi
 }
 
 setup_user() {
