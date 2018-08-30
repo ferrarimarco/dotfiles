@@ -198,6 +198,7 @@ base_debian() {
 		bridge-utils \
 		bzip2 \
 		coreutils \
+		dbus-user-session \
 		dnsutils \
 		file \
 		findutils \
