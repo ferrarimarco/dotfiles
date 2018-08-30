@@ -100,10 +100,16 @@ setup_debian_sources() {
 		lsb-release \
 		--no-install-recommends
 
-	# Add the Google Chrome distribution URI as a package source
-	cat <<-EOF > /etc/apt/sources.list.d/google-chrome.list
-	deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
-	EOF
+	# Add the Google Chrome distribution URI as a package source if needed
+	CHROME_APT_SOURCE_PATH="/etc/apt/sources.list.d/google-chrome.list"
+	if [ -e "$CHROME_APT_SOURCE_PATH" ]
+	then
+	    echo "Google Chrome APT source is already installed. Contents: $(cat "$CHROME_APT_SOURCE_PATH")"
+	else
+		cat <<-EOF > "$CHROME_APT_SOURCE_PATH"
+		deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+		EOF
+	fi
 
 	# Import the Google Chrome public key
 	curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
