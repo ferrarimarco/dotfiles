@@ -259,11 +259,12 @@ base_debian() {
 usage() {
 	echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
 	echo "Usage:"
-	echo "  base                                - setup sudo, user and docker"
+	echo "  base                                - setup sudo and docker"
   echo "  debian-base                         - install base packages on a Debian system"
   echo "  dotfiles                            - get dotfiles"
   echo "  golang                              - install golang and packages"
   echo "  scripts                             - install scripts"
+	echo "  user                                - setup user"
 }
 
 main() {
@@ -278,7 +279,6 @@ main() {
 		check_is_sudo
 		get_user
     setup_sudo
-    setup_user
     setup_docker
   elif [[ $cmd == "debian-base" ]]; then
     check_is_sudo
@@ -293,6 +293,9 @@ main() {
   elif [[ $cmd == "scripts" ]]; then
     check_is_sudo
     install_scripts
+	elif [[ $cmd == "user" ]]; then
+    get_user
+    setup_user
 	else
 		usage
 	fi
