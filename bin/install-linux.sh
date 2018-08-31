@@ -102,14 +102,14 @@ setup_docker(){
 setup_dotfiles() {
 	# create subshell
 	(
-	cd "$HOME"
+	cd "/home/${TARGET_USER}"
 
-	if [[ ! -d "${HOME}/dotfiles" ]]; then
+	if [[ ! -d "/home/${TARGET_USER}/dotfiles" ]]; then
 		# install dotfiles from repo
-		git clone https://github.com/ferrarimarco/dotfiles.git "${HOME}/dotfiles"
+		git clone https://github.com/ferrarimarco/dotfiles.git "/home/${TARGET_USER}/dotfiles"
 	fi
 
-	cd "${HOME}/dotfiles"
+	cd "/home/${TARGET_USER}/dotfiles"
 
 	# installs all the things
 	make
@@ -119,7 +119,6 @@ setup_dotfiles() {
 
 	sudo systemctl enable systemd-networkd systemd-resolved
 	sudo systemctl start systemd-networkd systemd-resolved
-
 	)
 }
 
