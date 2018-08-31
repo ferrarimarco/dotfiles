@@ -280,7 +280,6 @@ main() {
   elif [[ $cmd == "debian" ]]; then
     check_is_sudo
 		get_user
-		setup_debian_sources
 		setup_debian
   elif [[ $cmd == "dotfiles" ]]; then
 		get_user
