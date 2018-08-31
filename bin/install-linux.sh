@@ -83,38 +83,6 @@ install_scripts() {
 	chmod +x /usr/local/bin/speedtest
 }
 
-# sets up apt sources
-setup_debian_sources() {
-  add-apt-repository main
-  add-apt-repository universe
-  add-apt-repository multiverse
-  add-apt-repository restricted
-
-	apt-get update || true
-	apt-get install -y \
-		apt-transport-https \
-		ca-certificates \
-		curl \
-		dirmngr \
-		gnupg2 \
-		lsb-release \
-		--no-install-recommends
-
-	# Add the Google Chrome distribution URI as a package source if needed
-	CHROME_APT_SOURCE_PATH="/etc/apt/sources.list.d/google-chrome.list"
-	if [ -e "$CHROME_APT_SOURCE_PATH" ]
-	then
-	    echo "Google Chrome APT source is already installed. Contents: $(cat "$CHROME_APT_SOURCE_PATH")"
-	else
-		cat <<-EOF > "$CHROME_APT_SOURCE_PATH"
-		deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
-		EOF
-	fi
-
-	# Import the Google Chrome public key
-	curl -s https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-}
-
 setup_docker(){
   if command -v docker >/dev/null 2>&1 ; then
     echo "Docker is already installed"
@@ -183,7 +151,36 @@ setup_user() {
   mkdir -p "/home/$TARGET_USER/Pictures/Screenshots"
 }
 
-base_debian() {
+setup_debian() {
+	add-apt-repository main
+  add-apt-repository universe
+  add-apt-repository multiverse
+  add-apt-repository restricted
+
+	apt-get update || true
+	apt-get install -y \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		dirmngr \
+		gnupg2 \
+		lsb-release \
+		--no-install-recommends
+
+	# Add the Google Chrome distribution URI as a package source if needed
+	CHROME_APT_SOURCE_PATH="/etc/apt/sources.list.d/google-chrome.list"
+	if [ -e "$CHROME_APT_SOURCE_PATH" ]
+	then
+	    echo "Google Chrome APT source is already installed. Contents: $(cat "$CHROME_APT_SOURCE_PATH")"
+	else
+		cat <<-EOF > "$CHROME_APT_SOURCE_PATH"
+		deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+		EOF
+	fi
+
+	# Import the Google Chrome public key
+	curl -s https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+
 	apt-get update || true
 	apt-get -y upgrade
 
@@ -243,7 +240,6 @@ base_debian() {
 		tar \
 		tree \
 		tzdata \
-    ubuntu-desktop \
 		unzip \
 		usbmuxd \
 		xclip \
@@ -261,7 +257,7 @@ usage() {
 	echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
 	echo "Usage:"
 	echo "  base                                - setup sudo and docker"
-  echo "  debian-base                         - install base packages on a Debian system"
+  echo "  debian                         			- install base packages on a Debian system"
   echo "  dotfiles                            - get dotfiles"
   echo "  golang                              - install golang and packages"
   echo "  scripts                             - install scripts"
@@ -281,11 +277,11 @@ main() {
 		get_user
     setup_sudo
     setup_docker
-  elif [[ $cmd == "debian-base" ]]; then
+  elif [[ $cmd == "debian" ]]; then
     check_is_sudo
 		get_user
 		setup_debian_sources
-		base_debian
+		setup_debian
   elif [[ $cmd == "dotfiles" ]]; then
 		get_user
 		setup_dotfiles
