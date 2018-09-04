@@ -190,7 +190,6 @@ setup_debian() {
 		automake \
 		bash-completion \
 		bc \
-    bmon \
 		bridge-utils \
 		bzip2 \
 		coreutils \

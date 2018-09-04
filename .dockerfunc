@@ -56,6 +56,15 @@ atom(){
 		${DOCKER_REPO_PREFIX}/atom
 }
 
+bmon(){
+	del_stopped bmon
+
+	docker run -it --rm \
+		--net=host \
+		--name bmon \
+		${DOCKER_REPO_PREFIX}/bmon
+}
+
 changelog-generator(){
 	del_stopped changelog-generator
 
