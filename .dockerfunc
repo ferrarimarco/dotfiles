@@ -69,6 +69,7 @@ changelog-generator(){
 	del_stopped changelog-generator
 
 	docker run -it --rm \
+		-v /etc/localtime:/etc/localtime:ro \
 		-v "$(pwd)":/usr/local/src/your-app \
 		--name changelog-generator \
 		${DOCKER_REPO_PREFIX}/github-changelog-generator "$@"
@@ -78,6 +79,7 @@ cookiecutter(){
 	del_stopped cookiecutter
 
 	docker run -it --rm \
+		-v /etc/localtime:/etc/localtime:ro \
 		-u "$(id -u)":"$(id -g)" \
 		-v "$(pwd)":/usr/src/app \
 		--name cookiecutter \
@@ -88,6 +90,7 @@ docker-clean(){
 	del_stopped docker-clean
 
 	docker run --rm \
+		-v /etc/localtime:/etc/localtime:ro \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		--name docker-clean \
 		zzrot/docker-clean "$@"
@@ -107,14 +110,16 @@ dockerfile-lint(){
 
 liquibase(){
 	del_stopped liquibase
-	docker run \
+	docker run --rm \
+		-v /etc/localtime:/etc/localtime:ro \
 		--name liquibase \
 		${DOCKER_REPO_PREFIX}/liquibase "$@"
 }
 
 maven(){
 	del_stopped maven
-	docker run \
+	docker run --rm \
+		-v /etc/localtime:/etc/localtime:ro \
 		-v "${HOME}/.m2:/var/maven/.m2" \
 		--name changelog-generator \
 		-ti --rm -u "$(id -u)":"$(id -g)" \
