@@ -71,7 +71,7 @@ changelog-generator(){
 	docker run -it --rm \
 		-v "$(pwd)":/usr/local/src/your-app \
 		--name changelog-generator \
-		ferrarimarco/github-changelog-generator
+		ferrarimarco/github-changelog-generator "$@"
 }
 
 docker-clean(){
@@ -80,7 +80,7 @@ docker-clean(){
 	docker run --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		--name docker-clean \
-		zzrot/docker-clean
+		zzrot/docker-clean "$@"
 }
 
 dockerfile-lint(){
