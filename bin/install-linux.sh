@@ -223,7 +223,6 @@ setup_debian() {
 		locales \
 		lsof \
 		make \
-    maven \
 		mount \
     nano \
     nethogs \
