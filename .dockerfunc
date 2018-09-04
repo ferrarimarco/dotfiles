@@ -105,6 +105,13 @@ dockerfile-lint(){
 	done
 }
 
+liquibase(){
+	del_stopped liquibase
+	docker run \
+		--name liquibase \
+		${DOCKER_REPO_PREFIX}/liquibase "$@"
+}
+
 maven(){
 	del_stopped maven
 	docker run \
