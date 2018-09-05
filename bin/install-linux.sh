@@ -224,7 +224,6 @@ setup_debian() {
 		make \
 		mount \
     nano \
-    nethogs \
 		net-tools \
 		pinentry-curses \
 		rxvt-unicode-256color \

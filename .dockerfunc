@@ -167,6 +167,15 @@ maven(){
 		mvn -Duser.home=/var/maven "$@"
 }
 
+nethogs(){
+	del_stopped nethogs
+
+	docker run -it --rm \
+		--net=host \
+		--name nethogs \
+		${DOCKER_REPO_PREFIX}/nethogs
+}
+
 psscriptanalyzer(){
 	del_stopped psscriptanalyzer
 
