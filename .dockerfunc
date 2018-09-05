@@ -123,6 +123,16 @@ dockerfile-lint(){
 	done
 }
 
+jq(){
+	del_stopped jq
+
+	docker run \
+		--rm \
+		-i \
+		--name jq \
+		stedolan/jq "$@"
+}
+
 inspec(){
 	del_stopped inspec
 

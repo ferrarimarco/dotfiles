@@ -212,7 +212,6 @@ setup_debian() {
 		indent \
 		iptables \
     jmeter \
-		jq \
 		less \
 		libapparmor-dev \
 		libc6-dev \
