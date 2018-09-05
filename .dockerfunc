@@ -72,7 +72,7 @@ changelog-generator(){
 		-v /etc/localtime:/etc/localtime:ro \
 		-v "$(pwd)":/usr/local/src/your-app \
 		--name changelog-generator \
-		${DOCKER_REPO_PREFIX}/github-changelog-generator "$@"
+		${DOCKER_REPO_PREFIX}/github-changelog-generator:1.14.3 "$@"
 }
 
 cookiecutter(){
