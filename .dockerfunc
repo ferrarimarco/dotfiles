@@ -123,6 +123,20 @@ dockerfile-lint(){
 	done
 }
 
+inspec(){
+	del_stopped inspec
+
+	docker run \
+	--rm \
+	-it \
+	--net=host \
+	-v /etc/localtime:/etc/localtime:ro \
+	-v "$(pwd)":/share \
+	-v "${HOME}"/.ssh:/root/.ssh:ro \
+	--name inspec \
+	chef/inspec "$@"
+}
+
 liquibase(){
 	del_stopped liquibase
 	docker run --rm \
