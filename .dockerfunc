@@ -41,6 +41,21 @@ relies_on(){
 #
 # Container Aliases
 #
+
+ansible(){
+	del_stopped ansible
+
+	docker run \
+  --rm \
+  -it \
+  --net=host \
+	-v /etc/localtime:/etc/localtime:ro \
+  -v "$(pwd)":/etc/ansible \
+  -v "${HOME}"/.ssh:/root/.ssh:ro \
+	--name ansible \
+  ${DOCKER_REPO_PREFIX}/open-development-environment-ansible "$@"
+}
+
 atom(){
 	del_stopped atom
 
