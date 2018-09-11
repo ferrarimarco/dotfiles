@@ -21,4 +21,5 @@ Write your values in the [`.extra`](.extra) file.
 
 - [Jessie Frazelle](https://blog.jessfraz.com/) for her awesome [.dotfiles](https://github.com/jessfraz/dotfiles) and [dockerfiles](https://github.com/jessfraz/dockerfiles) repos.
 - [Kevin Suttle](https://github.com/kevinSuttle) for his [dotfiles](https://github.com/kevinSuttle/dotfiles)
+- [Mathias Bynens](https://mathiasbynens.be/) for his [dotfiles](https://github.com/mathiasbynens/dotfiles)
 - [Nicolas Gallagher](https://github.com/necolas) for his [dotfiles](https://github.com/necolas/dotfiles)
