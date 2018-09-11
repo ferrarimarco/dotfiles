@@ -5,6 +5,10 @@
 .AppleDouble
 .LSOverride
 
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
 # Icon must end with two \r
 Icon
 
@@ -157,8 +161,15 @@ _testmain.go
 *.test
 *.prof
 
+# Thumbnail cache files
+._*
+Thumbs.db
+
 # python virtual env
 .venv
 
 # linux kernel debs
 linux-*.deb
+
+# Compiled Python files
+*.pyc
