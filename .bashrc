@@ -185,6 +185,10 @@ if hash kubectl 2>/dev/null; then
 	source <(kubectl completion bash)
 fi
 
+# The next line enables shell command completion for gcloud.
+# shellcheck source=/dev/null
+if [ -f "${HOME}/google-cloud-sdk/completion.bash.inc" ]; then . "${HOME}/google-cloud-sdk/completion.bash.inc"; fi
+
 for file in ~/.{bash_prompt,aliases,functions,path,dockerfunc,extra,exports}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
 		# shellcheck source=/dev/null
