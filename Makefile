@@ -1,7 +1,7 @@
 # From https://github.com/jessfraz/dotfiles
 
 .PHONY: all
-all: bin dotfiles etc ## Installs the bin and etc directory files and the dotfiles.
+all: bin dotfiles ## Installs the bin and etc directory files and the dotfiles.
 
 .PHONY: bin
 bin: ## Installs the bin directory files.
@@ -20,23 +20,12 @@ dotfiles: ## Installs the dotfiles.
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
 		ln -sfn $$file $(HOME)/$$f; \
 	done; \
-	gpg --list-keys || true;
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	git update-index --skip-worktree $(CURDIR)/.gitconfig;
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
 	if [ -f /usr/local/bin/pinentry ]; then \
 		sudo ln -snf /usr/bin/pinentry /usr/local/bin/pinentry; \
 	fi;
-
-.PHONY: etc
-etc: ## Installs the etc directory files.
-	for file in $(shell find $(CURDIR)/etc -type f -not -name ".*.swp"); do \
-		f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
-		sudo mkdir -p $$(dirname $$f); \
-		sudo ln -f $$file $$f; \
-	done
-	systemctl --user daemon-reload || true
-	sudo systemctl daemon-reload
 
 .PHONY: test
 test: shellcheck ## Runs all the tests on the files in the repository.
