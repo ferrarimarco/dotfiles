@@ -19,31 +19,5 @@ export HISTIGNORE=" *:ls:cd:cd -:pwd:exit:date:* --help:* -h:pony:pony add *:pon
 export LANG="en_US.UTF-8";
 export LC_ALL="en_US.UTF-8";
 
-# Don’t clear the screen after quitting a manual page
-export MANPAGER="less -X";
-
 # Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
 export PYTHONIOENCODING='UTF-8';
-
-# Avoid issues with `gpg` as installed via Homebrew.
-# https://stackoverflow.com/a/42265848/96656
-GPG_TTY=$(tty)
-export GPG_TTY;
-
-export DBUS_SESSION_BUS_ADDRESS
-DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/user/$(id -u)/bus;
-
-export TODOTXT_DEFAULT_ACTION=ls
-
-# hidpi for gtk apps
-#export GDK_SCALE=2
-#export GDK_DPI_SCALE=0.5
-#export QT_DEVICE_PIXEL_RATIO=2
-
-export DOCKER_CONTENT_TRUST=0
-
-# if it's an ssh session export GPG_TTY
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
-	GPG_TTY=$(tty)
-	export GPG_TTY
-fi
