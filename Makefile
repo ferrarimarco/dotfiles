@@ -6,7 +6,7 @@ all: bin dotfiles etc ## Installs the bin and etc directory files and the dotfil
 .PHONY: bin
 bin: ## Installs the bin directory files.
 	# add aliases for things in bin
-	for file in $(shell find $(CURDIR)/bin -type f -not -name "*-backlight" -not -name ".*.swp"); do \
+	for file in $(shell find $(CURDIR)/bin -type f -not -name ".*.swp"); do \
 		f=$$(basename $$file); \
 		sudo ln -sf $$file /usr/local/bin/$$f; \
 	done
@@ -15,17 +15,14 @@ bin: ## Installs the bin directory files.
 dotfiles: ## Installs the dotfiles.
 	# add aliases for dotfiles
 	mkdir -p $(HOME)/.config;
-	mkdir -p $(HOME)/.local/share;
 	mkdir -p $(HOME)/.atom;
-	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -name ".travis.yml" -not -path "*/\.git/*" -not -path "*/\.fonts/*" -not -name ".*.swp"); do \
+	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -name ".travis.yml" -not -path "*/\.git/*" -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
 		ln -sfn $$file $(HOME)/$$f; \
 	done; \
 	gpg --list-keys || true;
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	git update-index --skip-worktree $(CURDIR)/.gitconfig;
-	ln -snf $(CURDIR)/.fonts $(HOME)/.fonts;
-	ln -snf $(CURDIR)/.fonts $(HOME)/.local/share/fonts;
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
 	if [ -f /usr/local/bin/pinentry ]; then \
 		sudo ln -snf /usr/bin/pinentry /usr/local/bin/pinentry; \
@@ -33,7 +30,6 @@ dotfiles: ## Installs the dotfiles.
 
 .PHONY: etc
 etc: ## Installs the etc directory files.
-	sudo mkdir -p /etc/docker/seccomp
 	for file in $(shell find $(CURDIR)/etc -type f -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed -e 's|$(CURDIR)||'); \
 		sudo mkdir -p $$(dirname $$f); \
