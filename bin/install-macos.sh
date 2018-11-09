@@ -14,12 +14,20 @@ ask_for_sudo() {
 }
 
 install_brew() {
-    # Run this to silently accept the Xcode license agreement
-    sudo xcodebuild -license accept
+	if ! command -v brew >/dev/null 2>&1; then
+		echo "Installing Homebrew"
+		# Run this to silently accept the Xcode license agreement
+		sudo xcodebuild -license accept
 
-	HOMEBREW_HOME="$HOME"/homebrew
-    mkdir "$HOMEBREW_HOME"
-    curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$HOMEBREW_HOME"
+		# Install XCode CLI
+		xcode-select --install
+
+		HOMEBREW_HOME="$HOME"/homebrew
+		mkdir -p "$HOMEBREW_HOME"
+		curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$HOMEBREW_HOME"
+	else
+		echo "Homebrew is already installed"
+	fi
 }
 
 usage() {
