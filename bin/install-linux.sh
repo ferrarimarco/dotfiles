@@ -42,7 +42,7 @@ install_golang() {
 	export GO_SRC=/usr/local/go
 
 	# if we are passing the version
-	if [[ ! -z "$1" ]]; then
+	if [[ -n "$1" ]]; then
 		GO_VERSION=$1
 	fi
 
