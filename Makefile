@@ -16,11 +16,11 @@ bin: ## Installs the bin directory files.
 .PHONY: dotfiles
 dotfiles: ## Installs the dotfiles.
 	# add aliases for dotfiles
-	mkdir -p $(HOME)/.config;
-	mkdir -p $(HOME)/.atom;
 	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -name ".travis.yml" -not -path "*/\.git/*" -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
-		ln -sfn $$file $(HOME)/$$f; \
+		file_path=$(HOME)/$$f; \
+		mkdir -p $$(dirname $$file_path); \
+		ln -sfn $$file $$file_path; \
 	done; \
 	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	git update-index --skip-worktree $(CURDIR)/.gitconfig;
