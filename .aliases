@@ -23,7 +23,7 @@ if ! command -v pbpaste >/dev/null 2>&1; then
 fi
 
 # copy working directory
-alias cwd="pwd | tr -d \"$(printf '\\n')\" | tr -d \"$(printf '\\r')\" | pbcopy"
+alias cwd="pwd | tr -d '\n' | tr -d '\r' | pbcopy"
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
