@@ -40,3 +40,14 @@ sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRest
 
 # Enable automatic updates in System Preferences -> Software Update -> Advanced -> Check for updates
 sudo softwareupdate --schedule ON
+
+###############################################################################
+# Trackpad                                                                    #
+###############################################################################
+
+# Trackpad: enable tap to click for this user
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+
+# Trackpad: enable tap to click for the login screen
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
