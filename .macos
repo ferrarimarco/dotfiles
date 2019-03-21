@@ -73,6 +73,14 @@ defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 ###############################################################################
+# Menu bar                                                                    #
+###############################################################################
+
+# Show icons in the menu bar
+defaults write com.apple.systemuiserver menuExtras -array \
+ "/System/Library/CoreServices/Menu Extras/Bluetooth.menu"
+
+###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 
