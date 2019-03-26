@@ -98,6 +98,12 @@ have()
     _have "$1"
 }
 
+# source bash_completion if available
+if [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]]; then
+ # shellcheck source=/dev/null
+ source /usr/share/bash-completion/bash_completion
+fi
+
 if [[ -d /etc/bash_completion.d/ ]]; then
 	for file in /etc/bash_completion.d/* ; do
 		# shellcheck source=/dev/null
