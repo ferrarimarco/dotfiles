@@ -34,11 +34,8 @@ install_brew() {
 }
 
 install_brew_formulae() {
-	# Make sure we’re using the latest Homebrew.
-	brew update
-
-	# Upgrade any already-installed formulae.
-	brew upgrade
+	# Make sure we’re using the latest Homebrew and formulae
+	update_brew
 
 	# Save Homebrew’s installed location.
 	BREW_PREFIX=$(brew --prefix)
