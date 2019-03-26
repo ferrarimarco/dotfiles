@@ -53,7 +53,7 @@ install_brew_formulae() {
 	brew install gnu-sed --with-default-names
 	# Install Bash 4.
 	brew install bash
-	brew install bash-completion2
+	brew install bash-completion@2
 
 	# Switch to using brew-installed bash as default shell
 	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
