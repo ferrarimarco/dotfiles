@@ -103,6 +103,7 @@ update_system() {
 usage() {
 		echo -e "install-macos.sh\\n\\tThis script installs my basic setup for a MacOS workstation\\n"
 		echo "  homebrew                            - install Homebrew"
+		echo "  homebrew-formulae                   - install Homebrew formulae"
 		echo "  update                              - update the system"
 }
 
@@ -116,9 +117,10 @@ main() {
 
 	ask_for_sudo
 
-	if [[ $cmd == "brew" ]]; then
+	if [[ $cmd == "homebrew" ]]; then
 		install_brew
-		install_brew_formulae
+  elif [[ $cmd == "homebrew-formulae" ]]; then
+    install_brew_formulae
   elif [[ $cmd == "update" ]]; then
     update_system
 	fi
