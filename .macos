@@ -78,7 +78,8 @@ defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # Show icons in the menu bar
 defaults write com.apple.systemuiserver menuExtras -array \
- "/System/Library/CoreServices/Menu Extras/Bluetooth.menu"
+ "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
+ "/System/Library/CoreServices/Menu Extras/Clock.menu"
 
 ###############################################################################
 # Kill affected applications                                                  #
