@@ -11,8 +11,6 @@ export PATH=$HOME/bin:$PATH
 export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
 
 # setup homebrew environment
-export PATH=$HOME/homebrew/bin:$PATH
-export LD_LIBRARY_PATH=$HOME/homebrew/lib:$LD_LIBRARY_PATH
 export HOMEBREW_NO_ANALYTICS=1
 
 # update cdpath

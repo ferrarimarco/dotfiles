@@ -22,9 +22,7 @@ install_brew() {
 		# Install XCode CLI
 		xcode-select --install
 
-		HOMEBREW_HOME="$HOME"/homebrew
-		mkdir -p "$HOMEBREW_HOME"
-		curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$HOMEBREW_HOME"
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	else
 		echo "Homebrew is already installed"
 	fi
