@@ -28,6 +28,9 @@ install_brew() {
 	else
 		echo "Homebrew is already installed"
 	fi
+
+	echo "Disabling homebrew usage analytics"
+	brew analytics off
 }
 
 install_brew_formulae() {
