@@ -26,9 +26,21 @@ install_brew() {
 		# Install XCode CLI
 		xcode-select --install
 
-		HOMEBREW_HOME="$HOME"/homebrew
-		mkdir -p "$HOMEBREW_HOME"
-		curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$HOMEBREW_HOME"
+		# Create dirs
+		echo "Initializing Homebrew Cellar path: ${HOMEBREW_CELLAR}, Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
+
+		HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
+		sudo install -d -o "$(whoami)" "${HOMEBREW_CELLAR}" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
+
+		# Download and install Homebrew
+		cd "${HOMEBREW_REPOSITORY}"
+		git init -q
+		git config remote.origin.url "https://github.com/Homebrew/brew"
+		git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+		git config core.autocrlf false
+		git fetch origin master:refs/remotes/origin/master --tags --force
+		git reset --hard origin/master
+		ln -s "${HOMEBREW_REPOSITORY}"/bin/brew "${HOMEBREW_BIN_PATH}"/brew
 	else
 		echo "Homebrew is already installed"
 	fi
