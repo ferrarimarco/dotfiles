@@ -17,3 +17,5 @@ Session.vim
 
 .extra
 .gitconfig
+
+default.profraw
