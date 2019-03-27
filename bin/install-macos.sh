@@ -16,6 +16,10 @@ ask_for_sudo() {
 install_brew() {
 	if ! command -v brew >/dev/null 2>&1; then
 		echo "Installing Homebrew"
+
+		# Set xcode directory
+		sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
 		# Run this to silently accept the Xcode license agreement
 		sudo xcodebuild -license accept
 
