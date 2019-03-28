@@ -59,7 +59,7 @@ install_brew_formulae() {
 	update_brew
 
 	# Save Homebrew’s installed location.
-	BREW_PREFIX=$(brew --prefix)
+	BREW_PREFIX="$(brew --prefix)"
 
 	# Install GNU core utilities (those that come with macOS are outdated).
 	# Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
