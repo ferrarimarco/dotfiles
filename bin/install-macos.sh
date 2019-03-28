@@ -106,9 +106,23 @@ install_brew_formulae() {
 	brew cleanup
 }
 
+patch_brew(){
+	cd "$HOMEBREW_REPOSITORY"
+	if ! patch -R -p0 -s -f --dry-run < "$DOTFILES_LIB_PATH"/homebrew-cellar.patch >/dev/null 2>&1; then
+		echo "Patching Homebrew (in $HOMEBREW_REPOSITORY) to let users set the Cellar path (currently set to: $HOMEBREW_CELLAR)"
+		patch -p0 < "$DOTFILES_LIB_PATH"/homebrew-cellar.patch
+	else
+		echo "Homebrew (in $HOMEBREW_REPOSITORY) is already patched to allow a customized Cellar path"
+	fi
+}
+
 update_brew() {
 	brew update
 	brew upgrade
+
+	# Check if we need to patch homebrew (if it was updated)
+	patch_brew
+
 	brew cleanup -s
 	brew cask cleanup
 
@@ -140,6 +154,7 @@ main() {
 
 	if [[ $cmd == "homebrew" ]]; then
 		install_brew
+		patch_brew
   elif [[ $cmd == "homebrew-formulae" ]]; then
     install_brew_formulae
   elif [[ $cmd == "update" ]]; then

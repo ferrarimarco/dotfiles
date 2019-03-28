@@ -1,0 +1,24 @@
+--- Library/Homebrew/brew.sh
++++ Library/Homebrew/brew.sh
+@@ -5,12 +5,16 @@ then
+ fi
+ 
+ # Where we store built products; a Cellar in HOMEBREW_PREFIX (often /usr/local
+-# for bottles) unless there's already a Cellar in HOMEBREW_REPOSITORY.
+-if [[ -d "$HOMEBREW_REPOSITORY/Cellar" ]]
++# for bottles) unless there's already a Cellar in HOMEBREW_REPOSITORY or the
++# user has specified HOMEBREW_CELLAR explicitly.
++if [[ -z "$HOMEBREW_CELLAR" ]]
+ then
+-  HOMEBREW_CELLAR="$HOMEBREW_REPOSITORY/Cellar"
+-else
+-  HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
++    if [[ -d "$HOMEBREW_REPOSITORY/Cellar" ]]
++    then
++	       HOMEBREW_CELLAR="$HOMEBREW_REPOSITORY/Cellar"
++    else
++	       HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
++    fi
+ fi
+ 
+ case "$*" in
