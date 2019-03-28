@@ -15,16 +15,20 @@ ask_for_sudo() {
 
 install_brew() {
 	if ! command -v brew >/dev/null 2>&1; then
-		echo "Installing Homebrew"
-
 		# Set xcode directory
-		sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+		XCODE_DIRECTORY=/Applications/Xcode.app/Contents/Developer
+		echo "Setting Xcode directory to $XCODE_DIRECTORY"
+		sudo xcode-select -s "$XCODE_DIRECTORY"
 
-		# Run this to silently accept the Xcode license agreement
+		echo "Accepting Xcode license"
 		sudo xcodebuild -license accept
 
-		# Install XCode CLI
-		xcode-select --install
+		if ! xcode-select -p >/dev/null 2>&1; then
+			echo "Installing Xcode CLI"
+			xcode-select --install
+		else
+			echo "Xcode is already installed"
+		fi
 
 		# Create dirs
 		echo "Initializing Homebrew Cellar path: ${HOMEBREW_CELLAR}, Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
@@ -33,6 +37,7 @@ install_brew() {
 		sudo install -d -o "$(whoami)" "${HOMEBREW_CELLAR}" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
 
 		# Download and install Homebrew
+		echo "Installing Homebrew"
 		cd "${HOMEBREW_REPOSITORY}"
 		git init -q
 		git config remote.origin.url "https://github.com/Homebrew/brew"
