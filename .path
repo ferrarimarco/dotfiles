@@ -24,12 +24,11 @@ export HOMEBREW_NO_ANALYTICS=1
 # update cdpath
 export CDPATH=${CDPATH}:${GOPATH}/src/github.com:${GOPATH}/src/golang.org:${GOPATH}/src
 
-# update path for gnu coreutils, make & find on darwin
-export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
-export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
-
-export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
-export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
-
-export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
-export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
+# Remove comments below if you want to use executables installed with Homebrew
+# instead of the macOS ones
+#export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
+#export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
+#export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
+#export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
+#export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
+#export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
