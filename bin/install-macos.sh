@@ -167,10 +167,12 @@ main() {
 	if [[ $cmd == "homebrew" ]]; then
 		install_brew
 		patch_brew
-  elif [[ $cmd == "homebrew-formulae" ]]; then
-    install_brew_formulae
-  elif [[ $cmd == "update" ]]; then
-    update_system
+	elif [[ $cmd == "homebrew-formulae" ]]; then
+		install_brew
+		patch_brew
+		install_brew_formulae
+	elif [[ $cmd == "update" ]]; then
+		update_system
 	fi
 }
 
