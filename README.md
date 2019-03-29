@@ -19,7 +19,7 @@ Write your values in the [`.extra`](.extra) file.
 
 #### Path
 
-If you want to use the executables installed by Homebrew instead of the ones bundled with macOS, uncomment the relevant lines in [`.path`](.path)
+If you want to use the executables installed by Homebrew instead of the ones bundled with macOS, uncomment the relevant lines in [`.path`](.path).
 
 ## Contents
 
