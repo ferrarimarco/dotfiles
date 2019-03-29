@@ -38,7 +38,7 @@ install_brew() {
 
 		# Download and install Homebrew
 		echo "Installing Homebrew"
-		cd "${HOMEBREW_REPOSITORY}"
+		cd "${HOMEBREW_REPOSITORY}" || exit
 		git init -q
 		git config remote.origin.url "https://github.com/Homebrew/brew"
 		git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
@@ -113,7 +113,7 @@ install_brew_formulae() {
 }
 
 patch_brew(){
-	cd "$HOMEBREW_REPOSITORY"
+	cd "$HOMEBREW_REPOSITORY" || exit
 	if ! patch -R -p0 -s -f --dry-run < "$DOTFILES_LIB_PATH"/homebrew-cellar.patch >/dev/null 2>&1; then
 		echo "Patching Homebrew (in $HOMEBREW_REPOSITORY) to let users set the Cellar path (currently set to: $HOMEBREW_CELLAR)"
 		patch -p0 < "$DOTFILES_LIB_PATH"/homebrew-cellar.patch
