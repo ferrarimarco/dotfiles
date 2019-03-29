@@ -6,11 +6,57 @@ These are the dotfiles I use on my systems.
 
 ## Installation
 
-Just run `make`.
+To install these dotfiles:
+
+1. Clone this repository
+1. Run `make` (all the dotfiles and binaries will be symlinked to their destinations so you can update them just by `git pull`ing the latest changes)
 
 ### Customization
 
 Write your values in the [`.extra`](.extra) file.
+
+## Contents
+
+### Binaries
+
+#### install-linux.sh
+
+[This shell script](bin/install-linux.sh) sets up linux systems the way I like. After installing the dotfiles, run it with no args to see what it does:
+
+```bash
+install-linux.sh
+```
+
+#### install-macos.sh
+
+[This shell script](bin/install-macos.sh) sets up macOS systems the way I like. After installing the dotfiles, run it with no args to see what it does:
+
+```bash
+install-macos.sh
+```
+
+### Customizations
+
+#### macOS Specific
+
+Look into the [.macos](.macos) file.
+
+#### Homebrew
+
+The provided [maintenance binaries](bin/install-macos.sh) patch [Homebrew](https://brew.sh) on the first installation (and after every upgrade) to allow the personalization
+of the Homebrew Cellar path.
+
+To install Homebrew run:
+
+```bash
+install-macos.sh homebrew
+```
+
+Then you can install the predefined formulae by running:
+
+```bash
+install-macos.sh homebrew-formulae
+```
 
 ## Development
 
