@@ -66,12 +66,18 @@ install_brew_formulae() {
 		bash-completion \
 		coreutils \
 		findutils \
+		gawk \
 		git \
 		git-lfs \
 		gnupg \
+		gnu-getopt \
+		gnu-indent \
 		gnu-sed \
+		gnu-tar \
+		gnu-tls \
 		grep \
 		imagemagick \
+		make \
 		moreutils \
 		openssh \
 		screen \
