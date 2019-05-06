@@ -101,7 +101,7 @@ install_brew_formulae() {
 	# shellcheck disable=SC2016
 	echo 'Add `$(brew --prefix gnu-sed)/libexec/gnubin` to `$PATH` if you would prefer gnu-sed be the defaults.'
 
-	echo 'Mapping gsha256sum to sha256sum'
+	echo "Mapping gsha256sum to sha256sum"
 	ln -s "${BREW_PREFIX}/bin/gsha256sum" "${BREW_PREFIX}/bin/sha256sum"
 
 	echo "Switching to using brew-installed bash as default shell"
@@ -110,7 +110,7 @@ install_brew_formulae() {
 		chsh -s "${BREW_PREFIX}/bin/bash";
 	fi;
 
-	echo 'Mapping vi so it opens the brew-installed vim'
+	echo "Mapping vi so it opens the brew-installed vim"
 	ln -s /usr/local/bin/vim /usr/local/bin/vi
 
 	echo "Removing outdated versions from the cellar."
