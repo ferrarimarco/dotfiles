@@ -60,6 +60,17 @@ install_brew_formulae() {
 
 	# Save Homebrew’s installed location.
 	BREW_PREFIX="$(brew --prefix)"
+	BUILD_FROM_SOURCE_SWITCH=""
+	while true; do
+		read -p "Build from source? (y/n) "  yn
+		case $yn in
+			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
+			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=""; break;;
+			* ) echo "Please answer yes or no.";;
+		esac
+	done
+
+	echo "Build from source switch set to: $BUILD_FROM_SOURCE_SWITCH"
 
 	for f in \
 		bash \
@@ -131,9 +142,18 @@ patch_brew(){
 }
 
 update_brew() {
-	echo "The following formulae are outdated: $(brew outdated)"
+	BUILD_FROM_SOURCE_SWITCH=""
+	while true; do
+		read -p "Build from source? (y/n) "  yn
+		case $yn in
+			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
+			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=""; break;;
+			* ) echo "Please answer yes or no.";;
+		esac
+	done
+	echo "Build from source switch set to: $BUILD_FROM_SOURCE_SWITCH"
 
-	brew upgrade
+	brew upgrade "$BUILD_FROM_SOURCE_SWITCH"
 
 	# Check if we need to patch homebrew (if it was updated)
 	patch_brew
