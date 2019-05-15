@@ -118,11 +118,12 @@ install_brew_formulae() {
 	echo "Mapping gsha256sum to sha256sum"
 	ln -s "${BREW_PREFIX}/bin/gsha256sum" "${BREW_PREFIX}/bin/sha256sum"
 
-	echo "Switching to using brew-installed bash as default shell"
-	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
+	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells;
+	then
+		echo "Switching to using brew-installed bash as default shell"
 		echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
 		chsh -s "${BREW_PREFIX}/bin/bash";
-	fi;
+	fi
 
 	echo "Mapping vi so it opens the brew-installed vim"
 	ln -s /usr/local/bin/vim /usr/local/bin/vi
