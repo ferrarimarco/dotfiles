@@ -148,12 +148,6 @@ fi;
 # You could just use `-g` instead, but I like being explicit
 complete -W "NSGlobalDomain" defaults;
 
-# This loads nvm and nvm bash_completion
-# shellcheck source=/dev/null
-[[ -e "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm" \
-  && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
-  && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
 # source kubectl bash completion
 if hash kubectl 2>/dev/null; then
 	# shellcheck source=/dev/null
