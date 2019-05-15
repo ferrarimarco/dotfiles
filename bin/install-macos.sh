@@ -139,7 +139,6 @@ update_brew() {
 	patch_brew
 
 	brew cleanup -s
-	brew cask cleanup
 
 	brew doctor
 	brew missing
