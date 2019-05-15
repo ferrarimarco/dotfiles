@@ -86,11 +86,14 @@ install_brew_formulae() {
 		tree \
 		vim \
 		wget
-  do
-    if brew ls --versions "$f" > /dev/null; then
-      brew install "$f"
-    fi
-  done
+	do
+		if ! brew ls --versions "$f" > /dev/null; then
+			echo "Installing $f"
+			brew install "$BUILD_FROM_SOURCE_SWITCH" "$f"
+		else
+			echo "$f is already installed"
+		fi
+	done
 
 	# shellcheck disable=SC2016
 	echo 'Add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH` if you would prefer coreutils be the defaults.'
