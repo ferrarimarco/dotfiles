@@ -62,7 +62,7 @@ install_brew_formulae() {
 	BREW_PREFIX="$(brew --prefix)"
 	BUILD_FROM_SOURCE_SWITCH=""
 	while true; do
-		read -pr "Build from source? (y/n) "  yn
+		read -r -p "Build from source? (y/n) "  yn
 		case $yn in
 			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
 			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=""; break;;
@@ -133,7 +133,7 @@ patch_brew(){
 update_brew() {
 	BUILD_FROM_SOURCE_SWITCH=""
 	while true; do
-		read -pr "Build from source? (y/n) "  yn
+		read -r -p "Build from source? (y/n) "  yn
 		case $yn in
 			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
 			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=""; break;;
