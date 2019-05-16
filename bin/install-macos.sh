@@ -87,15 +87,9 @@ install_brew_formulae() {
 		gnu-sed \
 		gnu-tar \
 		grep \
-		imagemagick \
 		make \
-		moreutils \
-		openssh \
-		screen \
-		php \
 		p7zip \
 		tree \
-		vim \
 		wget
 	do
 		if ! brew ls --versions "$f" > /dev/null; then
@@ -112,9 +106,6 @@ install_brew_formulae() {
 		echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
 		chsh -s "${BREW_PREFIX}/bin/bash";
 	fi
-
-	echo "Mapping vi so it opens the brew-installed vim"
-	ln -s /usr/local/bin/vim /usr/local/bin/vi
 
 	echo "Removing outdated versions from the cellar."
 	brew cleanup
