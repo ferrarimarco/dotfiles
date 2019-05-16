@@ -116,7 +116,6 @@ unset have
 
 # Add tab completion for many Bash commands on macOS
 if command -v brew &> /dev/null && [ -f "$(brew --prefix)"/etc/bash_completion ]; then
-	echo "Sourcing"
 	# shellcheck source=/dev/null
 	source "$(brew --prefix)"/etc/bash_completion;
 elif [ -f /etc/bash_completion ]; then
