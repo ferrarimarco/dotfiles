@@ -81,11 +81,11 @@ install_brew_formulae() {
 		git \
 		git-lfs \
 		gnupg \
+		gnutls \
 		gnu-getopt \
 		gnu-indent \
 		gnu-sed \
 		gnu-tar \
-		gnu-tls \
 		grep \
 		imagemagick \
 		make \
