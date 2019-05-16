@@ -106,18 +106,6 @@ install_brew_formulae() {
 		fi
 	done
 
-	# shellcheck disable=SC2016
-	echo 'Add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH` if you would prefer coreutils be the defaults.'
-
-	# shellcheck disable=SC2016
-	echo 'Add `$(brew --prefix findutils)/libexec/gnubin` to `$PATH` if you would prefer findutils be the defaults.'
-
-	# shellcheck disable=SC2016
-	echo 'Add `$(brew --prefix gnu-sed)/libexec/gnubin` to `$PATH` if you would prefer gnu-sed be the defaults.'
-
-	echo "Mapping gsha256sum to sha256sum"
-	ln -s "${BREW_PREFIX}/bin/gsha256sum" "${BREW_PREFIX}/bin/sha256sum"
-
 	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells;
 	then
 		echo "Switching to using brew-installed bash as default shell"
