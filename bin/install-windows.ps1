@@ -1,47 +1,27 @@
 function Install-Chocolatey
 {
-  Set-ExecutionPolicy Bypass -Scope Process -Force
-  iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-}
-
-function Install-Package-Providers
-{
-  $PackageProviders =
-    'chocolatey',
-	'nuget'
-
-  ForEach ($Provider in $PackageProviders)
-  {
-    if ((Get-PackageProvider -Name $Provider).Count -eq 0) {
-      try {
-        Write-Output "Installing $Provider provider"
-        Install-PackageProvider -Force -Name $Provider -Scope CurrentUser
-      }
-      catch [Exception]{
-          $_.message
-          exit
-      }
-    } else {
-      Write-Host "$Provider provider already installed"
-    }
+  if (!$env:ChocolateyInstall) {
+    Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  } else {
+    Write-Output "Chocolatey is already installed"
   }
 }
 
 function Install-Packages
 {
   $Packages =
+    'chocolatey',
     'conemu',
-    'git'
+    'git',
+	'keepass',
+	'notepadplusplus'
 
   ForEach ($Package in $Packages)
   {
-    Write-Output "Installing $Package Package"
-    Install-Package `
-	  -Name $Package `
-	  -ProviderName chocolatey `
+    choco install -y $Package
   }
 }
 
-
-Install-Package-Providers
+Install-Chocolatey
+choco upgrade -y all
 Install-Packages
