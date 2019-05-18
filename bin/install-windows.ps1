@@ -12,22 +12,36 @@ function Install-Package-Providers
 
   ForEach ($Provider in $PackageProviders)
   {
-    Write-Output "Installing $Provider provider"
-    Install-PackageProvider -Force -Name $Provider -Scope CurrentUser
+    if ((Get-PackageProvider -Name $Provider).Count -eq 0) {
+      try {
+        Write-Output "Installing $Provider provider"
+        Install-PackageProvider -Force -Name $Provider -Scope CurrentUser
+      }
+      catch [Exception]{
+          $_.message
+          exit
+      }
+    } else {
+      Write-Host "$Provider provider already installed"
+    }
   }
 }
 
 function Install-Packages
 {
   $Packages =
+    'conemu',
     'git'
 
-  ForEach ($Provider in $PackageProviders)
+  ForEach ($Package in $Packages)
   {
-    Write-Output "Installing $Provider provider"
-    Install-PackageProvider -Force -Name $Provider -Scope CurrentUser
+    Write-Output "Installing $Package Package"
+    Install-Package `
+	  -Name $Package `
+	  -ProviderName chocolatey `
   }
 }
 
 
 Install-Package-Providers
+Install-Packages
