@@ -14,7 +14,8 @@ function Install-Packages
     'conemu',
     'git',
 	'keepass',
-	'notepadplusplus'
+	'notepadplusplus',
+	'vscode'
 
   ForEach ($Package in $Packages)
   {
