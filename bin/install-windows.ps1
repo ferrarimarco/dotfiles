@@ -13,9 +13,9 @@ function Install-Packages
     'chocolatey',
     'conemu',
     'git',
-	'keepass',
-	'notepadplusplus',
-	'vscode'
+    'keepass',
+    'notepadplusplus',
+    'vscode'
 
   ForEach ($Package in $Packages)
   {
