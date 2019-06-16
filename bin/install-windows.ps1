@@ -23,6 +23,18 @@ function Install-Packages
   }
 }
 
+function Install-VSCode-Extensions
+{
+  $Extensions =
+    'ms-vscode.powershell'
+
+  ForEach ($Extension in $Extensions)
+  {
+    code --install-extension $Extension
+  }
+}
+
 Install-Chocolatey
 choco upgrade -y all
 Install-Packages
+Install-VSCode-Extensions
