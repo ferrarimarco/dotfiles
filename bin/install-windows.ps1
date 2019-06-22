@@ -26,6 +26,7 @@ function Install-Packages
 function Install-VSCode-Extensions
 {
   $Extensions =
+    'ms-azuretools.vscode-docker',
     'ms-vscode.powershell'
 
   ForEach ($Extension in $Extensions)
