@@ -6,6 +6,16 @@ mkd() {
 	cd "$@" || exit
 }
 
+# If you install brew formulae from source, you may want to install its
+# deps from source as well
+brew-install-recursive-build-from-source() {
+	echo "Installing $@ and it's deps from source"
+	brew deps --include-build --include-optional -n  "$@" | while read -r line ; do
+		brew install --build-from-source "$line"
+	done
+	brew install --build-from-source "$@"
+}
+
 # Make a temporary directory and enter it
 tmpd() {
 	local dir

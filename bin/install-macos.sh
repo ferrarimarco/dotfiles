@@ -60,17 +60,10 @@ install_brew_formulae() {
 
 	# Save Homebrew’s installed location.
 	BREW_PREFIX="$(brew --prefix)"
-	BUILD_FROM_SOURCE_SWITCH=""
-	while true; do
-		read -r -p "Build from source? (y/n) "  yn
-		case $yn in
-			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
-			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=""; break;;
-			* ) echo "Please answer yes or no.";;
-		esac
-	done
 
-	echo "Build from source switch set to: $BUILD_FROM_SOURCE_SWITCH"
+	# Source .functions to access the brew-install-recursive-build-from-source function
+	# shellcheck source=/dev/null
+	source "${HOME}"/.functions
 
 	for f in \
 		bash \
@@ -89,12 +82,20 @@ install_brew_formulae() {
 		grep \
 		make \
 		p7zip \
+		terraform \
 		tree \
 		wget
 	do
 		if ! brew ls --versions "$f" > /dev/null; then
 			echo "Installing $f"
-			brew install "$BUILD_FROM_SOURCE_SWITCH" "$f"
+			while true; do
+				read -r -p "Build from source? (y/n) "  yn
+				case $yn in
+					[Yy]* ) brew-install-recursive-build-from-source "$f"; break;;
+					[Nn]* ) brew install "$f"; break;;
+					* ) echo "Please answer yes or no.";;
+				esac
+			done
 		else
 			echo "$f is already installed"
 		fi
