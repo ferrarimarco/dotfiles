@@ -28,6 +28,7 @@ function Install-VSCode-Extensions
   $Extensions =
     'mauve.terraform',
     'ms-azuretools.vscode-docker',
+    'ms-python.python',
     'ms-vscode.powershell'
 
   ForEach ($Extension in $Extensions)
