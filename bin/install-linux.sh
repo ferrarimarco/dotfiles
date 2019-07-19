@@ -76,6 +76,11 @@ install_golang() {
 	sudo ln -snf "${GOPATH}/bin/weather" /usr/local/bin/weather
 }
 
+install_rubygems() {
+	gem install \
+		bundler
+}
+
 # install custom scripts/binaries
 install_scripts() {
 	# install speedtest
@@ -255,6 +260,7 @@ usage() {
   echo "  debian                         			- install base packages on a Debian system"
   echo "  dotfiles                            - get dotfiles"
   echo "  golang                              - install golang and packages"
+  echo "  rubygems                            - install Ruby gems"
   echo "  scripts                             - install scripts"
 	echo "  user                                - setup user"
 }
@@ -281,6 +287,9 @@ main() {
 		setup_dotfiles
   elif [[ $cmd == "golang" ]]; then
 		install_golang "$2"
+	elif [[ $cmd == "rubygems" ]]; then
+		check_is_sudo
+		install_rubygems
   elif [[ $cmd == "scripts" ]]; then
     check_is_sudo
     install_scripts
