@@ -82,6 +82,7 @@ install_brew_formulae() {
 		grep \
 		make \
 		p7zip \
+		rbenv \
 		terraform \
 		tree \
 		wget
