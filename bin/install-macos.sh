@@ -101,6 +101,17 @@ install_brew_formulae() {
 		fi
 	done
 
+	for f in \
+		google-cloud-sdk
+	do
+		if ! brew cask ls --versions "$f" > /dev/null; then
+			echo "Installing $f cask"
+			brew cask install "$f"
+		else
+			echo "$f cask is already installed"
+		fi
+	done
+
 	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells;
 	then
 		echo "Switching to using brew-installed bash as default shell"
