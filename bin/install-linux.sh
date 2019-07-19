@@ -254,15 +254,15 @@ setup_debian() {
 }
 
 usage() {
-	echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
-	echo "Usage:"
-	echo "  base                                - setup sudo and docker"
-  echo "  debian                         			- install base packages on a Debian system"
+  echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
+  echo "Usage:"
+  echo "  base                                - setup sudo and docker"
+  echo "  debian                              - install base packages on a Debian system"
   echo "  dotfiles                            - get dotfiles"
   echo "  golang                              - install golang and packages"
   echo "  rubygems                            - install Ruby gems"
   echo "  scripts                             - install scripts"
-	echo "  user                                - setup user"
+  echo "  user                                - setup user"
 }
 
 main() {
