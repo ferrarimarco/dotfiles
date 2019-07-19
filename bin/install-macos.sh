@@ -103,7 +103,8 @@ install_brew_formulae() {
 	done
 
 	for f in \
-		google-cloud-sdk
+		google-cloud-sdk \
+		visual-studio-code
 	do
 		if ! brew cask ls --versions "$f" > /dev/null; then
 			echo "Installing $f cask"
