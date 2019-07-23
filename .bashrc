@@ -102,8 +102,8 @@ fi
 # define this function for scripts that did not migrate to the non-deprecated _have()
 have()
 {
-    unset -v have
-    _have "$1"
+	unset -v have
+	_have "$1"
 }
 
 # source bash_completion if available
