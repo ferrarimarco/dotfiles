@@ -172,5 +172,7 @@ done
 unset file
 
 # MOTD
-sw_vers
+if command -v sw_vers &> /dev/null; then
+	sw_vers
+fi;
 uname -snrvm
