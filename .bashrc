@@ -9,6 +9,14 @@ case $- in
 	*) return;;
 esac
 
+for file in "${HOME}"/.{path,bash_prompt,aliases,functions,dockerfunc,extra,exports}; do
+	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
+		# shellcheck source=/dev/null
+		source "$file"
+	fi
+done
+unset file
+
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -162,14 +170,6 @@ fi
 # The next line enables shell command completion for gcloud.
 # shellcheck source=/dev/null
 if [ -f "${HOME}/google-cloud-sdk/completion.bash.inc" ]; then . "${HOME}/google-cloud-sdk/completion.bash.inc"; fi
-
-for file in ~/.{bash_prompt,aliases,functions,path,dockerfunc,extra,exports}; do
-	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
-		# shellcheck source=/dev/null
-		source "$file"
-	fi
-done
-unset file
 
 # MOTD
 if command -v sw_vers &> /dev/null; then
