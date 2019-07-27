@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# shellcheck source=.bashrc
+# shellcheck source=/dev/null
 source "$HOME"/.bashrc
