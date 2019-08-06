@@ -81,6 +81,7 @@ install_brew_formulae() {
 		gnu-tar \
 		grep \
 		make \
+		nano \
 		p7zip \
 		rbenv \
 		terraform \
