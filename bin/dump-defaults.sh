@@ -5,7 +5,7 @@ defaults -currentHost read NSGlobalDomain > NSGlobalDomain-currentHost-before.ou
 defaults read > read-before.out
 defaults -currentHost read > read-currentHost-before.out
 
-read -n1 -rsp "Change the settings and press any key to continue...\n" key
+read -n1 -rsp $'Change the settings and press any key to continue...\n'
 
 defaults read NSGlobalDomain > NSGlobalDomain-after.out
 defaults -currentHost read NSGlobalDomain > NSGlobalDomain-currentHost-after.out
