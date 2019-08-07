@@ -94,18 +94,37 @@ defaults write com.apple.systemuiserver menuExtras -array \
  "/System/Library/CoreServices/Menu Extras/Volume.menu"
 
 ###############################################################################
-# Autostart                                                                   #
+# Adobe stuff                                                                 #
 ###############################################################################
 
-# Disable Adobe stuff
+# Kill those processes
+killall AGSService ACCFinderSync "Core Sync" AdobeCRDaemon "Adobe Creative" AdobeIPCBroker node "Adobe Desktop Service" "Adobe Crash Reporter" CCXProcess CCLibrary
+
+# Disable Adobe autostart agents and daemons
 for i in /Library/LaunchAgents/com.adobe* \
 	"$HOME"/Library/LaunchAgents/com.adobe* \
 	/Library/LaunchDaemons/com.adobe* \
 	/System/Library/LaunchAgents/com.adobe* \
 	/System/Library/LaunchDaemons/com.adobe*; do
+
+	# Exit the loop if there are no matching files
+	# Safeguard for when nullglob is disabled in bash
 	[ -f "$i" ] || break
-	launchctl unload -w "$i"
+
+	# Disable the agent
+	launchctl unload -w "$i" 2>/dev/null
+
+	# Avoid further edits
+	sudo chmod 000 "$i"
 done
+
+# Disable the "Core Sync" finder extension
+if defaults read "com.apple.finder.SyncExtensions" 2>/dev/null; then
+	defaults delete "com.apple.finder.SyncExtensions"
+fi
+
+# Remove the "Core Sync" finder extension
+sudo rm -rf "/Applications/Utilities/Adobe Sync/CoreSync/Core Sync.app"
 
 ###############################################################################
 # Kill affected applications                                                  #
