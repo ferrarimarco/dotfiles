@@ -94,6 +94,20 @@ defaults write com.apple.systemuiserver menuExtras -array \
  "/System/Library/CoreServices/Menu Extras/Volume.menu"
 
 ###############################################################################
+# Autostart                                                                   #
+###############################################################################
+
+# Disable Adobe stuff
+for i in /Library/LaunchAgents/com.adobe* \
+	"$HOME"/Library/LaunchAgents/com.adobe* \
+	/Library/LaunchDaemons/com.adobe* \
+	/System/Library/LaunchAgents/com.adobe* \
+	/System/Library/LaunchDaemons/com.adobe*; do
+	[ -f "$i" ] || break
+	launchctl unload -w "$i"
+done
+
+###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 
