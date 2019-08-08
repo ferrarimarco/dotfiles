@@ -110,9 +110,8 @@ fi
 if [[ -d /etc/bash_completion.d ]]; then
 	for filename in /etc/bash_completion.d/**/*; do
 		[ -e "$filename" ] || continue
-		echo "Sourcing $filename"
 		# shellcheck source=/dev/null
-		source "$file"
+		source "$filename"
 	done
 fi
 
