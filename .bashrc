@@ -83,6 +83,13 @@ if [ -x /usr/bin/dircolors ]; then
 	alias egrep='egrep --color=auto'
 fi
 
+# define this function for scripts that did not migrate to the non-deprecated _have()
+have()
+{
+	unset -v have
+	_have "$1"
+}
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -98,13 +105,6 @@ if ! shopt -oq posix; then
 		. /usr/local/etc/bash_completion
 	fi
 fi
-
-# define this function for scripts that did not migrate to the non-deprecated _have()
-have()
-{
-	unset -v have
-	_have "$1"
-}
 
 # source bash_completion if available
 if [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]]; then
