@@ -99,16 +99,6 @@ if ! shopt -oq posix; then
 	fi
 fi
 
-# source any bash completion script, if available
-if [[ -d /etc/bash_completion.d ]]; then
-	for filename in /etc/bash_completion.d/*; do
-		if [[ -f "$filename" && -e "$filename" ]]; then
-			# shellcheck source=/dev/null
-			source "$filename"
-		fi
-	done
-fi
-
 # Add tab completion for many Bash commands on macOS
 if command -v brew &> /dev/null && [ -f "$(brew --prefix)"/etc/bash_completion ]; then
 	# shellcheck source=/dev/null
