@@ -109,9 +109,10 @@ fi
 # source any bash completion script, if available
 if [[ -d /etc/bash_completion.d ]]; then
 	for filename in /etc/bash_completion.d/*; do
-		[ -e "$filename" && -f "$filename" ] || continue
-		# shellcheck source=/dev/null
-		source "$filename"
+		if [[ -f "$filename" && -e "$filename" ]]; then
+			# shellcheck source=/dev/null
+			source "$filename"
+		fi
 	done
 fi
 
