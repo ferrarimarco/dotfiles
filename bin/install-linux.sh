@@ -98,6 +98,10 @@ setup_docker(){
     echo "Docker is already installed"
   else
     curl -sSL https://get.docker.com | sh
+
+		# create docker group
+		getent group docker >/dev/null 2>&1 || groupadd docker
+		gpasswd -a "$TARGET_USER" docker
   fi
 
   if command -v docker-compose >/dev/null 2>&1 ; then
@@ -141,10 +145,6 @@ setup_sudo() {
 	# then you wont need sudo to view logs and shit
 	gpasswd -a "$TARGET_USER" systemd-journal
 	gpasswd -a "$TARGET_USER" systemd-network
-
-	# create docker group
-	getent group docker >/dev/null 2>&1 || groupadd docker
-	gpasswd -a "$TARGET_USER" docker
 
 	SUDOERS_FILE_PATH="/etc/sudoers"
 	if ! grep -q "${TARGET_USER}" "$SUDOERS_FILE_PATH"; then
