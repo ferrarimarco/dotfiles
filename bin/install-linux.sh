@@ -155,10 +155,14 @@ setup_user() {
 }
 
 setup_debian() {
-	add-apt-repository main
-  add-apt-repository universe
-  add-apt-repository multiverse
-  add-apt-repository restricted
+	if command -v add-apt-repository &> /dev/null; then
+		add-apt-repository main
+		add-apt-repository universe
+		add-apt-repository multiverse
+		add-apt-repository restricted
+	else
+		echo "add-apt-repository command not available. Don't add APT repos."
+	fi;
 
 	apt-get update || true
 	apt-get install -y \
