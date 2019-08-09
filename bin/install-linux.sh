@@ -86,13 +86,6 @@ install_rubygems() {
 		bundler
 }
 
-# install custom scripts/binaries
-install_scripts() {
-	# install speedtest
-	curl -sSL https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py  > /usr/local/bin/speedtest
-	chmod +x /usr/local/bin/speedtest
-}
-
 setup_docker(){
   if command -v docker >/dev/null 2>&1 ; then
     echo "Docker is already installed"
@@ -265,7 +258,6 @@ usage() {
   echo "  golang                              - install golang and packages"
   echo "  npm                                 - install npm packages"
   echo "  rubygems                            - install Ruby gems"
-  echo "  scripts                             - install scripts"
   echo "  user                                - setup user"
 }
 
@@ -296,9 +288,6 @@ main() {
 	elif [[ $cmd == "rubygems" ]]; then
 		check_is_sudo
 		install_rubygems
-  elif [[ $cmd == "scripts" ]]; then
-    check_is_sudo
-    install_scripts
 	elif [[ $cmd == "user" ]]; then
     get_user
     setup_user
