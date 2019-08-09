@@ -63,17 +63,6 @@ install_golang() {
 	sudo chown -R "${user}" /usr/local/go/pkg
 	CGO_ENABLED=0 go install -a -installsuffix cgo std
 	)
-
-	# get commandline tools
-	(
-	set -x
-	set +e
-
-	go get github.com/genuinetools/certok
-	go get github.com/genuinetools/reg
-  )
-	# symlink weather binary for motd
-	sudo ln -snf "${GOPATH}/bin/weather" /usr/local/bin/weather
 }
 
 install_npm() {
