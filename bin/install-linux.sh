@@ -186,7 +186,7 @@ setup_debian() {
 		fwupdate \
 		gcc \
 		git \
-    glogg \
+		glogg \
 		gnupg \
 		gnupg-agent \
 		grep \
@@ -250,9 +250,9 @@ main() {
 	if [[ $cmd == "base" ]]; then
 		check_is_sudo
 		get_user
-    setup_sudo
-  elif [[ $cmd == "debian" ]]; then
-    check_is_sudo
+		setup_sudo
+	elif [[ $cmd == "debian" ]]; then
+		check_is_sudo
 		get_user
 		setup_debian
 	elif [[ $cmd == "docker" ]]; then
@@ -262,7 +262,7 @@ main() {
   elif [[ $cmd == "dotfiles" ]]; then
 		get_user
 		setup_dotfiles
-  elif [[ $cmd == "golang" ]]; then
+	elif [[ $cmd == "golang" ]]; then
 		install_golang "$2"
 	elif [[ $cmd == "npm" ]]; then
 		install_npm
@@ -270,8 +270,8 @@ main() {
 		check_is_sudo
 		install_rubygems
 	elif [[ $cmd == "user" ]]; then
-    get_user
-    setup_user
+		get_user
+		setup_user
 	else
 		usage
 	fi
