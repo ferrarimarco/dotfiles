@@ -131,6 +131,9 @@ setup_sudo() {
 setup_user() {
   mkdir -p "/home/$TARGET_USER/Downloads"
   mkdir -p "/home/$TARGET_USER/Pictures/Screenshots"
+
+	# enable dbus for the user session
+	systemctl --user enable dbus.socket
 }
 
 setup_debian() {
