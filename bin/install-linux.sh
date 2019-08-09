@@ -189,25 +189,20 @@ setup_debian() {
 		grep \
 		gzip \
 		hostname \
-    imagemagick \
-		indent \
+		imagemagick \
 		iptables \
-    jmeter \
+		jmeter \
 		less \
-		libapparmor-dev \
 		libc6-dev \
-		libimobiledevice6 \
-		libltdl-dev \
 		libpam-systemd \
-		libseccomp-dev \
 		locales \
 		lsof \
 		make \
 		mount \
-    nano \
+		nano \
 		net-tools \
 		pinentry-curses \
-		rxvt-unicode-256color \
+		rxvt-unicode \
 		scdaemon \
 		ssh \
 		strace \
@@ -217,7 +212,6 @@ setup_debian() {
 		tree \
 		tzdata \
 		unzip \
-		usbmuxd \
 		xclip \
 		xcompmgr \
 		xz-utils \
