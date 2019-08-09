@@ -100,12 +100,17 @@ if ! shopt -oq posix; then
 fi
 
 # Add tab completion for many Bash commands on macOS
-if command -v brew &> /dev/null && [ -f "$(brew --prefix)"/etc/bash_completion ]; then
-	# shellcheck source=/dev/null
-	source "$(brew --prefix)"/etc/bash_completion;
-elif [ -f /etc/bash_completion ]; then
-	# shellcheck source=/dev/null
-	source /etc/bash_completion;
+if command -v brew &> /dev/null; then
+	BREW_PREFIX="$(brew --prefix)"
+
+	BASH_COMPLETION_PATH="$BREW_PREFIX"/etc/bash_completion
+	if [ -f "$BASH_COMPLETION_PATH" ]; then
+		# shellcheck source=/dev/null
+		. "$BASH_COMPLETION_PATH";
+	fi
+
+	unset BASH_COMPLETION_PATH
+	unset BREW_PREFIX
 fi;
 
 # Initialize rbenv if available
