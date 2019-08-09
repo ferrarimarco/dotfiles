@@ -160,4 +160,7 @@ fi
 if command -v sw_vers &> /dev/null; then
 	sw_vers
 fi;
-uname -snrvm
+
+if command -v uname &> /dev/null; then
+	uname -snrvm
+fi;
