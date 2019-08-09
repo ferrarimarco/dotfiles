@@ -109,6 +109,13 @@ if command -v brew &> /dev/null; then
 		. "$BASH_COMPLETION_PATH";
 	fi
 
+	BASH_COMPLETION_PATH="$BREW_PREFIX"/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
+	# Enable shell command completion for gcloud SDK
+	if [ -f "$BASH_COMPLETION_PATH" ]; then
+		# shellcheck source=/dev/null
+		. "$BASH_COMPLETION_PATH";
+	fi
+
 	unset BASH_COMPLETION_PATH
 	unset BREW_PREFIX
 fi;
@@ -148,10 +155,6 @@ if hash kubectl 2>/dev/null; then
 	# shellcheck source=/dev/null
 	source <(kubectl completion bash)
 fi
-
-# The next line enables shell command completion for gcloud.
-# shellcheck source=/dev/null
-if [ -f "${HOME}/google-cloud-sdk/completion.bash.inc" ]; then . "${HOME}/google-cloud-sdk/completion.bash.inc"; fi
 
 # MOTD
 if command -v sw_vers &> /dev/null; then
