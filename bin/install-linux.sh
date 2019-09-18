@@ -118,9 +118,14 @@ setup_sudo() {
 	adduser "$TARGET_USER" sudo
 
 	# add user to systemd groups
-	# then you wont need sudo to view logs and shit
-	gpasswd -a "$TARGET_USER" systemd-journal
-	gpasswd -a "$TARGET_USER" systemd-network
+	# then you wont need sudo to view logs
+	if [ $(getent group systemd-journal) ]; then
+		gpasswd -a "$TARGET_USER" systemd-journal
+	fi
+
+	if [ $(getent group systemd-journal) ]; then
+		gpasswd -a "$TARGET_USER" systemd-network
+	fi
 
 	SUDOERS_FILE_PATH="/etc/sudoers"
 	if ! grep -q "${TARGET_USER}" "$SUDOERS_FILE_PATH"; then
