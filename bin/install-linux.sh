@@ -154,18 +154,13 @@ setup_debian() {
 		--no-install-recommends
 
 	# Add the Google Chrome distribution URI as a package source if needed
-	CHROME_APT_SOURCE_PATH="/etc/apt/sources.list.d/google-chrome.list"
-	if [ -e "$CHROME_APT_SOURCE_PATH" ]
-	then
-	    echo "Google Chrome APT source is already installed. Contents: $(cat "$CHROME_APT_SOURCE_PATH")"
-	else
-		cat <<-EOF > "$CHROME_APT_SOURCE_PATH"
-		deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
-		EOF
+	if ! [ -d "/opt/google/cros-containers" ]; then
+		echo "Installing Chrome browser..."
+		curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
+		apt install -y ./google-chrome-stable_current_amd64.deb
+		rm ./google-chrome-stable_current_amd64.deb
+		apt-get install -f
 	fi
-
-	# Import the Google Chrome public key
-	curl -s https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
 
 	apt-get update || true
 	apt-get -y upgrade
@@ -191,7 +186,6 @@ setup_debian() {
     glogg \
 		gnupg \
 		gnupg-agent \
-		google-chrome-stable \
 		grep \
 		gzip \
 		hostname \
