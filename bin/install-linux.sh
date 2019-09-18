@@ -126,14 +126,6 @@ setup_sudo() {
 	if [ $(getent group systemd-journal) ]; then
 		gpasswd -a "$TARGET_USER" systemd-network
 	fi
-
-	SUDOERS_FILE_PATH="/etc/sudoers"
-	if ! grep -q "${TARGET_USER}" "$SUDOERS_FILE_PATH"; then
-		{ \
-			echo -e "${TARGET_USER} ALL=(ALL) NOPASSWD:ALL"; \
-			echo -e "${TARGET_USER} ALL=NOPASSWD: /sbin/ifconfig, /sbin/ifup, /sbin/ifdown, /sbin/ifquery"; \
-		} >> "$SUDOERS_FILE_PATH"
-	fi
 }
 
 setup_user() {
