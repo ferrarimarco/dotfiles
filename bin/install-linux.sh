@@ -134,15 +134,6 @@ setup_user() {
 }
 
 setup_debian() {
-	if command -v add-apt-repository &> /dev/null; then
-		add-apt-repository main
-		add-apt-repository universe
-		add-apt-repository multiverse
-		add-apt-repository restricted
-	else
-		echo "add-apt-repository command not available. Don't add APT repos."
-	fi;
-
 	apt-get update || true
 	apt-get install -y \
 		apt-transport-https \
@@ -151,7 +142,13 @@ setup_debian() {
 		dirmngr \
 		gnupg2 \
 		lsb-release \
+		software-properties-common \
 		--no-install-recommends
+
+	add-apt-repository main
+	add-apt-repository universe
+	add-apt-repository multiverse
+	add-apt-repository restricted
 
 	# Add the Google Chrome distribution URI as a package source if needed
 	if ! [ -d "/opt/google/cros-containers" ]; then
