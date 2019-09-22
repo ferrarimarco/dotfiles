@@ -43,7 +43,7 @@ psscriptanalyzer: ## Runs PSScriptAnalyzer tests on the scripts
 		--name df-psscriptanalyzer \
 		-v $(CURDIR):/usr/src:ro \
 		mcr.microsoft.com/powershell \
-		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -Path /usr/src -Recurse"
+		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse"
 
 .PHONY: shellcheck
 shellcheck: ## Runs shellcheck tests on the scripts.
