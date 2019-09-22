@@ -180,9 +180,11 @@ psscriptanalyzer(){
 	del_stopped psscriptanalyzer
 
 	docker run -it --rm \
-		-v "$(pwd)":/powershell \
 		--name psscriptanalyzer \
-		cvent/psscriptanalyzer
+		-v $(pwd):/usr/src:ro \
+		mcr.microsoft.com/powershell \
+		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse"
+
 }
 
 shellcheck(){
