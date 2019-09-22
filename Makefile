@@ -27,7 +27,7 @@ dotfiles: ## Installs the dotfiles.
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
 
 .PHONY: test
-test: shellcheck ## Runs all the tests on the files in the repository.
+test: psscriptanalyzer shellcheck ## Runs all the tests on the files in the repository.
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -36,6 +36,14 @@ INTERACTIVE := $(shell [ -t 0 ] && echo 1 || echo 0)
 ifeq ($(INTERACTIVE), 1)
 	DOCKER_FLAGS += -t
 endif
+
+.PHONY: psscriptanalyzer
+psscriptanalyzer: ## Runs PSScriptAnalyzer tests on the scripts
+	docker run --rm -i $(DOCKER_FLAGS) \
+		--name df-psscriptanalyzer \
+		-v $(CURDIR):/usr/src:ro \
+		mcr.microsoft.com/powershell \
+		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -Path /usr/src -Recurse"
 
 .PHONY: shellcheck
 shellcheck: ## Runs shellcheck tests on the scripts.
