@@ -1,7 +1,7 @@
 function Install-Chocolatey
 {
   if (!$env:ChocolateyInstall) {
-    Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   } else {
     Write-Output "Chocolatey is already installed"
   }
