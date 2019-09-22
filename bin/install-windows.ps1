@@ -1,5 +1,8 @@
 function Install-Chocolatey
 {
+  [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "", Justification="Trusting Chocolatey installer")]
+  param()
+
   if (!$env:ChocolateyInstall) {
     Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
   } else {
