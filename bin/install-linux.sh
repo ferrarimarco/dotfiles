@@ -131,6 +131,7 @@ setup_sudo() {
 setup_user() {
   mkdir -p "/home/$TARGET_USER/Downloads"
   mkdir -p "/home/$TARGET_USER/Pictures/Screenshots"
+  mkdir -p "/home/$TARGET_USER/Pictures/Wallpapers"
 
 	# enable dbus for the user session
 	systemctl --user enable dbus.socket
