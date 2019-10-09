@@ -9,13 +9,18 @@ case $- in
 	*) return;;
 esac
 
-for file in "${HOME}"/.{path,bash_prompt,aliases,functions,dockerfunc,extra,exports}; do
+for file in "${HOME}"/.{path,bash_prompt,aliases,functions,extra,exports}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
 		# shellcheck source=/dev/null
 		source "$file"
 	fi
 done
 unset file
+
+# source docker aliases if docker is installed
+if command -v docker &> /dev/null; then
+	. "${HOME}"/.dockerfunc
+fi;
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
