@@ -146,9 +146,12 @@ setup_debian() {
 		--no-install-recommends
 
 	add-apt-repository main
-	add-apt-repository universe
-	add-apt-repository multiverse
-	add-apt-repository restricted
+
+	if case $(lsb_release -d | awk -F"\t" '{print $2}') in Ubuntu*) true;; *) false;; esac; then
+		add-apt-repository universe
+		add-apt-repository multiverse
+		add-apt-repository restricted
+	fi
 
 	# Add the Google Chrome distribution URI as a package source if needed
 	if ! [ "${CROSTINI}" = "1" ]; then
