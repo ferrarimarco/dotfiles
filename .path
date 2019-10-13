@@ -30,10 +30,6 @@ if [ -d "${VS_CODE_PATH_MACOS}" ]; then
   export PATH="${VS_CODE_PATH_MACOS}:${PATH}"
 fi
 
-if [ -d "/opt/google/cros-containers" ]; then
-  export CROSTINI=1
-fi
-
 # Uncomment the lines below if you want to use executables installed with Homebrew
 # instead of the macOS ones
 #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
