@@ -1,4 +1,4 @@
-# From https://github.com/jessfraz/dotfiles
+# Inspired by https://github.com/jessfraz/dotfiles
 
 .PHONY: all
 all: bin dotfiles ## Installs the bin and etc directory files and the dotfiles.
