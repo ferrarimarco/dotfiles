@@ -151,7 +151,7 @@ setup_debian() {
 	add-apt-repository restricted
 
 	# Add the Google Chrome distribution URI as a package source if needed
-	if ! [ -d "/opt/google/cros-containers" ]; then
+	if ! [ "${CROSTINI}" = "1" ]; then
 		echo "Installing Chrome browser..."
 		curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
 		apt install -y ./google-chrome-stable_current_amd64.deb
