@@ -4,7 +4,8 @@
 all: bin dotfiles ## Installs the bin and etc directory files and the dotfiles.
 
 .PHONY: bin
-bin: ## Installs the bin directory files.
+bin:
+	@echo Installing binaries
 	mkdir -p $(HOME)/bin;
 
 	# add aliases for things in bin
@@ -14,7 +15,8 @@ bin: ## Installs the bin directory files.
 	done;
 
 .PHONY: dotfiles
-dotfiles: ## Installs the dotfiles.
+dotfiles:
+	@echo Installing dotfiles
 	# add aliases for dotfiles
 	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -name ".travis.yml" -not -path "*/\.git/*" -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
@@ -27,7 +29,9 @@ dotfiles: ## Installs the dotfiles.
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
 
 .PHONY: test
-test: psscriptanalyzer shellcheck ## Runs all the tests on the files in the repository.
+test:
+	@echo Running tests
+	psscriptanalyzer shellcheck 
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -38,7 +42,8 @@ ifeq ($(INTERACTIVE), 1)
 endif
 
 .PHONY: psscriptanalyzer
-psscriptanalyzer: ## Runs PSScriptAnalyzer tests on the scripts
+psscriptanalyzer:
+	@echo Running PSScriptAnalyzer
 	docker run --rm -i $(DOCKER_FLAGS) \
 		--name df-psscriptanalyzer \
 		-v $(CURDIR):/usr/src:ro \
@@ -46,7 +51,8 @@ psscriptanalyzer: ## Runs PSScriptAnalyzer tests on the scripts
 		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse"
 
 .PHONY: shellcheck
-shellcheck: ## Runs shellcheck tests on the scripts.
+shellcheck:
+	@echo Running shellcheck
 	docker run --rm -i $(DOCKER_FLAGS) \
 		--name df-shellcheck \
 		-v $(CURDIR):/usr/src:ro \
