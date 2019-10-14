@@ -19,6 +19,7 @@ unset file
 
 # source docker aliases if docker is installed
 if command -v docker &> /dev/null; then
+	# shellcheck source=.dockerfunc
 	. "${HOME}"/.dockerfunc
 fi;
 
