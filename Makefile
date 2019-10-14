@@ -29,9 +29,7 @@ dotfiles:
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
 
 .PHONY: test
-test:
-	@echo Running tests
-	psscriptanalyzer shellcheck 
+test: psscriptanalyzer shellcheck
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
