@@ -86,6 +86,7 @@ install_brew_formulae() {
 		rbenv \
 		terraform \
 		tree \
+		vagrant \
 		wget
 	do
 		if ! brew ls --versions "$f" > /dev/null; then
@@ -105,6 +106,7 @@ install_brew_formulae() {
 
 	for f in \
 		google-cloud-sdk \
+		virtualbox \
 		visual-studio-code
 	do
 		if ! brew cask ls --versions "$f" > /dev/null; then
@@ -134,6 +136,138 @@ patch_brew(){
 	else
 		echo "Homebrew (in $HOMEBREW_REPOSITORY) is already patched to allow a customized Cellar path"
 	fi
+}
+
+setup_macos(){
+	###############################################################################
+	# General UI/UX                                                               #
+	###############################################################################
+
+	# Disable the sound effects on boot
+	sudo nvram SystemAudioVolume=" "
+
+	# Enable the sound effects on boot
+	#sudo nvram SystemAudioVolume="7"
+
+	###############################################################################
+	# Mac App Store                                                               #
+	###############################################################################
+
+	# Enable the automatic update check
+	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true
+
+	# Check for software updates daily, not just once per week
+	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ScheduleFrequency -int 1
+
+	# Download newly available updates in background
+	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -int 1
+
+	# Install System data files & security updates
+	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist CriticalUpdateInstall -int 1
+
+	# Automatically download apps purchased on other Macs
+	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ConfigDataInstall -int 1
+
+	# Automatically install macOS Updates
+	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticallyInstallMacOSUpdates -int 1
+
+	# Turn on app auto-update in App Store
+	sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true
+
+	# Allow the App Store to reboot machine on macOS updates
+	sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true
+
+	# Enable automatic updates in System Preferences -> Software Update -> Advanced -> Check for updates
+	sudo softwareupdate --schedule ON
+
+	###############################################################################
+	# Dock                                                                        #
+	###############################################################################
+
+	# Change minimize/maximize window effect
+	defaults write com.apple.dock mineffect -string "scale"
+
+	# Minimize windows into their application’s icon
+	defaults write com.apple.dock minimize-to-application -bool true
+
+	###############################################################################
+	# Terminal & iTerm 2                                                          #
+	###############################################################################
+
+	# Only use UTF-8 in Terminal.app
+	defaults write com.apple.terminal StringEncodings -array 4
+
+	# Don’t display the annoying prompt when quitting iTerm
+	defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+	###############################################################################
+	# Trackpad                                                                    #
+	###############################################################################
+
+	# Trackpad: enable tap to click for this user
+	defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+
+	# Trackpad: enable tap to click for the login screen
+	defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+	defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+	###############################################################################
+	# Menu bar                                                                    #
+	###############################################################################
+
+	# Show icons in the menu bar
+	defaults write com.apple.systemuiserver menuExtras -array \
+	"/System/Library/CoreServices/Menu Extras/AirPort.menu" \
+	"/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
+	"/System/Library/CoreServices/Menu Extras/Clock.menu" \
+	"/System/Library/CoreServices/Menu Extras/Volume.menu"
+
+	###############################################################################
+	# Adobe stuff                                                                 #
+	###############################################################################
+
+	# Kill those processes
+	killall AGSService ACCFinderSync "Core Sync" AdobeCRDaemon "Adobe Creative" AdobeIPCBroker node "Adobe Desktop Service" "Adobe Crash Reporter" CCXProcess CCLibrary
+
+	# Disable Adobe autostart agents and daemons
+	for i in /Library/LaunchAgents/com.adobe* \
+		"$HOME"/Library/LaunchAgents/com.adobe* \
+		/Library/LaunchDaemons/com.adobe* \
+		/System/Library/LaunchAgents/com.adobe* \
+		/System/Library/LaunchDaemons/com.adobe*; do
+
+		# Exit the loop if there are no matching files
+		# Safeguard for when nullglob is disabled in bash
+		[ -f "$i" ] || break
+
+		# Disable the agent
+		launchctl unload -w "$i" 2>/dev/null
+
+		# Avoid further edits
+		sudo chmod 000 "$i"
+	done
+
+	# Disable the "Core Sync" finder extension
+	if defaults read "com.apple.finder.SyncExtensions" 2>/dev/null; then
+		defaults delete "com.apple.finder.SyncExtensions"
+	fi
+
+	# Remove the "Core Sync" finder extension
+	sudo rm -rf "/Applications/Utilities/Adobe Sync/CoreSync/Core Sync.app"
+
+	###############################################################################
+	# Kill affected applications                                                  #
+	###############################################################################
+
+	for app in "Activity Monitor" \
+		"cfprefsd" \
+		"Dock" \
+		"Finder" \
+		"SystemUIServer" \
+		"Terminal"; do
+		killall "${app}" &> /dev/null
+	done
+	echo "Done. Note that some of these changes require a logout/restart to take effect."
 }
 
 update_brew() {
@@ -168,6 +302,7 @@ usage() {
 		echo -e "install-macos.sh\\n\\tThis script installs my basic setup for a MacOS workstation\\n"
 		echo "  homebrew                            - install Homebrew"
 		echo "  homebrew-formulae                   - install Homebrew formulae"
+		echo "  macos                               - setup macOS"
 		echo "  update                              - update the system"
 }
 
@@ -188,6 +323,8 @@ main() {
 		install_brew
 		patch_brew
 		install_brew_formulae
+	elif [[ $cmd == "macos" ]]; then
+		setup_macos
 	elif [[ $cmd == "update" ]]; then
 		update_system
 	fi
