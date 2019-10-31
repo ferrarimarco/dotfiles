@@ -74,7 +74,6 @@ install_brew_formulae() {
 		git \
 		git-lfs \
 		gnupg \
-		gnutls \
 		gnu-getopt \
 		gnu-indent \
 		gnu-sed \
