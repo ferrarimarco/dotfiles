@@ -72,7 +72,6 @@ install_brew_formulae() {
 		findutils \
 		gawk \
 		git \
-		git-lfs \
 		gnupg \
 		gnu-getopt \
 		gnu-indent \
