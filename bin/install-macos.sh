@@ -271,18 +271,17 @@ setup_macos(){
 }
 
 update_brew() {
-	BUILD_FROM_SOURCE_SWITCH=""
+	BUILD_FROM_SOURCE_SWITCH=
 	while true; do
 		read -r -p "Build from source? (y/n) "  yn
 		case $yn in
 			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
-			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=""; break;;
+			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=; break;;
 			* ) echo "Please answer yes or no.";;
 		esac
 	done
-	echo "Build from source switch set to: $BUILD_FROM_SOURCE_SWITCH"
 
-	brew upgrade "$BUILD_FROM_SOURCE_SWITCH"
+	brew upgrade $BUILD_FROM_SOURCE_SWITCH
 
 	# Check if we need to patch homebrew (if it was updated)
 	patch_brew
