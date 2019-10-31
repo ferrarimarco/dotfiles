@@ -41,12 +41,6 @@ install-linux.sh
 install-macos.sh
 ```
 
-### Customizations
-
-#### macOS Specific
-
-Look into the [.macos](.macos) file.
-
 #### Homebrew
 
 The provided [maintenance binaries](bin/install-macos.sh) patch [Homebrew](https://brew.sh) on the first installation (and after every upgrade) to allow the personalization
