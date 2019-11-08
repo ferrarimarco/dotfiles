@@ -18,6 +18,8 @@ function Install-Packages
     'git',
     'keepass',
     'notepadplusplus',
+    'vagrant',
+    'virtualbox',
     'vscode'
 
   ForEach ($Package in $Packages)
