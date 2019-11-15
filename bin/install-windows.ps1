@@ -19,7 +19,7 @@ function Install-Packages
     'keepass',
     'notepadplusplus',
     'vagrant',
-    'virtualbox',
+    'virtualbox --params "/NoDesktopShortcut /ExtensionPack"',
     'vscode'
 
   ForEach ($Package in $Packages)
