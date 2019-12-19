@@ -1,8 +1,8 @@
 #!/bin/sh
 
-###
-### Git credentials
-###
+###############################################################################
+# Git                                                                         #
+###############################################################################
 
 GIT_AUTHOR_NAME="Marco Ferrari"
 git config --global user.name "$GIT_AUTHOR_NAME"
@@ -12,3 +12,5 @@ git config --global user.email "$GIT_AUTHOR_EMAIL"
 
 GH_USER="ferrarimarco"
 git config --global github.user "$GH_USER"
+
+git config --global commit.gpgsign false
