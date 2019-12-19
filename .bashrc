@@ -116,7 +116,7 @@ fi;
 complete -W "NSGlobalDomain" defaults;
 
 # source kubectl bash completion
-if hash kubectl 2>/dev/null; then
+if command -v kubectl &> /dev/null; then
 	# shellcheck source=/dev/null
 	. <(kubectl completion bash)
 fi
