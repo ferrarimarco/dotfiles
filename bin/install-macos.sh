@@ -288,7 +288,7 @@ update_brew() {
 		esac
 	done
 
-	brew upgrade $BUILD_FROM_SOURCE_SWITCH
+	brew upgrade "$BUILD_FROM_SOURCE_SWITCH"
 
 	# Check if we need to patch homebrew (if it was updated)
 	patch_brew
