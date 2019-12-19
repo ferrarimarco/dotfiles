@@ -220,6 +220,15 @@ setup_macos(){
 	"/System/Library/CoreServices/Menu Extras/Clock.menu" \
 	"/System/Library/CoreServices/Menu Extras/Volume.menu"
 
+	# Ensure we're using a digital clock
+	defaults write com.apple.menuextra.clock IsAnalog -bool false
+
+	# Show date and time in the menu bar
+	defaults write com.apple.menuextra.clock "DateFormat" "EEE d MMM HH:mm:ss"
+
+	# Don't flash time and date separators
+	defaults write com.apple.menuextra.clock FlashDateSeparators -bool false
+
 	###############################################################################
 	# Adobe stuff                                                                 #
 	###############################################################################
