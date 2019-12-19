@@ -63,7 +63,7 @@ install_brew_formulae() {
 
 	# Source .functions to access the brew-install-recursive-build-from-source function
 	# shellcheck source=/dev/null
-	source "${HOME}"/.functions
+	. "${HOME}"/.functions
 
 	for f in \
 		bash \

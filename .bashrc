@@ -12,7 +12,7 @@ esac
 for file in "${HOME}"/.{path,bash_prompt,aliases,functions,extra,exports}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
 		# shellcheck source=/dev/null
-		source "$file"
+		. "$file"
 	fi
 done
 unset file
