@@ -163,6 +163,7 @@
 #[remote "origin"]
 	#fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
 
+# Values set from my defaults in the .extra file
 [commit]
 	gpgsign = false
 [user]
