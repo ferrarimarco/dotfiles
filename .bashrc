@@ -109,8 +109,9 @@ fi
 if command -v brew &> /dev/null; then
 	BREW_PREFIX="$(brew --prefix)"
 
-	BASH_COMPLETION_PATH="$BREW_PREFIX"/etc/bash_completion
+	BASH_COMPLETION_PATH="$BREW_PREFIX"/etc/profile.d/bash_completion.sh
 	if [ -f "$BASH_COMPLETION_PATH" ]; then
+		export BASH_COMPLETION_COMPAT_DIR="$BREW_PREFIX"/etc/bash_completion.d
 		# shellcheck source=/dev/null
 		. "$BASH_COMPLETION_PATH";
 	fi
