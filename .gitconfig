@@ -17,7 +17,7 @@
 	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 
 	# Pull in remote changes for the current repository and all its submodules
-	p = !"git pull; git submodule foreach git pull origin master"
+	p = !"git pull --recurse-submodules"
 
 	# Checkout a pull request from origin (of a github repository)
 	pr = !"pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
