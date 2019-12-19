@@ -15,13 +15,13 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 # run Xprofile
-if [ -f ~/.Xprofile ]; then
+if [ -f "$HOME"/.Xprofile ]; then
 	# shellcheck source=/dev/null
-	. ~/.Xprofile
+	. "$HOME"/.Xprofile
 fi
 
 # run Xmodmap
-[ -f ~/.Xmodmap ] && xmodmap ~/.Xmodmap
+[ -f "$HOME"/.Xmodmap ] && xmodmap "$HOME"/.Xmodmap
 
 # allow the root user to run GUI applications
 xhost local:root
