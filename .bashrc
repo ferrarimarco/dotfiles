@@ -123,11 +123,4 @@ if command -v kubectl &> /dev/null; then
 	. <(kubectl completion bash)
 fi
 
-# MOTD
-if command -v sw_vers &> /dev/null; then
-	sw_vers
-fi;
-
-if command -v uname &> /dev/null; then
-	uname -snrvm
-fi;
+. "${HOME}"/.motd
