@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Initialize rbenv if available
+if command -v rbenv &> /dev/null; then
+	eval "$(rbenv init -)"
+fi;

@@ -85,11 +85,6 @@ if command -v brew &> /dev/null; then
 	unset BREW_PREFIX
 fi;
 
-# Initialize rbenv if available
-if command -v rbenv &> /dev/null; then
-	eval "$(rbenv init -)"
-fi;
-
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
 
@@ -123,4 +118,10 @@ if command -v kubectl &> /dev/null; then
 	. <(kubectl completion bash)
 fi
 
-. "${HOME}"/.motd
+for file in "${HOME}"/.{init,motd}; do
+	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
+		# shellcheck source=/dev/null
+		. "$file"
+	fi
+done
+unset file
