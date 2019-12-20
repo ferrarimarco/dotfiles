@@ -92,3 +92,25 @@ alias hosts='sudo nano /etc/hosts'
 
 # untar
 alias untar='tar xvf'
+
+# source docker aliases if docker is installed
+if command -v docker &> /dev/null; then
+	# shellcheck source=/dev/null
+	. "${HOME}"/.dockerfunc
+fi;
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+	# shellcheck disable=SC2015
+	test -r "$HOME"/.dircolors && eval "$(dircolors -b "$HOME"/.dircolors)" || eval "$(dircolors -b)"
+	alias ls='ls --color=auto'
+	alias dir='dir --color=auto'
+	alias vdir='vdir --color=auto'
+
+	alias grep='grep --color=auto'
+	alias fgrep='fgrep --color=auto'
+	alias egrep='egrep --color=auto'
+fi
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && export LESSOPEN="|lesspipe %s"
