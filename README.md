@@ -33,7 +33,7 @@ To avoid repetitions, the customizations are categorized considering the type of
 
 [This shell script](bin/install-linux.sh) sets up linux systems the way I like. After installing the dotfiles, run it with no args to see what it does:
 
-```bash
+```shell
 install-linux.sh
 ```
 
@@ -41,7 +41,7 @@ install-linux.sh
 
 [This shell script](bin/install-macos.sh) sets up macOS systems the way I like. After installing the dotfiles, run it with no args to see what it does:
 
-```bash
+```shell
 install-macos.sh
 ```
 
@@ -52,13 +52,13 @@ of the Homebrew Cellar path.
 
 To install Homebrew run:
 
-```bash
+```shell
 install-macos.sh homebrew
 ```
 
 Then you can install the predefined formulae by running:
 
-```bash
+```shell
 install-macos.sh homebrew-formulae
 ```
 
