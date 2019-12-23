@@ -23,8 +23,8 @@ Write your values in the [`.extra`](.extra) file.
 
 To avoid repetitions, the customizations are categorized considering the type of shell they are applicable to. All the customizations are in the [`.shells`](.shells) directory:
 
-- The [`.bash`](.shells/.bash) directory contains scripts for Bash.
-- The scripts in the [`.all`](.shells/.all) directory are executed by all the shells.
+- The [`.bash`](.shells/.bash/) directory contains scripts for Bash.
+- The scripts in the [`.all`](.shells/.all/) directory are executed by all the shells.
 
 ### Binaries
 
