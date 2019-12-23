@@ -23,6 +23,13 @@ If you want to use the executables installed by Homebrew instead of the ones bun
 
 ## Contents
 
+### Shell customizations
+
+To avoid repetitions, the customizations are categorized considering the type of shell they are applicable to:
+
+- The [`.bash`](.bash) directory contains scripts for Bash.
+- The scripts in the [`.shell`](.shell) directory are executed by all the shells.
+
 ### Binaries
 
 #### install-linux.sh

@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 # Bash wrappers for docker run commands
 
 export DOCKER_REPO_PREFIX=ferrarimarco
