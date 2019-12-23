@@ -75,9 +75,12 @@ if tput setaf 1 &> /dev/null; then
 else
 	bold='';
 	reset="\e[0m";
+	# shellcheck disable=SC2034  # Unused variables left for future use
 	black="\e[1;30m";
+	# shellcheck disable=SC2034  # Unused variables left for future use
 	blue="\e[1;34m";
 	cyan="\e[1;36m";
+	# shellcheck disable=SC2034  # Unused variables left for future use
 	green="\e[1;32m";
 	orange="\e[1;33m";
 	purple="\e[1;35m";
