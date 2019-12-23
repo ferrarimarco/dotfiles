@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Make vim the default editor
+# Set the default editor
 export EDITOR=/usr/bin/nano;
 export TERMINAL="urxvt";
 export VISUAL=$EDITOR
