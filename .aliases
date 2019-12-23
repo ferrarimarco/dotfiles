@@ -30,11 +30,11 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd $HOME" # `cd` is probably faster to type though
+alias ~='cd $HOME' # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Shortcuts
-alias dl="cd $HOME/Downloads"
+alias dl='cd $HOME/Downloads'
 alias g="git"
 alias h="history"
 alias gc="git commit -v "
