@@ -4,5 +4,8 @@
 # sequence, which means this file suddenly has to cater for two different
 # shells.
 
+# shellcheck source=/dev/null
 . "$HOME"/.shells/.sh/environment.sh
+
+# shellcheck source=/dev/null
 . "$HOME"/.shells/.sh/login.sh
