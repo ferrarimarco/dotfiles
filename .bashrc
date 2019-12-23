@@ -10,7 +10,7 @@ case $- in
 	*) return;;
 esac
 
-for file in "${HOME}"/.{path,bash_prompt,aliases,functions,extra,exports}; do
+for file in "${HOME}"/.{path,bash_prompt,aliases,functions,extra}; do
 	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
 		# shellcheck source=/dev/null
 		. "$file"
