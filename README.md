@@ -17,10 +17,6 @@ To install these dotfiles:
 
 Write your values in the [`.extra`](.extra) file.
 
-#### Path
-
-If you want to use the executables installed by Homebrew instead of the ones bundled with macOS, uncomment the relevant lines in [`.path`](.path).
-
 ## Contents
 
 ### Shell customizations
@@ -64,6 +60,10 @@ Then you can install the predefined formulae by running:
 ```bash
 install-macos.sh homebrew-formulae
 ```
+
+##### Path
+
+If you want to use the executables installed by Homebrew instead of the ones bundled with macOS, uncomment the relevant lines in [`.path`](.path).
 
 ## Development
 
