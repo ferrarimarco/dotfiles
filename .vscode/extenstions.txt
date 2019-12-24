@@ -1,0 +1,7 @@
+davidanson.vscode-markdownlint
+editorconfig.editorconfig
+mauve.terraform
+ms-azuretools.vscode-docker
+ms-python.python
+ms-vscode.powershell
+wholroyd.jinja
