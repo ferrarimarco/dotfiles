@@ -30,7 +30,7 @@ function Install-Packages
 
 function Install-VSCode-Extensions
 {
-  Get-Content ..\.vscode\extenstions.txt | ForEach-Object {
+  Get-Content ..\.config\Code\extenstions.txt | ForEach-Object {
     code --install-extension $_
   }
 }
