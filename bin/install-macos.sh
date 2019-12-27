@@ -126,7 +126,7 @@ install_brew_formulae() {
 	brew cleanup
 
 	echo "Setting up Visual Studio Code settings"
-	local _vs_code_settings_dir=""$HOME"/Library/Application Support/Code/User"
+	local _vs_code_settings_dir="$HOME"/Library/Application\ Support/Code/User
 	local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
 	ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
 	unset _vs_code_settings_path
@@ -277,7 +277,6 @@ setup_macos(){
 update_brew() {
 	echo "Upgrading brew and formulae"
 
-	BUILD_FROM_SOURCE_SWITCH=
 	while true; do
 		read -r -p "Build from source? (y/n) "  yn
 		case $yn in
