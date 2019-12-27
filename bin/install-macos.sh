@@ -126,13 +126,9 @@ install_brew_formulae() {
 	brew cleanup
 
 	echo "Setting up Visual Studio Code settings"
-	local _vs_code_settings_dir = "$HOME"/Library/Application Support/Code/User
-	local _vs_code_settings_path = "$vs_code_settings_dir"/settings.json
-	mkdir -p _vs_code_settings_dir
-	if [ ! -f "$vs_code_settings_path" ]; then
-		ln -sfn "$HOME"/.config/Code/User/settings.json "$vs_code_settings_path"
-	fi
-	unset _vs_code_settings_dir
+	local _vs_code_settings_dir=""$HOME"/Library/Application Support/Code/User"
+	local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
+	ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
 	unset _vs_code_settings_path
 }
 

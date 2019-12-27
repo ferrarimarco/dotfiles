@@ -1,0 +1,16 @@
+{
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "explorer.confirmDelete": false,
+    "workbench.startupEditor": "newUntitledFile",
+    "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "all",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "python.jediEnabled": false,
+    "html.format.indentInnerHtml": true,
+    "html.format.indentHandlebars": true,
+    "files.associations": {
+        "Vagrantfile": "ruby"
+    }
+}
