@@ -124,6 +124,16 @@ install_brew_formulae() {
 
 	echo "Removing outdated versions from the cellar."
 	brew cleanup
+
+	echo "Setting up Visual Studio Code settings"
+	local _vs_code_settings_dir = "$HOME"/Library/Application Support/Code/User
+	local _vs_code_settings_path = "$vs_code_settings_dir"/settings.json
+	mkdir -p _vs_code_settings_dir
+	if [ ! -f "$vs_code_settings_path" ]; then
+		ln -sfn "$HOME"/.config/Code/User/settings.json "$vs_code_settings_path"
+	fi
+	unset _vs_code_settings_dir
+	unset _vs_code_settings_path
 }
 
 patch_brew(){
@@ -278,17 +288,17 @@ setup_macos(){
 }
 
 update_brew() {
+	echo "Upgrading brew and formulae"
+
 	BUILD_FROM_SOURCE_SWITCH=
 	while true; do
 		read -r -p "Build from source? (y/n) "  yn
 		case $yn in
-			[Yy]* ) BUILD_FROM_SOURCE_SWITCH="--build-from-source"; break;;
-			[Nn]* ) BUILD_FROM_SOURCE_SWITCH=; break;;
+			[Yy]* ) brew upgrade --build-from-source; break;;
+			[Nn]* ) brew upgrade; break;;
 			* ) echo "Please answer yes or no.";;
 		esac
 	done
-
-	brew upgrade "$BUILD_FROM_SOURCE_SWITCH"
 
 	# Check if we need to patch homebrew (if it was updated)
 	patch_brew
