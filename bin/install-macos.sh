@@ -31,10 +31,10 @@ install_brew() {
 		fi
 
 		# Create dirs
-		echo "Initializing Homebrew Cellar path: ${HOMEBREW_CELLAR}, Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
+		echo "Initializing Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
 
 		HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
-		sudo install -d -o "$(whoami)" "${HOMEBREW_CELLAR}" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
+		sudo install -d -o "$(whoami)" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
 
 		# Download and install Homebrew
 		echo "Installing Homebrew"
@@ -130,16 +130,7 @@ install_brew_formulae() {
 	local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
 	ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
 	unset _vs_code_settings_path
-}
-
-patch_brew(){
-	cd "$HOMEBREW_REPOSITORY" || exit
-	if ! patch -R -p0 -s -f --dry-run < "$DOTFILES_LIB_PATH"/homebrew-cellar.patch >/dev/null 2>&1; then
-		echo "Patching Homebrew (in $HOMEBREW_REPOSITORY) to let users set the Cellar path (currently set to: $HOMEBREW_CELLAR)"
-		patch -p0 < "$DOTFILES_LIB_PATH"/homebrew-cellar.patch
-	else
-		echo "Homebrew (in $HOMEBREW_REPOSITORY) is already patched to allow a customized Cellar path"
-	fi
+	unset _vs_code_settings_dir
 }
 
 setup_macos(){
@@ -296,9 +287,6 @@ update_brew() {
 		esac
 	done
 
-	# Check if we need to patch homebrew (if it was updated)
-	patch_brew
-
 	brew cleanup -s
 
 	brew doctor
@@ -330,10 +318,8 @@ main() {
 
 	if [[ $cmd == "homebrew" ]]; then
 		install_brew
-		patch_brew
 	elif [[ $cmd == "homebrew-formulae" ]]; then
 		install_brew
-		patch_brew
 		install_brew_formulae
 	elif [[ $cmd == "macos" ]]; then
 		setup_macos

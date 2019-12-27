@@ -6,7 +6,6 @@ export GOPATH="${HOME}/.go"
 # update path
 export PATH=/usr/local/bin:${PATH}:/sbin
 export PATH=$HOME/bin:$PATH
-export DOTFILES_LIB_PATH="$HOME"/.dotfiles-lib
 
 # add go path
 export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
@@ -14,10 +13,8 @@ export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
 # setup homebrew environment
 export HOMEBREW_REPOSITORY=/usr/local/Homebrew
 export HOMEBREW_PATH=/usr/local/brew
-export HOMEBREW_CELLAR=/usr/local/Cellar
 export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
-
-export LD_LIBRARY_PATH=/"${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
 export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
 export HOMEBREW_NO_ANALYTICS=1
 

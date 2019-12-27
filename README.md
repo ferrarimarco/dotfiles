@@ -47,9 +47,6 @@ install-macos.sh
 
 #### Homebrew
 
-The provided [maintenance binaries](bin/install-macos.sh) patch [Homebrew](https://brew.sh) on the first installation (and after every upgrade) to allow the personalization
-of the Homebrew Cellar path.
-
 To install Homebrew run:
 
 ```shell
