@@ -280,8 +280,8 @@ update_brew() {
 	while true; do
 		read -r -p "Build from source? (y/n) "  yn
 		case $yn in
-			[Yy]* ) brew upgrade --build-from-source; break;;
-			[Nn]* ) brew upgrade; break;;
+			[Yy]* ) brew update --build-from-source; brew upgrade --build-from-source; break;;
+			[Nn]* ) brew update --build-from-source; brew upgrade; break;;
 			* ) echo "Please answer yes or no.";;
 		esac
 	done
