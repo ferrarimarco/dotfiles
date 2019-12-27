@@ -24,8 +24,7 @@ dotfiles:
 		mkdir -p $$(dirname $$file_path); \
 		ln -sfn $$file $$file_path; \
 	done; \
-	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
-	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
+	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
 
 .PHONY: test
 test: psscriptanalyzer shellcheck
