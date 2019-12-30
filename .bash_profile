@@ -2,6 +2,16 @@
 
 # ~/.bash_profile: executed by bash(1) for login shells.
 
+# Ensure $HOME/.shells/.bash/environment.sh gets run first
+# shellcheck source=/dev/null
+. "$HOME"/.shells/.bash/environment.sh
+
+# Prevent it from being run later, since we need to use $BASH_ENV for
+# non-login non-interactive shells.
+# We don't export it, as we may have a non-login non-interactive shell as
+# a child.
+BASH_ENV=
+
 # shellcheck source=/dev/null
 . "$HOME"/.shells/.bash/login.sh
 

@@ -13,4 +13,7 @@
 # however, we assume that #2 is a recovery mode, so we don't want to do much.
 
 # shellcheck source=/dev/null
+. "$HOME"/.shells/.bash/environment.sh
+
+# shellcheck source=/dev/null
 . "$HOME"/.shells/.bash/interactive.sh
