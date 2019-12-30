@@ -1,25 +1,31 @@
 #!/usr/bin/env sh
 
-for file in "${HOME}"/.{path,aliases,functions,extra}; do
-	if [[ -r "$file" ]] && [[ -f "$file" ]]; then
-		# shellcheck source=/dev/null
-		. "$file"
-	fi
-done
-unset file
+# shellcheck source=/dev/null
+FILE="${HOME}"/.path && test -f "$FILE" && . "$FILE"
+
+# shellcheck source=/dev/null
+FILE="${HOME}"/.aliases && test -f "$FILE" && . "$FILE"
+
+# shellcheck source=/dev/null
+FILE="${HOME}"/.functions && test -f "$FILE" && . "$FILE"
+
+# shellcheck source=/dev/null
+FILE="${HOME}"/.extra && test -f "$FILE" && . "$FILE"
+
+unset FILE
 
 # Initialize rbenv if available
-if command -v rbenv &> /dev/null; then
+if command -v rbenv > /dev/null 2>&1; then
 	eval "$(rbenv init -)"
 fi;
 
 ###############################################################################
 # MOTD                                                                        #
 ###############################################################################
-if command -v sw_vers &> /dev/null; then
+if command -v sw_vers > /dev/null 2>&1; then
 	sw_vers
 fi;
 
-if command -v uname &> /dev/null; then
+if command -v uname > /dev/null 2>&1; then
 	uname -snrvm
 fi;
