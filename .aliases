@@ -97,13 +97,13 @@ alias untar='tar xvf'
 if [ -x /usr/bin/dircolors ]; then
 	# shellcheck disable=SC2015
 	test -r "$HOME"/.dircolors && eval "$(dircolors -b "$HOME"/.dircolors)" || eval "$(dircolors -b)"
-	alias ls='ls --color=auto'
-	alias dir='dir --color=auto'
-	alias vdir='vdir --color=auto'
+	command -v ls > /dev/null || alias ls='ls --color=auto'
+	command -v dir > /dev/null || alias dir='dir --color=auto'
+	command -v vdir > /dev/null || alias vdir='vdir --color=auto'
 
-	alias grep='grep --color=auto'
-	alias fgrep='fgrep --color=auto'
-	alias egrep='egrep --color=auto'
+	command -v grep > /dev/null || alias grep='grep --color=auto'
+	command -v fgrep > /dev/null || alias fgrep='fgrep --color=auto'
+	command -v sha1sum > /dev/null || alias egrep='egrep --color=auto'
 fi
 
 # make less more friendly for non-text input files, see lesspipe(1)
