@@ -71,7 +71,8 @@ If you want to use the executables installed by Homebrew instead of the ones bun
 
 ## Thanks
 
-- [Jessie Frazelle](https://blog.jessfraz.com/) for her awesome [.dotfiles](https://github.com/jessfraz/dotfiles) and [dockerfiles](https://github.com/jessfraz/dockerfiles) repos.
-- [Kevin Suttle](https://github.com/kevinSuttle) for his [dotfiles](https://github.com/kevinSuttle/dotfiles)
-- [Mathias Bynens](https://mathiasbynens.be/) for his [dotfiles](https://github.com/mathiasbynens/dotfiles)
-- [Nicolas Gallagher](https://github.com/necolas) for his [dotfiles](https://github.com/necolas/dotfiles)
+- [Jessie Frazelle](https://github.com/jessfraz/dotfiles).
+- [Kevin Suttle](https://github.com/kevinSuttle/dotfiles).
+- [Mathias Bynens](https://github.com/mathiasbynens/dotfiles).
+- [Nicolas Gallagher](https://github.com/necolas/dotfiles).
+- [Peter Ward](https://bitbucket.org/flowblok/shell-startup).
