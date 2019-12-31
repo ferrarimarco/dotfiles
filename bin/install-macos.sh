@@ -78,10 +78,12 @@ install_brew_formulae() {
 		nano \
 		p7zip \
 		rbenv \
+		shellcheck \
 		terraform \
 		tree \
 		vagrant \
-		wget
+		wget \
+		zsh
 	do
 		if ! brew ls --versions "$f" > /dev/null; then
 			echo "Installing $f"
@@ -113,20 +115,32 @@ install_brew_formulae() {
 
 	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells;
 	then
-		echo "Switching to using brew-installed bash as default shell"
+		echo "Add bash installed via brew to the list of allowed shells"
 		echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
-		chsh -s "${BREW_PREFIX}/bin/bash";
+	fi
+
+	if ! grep -Fq "${BREW_PREFIX}/bin/zsh" /etc/shells;
+	then
+		echo "Add zsh installed via brew to the list of allowed shells"
+		echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells;
+
+		echo "Changing default shell to zsh"
+		chsh -s "${BREW_PREFIX}/bin/zsh";
 	fi
 
 	echo "Removing outdated versions from the cellar."
 	brew cleanup
 
-	echo "Setting up Visual Studio Code settings"
+	echo "Setting up Visual Studio Code"
 	local _vs_code_settings_dir="$HOME"/Library/Application\ Support/Code/User
 	local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
 	ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
 	unset _vs_code_settings_path
 	unset _vs_code_settings_dir
+
+	while IFS= read -r line; do
+		code --install-extension "$line"
+	done < "$HOME"/.config/Code/extensions.txt
 }
 
 setup_macos(){
@@ -270,14 +284,23 @@ setup_macos(){
 	echo "Done. Note that some of these changes require a logout/restart to take effect."
 }
 
+setup_shell() {
+	# Download ZSH themes
+	CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
+	rm -rf "$CURRENT_ZSH_THEME_DIR"
+	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
+	unset CURRENT_ZSH_THEME_DIR
+}
+
 update_brew() {
 	echo "Upgrading brew and formulae"
+    brew update
 
 	while true; do
-		read -r -p "Build from source? (y/n) "  yn
+		read -r -p "Build homebrew upgrades from source? (y/n) "  yn
 		case $yn in
-			[Yy]* ) brew update --build-from-source; brew upgrade --build-from-source; break;;
-			[Nn]* ) brew update --build-from-source; brew upgrade; break;;
+			[Yy]* ) brew upgrade --build-from-source; break;;
+			[Nn]* ) brew upgrade; break;;
 			* ) echo "Please answer yes or no.";;
 		esac
 	done
@@ -318,8 +341,10 @@ main() {
 		install_brew_formulae
 	elif [[ $cmd == "macos" ]]; then
 		setup_macos
+		setup_shell
 	elif [[ $cmd == "update" ]]; then
 		update_system
+		setup_shell
 	fi
 }
 

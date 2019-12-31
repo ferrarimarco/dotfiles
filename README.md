@@ -25,6 +25,7 @@ To avoid repetitions, the customizations are categorized considering the type of
 
 - The [`.bash`](.shells/.bash/) directory contains scripts for Bash.
 - The [`.sh`](.shells/.sh/) directory contains scripts for the Bourne shell.
+- The [`.zsh`](.shells/.zsh/) directory contains scripts for the Z shell.
 - The scripts in the [`.all`](.shells/.all/) directory are executed by all the shells.
 
 ### Binaries

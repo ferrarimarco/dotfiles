@@ -5,15 +5,17 @@ export EDITOR=/usr/bin/nano;
 export TERMINAL="urxvt";
 export VISUAL=$EDITOR
 
-# Larger bash history (allow 32³ entries; default is 500)
+# Larger command history
 export HISTSIZE=50000000;
 export HISTFILESIZE=$HISTSIZE;
+export SAVEHIST=$HISTSIZE;
 
 # Omit duplicates and commands that begin with a space from history.
 export HISTCONTROL='ignoreboth';
 
 # Make some commands not show up in history
-export HISTIGNORE="";
+export HISTIGNORE=""; # Bash
+export HISTORY_IGNORE=""; # ZSH
 
 # Prefer US English and use UTF-8
 export LANG="en_US.UTF-8";
@@ -36,3 +38,14 @@ GH_USER="ferrarimarco"
 git config --global github.user "$GH_USER"
 
 git config --global commit.gpgsign false
+
+###############################################################################
+# Shell prompt                                                                #
+###############################################################################
+
+export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
+
+# Don't run the configuration wizard
+export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+
+export ZSH_THEME_CONFIGURATION_PATH="$HOME"/.shells/.zsh/.p10k.zsh

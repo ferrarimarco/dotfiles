@@ -142,3 +142,13 @@ fi
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && export LESSOPEN="|lesspipe %s"
+
+###############################################################################
+# Prompt                                                                      #
+###############################################################################
+
+if case "$COLORTERM" in "gnome-"*) true;; *) false;; esac && [ "$TERM" = "xterm" ] && infocmp gnome-256color >/dev/null 2>&1; then
+	export TERM='gnome-256color';
+elif infocmp xterm-256color >/dev/null 2>&1; then
+	export TERM='xterm-256color';
+fi;

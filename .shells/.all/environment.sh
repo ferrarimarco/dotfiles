@@ -19,6 +19,9 @@ else
     unset GOPATH
 fi
 
+# ZSH related stuff
+export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
+
 # update path
 export PATH=/usr/local/bin:${PATH}:/sbin
 export PATH=$HOME/bin:$PATH
