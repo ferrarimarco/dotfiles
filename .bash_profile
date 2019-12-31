@@ -6,9 +6,9 @@
 # shellcheck source=/dev/null
 . "$HOME"/.shells/.bash/environment.sh
 
-# Prevent it from being run later, since we need to use $BASH_ENV for
-# non-login non-interactive shells.
-# We don't export it, as we may have a non-login non-interactive shell as
+# Prevent it from being run later, since we want to use $BASH_ENV for
+# non-login non-interactive shells only.
+# Don't export it, as we may have a non-login non-interactive shell as
 # a child.
 BASH_ENV=
 

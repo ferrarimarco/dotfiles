@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 
+# Set ENV so that if you use a shell as your login shell,
+# and then start "sh" as a non-login interactive shell the startup scripts will
+# correctly run.
+export ENV="$HOME"/.shells/.all/interactive.sh
+
 ###############################################################################
 # Path                                                                        #
 ###############################################################################
