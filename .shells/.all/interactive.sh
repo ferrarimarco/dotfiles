@@ -1,9 +1,6 @@
 #!/usr/bin/env sh
 
 # shellcheck source=/dev/null
-FILE="${HOME}"/.path && test -f "$FILE" && . "$FILE"
-
-# shellcheck source=/dev/null
 FILE="${HOME}"/.extra && test -f "$FILE" && . "$FILE"
 
 unset FILE

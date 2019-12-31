@@ -59,10 +59,6 @@ Then you can install the predefined formulae by running:
 install-macos.sh homebrew-formulae
 ```
 
-##### Path
-
-If you want to use the executables installed by Homebrew instead of the ones bundled with macOS, uncomment the relevant lines in [`.path`](.path).
-
 ## Development
 
 - `make`: install dotfiles, bins and configuration files
