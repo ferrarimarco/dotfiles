@@ -61,10 +61,6 @@ install_brew_formulae() {
 	# Save Homebrew’s installed location.
 	BREW_PREFIX="$(brew --prefix)"
 
-	# Source .functions to access the brew-install-recursive-build-from-source function
-	# shellcheck source=/dev/null
-	. "${HOME}"/.functions
-
 	for f in \
 		bash \
 		bash-completion \
@@ -92,7 +88,7 @@ install_brew_formulae() {
 			while true; do
 				read -r -p "Build from source? (y/n) "  yn
 				case $yn in
-					[Yy]* ) brew-install-recursive-build-from-source "$f"; break;;
+					[Yy]* ) brew_install_recursive_build_from_source "$f"; break;;
 					[Nn]* ) brew install "$f"; break;;
 					* ) echo "Please answer yes or no.";;
 				esac

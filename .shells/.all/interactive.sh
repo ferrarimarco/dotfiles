@@ -26,12 +26,12 @@ fi;
 ###############################################################################
 
 # shellcheck source=/dev/null
-FILE="${HOME}"/.functions && test -f "$FILE" && . "$FILE"
+FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
 
 # source docker aliases if docker is installed
 if command -v docker > /dev/null 2>&1; then
 	# shellcheck source=/dev/null
-	FILE="${HOME}"/.dockerfunc && test -f "$FILE" && . "$FILE"
+	FILE="${HOME}"/.shells/.all/dockerfunctions.sh && test -f "$FILE" && . "$FILE"
 fi;
 
 # Check for various OS openers. Quit as soon as we find one that works.

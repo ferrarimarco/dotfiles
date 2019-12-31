@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Create a new directory and enter it
 mkd() {
@@ -8,7 +8,7 @@ mkd() {
 
 # If you install brew formulae from source, you may want to install its
 # deps from source as well
-brew-install-recursive-build-from-source() {
+brew_install_recursive_build_from_source() {
 	echo "Installing $* and it's deps from source"
 	brew deps --include-build --include-optional -n  "$@" | while read -r line ; do
 		brew install --build-from-source "$line"
@@ -18,21 +18,22 @@ brew-install-recursive-build-from-source() {
 
 # Make a temporary directory and enter it
 tmpd() {
-	local dir
+	dir=
 	if [ $# -eq 0 ]; then
 		dir=$(mktemp -d)
 	else
 		dir=$(mktemp -d -t "${1}.XXXXXXXXXX")
 	fi
 	cd "$dir" || exit
+	unset dir
 }
 
 # Use Git’s colored diff when available
-if hash git &>/dev/null ; then
+if command -v git > /dev/null 2>&1; then
 	diff() {
 		git diff --no-index --color-words "$@"
 	}
-fi
+fi;
 
 # Get colors in manual pages
 man() {

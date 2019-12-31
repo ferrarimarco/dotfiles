@@ -1,41 +1,31 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-# Bash wrappers for docker run commands
-
-export DOCKER_REPO_PREFIX=ferrarimarco
+# Wrappers for docker run commands
 
 #
 # Helper Functions
 #
-dcleanup(){
-	local containers
-	mapfile -t containers < <(docker ps -aq 2>/dev/null)
-	docker rm "${containers[@]}" 2>/dev/null
-	local volumes
-	mapfile -t volumes < <(docker ps --filter status=exited -q 2>/dev/null)
-	docker rm -v "${volumes[@]}" 2>/dev/null
-	local images
-	mapfile -t images < <(docker images --filter dangling=true -q 2>/dev/null)
-	docker rmi "${images[@]}" 2>/dev/null
-}
+
 del_stopped(){
-	local name=$1
-	local state
+	name=$1
 	state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
 
-	if [[ "$state" == "false" ]]; then
+	if [ "$state" = "false" ]; then
 		docker rm "$name"
 	fi
+	unset state
+	unset name
 }
+
 relies_on(){
 	for container in "$@"; do
-		local state
 		state=$(docker inspect --format "{{.State.Running}}" "$container" 2>/dev/null)
 
-		if [[ "$state" == "false" ]] || [[ "$state" == "" ]]; then
+		if [ "$state" = "false" ] || [ "$state" = "" ]; then
 			echo "$container is not running, starting it for you."
 			$container
 		fi
+		unset state
 	done
 }
 
@@ -47,62 +37,27 @@ ansible(){
 	del_stopped ansible
 
 	docker run \
-  --rm \
-  -it \
-  --net=host \
-	-v /etc/localtime:/etc/localtime:ro \
-  -v "$(pwd)":/etc/ansible \
-  -v "${HOME}"/.ssh:/root/.ssh:ro \
-	--name ansible \
-  ${DOCKER_REPO_PREFIX}/open-development-environment-ansible "$@"
-}
-
-atom(){
-	del_stopped atom
-
-	docker run -d \
-		-v /etc/localtime:/etc/localtime:ro \
-		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-v "${HOME}:/root/host_home" \
-		-v "${HOME}/.atom/config.cson:/root/.atom/config.cson" \
-		-e "DISPLAY=unix${DISPLAY}" \
-		-e "QT_X11_NO_MITSHM=1" \
-		--device /dev/dri \
-		--name atom \
-		${DOCKER_REPO_PREFIX}/atom
-}
-
-bmon(){
-	del_stopped bmon
-
-	docker run -it --rm \
+		--rm \
+		-it \
 		--net=host \
-		--name bmon \
-		${DOCKER_REPO_PREFIX}/bmon
+		-v /etc/localtime:/etc/localtime:ro \
+		-v "$(pwd)":/etc/ansible \
+		-v "${HOME}"/.ssh:/root/.ssh:ro \
+		--name ansible \
+		ferrarimarco/docker-ansible "$@"
 }
 
-changelog-generator(){
+changelog_generator(){
 	del_stopped changelog-generator
 
 	docker run -it --rm \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v "$(pwd)":/usr/local/src/your-app \
 		--name changelog-generator \
-		${DOCKER_REPO_PREFIX}/github-changelog-generator:1.14.3 "$@"
+		ferrarimarco/github-changelog-generator:1.15.0 "$@"
 }
 
-cookiecutter(){
-	del_stopped cookiecutter
-
-	docker run -it --rm \
-		-v /etc/localtime:/etc/localtime:ro \
-		-u "$(id -u)":"$(id -g)" \
-		-v "$(pwd)":/usr/src/app \
-		--name cookiecutter \
-		${DOCKER_REPO_PREFIX}/cookiecutter "$@"
-}
-
-docker-clean(){
+docker_clean(){
 	del_stopped docker-clean
 
 	docker run --rm \
@@ -112,7 +67,7 @@ docker-clean(){
 		zzrot/docker-clean "$@"
 }
 
-dockerfile-lint(){
+dockerfile_lint(){
 	del_stopped hadolint
 	del_stopped dockerlint
 
@@ -153,7 +108,7 @@ liquibase(){
 	docker run --rm \
 		-v /etc/localtime:/etc/localtime:ro \
 		--name liquibase \
-		${DOCKER_REPO_PREFIX}/liquibase "$@"
+		ferrarimarco/liquibase "$@"
 }
 
 maven(){
@@ -164,17 +119,8 @@ maven(){
 		--name changelog-generator \
 		-ti --rm -u "$(id -u)":"$(id -g)" \
 		-e MAVEN_CONFIG=/var/maven/.m2 \
-		maven:3.5.4-jdk-8-alpine \
+		maven \
 		mvn -Duser.home=/var/maven "$@"
-}
-
-nethogs(){
-	del_stopped nethogs
-
-	docker run -it --rm \
-		--net=host \
-		--name nethogs \
-		${DOCKER_REPO_PREFIX}/nethogs
 }
 
 psscriptanalyzer(){
@@ -194,5 +140,5 @@ shellcheck(){
 	docker run --rm -it \
 		--name shellcheck \
 		-v "$(pwd)":/usr/src:ro \
-		${DOCKER_REPO_PREFIX}/shellcheck
+		ferrarimarco/shellcheck
 }
