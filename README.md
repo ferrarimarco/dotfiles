@@ -71,4 +71,4 @@ install-macos.sh homebrew-formulae
 - [Kevin Suttle](https://github.com/kevinSuttle/dotfiles).
 - [Mathias Bynens](https://github.com/mathiasbynens/dotfiles).
 - [Nicolas Gallagher](https://github.com/necolas/dotfiles).
-- [Peter Ward](https://bitbucket.org/flowblok/shell-startup).
+- [Peter Ward](https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html).
