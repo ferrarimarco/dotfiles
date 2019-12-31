@@ -12,7 +12,7 @@ export ENV="$HOME"/.shells/.all/interactive.sh
 # go path
 GOPATH="${HOME}/.go"
 if [ -d "${GOPATH}" ]; then
-    export $GOPATH
+    export GOPATH
     export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
     export CDPATH=${CDPATH}:${GOPATH}/src/github.com:${GOPATH}/src/golang.org:${GOPATH}/src
 else
