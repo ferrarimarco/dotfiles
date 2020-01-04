@@ -17,9 +17,10 @@ function Install-Packages
     'conemu',
     'git',
     'keepass',
-    'notepadplusplus',
+    'potplayer',
     'vagrant',
     'virtualbox --params "/NoDesktopShortcut /ExtensionPack"',
+    'vlc',
     'vscode'
 
   ForEach ($Package in $Packages)
@@ -30,7 +31,7 @@ function Install-Packages
 
 function Install-VSCode-Extensions
 {
-  Get-Content ..\.config\Code\extenstions.txt | ForEach-Object {
+  Get-Content "..\.config\Code\extensions.txt" | ForEach-Object {
     code --install-extension $_
   }
 }
