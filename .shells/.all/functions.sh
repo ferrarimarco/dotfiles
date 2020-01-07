@@ -16,6 +16,26 @@ brew_install_recursive_build_from_source() {
 	brew install --build-from-source "$@"
 }
 
+# find all scripts and run `shellcheck`
+shellcheck_dir() {
+	dir=
+	if [ $# -eq 0 ]; then
+		dir="$(pwd)"
+	else
+		dir="${1}"
+	fi
+	find "$dir" -type f -not -path "*/\\.git/*" | sort -u | while read -r f; do
+		if file "$f" | grep 'shell\| sh' | grep -v 'zsh'; then
+			if shellcheck "$f"; then
+				echo "[OK]: sucessfully linted $f"
+			else
+				echo "[FAIL]: found errors/warnings while linting $f"
+			fi
+		fi
+	done
+	unset dir
+}
+
 # Make a temporary directory and enter it
 tmpd() {
 	dir=
