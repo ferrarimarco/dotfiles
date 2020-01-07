@@ -91,6 +91,12 @@
       # example               # example user-defined segment (see prompt_example function below)
   )
 
+  # display left segments on one line, and print the command prompt below it
+  typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+
+  # display right segments on one line, and print the command prompt below it
+  typeset -g POWERLEVEL9K_RPROMPT_ON_NEWLINE=true
+
   # To disable default icons for all segments, set POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION=''.
   #
   # To enable default icons for all segments, don't define POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION
