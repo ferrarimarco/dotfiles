@@ -12,5 +12,11 @@
     "html.format.indentHandlebars": true,
     "files.associations": {
         "Vagrantfile": "ruby"
-    }
+    },
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.enableBold": true,
+    "terminal.integrated.fontFamily": "MesloLGS NF",
+    "terminal.integrated.fontSize": 12,
+    "terminal.integrated.rightClickCopyPaste": true,
 }
