@@ -64,7 +64,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|
 zstyle ':completion:*' special-dirs true
 
 # If the zsh/complist module is loaded, this style can be used to set color specifications
-zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 
 # Complete kill and ps
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
