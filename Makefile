@@ -49,8 +49,9 @@ psscriptanalyzer:
 .PHONY: shellcheck
 shellcheck:
 	@echo Running shellcheck
-	for file in $(shell find $(CURDIR) -type f -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print | while IFS="" read -r file); do \
+	for file in $(shell find $(CURDIR) -type f -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \;); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
+		echo "Linting $$f"; \
 		docker run --rm -i $(DOCKER_FLAGS) \
 			-v $(CURDIR):/mnt:ro \
 			koalaman/shellcheck:v0.7.0 "$$f"; \
