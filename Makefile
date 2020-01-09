@@ -49,7 +49,7 @@ psscriptanalyzer:
 .PHONY: shellcheck
 shellcheck:
 	@echo Running shellcheck
-	for file in $(shell find $(CURDIR) -type f -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \;); do \
+	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
 		echo "Linting $$f"; \
 		docker run --rm -i $(DOCKER_FLAGS) \
