@@ -54,7 +54,7 @@ shellcheck:
 		echo "Linting $$f"; \
 		docker run --rm -i $(DOCKER_FLAGS) \
 			-v $(CURDIR):/mnt:ro \
-			koalaman/shellcheck:v0.7.0 "$$f"; \
+			koalaman/shellcheck:v0.7.0 "$$f" || exit 1 ; \
 	done;
 
 .PHONY: help
