@@ -49,6 +49,13 @@ psscriptanalyzer:
 .PHONY: shellcheck
 shellcheck:
 	@echo Running shellcheck
+	find $(CURDIR) -type f -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print |
+		while IFS="" read -r file
+		do
+			docker run --rm -i $(DOCKER_FLAGS) \
+				-v $(CURDIR):/mnt:ro \
+				koalaman/shellcheck:v0.7.0 "$file"
+		done
 	docker run --rm -i $(DOCKER_FLAGS) \
 		--name df-shellcheck \
 		-v $(CURDIR):/usr/src:ro \
