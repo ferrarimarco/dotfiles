@@ -50,10 +50,10 @@ psscriptanalyzer:
 shellcheck:
 	@echo Running shellcheck
 	for file in $(shell find $(CURDIR) -type f -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print | while IFS="" read -r file); do \
-		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
+		f=$$(echo $$file | sed "s|^\$(CURDIR)/||");
 		docker run --rm -i $(DOCKER_FLAGS) \
 			-v $(CURDIR):/mnt:ro \
-			koalaman/shellcheck:v0.7.0 "$$f" \
+			koalaman/shellcheck:v0.7.0 "$$f";
 	done;
 
 .PHONY: help
