@@ -19,4 +19,6 @@
     "terminal.integrated.fontFamily": "MesloLGS NF",
     "terminal.integrated.fontSize": 12,
     "terminal.integrated.rightClickCopyPaste": true,
+    "terraform.indexing.enabled": false,
+    "terraform.languageServer.enabled": true
 }
