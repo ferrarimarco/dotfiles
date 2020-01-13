@@ -20,5 +20,6 @@
     "terminal.integrated.fontSize": 12,
     "terminal.integrated.rightClickCopyPaste": true,
     "terraform.indexing.enabled": false,
-    "terraform.languageServer.enabled": true
+    "terraform.languageServer.enabled": true,
+    "explorer.confirmDragAndDrop": false
 }
