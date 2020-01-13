@@ -80,6 +80,7 @@ install_brew_formulae() {
 		rbenv \
 		shellcheck \
 		terraform \
+		tflint \
 		tree \
 		vagrant \
 		wget \
