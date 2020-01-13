@@ -45,6 +45,10 @@ if command -v brew &> /dev/null; then
     typeset -U FPATH fpath
     fpath=("$BREW_PREFIX"/share/zsh/site-functions $fpath)
 
+    ZSH_AUTOSUGGESTIONS_PATH="${BREW_PREFIX}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    [ -f "$ZSH_AUTOSUGGESTIONS_PATH" ] && . "$ZSH_AUTOSUGGESTIONS_PATH"
+    unset ZSH_AUTOSUGGESTIONS_PATH
+
     unset BREW_PREFIX
 fi
 
