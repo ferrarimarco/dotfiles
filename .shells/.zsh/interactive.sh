@@ -193,3 +193,13 @@ bindkey "^[m" copy-prev-shell-word
 
 # Load the theme configuration
 [ -f "$ZSH_THEME_CONFIGURATION_PATH" ] && . "$ZSH_THEME_CONFIGURATION_PATH"
+
+[ -f "$ZSH_THEME_CONFIGURATION_PATH" ] && . "$ZSH_THEME_CONFIGURATION_PATH"
+
+if command -v brew &> /dev/null; then
+    BREW_PREFIX="$(brew --prefix)"
+    ZSH_SYNTAX_HIGHLIGHTING_PATH="${BREW_PREFIX}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    [ -f "$ZSH_SYNTAX_HIGHLIGHTING_PATH" ] && . "$ZSH_SYNTAX_HIGHLIGHTING_PATH"
+    unset ZSH_SYNTAX_HIGHLIGHTING_PATH
+    unset BREW_PREFIX
+fi

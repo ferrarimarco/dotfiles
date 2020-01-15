@@ -85,7 +85,8 @@ install_brew_formulae() {
 		vagrant \
 		wget \
 		zsh \
-		zsh-autosuggestions
+		zsh-autosuggestions \
+		zsh-syntax-highlighting
 	do
 		if ! brew ls --versions "$f" > /dev/null; then
 			echo "Installing $f"
