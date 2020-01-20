@@ -36,7 +36,15 @@ function Install-VSCode-Extensions
   }
 }
 
+function Install-WSL
+{
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
+    Add-AppxPackage .\Ubuntu.appx
+}
+
 Install-Chocolatey
 choco upgrade -y all
 Install-Packages
 Install-VSCode-Extensions
+Install-WSL
