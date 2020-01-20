@@ -105,6 +105,7 @@ install_brew_formulae() {
 
 	for f in \
 		google-cloud-sdk \
+		iterm2 \
 		virtualbox \
 		visual-studio-code
 	do
