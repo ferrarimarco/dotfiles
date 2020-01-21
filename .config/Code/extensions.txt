@@ -4,5 +4,6 @@ mauve.terraform
 ms-azuretools.vscode-docker
 ms-python.python
 ms-vscode.powershell
+ms-vscode-remote.remote-wsl
 timonwong.shellcheck
 wholroyd.jinja
