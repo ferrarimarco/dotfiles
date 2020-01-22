@@ -25,6 +25,9 @@
 	# Clone a repository including all submodules
 	c = clone --recursive
 
+	# Add in patch mode
+	ap = add --patch
+
 	# Commit all changes
 	ca = !git add -A && git commit -av
 
