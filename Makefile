@@ -1,7 +1,7 @@
 # Inspired by https://github.com/jessfraz/dotfiles
 
 .PHONY: all
-all: bin dotfiles ## Installs the bin and etc directory files and the dotfiles.
+all: bin dotfiles githooks ## Installs bins, dotfiles and git hooks.
 
 .PHONY: bin
 bin:
@@ -25,6 +25,16 @@ dotfiles:
 		ln -sfn $$file $$file_path; \
 	done; \
 	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
+
+githooks:
+	@echo Installing Git hooks
+	mkdir -p $(HOME)/git-hooks;
+
+	# add aliases for things in git-hooks
+	for file in $(shell find $(CURDIR)/git-hooks -type f -not -name ".*.swp"); do \
+		f=$$(basename $$file); \
+		ln -sf $$file $(HOME)/git-hooks/$$f; \
+	done;
 
 .PHONY: test
 test: shellcheck psscriptanalyzer
