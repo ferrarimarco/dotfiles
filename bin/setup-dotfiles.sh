@@ -471,9 +471,17 @@ update_brew() {
 	brew missing
 }
 
-update_macos_system() {
-	sudo softwareupdate -ia
-	update_brew
+update_system() {
+    local os_name;
+    os_name="$(uname -s)";
+    if test "${os_name#*"Darwin"}" != "$os_name"; then
+        echo "Updating macOS"
+        sudo softwareupdate -ia
+        update_brew
+    elif test "${os_name#*"Linux"}" != "$os_name"; then
+        echo "Updating linux"
+    fi
+    unset os_name;
 }
 
 usage() {
