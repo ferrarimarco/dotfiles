@@ -30,35 +30,13 @@ To avoid repetitions, the customizations are categorized considering the type of
 
 ### Binaries
 
-#### install-linux.sh
+#### setup.sh
 
-[This shell script](bin/install-linux.sh) sets up linux systems the way I like. After installing the dotfiles, run it with no args to see what it does:
+[`setup.sh`](bin/setup.sh) sets up linux and macOS systems the way I like. Run it with no args to see what it does.
 
-```shell
-install-linux.sh
-```
+#### install-windows.ps1
 
-#### install-macos.sh
-
-[This shell script](bin/install-macos.sh) sets up macOS systems the way I like. After installing the dotfiles, run it with no args to see what it does:
-
-```shell
-install-macos.sh
-```
-
-#### Homebrew
-
-To install Homebrew run:
-
-```shell
-install-macos.sh homebrew
-```
-
-Then you can install the predefined formulae by running:
-
-```shell
-install-macos.sh homebrew-formulae
-```
+[`install-windows.ps1`](bin/install-windows.ps1) sets up Windows systems the way I like.
 
 ## Development
 

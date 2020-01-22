@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 
+set -e
+set -o pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
 ask_for_sudo() {
-    echo "Prompting for sudo password..."
-    if sudo --validate; then
-        # Keep-alive
-        while true; do sudo --non-interactive true; \
-            sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-        echo "Sudo credentials updated."
-    else
-        echo "Obtaining sudo credentials failed."
-        exit 1
-    fi
+	echo "Prompting for sudo password..."
+	if sudo -v; then
+		# Keep-alive
+		while true; do sudo -n true; \
+			sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+		echo "Sudo credentials updated."
+	else
+		echo "Obtaining sudo credentials failed."
+		exit 1
+	fi
+}
+
+# Choose a user account to use for this installation
+get_user() {
+	TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
 }
 
 install_brew() {
@@ -145,6 +155,152 @@ install_brew_formulae() {
 	while IFS= read -r line; do
 		code --install-extension "$line"
 	done < "$HOME"/.config/Code/extensions.txt
+}
+
+install_npm() {
+	npm install \
+		@google/clasp -g
+}
+
+install_rubygems() {
+	gem install \
+		bundler
+}
+
+setup_docker(){
+	if command -v docker >/dev/null 2>&1 ; then
+		echo "Docker is already installed"
+	else
+		curl -sSL https://get.docker.com | sh
+
+		# create docker group
+		getent group docker >/dev/null 2>&1 || groupadd docker
+		gpasswd -a "$TARGET_USER" docker
+	fi
+
+	if command -v docker-compose >/dev/null 2>&1 ; then
+		echo "Docker Compose is already installed"
+	else
+		docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" |  grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
+		curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
+		chmod a+x /usr/local/bin/docker-compose
+	fi
+}
+
+# setup sudo for a user
+setup_sudo() {
+	# add user to sudoers
+	adduser "$TARGET_USER" sudo
+
+	# add user to systemd groups
+	# then you wont need sudo to view logs
+	if [ "$(getent group systemd-journal)" ]; then
+		gpasswd -a "$TARGET_USER" systemd-journal
+	fi
+
+	if [ "$(getent group systemd-journal)" ]; then
+		gpasswd -a "$TARGET_USER" systemd-network
+	fi
+}
+
+setup_user() {
+	mkdir -p "$HOME/Downloads"
+	mkdir -p "$HOME/Pictures/Screenshots"
+	mkdir -p "$HOME/Pictures/Wallpapers"
+	mkdir -p "$HOME/Pictures/workspaces"
+
+	# enable dbus for the user session
+	systemctl --user enable dbus.socket
+}
+
+setup_debian() {
+	apt-get update || true
+	apt-get install -y \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		dirmngr \
+		gnupg2 \
+		lsb-release \
+		software-properties-common \
+		--no-install-recommends
+
+	add-apt-repository main
+
+	if case $(lsb_release -d | awk -F"\t" '{print $2}') in Ubuntu*) true;; *) false;; esac; then
+		add-apt-repository universe
+		add-apt-repository multiverse
+		add-apt-repository restricted
+	fi
+
+	# Add the Google Chrome distribution URI as a package source if needed
+	if ! [ -d "/opt/google/cros-containers" ]; then
+		echo "Installing Chrome browser..."
+		curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
+		apt install -y ./google-chrome-stable_current_amd64.deb
+		rm ./google-chrome-stable_current_amd64.deb
+		apt-get install -f
+	fi
+
+	apt-get update || true
+	apt-get -y upgrade
+
+	apt-get install -y \
+		adduser \
+		alsa-utils \
+		apparmor \
+		automake \
+		bash-completion \
+		bc \
+		bridge-utils \
+		bzip2 \
+		coreutils \
+		dbus-user-session \
+		dnsutils \
+		file \
+		findutils \
+		fwupd \
+		fwupdate \
+		gcc \
+		git \
+		glogg \
+		gnupg \
+		gnupg-agent \
+		grep \
+		gzip \
+		hostname \
+		imagemagick \
+		iptables \
+		jmeter \
+		less \
+		libc6-dev \
+		libpam-systemd \
+		locales \
+		lsof \
+		make \
+		mount \
+		nano \
+		net-tools \
+		pinentry-curses \
+		rxvt-unicode \
+		scdaemon \
+		ssh \
+		strace \
+		sudo \
+		systemd \
+		tar \
+		tree \
+		tzdata \
+		unzip \
+		xclip \
+		xcompmgr \
+		xz-utils \
+		zip \
+		--no-install-recommends
+
+	apt-get autoremove
+	apt-get autoclean
+	apt-get clean
 }
 
 setup_macos(){
@@ -298,7 +454,7 @@ setup_shell() {
 
 update_brew() {
 	echo "Upgrading brew and formulae"
-    brew update
+	brew update
 
 	while true; do
 		read -r -p "Build homebrew upgrades from source? (y/n) "  yn
@@ -315,17 +471,24 @@ update_brew() {
 	brew missing
 }
 
-update_system() {
+update_macos_system() {
 	sudo softwareupdate -ia
 	update_brew
 }
 
 usage() {
-		echo -e "install-macos.sh\\n\\tThis script installs my basic setup for a MacOS workstation\\n"
-		echo "  homebrew                            - install Homebrew"
-		echo "  homebrew-formulae                   - install Homebrew formulae"
-		echo "  macos                               - setup macOS"
-		echo "  update                              - update the system"
+  echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
+  echo "Usage:"
+  echo "  base                                - setup sudo and user"
+  echo "  debian                              - install base packages on a Debian system"
+  echo "  docker                              - install docker"
+  echo "  homebrew                            - install Homebrew"
+  echo "  homebrew-formulae                   - install Homebrew formulae"
+  echo "  macos                               - setup macOS"
+  echo "  npm                                 - install npm packages"
+  echo "  rubygems                            - install Ruby gems"
+  echo "  update                              - update the system"
+  echo "  user                                - setup user"
 }
 
 main() {
@@ -338,7 +501,16 @@ main() {
 
 	ask_for_sudo
 
-	if [[ $cmd == "homebrew" ]]; then
+	if [[ $cmd == "base" ]]; then
+		get_user
+		setup_sudo
+	elif [[ $cmd == "debian" ]]; then
+		get_user
+		setup_debian
+	elif [[ $cmd == "docker" ]]; then
+		get_user
+		setup_docker
+	elif [[ $cmd == "homebrew" ]]; then
 		install_brew
 	elif [[ $cmd == "homebrew-formulae" ]]; then
 		install_brew
@@ -346,9 +518,18 @@ main() {
 	elif [[ $cmd == "macos" ]]; then
 		setup_macos
 		setup_shell
+	elif [[ $cmd == "npm" ]]; then
+		install_npm
+	elif [[ $cmd == "rubygems" ]]; then
+		install_rubygems
+	elif [[ $cmd == "user" ]]; then
+		get_user
+		setup_user
 	elif [[ $cmd == "update" ]]; then
 		update_system
 		setup_shell
+	else
+		usage
 	fi
 }
 
