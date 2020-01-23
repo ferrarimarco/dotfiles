@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+
+echo "Running pre-commit hook"
+
+# Check if this is the initial commit
+if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    AGAINST=HEAD
+else
+    # Get the hash of the empty-tree commit
+    AGAINST="$(git hash-object -t tree --stdin < /dev/null)"
+fi
+
+CHANGED_FILES="$(git diff-index --cached --name-only "$AGAINST")"
+
+EXIT_CODE=0
+
+echo "pre-commit: Testing for whitespace errors..."
+if ! git diff-index --check --cached "$AGAINST"; then
+    echo "pre-commit: Aborting commit due to whitespace errors"
+    exit 1
+else
+    echo "pre-commit: No whitespace errors"
+fi
+
+echo "pre-commit: Running shellsheck..."
+for CHANGED_FILE in $CHANGED_FILES; do
+    if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
+        if shellcheck "$CHANGED_FILE"; then
+            echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
+        else
+            EXIT_CODE=$?
+            echo "pre-commit: shellcheck on $CHANGED_FILE FAILED";
+        fi
+    fi
+done
+
+unset line
+unset CHANGED_FILE
+unset CHANGED_FILES
+unset AGAINST
+
+echo "pre-commit: Exit code: $EXIT_CODE"
+exit $EXIT_CODE
