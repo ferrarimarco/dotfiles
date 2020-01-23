@@ -163,8 +163,8 @@ install_brew_formulae() {
 }
 
 install_npm() {
-    npm install \
-        @google/clasp -g
+    npm install -g \
+        @google/clasp
 }
 
 install_rubygems() {
