@@ -1,5 +1,6 @@
 davidanson.vscode-markdownlint
 editorconfig.editorconfig
+foxundermoon.shell-format
 mauve.terraform
 ms-azuretools.vscode-docker
 ms-python.python
