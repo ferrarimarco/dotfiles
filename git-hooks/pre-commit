@@ -1,6 +1,14 @@
 #!/usr/bin/env sh
 
-echo "Running pre-commit hook"
+exit_on_error() {
+    EXIT_CODE=$1
+    # shellcheck disable=SC2086
+    if [ $EXIT_CODE -ne 0 ]
+    then
+        echo "Exit code: $EXIT_CODE"
+        exit $EXIT_CODE
+    fi
+}
 
 # Check if this is the initial commit
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
@@ -14,13 +22,14 @@ CHANGED_FILES="$(git diff-index --cached --name-only "$AGAINST")"
 
 EXIT_CODE=0
 
-echo "pre-commit: Testing for whitespace errors..."
 if ! git diff-index --check --cached "$AGAINST"; then
+    EXIT_CODE=$?
     echo "pre-commit: Aborting commit due to whitespace errors"
-    exit 1
 else
     echo "pre-commit: No whitespace errors"
 fi
+
+exit_on_error $EXIT_CODE
 
 if command -v shellcheck > /dev/null 2>&1; then
     echo "pre-commit: Running shellcheck..."
@@ -38,11 +47,10 @@ else
     echo "pre-commit: WARNING, shellcheck is not installed!"
 fi;
 
+exit_on_error $EXIT_CODE
 
 unset line
+unset EXIT_CODE
 unset CHANGED_FILE
 unset CHANGED_FILES
 unset AGAINST
-
-echo "pre-commit: Exit code: $EXIT_CODE"
-exit $EXIT_CODE
