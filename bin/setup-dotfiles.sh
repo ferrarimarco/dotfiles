@@ -159,7 +159,8 @@ install_brew_formulae() {
 
 install_npm() {
 	npm install \
-		@google/clasp -g
+		@google/clasp -g \
+        prettier
 }
 
 install_rubygems() {
