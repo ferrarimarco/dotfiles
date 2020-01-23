@@ -486,13 +486,10 @@ update_system() {
 }
 
 usage() {
-  echo -e "install-linux.sh\\n\\tThis script installs my basic setup for a linux workstation\\n"
+  echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
   echo "Usage:"
-  echo "  base                                - setup sudo and user"
   echo "  debian                              - install base packages on a Debian system"
   echo "  docker                              - install docker"
-  echo "  homebrew                            - install Homebrew"
-  echo "  homebrew-formulae                   - install Homebrew formulae"
   echo "  macos                               - setup macOS"
   echo "  npm                                 - install npm packages"
   echo "  rubygems                            - install Ruby gems"
@@ -509,30 +506,23 @@ main() {
 	fi
 
 	ask_for_sudo
+	get_user
 
-	if [[ $cmd == "base" ]]; then
-		get_user
-		setup_sudo
-	elif [[ $cmd == "debian" ]]; then
-		get_user
+	if [[ $cmd == "debian" ]]; then
 		setup_debian
+        setup_sudo
 	elif [[ $cmd == "docker" ]]; then
-		get_user
 		setup_docker
-	elif [[ $cmd == "homebrew" ]]; then
-		install_brew
-	elif [[ $cmd == "homebrew-formulae" ]]; then
-		install_brew
-		install_brew_formulae
 	elif [[ $cmd == "macos" ]]; then
 		setup_macos
 		setup_shell
+		install_brew
+		install_brew_formulae
 	elif [[ $cmd == "npm" ]]; then
 		install_npm
 	elif [[ $cmd == "rubygems" ]]; then
 		install_rubygems
 	elif [[ $cmd == "user" ]]; then
-		get_user
 		setup_user
 	elif [[ $cmd == "update" ]]; then
 		update_system
