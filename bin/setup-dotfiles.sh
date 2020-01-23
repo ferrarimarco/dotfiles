@@ -6,475 +6,485 @@ set -o pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 ask_for_sudo() {
-	echo "Prompting for sudo password..."
-	if sudo -v; then
-		# Keep-alive
-		while true; do sudo -n true; \
-			sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-		echo "Sudo credentials updated."
-	else
-		echo "Obtaining sudo credentials failed."
-		exit 1
-	fi
+    echo "Prompting for sudo password..."
+    if sudo -v; then
+        # Keep-alive
+        while true; do
+            sudo -n true
+            sleep 60
+            kill -0 "$$" || exit
+        done 2>/dev/null &
+        echo "Sudo credentials updated."
+    else
+        echo "Obtaining sudo credentials failed."
+        exit 1
+    fi
 }
 
 # Choose a user account to use for this installation
 get_user() {
-	TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
+    TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
 }
 
 install_brew() {
-	if ! command -v brew >/dev/null 2>&1; then
-		# Set xcode directory
-		XCODE_DIRECTORY=/Applications/Xcode.app/Contents/Developer
-		echo "Setting Xcode directory to $XCODE_DIRECTORY"
-		sudo xcode-select -s "$XCODE_DIRECTORY"
+    if ! command -v brew >/dev/null 2>&1; then
+        # Set xcode directory
+        XCODE_DIRECTORY=/Applications/Xcode.app/Contents/Developer
+        echo "Setting Xcode directory to $XCODE_DIRECTORY"
+        sudo xcode-select -s "$XCODE_DIRECTORY"
 
-		echo "Accepting Xcode license"
-		sudo xcodebuild -license accept
+        echo "Accepting Xcode license"
+        sudo xcodebuild -license accept
 
-		if ! xcode-select -p >/dev/null 2>&1; then
-			echo "Installing Xcode CLI"
-			xcode-select --install
-		else
-			echo "Xcode is already installed"
-		fi
+        if ! xcode-select -p >/dev/null 2>&1; then
+            echo "Installing Xcode CLI"
+            xcode-select --install
+        else
+            echo "Xcode is already installed"
+        fi
 
-		# Create dirs
-		echo "Initializing Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
+        # Create dirs
+        echo "Initializing Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
 
-		HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
-		sudo install -d -o "$(whoami)" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
+        HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
+        sudo install -d -o "$(whoami)" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
 
-		# Download and install Homebrew
-		echo "Installing Homebrew"
-		cd "${HOMEBREW_REPOSITORY}" || exit
-		git init -q
-		git config remote.origin.url "https://github.com/Homebrew/brew"
-		git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
-		git config core.autocrlf false
-		git fetch origin master:refs/remotes/origin/master --tags --force
-		git reset --hard origin/master
-		ln -s "${HOMEBREW_REPOSITORY}"/bin/brew "${HOMEBREW_BIN_PATH}"/brew
-	else
-		echo "Homebrew is already installed"
-	fi
+        # Download and install Homebrew
+        echo "Installing Homebrew"
+        cd "${HOMEBREW_REPOSITORY}" || exit
+        git init -q
+        git config remote.origin.url "https://github.com/Homebrew/brew"
+        git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+        git config core.autocrlf false
+        git fetch origin master:refs/remotes/origin/master --tags --force
+        git reset --hard origin/master
+        ln -s "${HOMEBREW_REPOSITORY}"/bin/brew "${HOMEBREW_BIN_PATH}"/brew
+    else
+        echo "Homebrew is already installed"
+    fi
 
-	echo "Disabling homebrew usage analytics"
-	brew analytics off
+    echo "Disabling homebrew usage analytics"
+    brew analytics off
 }
 
 install_brew_formulae() {
-	# Make sure we’re using the latest Homebrew and formulae
-	update_brew
+    # Make sure we’re using the latest Homebrew and formulae
+    update_brew
 
-	# Save Homebrew’s installed location.
-	BREW_PREFIX="$(brew --prefix)"
+    # Save Homebrew’s installed location.
+    BREW_PREFIX="$(brew --prefix)"
 
-	for f in \
-		bash \
-		bash-completion \
-		coreutils \
-		findutils \
-		gawk \
-		git \
-		gnupg \
-		gnu-getopt \
-		gnu-indent \
-		gnu-sed \
-		gnu-tar \
-		grep \
-		make \
-		nano \
-		p7zip \
-		rbenv \
-		shellcheck \
-		terraform \
-		tflint \
-		tree \
-		vagrant \
-		wget \
-		zsh \
-		zsh-autosuggestions \
-		zsh-syntax-highlighting
-	do
-		if ! brew ls --versions "$f" > /dev/null; then
-			echo "Installing $f"
-			while true; do
-				read -r -p "Build from source? (y/n) "  yn
-				case $yn in
-					[Yy]* ) brew_install_recursive_build_from_source "$f"; break;;
-					[Nn]* ) brew install "$f"; break;;
-					* ) echo "Please answer yes or no.";;
-				esac
-			done
-		else
-			echo "$f is already installed"
-		fi
-	done
+    for f in \
+        bash \
+        bash-completion \
+        coreutils \
+        findutils \
+        gawk \
+        git \
+        gnupg \
+        gnu-getopt \
+        gnu-indent \
+        gnu-sed \
+        gnu-tar \
+        grep \
+        make \
+        nano \
+        p7zip \
+        rbenv \
+        shellcheck \
+        terraform \
+        tflint \
+        tree \
+        vagrant \
+        wget \
+        zsh \
+        zsh-autosuggestions \
+        zsh-syntax-highlighting; do
+        if ! brew ls --versions "$f" >/dev/null; then
+            echo "Installing $f"
+            while true; do
+                read -r -p "Build from source? (y/n) " yn
+                case $yn in
+                [Yy]*)
+                    brew_install_recursive_build_from_source "$f"
+                    break
+                    ;;
+                [Nn]*)
+                    brew install "$f"
+                    break
+                    ;;
+                *) echo "Please answer yes or no." ;;
+                esac
+            done
+        else
+            echo "$f is already installed"
+        fi
+    done
 
-	for f in \
-		google-cloud-sdk \
-		iterm2 \
-		virtualbox \
-		visual-studio-code
-	do
-		if ! brew cask ls --versions "$f" > /dev/null; then
-			echo "Installing $f cask"
-			brew cask install "$f"
-		else
-			echo "$f cask is already installed"
-		fi
-	done
+    for f in \
+        google-cloud-sdk \
+        iterm2 \
+        virtualbox \
+        visual-studio-code; do
+        if ! brew cask ls --versions "$f" >/dev/null; then
+            echo "Installing $f cask"
+            brew cask install "$f"
+        else
+            echo "$f cask is already installed"
+        fi
+    done
 
-	if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells;
-	then
-		echo "Add bash installed via brew to the list of allowed shells"
-		echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
-	fi
+    if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
+        echo "Add bash installed via brew to the list of allowed shells"
+        echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells
+    fi
 
-	if ! grep -Fq "${BREW_PREFIX}/bin/zsh" /etc/shells;
-	then
-		echo "Add zsh installed via brew to the list of allowed shells"
-		echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells;
+    if ! grep -Fq "${BREW_PREFIX}/bin/zsh" /etc/shells; then
+        echo "Add zsh installed via brew to the list of allowed shells"
+        echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells
 
-		echo "Changing default shell to zsh"
-		chsh -s "${BREW_PREFIX}/bin/zsh";
-	fi
+        echo "Changing default shell to zsh"
+        chsh -s "${BREW_PREFIX}/bin/zsh"
+    fi
 
-	echo "Removing outdated versions from the cellar."
-	brew cleanup
+    echo "Removing outdated versions from the cellar."
+    brew cleanup
 
-	echo "Setting up Visual Studio Code"
-	local _vs_code_settings_dir="$HOME"/Library/Application\ Support/Code/User
-	local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
-	ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
-	unset _vs_code_settings_path
-	unset _vs_code_settings_dir
+    echo "Setting up Visual Studio Code"
+    local _vs_code_settings_dir="$HOME"/Library/Application\ Support/Code/User
+    local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
+    ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
+    unset _vs_code_settings_path
+    unset _vs_code_settings_dir
 
-	while IFS= read -r line; do
-		code --install-extension "$line"
-	done < "$HOME"/.config/Code/extensions.txt
+    while IFS= read -r line; do
+        code --install-extension "$line"
+    done <"$HOME"/.config/Code/extensions.txt
 }
 
 install_npm() {
-	npm install \
-		@google/clasp -g \
-        prettier
+    npm install \
+        @google/clasp -g
 }
 
 install_rubygems() {
-	gem install \
-		bundler
+    gem install \
+        bundler
 }
 
-setup_docker(){
-	if command -v docker >/dev/null 2>&1 ; then
-		echo "Docker is already installed"
-	else
-		curl -sSL https://get.docker.com | sh
+setup_docker() {
+    if command -v docker >/dev/null 2>&1; then
+        echo "Docker is already installed"
+    else
+        curl -sSL https://get.docker.com | sh
 
-		# create docker group
-		getent group docker >/dev/null 2>&1 || groupadd docker
-		gpasswd -a "$TARGET_USER" docker
-	fi
+        # create docker group
+        getent group docker >/dev/null 2>&1 || groupadd docker
+        gpasswd -a "$TARGET_USER" docker
+    fi
 
-	if command -v docker-compose >/dev/null 2>&1 ; then
-		echo "Docker Compose is already installed"
-	else
-		docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" |  grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
-		curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
-		chmod a+x /usr/local/bin/docker-compose
-	fi
+    if command -v docker-compose >/dev/null 2>&1; then
+        echo "Docker Compose is already installed"
+    else
+        docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
+        curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod a+x /usr/local/bin/docker-compose
+    fi
 }
 
 # setup sudo for a user
 setup_sudo() {
-	# add user to sudoers
-	adduser "$TARGET_USER" sudo
+    # add user to sudoers
+    adduser "$TARGET_USER" sudo
 
-	# add user to systemd groups
-	# then you wont need sudo to view logs
-	if [ "$(getent group systemd-journal)" ]; then
-		gpasswd -a "$TARGET_USER" systemd-journal
-	fi
+    # add user to systemd groups
+    # then you wont need sudo to view logs
+    if [ "$(getent group systemd-journal)" ]; then
+        gpasswd -a "$TARGET_USER" systemd-journal
+    fi
 
-	if [ "$(getent group systemd-journal)" ]; then
-		gpasswd -a "$TARGET_USER" systemd-network
-	fi
+    if [ "$(getent group systemd-journal)" ]; then
+        gpasswd -a "$TARGET_USER" systemd-network
+    fi
 }
 
 setup_user() {
-	mkdir -p "$HOME/Downloads"
-	mkdir -p "$HOME/Pictures/Screenshots"
-	mkdir -p "$HOME/Pictures/Wallpapers"
-	mkdir -p "$HOME/Pictures/workspaces"
+    mkdir -p "$HOME/Downloads"
+    mkdir -p "$HOME/Pictures/Screenshots"
+    mkdir -p "$HOME/Pictures/Wallpapers"
+    mkdir -p "$HOME/Pictures/workspaces"
 
-	# enable dbus for the user session
-	systemctl --user enable dbus.socket
+    # enable dbus for the user session
+    systemctl --user enable dbus.socket
 }
 
 setup_debian() {
-	apt-get update || true
-	apt-get install -y \
-		apt-transport-https \
-		ca-certificates \
-		curl \
-		dirmngr \
-		gnupg2 \
-		lsb-release \
-		software-properties-common \
-		--no-install-recommends
+    apt-get update || true
+    apt-get install -y \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        dirmngr \
+        gnupg2 \
+        lsb-release \
+        software-properties-common \
+        --no-install-recommends
 
-	add-apt-repository main
+    add-apt-repository main
 
-	if case $(lsb_release -d | awk -F"\t" '{print $2}') in Ubuntu*) true;; *) false;; esac; then
-		add-apt-repository universe
-		add-apt-repository multiverse
-		add-apt-repository restricted
-	fi
+    if case $(lsb_release -d | awk -F"\t" '{print $2}') in Ubuntu*) true ;; *) false ;; esac then
+        add-apt-repository universe
+        add-apt-repository multiverse
+        add-apt-repository restricted
+    fi
 
-	# Add the Google Chrome distribution URI as a package source if needed
-	if ! [ -d "/opt/google/cros-containers" ]; then
-		echo "Installing Chrome browser..."
-		curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
-		apt install -y ./google-chrome-stable_current_amd64.deb
-		rm ./google-chrome-stable_current_amd64.deb
-		apt-get install -f
-	fi
+    # Add the Google Chrome distribution URI as a package source if needed
+    if ! [ -d "/opt/google/cros-containers" ]; then
+        echo "Installing Chrome browser..."
+        curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
+        apt install -y ./google-chrome-stable_current_amd64.deb
+        rm ./google-chrome-stable_current_amd64.deb
+        apt-get install -f
+    fi
 
-	apt-get update || true
-	apt-get -y upgrade
+    apt-get update || true
+    apt-get -y upgrade
 
-	apt-get install -y \
-		adduser \
-		alsa-utils \
-		apparmor \
-		automake \
-		bash-completion \
-		bc \
-		bridge-utils \
-		bzip2 \
-		coreutils \
-		dbus-user-session \
-		dnsutils \
-		file \
-		findutils \
-		fwupd \
-		fwupdate \
-		gcc \
-		git \
-		glogg \
-		gnupg \
-		gnupg-agent \
-		grep \
-		gzip \
-		hostname \
-		imagemagick \
-		iptables \
-		jmeter \
-		less \
-		libc6-dev \
-		libpam-systemd \
-		locales \
-		lsof \
-		make \
-		mount \
-		nano \
-		net-tools \
-		pinentry-curses \
-		rxvt-unicode \
-		scdaemon \
-		ssh \
-		strace \
-		sudo \
-		systemd \
-		tar \
-		tree \
-		tzdata \
-		unzip \
-		xclip \
-		xcompmgr \
-		xz-utils \
-		zip \
-		--no-install-recommends
+    apt-get install -y \
+        adduser \
+        alsa-utils \
+        apparmor \
+        automake \
+        bash-completion \
+        bc \
+        bridge-utils \
+        bzip2 \
+        coreutils \
+        dbus-user-session \
+        dnsutils \
+        file \
+        findutils \
+        fwupd \
+        fwupdate \
+        gcc \
+        git \
+        glogg \
+        gnupg \
+        gnupg-agent \
+        grep \
+        gzip \
+        hostname \
+        imagemagick \
+        iptables \
+        jmeter \
+        less \
+        libc6-dev \
+        libpam-systemd \
+        locales \
+        lsof \
+        make \
+        mount \
+        nano \
+        net-tools \
+        pinentry-curses \
+        rxvt-unicode \
+        scdaemon \
+        ssh \
+        strace \
+        sudo \
+        systemd \
+        tar \
+        tree \
+        tzdata \
+        unzip \
+        xclip \
+        xcompmgr \
+        xz-utils \
+        zip \
+        --no-install-recommends
 
-	apt-get autoremove
-	apt-get autoclean
-	apt-get clean
+    apt-get autoremove
+    apt-get autoclean
+    apt-get clean
 }
 
-setup_macos(){
-	###############################################################################
-	# General UI/UX                                                               #
-	###############################################################################
+setup_macos() {
+    ###############################################################################
+    # General UI/UX                                                               #
+    ###############################################################################
 
-	# Disable the sound effects on boot
-	sudo nvram SystemAudioVolume=" "
+    # Disable the sound effects on boot
+    sudo nvram SystemAudioVolume=" "
 
-	# Enable the sound effects on boot
-	#sudo nvram SystemAudioVolume="7"
+    # Enable the sound effects on boot
+    #sudo nvram SystemAudioVolume="7"
 
-	###############################################################################
-	# Mac App Store                                                               #
-	###############################################################################
+    ###############################################################################
+    # Mac App Store                                                               #
+    ###############################################################################
 
-	# Enable the automatic update check
-	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true
+    # Enable the automatic update check
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true
 
-	# Check for software updates daily, not just once per week
-	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ScheduleFrequency -int 1
+    # Check for software updates daily, not just once per week
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ScheduleFrequency -int 1
 
-	# Download newly available updates in background
-	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -int 1
+    # Download newly available updates in background
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticDownload -int 1
 
-	# Install System data files & security updates
-	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist CriticalUpdateInstall -int 1
+    # Install System data files & security updates
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist CriticalUpdateInstall -int 1
 
-	# Automatically download apps purchased on other Macs
-	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ConfigDataInstall -int 1
+    # Automatically download apps purchased on other Macs
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist ConfigDataInstall -int 1
 
-	# Automatically install macOS Updates
-	sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticallyInstallMacOSUpdates -int 1
+    # Automatically install macOS Updates
+    sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticallyInstallMacOSUpdates -int 1
 
-	# Turn on app auto-update in App Store
-	sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true
+    # Turn on app auto-update in App Store
+    sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdate -bool true
 
-	# Allow the App Store to reboot machine on macOS updates
-	sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true
+    # Allow the App Store to reboot machine on macOS updates
+    sudo defaults write /Library/Preferences/com.apple.commerce.plist AutoUpdateRestartRequired -bool true
 
-	# Enable automatic updates in System Preferences -> Software Update -> Advanced -> Check for updates
-	sudo softwareupdate --schedule ON
+    # Enable automatic updates in System Preferences -> Software Update -> Advanced -> Check for updates
+    sudo softwareupdate --schedule ON
 
-	###############################################################################
-	# Dock                                                                        #
-	###############################################################################
+    ###############################################################################
+    # Dock                                                                        #
+    ###############################################################################
 
-	# Change minimize/maximize window effect
-	defaults write com.apple.dock mineffect -string "scale"
+    # Change minimize/maximize window effect
+    defaults write com.apple.dock mineffect -string "scale"
 
-	# Minimize windows into their application’s icon
-	defaults write com.apple.dock minimize-to-application -bool true
+    # Minimize windows into their application’s icon
+    defaults write com.apple.dock minimize-to-application -bool true
 
-	###############################################################################
-	# Terminal & iTerm 2                                                          #
-	###############################################################################
+    ###############################################################################
+    # Terminal & iTerm 2                                                          #
+    ###############################################################################
 
-	# Only use UTF-8 in Terminal.app
-	defaults write com.apple.terminal StringEncodings -array 4
+    # Only use UTF-8 in Terminal.app
+    defaults write com.apple.terminal StringEncodings -array 4
 
-	# Don’t display the annoying prompt when quitting iTerm
-	defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+    # Don’t display the annoying prompt when quitting iTerm
+    defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
-	###############################################################################
-	# Trackpad                                                                    #
-	###############################################################################
+    ###############################################################################
+    # Trackpad                                                                    #
+    ###############################################################################
 
-	# Trackpad: enable tap to click for this user
-	defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+    # Trackpad: enable tap to click for this user
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
-	# Trackpad: enable tap to click for the login screen
-	defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-	defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+    # Trackpad: enable tap to click for the login screen
+    defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+    defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-	###############################################################################
-	# Menu bar                                                                    #
-	###############################################################################
+    ###############################################################################
+    # Menu bar                                                                    #
+    ###############################################################################
 
-	# Show icons in the menu bar
-	defaults write com.apple.systemuiserver menuExtras -array \
-	"/System/Library/CoreServices/Menu Extras/AirPort.menu" \
-	"/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
-	"/System/Library/CoreServices/Menu Extras/Clock.menu" \
-	"/System/Library/CoreServices/Menu Extras/Volume.menu"
+    # Show icons in the menu bar
+    defaults write com.apple.systemuiserver menuExtras -array \
+        "/System/Library/CoreServices/Menu Extras/AirPort.menu" \
+        "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" \
+        "/System/Library/CoreServices/Menu Extras/Clock.menu" \
+        "/System/Library/CoreServices/Menu Extras/Volume.menu"
 
-	# Ensure we're using a digital clock
-	defaults write com.apple.menuextra.clock IsAnalog -bool false
+    # Ensure we're using a digital clock
+    defaults write com.apple.menuextra.clock IsAnalog -bool false
 
-	# Show date and time in the menu bar
-	defaults write com.apple.menuextra.clock "DateFormat" "EEE d MMM HH:mm:ss"
+    # Show date and time in the menu bar
+    defaults write com.apple.menuextra.clock "DateFormat" "EEE d MMM HH:mm:ss"
 
-	# Don't flash time and date separators
-	defaults write com.apple.menuextra.clock FlashDateSeparators -bool false
+    # Don't flash time and date separators
+    defaults write com.apple.menuextra.clock FlashDateSeparators -bool false
 
-	###############################################################################
-	# Adobe stuff                                                                 #
-	###############################################################################
+    ###############################################################################
+    # Adobe stuff                                                                 #
+    ###############################################################################
 
-	# Kill those processes
-	killall AGSService ACCFinderSync "Core Sync" AdobeCRDaemon "Adobe Creative" AdobeIPCBroker node "Adobe Desktop Service" "Adobe Crash Reporter" CCXProcess CCLibrary
+    # Kill those processes
+    killall AGSService ACCFinderSync "Core Sync" AdobeCRDaemon "Adobe Creative" AdobeIPCBroker node "Adobe Desktop Service" "Adobe Crash Reporter" CCXProcess CCLibrary
 
-	# Disable Adobe autostart agents and daemons
-	for i in /Library/LaunchAgents/com.adobe* \
-		"$HOME"/Library/LaunchAgents/com.adobe* \
-		/Library/LaunchDaemons/com.adobe* \
-		/System/Library/LaunchAgents/com.adobe* \
-		/System/Library/LaunchDaemons/com.adobe*; do
+    # Disable Adobe autostart agents and daemons
+    for i in /Library/LaunchAgents/com.adobe* \
+        "$HOME"/Library/LaunchAgents/com.adobe* \
+        /Library/LaunchDaemons/com.adobe* \
+        /System/Library/LaunchAgents/com.adobe* \
+        /System/Library/LaunchDaemons/com.adobe*; do
 
-		# Exit the loop if there are no matching files
-		# Safeguard for when nullglob is disabled in bash
-		[ -f "$i" ] || break
+        # Exit the loop if there are no matching files
+        # Safeguard for when nullglob is disabled in bash
+        [ -f "$i" ] || break
 
-		# Disable the agent
-		launchctl unload -w "$i" 2>/dev/null
+        # Disable the agent
+        launchctl unload -w "$i" 2>/dev/null
 
-		# Avoid further edits
-		sudo chmod 000 "$i"
-	done
+        # Avoid further edits
+        sudo chmod 000 "$i"
+    done
 
-	# Disable the "Core Sync" finder extension
-	if defaults read "com.apple.finder.SyncExtensions" 2>/dev/null; then
-		defaults delete "com.apple.finder.SyncExtensions"
-	fi
+    # Disable the "Core Sync" finder extension
+    if defaults read "com.apple.finder.SyncExtensions" 2>/dev/null; then
+        defaults delete "com.apple.finder.SyncExtensions"
+    fi
 
-	# Remove the "Core Sync" finder extension
-	sudo rm -rf "/Applications/Utilities/Adobe Sync/CoreSync/Core Sync.app"
+    # Remove the "Core Sync" finder extension
+    sudo rm -rf "/Applications/Utilities/Adobe Sync/CoreSync/Core Sync.app"
 
-	###############################################################################
-	# Kill affected applications                                                  #
-	###############################################################################
+    ###############################################################################
+    # Kill affected applications                                                  #
+    ###############################################################################
 
-	for app in "Activity Monitor" \
-		"cfprefsd" \
-		"Dock" \
-		"Finder" \
-		"SystemUIServer" \
-		"Terminal"; do
-		killall "${app}" &> /dev/null
-	done
-	echo "Done. Note that some of these changes require a logout/restart to take effect."
+    for app in "Activity Monitor" \
+        "cfprefsd" \
+        "Dock" \
+        "Finder" \
+        "SystemUIServer" \
+        "Terminal"; do
+        killall "${app}" &>/dev/null
+    done
+    echo "Done. Note that some of these changes require a logout/restart to take effect."
 }
 
 setup_shell() {
-	# Download ZSH themes
-	CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
-	rm -rf "$CURRENT_ZSH_THEME_DIR"
-	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
-	unset CURRENT_ZSH_THEME_DIR
+    # Download ZSH themes
+    CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
+    rm -rf "$CURRENT_ZSH_THEME_DIR"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
+    unset CURRENT_ZSH_THEME_DIR
 }
 
 update_brew() {
-	echo "Upgrading brew and formulae"
-	brew update
+    echo "Upgrading brew and formulae"
+    brew update
 
-	while true; do
-		read -r -p "Build homebrew upgrades from source? (y/n) "  yn
-		case $yn in
-			[Yy]* ) brew upgrade --build-from-source; break;;
-			[Nn]* ) brew upgrade; break;;
-			* ) echo "Please answer yes or no.";;
-		esac
-	done
+    while true; do
+        read -r -p "Build homebrew upgrades from source? (y/n) " yn
+        case $yn in
+        [Yy]*)
+            brew upgrade --build-from-source
+            break
+            ;;
+        [Nn]*)
+            brew upgrade
+            break
+            ;;
+        *) echo "Please answer yes or no." ;;
+        esac
+    done
 
-	brew cleanup -s
+    brew cleanup -s
 
-	brew doctor
-	brew missing
+    brew doctor
+    brew missing
 }
 
 update_system() {
-    local os_name;
-    os_name="$(uname -s)";
+    local os_name
+    os_name="$(uname -s)"
     if test "${os_name#*"Darwin"}" != "$os_name"; then
         echo "Updating macOS"
         sudo softwareupdate -ia
@@ -482,54 +492,54 @@ update_system() {
     elif test "${os_name#*"Linux"}" != "$os_name"; then
         echo "Updating linux"
     fi
-    unset os_name;
+    unset os_name
 }
 
 usage() {
-  echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
-  echo "Usage:"
-  echo "  debian                              - install base packages on a Debian system"
-  echo "  docker                              - install docker"
-  echo "  macos                               - setup macOS"
-  echo "  npm                                 - install npm packages"
-  echo "  rubygems                            - install Ruby gems"
-  echo "  update                              - update the system"
-  echo "  user                                - setup user"
+    echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
+    echo "Usage:"
+    echo "  debian                              - install base packages on a Debian system"
+    echo "  docker                              - install docker"
+    echo "  macos                               - setup macOS"
+    echo "  npm                                 - install npm packages"
+    echo "  rubygems                            - install Ruby gems"
+    echo "  update                              - update the system"
+    echo "  user                                - setup user"
 }
 
 main() {
-	local cmd=$1
+    local cmd=$1
 
-	if [[ -z "$cmd" ]]; then
-		usage
-		exit 1
-	fi
+    if [[ -z "$cmd" ]]; then
+        usage
+        exit 1
+    fi
 
-	ask_for_sudo
-	get_user
+    ask_for_sudo
+    get_user
 
-	if [[ $cmd == "debian" ]]; then
-		setup_debian
+    if [[ $cmd == "debian" ]]; then
+        setup_debian
         setup_sudo
-	elif [[ $cmd == "docker" ]]; then
-		setup_docker
-	elif [[ $cmd == "macos" ]]; then
-		setup_macos
-		setup_shell
-		install_brew
-		install_brew_formulae
-	elif [[ $cmd == "npm" ]]; then
-		install_npm
-	elif [[ $cmd == "rubygems" ]]; then
-		install_rubygems
-	elif [[ $cmd == "user" ]]; then
-		setup_user
-	elif [[ $cmd == "update" ]]; then
-		update_system
-		setup_shell
-	else
-		usage
-	fi
+    elif [[ $cmd == "docker" ]]; then
+        setup_docker
+    elif [[ $cmd == "macos" ]]; then
+        setup_macos
+        setup_shell
+        install_brew
+        install_brew_formulae
+    elif [[ $cmd == "npm" ]]; then
+        install_npm
+    elif [[ $cmd == "rubygems" ]]; then
+        install_rubygems
+    elif [[ $cmd == "user" ]]; then
+        setup_user
+    elif [[ $cmd == "update" ]]; then
+        update_system
+        setup_shell
+    else
+        usage
+    fi
 }
 
 main "$@"
