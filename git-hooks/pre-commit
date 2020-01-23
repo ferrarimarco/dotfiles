@@ -34,7 +34,7 @@ exit_on_error $EXIT_CODE
 if command -v shellcheck > /dev/null 2>&1; then
     echo "pre-commit: Running shellcheck..."
     for CHANGED_FILE in $CHANGED_FILES; do
-        if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
+        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
             if shellcheck "$CHANGED_FILE"; then
                 echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
             else
