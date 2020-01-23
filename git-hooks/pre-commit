@@ -22,17 +22,22 @@ else
     echo "pre-commit: No whitespace errors"
 fi
 
-echo "pre-commit: Running shellsheck..."
-for CHANGED_FILE in $CHANGED_FILES; do
-    if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
-        if shellcheck "$CHANGED_FILE"; then
-            echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
-        else
-            EXIT_CODE=$?
-            echo "pre-commit: shellcheck on $CHANGED_FILE FAILED";
+if command -v shellcheck > /dev/null 2>&1; then
+    echo "pre-commit: Running shellcheck..."
+    for CHANGED_FILE in $CHANGED_FILES; do
+        if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
+            if shellcheck "$CHANGED_FILE"; then
+                echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
+            else
+                EXIT_CODE=$?
+                echo "pre-commit: shellcheck on $CHANGED_FILE FAILED";
+            fi
         fi
-    fi
-done
+    done
+else
+    echo "pre-commit: WARNING, shellcheck is not installed!"
+fi;
+
 
 unset line
 unset CHANGED_FILE
