@@ -1,7 +1,7 @@
 # Inspired by https://github.com/jessfraz/dotfiles
 
 .PHONY: all
-all: bin dotfiles githooks ## Installs bins, dotfiles and git hooks.
+all: clean bin dotfiles githooks ## Cleans stale dotfiles, installs bins, dotfiles and git hooks.
 
 .PHONY: bin
 bin:
@@ -12,6 +12,13 @@ bin:
 	for file in $(shell find $(CURDIR)/bin -type f -not -name ".*.swp"); do \
 		f=$$(basename $$file); \
 		ln -sf $$file $(HOME)/bin/$$f; \
+	done;
+
+.PHONY: clean
+clean:
+	@echo Cleaning
+	for file in $(shell find $(HOME) -type l -ilname "*dotfiles*"); do \
+		rm $$file; \
 	done;
 
 .PHONY: dotfiles
