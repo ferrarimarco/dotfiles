@@ -37,7 +37,7 @@ export HOMEBREW_NO_ANALYTICS=1
 # add vs code bins to path
 VS_CODE_PATH_MACOS="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
 if [ -d "${VS_CODE_PATH_MACOS}" ]; then
-  export PATH="${VS_CODE_PATH_MACOS}:${PATH}"
+    export PATH="${VS_CODE_PATH_MACOS}:${PATH}"
 fi
 
 # Uncomment the lines below if you want to use executables installed with Homebrew
