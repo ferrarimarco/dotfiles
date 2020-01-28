@@ -4,7 +4,7 @@
 all: clean bin dotfiles githooks ## Cleans stale dotfiles, installs bins, dotfiles and git hooks.
 
 .PHONY: bin
-bin:
+bin: ## Installs binaries
 	@echo Installing binaries
 	mkdir -p $(HOME)/bin;
 
@@ -15,14 +15,14 @@ bin:
 	done;
 
 .PHONY: clean
-clean:
+clean: ## Uninstalls dotfiles and binaries
 	@echo Cleaning
 	for file in $(shell find $(HOME) -type l -ilname "*dotfiles*"); do \
 		rm $$file; \
 	done;
 
 .PHONY: dotfiles
-dotfiles:
+dotfiles: ## Installs dotfiles
 	@echo Installing dotfiles
 	# add aliases for dotfiles
 	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -name ".travis.yml" -not -path "*/\.git/*" -not -name ".*.swp"); do \
@@ -33,7 +33,8 @@ dotfiles:
 	done; \
 	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
 
-githooks:
+.PHONY: githooks
+githooks: ## Installs Git hooks
 	@echo Installing Git hooks
 	mkdir -p $(HOME)/git-hooks;
 
@@ -44,7 +45,8 @@ githooks:
 	done;
 
 .PHONY: test
-test: shellcheck psscriptanalyzer
+test: ## Run tests
+	shellcheck psscriptanalyzer
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -55,7 +57,7 @@ ifeq ($(INTERACTIVE), 1)
 endif
 
 .PHONY: psscriptanalyzer
-psscriptanalyzer:
+psscriptanalyzer: ## Run PSScriptAnalyzer tests
 	@echo Running PSScriptAnalyzer
 	docker run --rm -i $(DOCKER_FLAGS) \
 		--name df-psscriptanalyzer \
@@ -64,7 +66,7 @@ psscriptanalyzer:
 		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse"
 
 .PHONY: shellcheck
-shellcheck:
+shellcheck: ## Run Shellcheck tests
 	@echo Running shellcheck
 	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
@@ -75,5 +77,5 @@ shellcheck:
 	done;
 
 .PHONY: help
-help:
+help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
