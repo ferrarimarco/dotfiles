@@ -30,6 +30,7 @@ export PATH=$HOME/bin:$PATH
 export HOMEBREW_REPOSITORY=/usr/local/Homebrew
 export HOMEBREW_PATH=/usr/local/brew
 export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
+export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
 export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
 export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
 export HOMEBREW_NO_ANALYTICS=1
