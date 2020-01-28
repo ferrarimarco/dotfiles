@@ -142,9 +142,6 @@ install_brew_formulae() {
     if ! grep -Fq "${BREW_PREFIX}/bin/zsh" /etc/shells; then
         echo "Add zsh installed via brew to the list of allowed shells"
         echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells
-
-        echo "Changing default shell to zsh"
-        chsh -s "${BREW_PREFIX}/bin/zsh"
     fi
 
     echo "Removing outdated versions from the cellar."
@@ -450,11 +447,19 @@ setup_macos() {
 }
 
 setup_shell() {
+    echo "Setting up the shell..."
+
     # Download ZSH themes
     CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
     rm -rf "$CURRENT_ZSH_THEME_DIR"
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
     unset CURRENT_ZSH_THEME_DIR
+
+    if [ "$(dscl . -read ~/ UserShell | sed 's/UserShell: //')" != "$DEFAULT_SHELL" ]; then
+        echo "Changing default shell to $DEFAULT_SHELL"
+        chsh -s "$DEFAULT_SHELL"
+    fi
+    echo "The default shell is set to $DEFAULT_SHELL"
 }
 
 update_brew() {
@@ -476,9 +481,10 @@ update_brew() {
         esac
     done
 
+    echo "Cleaning up brew..."
     brew cleanup -s
 
-    brew doctor
+    echo "Checking for missing brew formula kegs..."
     brew missing
 }
 
@@ -486,11 +492,11 @@ update_system() {
     local os_name
     os_name="$(uname -s)"
     if test "${os_name#*"Darwin"}" != "$os_name"; then
-        echo "Updating macOS"
+        echo "Updating macOS..."
         sudo softwareupdate -ia
         update_brew
     elif test "${os_name#*"Linux"}" != "$os_name"; then
-        echo "Updating linux"
+        echo "Updating linux..."
     fi
     unset os_name
 }
@@ -535,6 +541,7 @@ main() {
     elif [[ $cmd == "user" ]]; then
         setup_user
     elif [[ $cmd == "update" ]]; then
+        echo "Updating the system..."
         update_system
         setup_shell
     else
