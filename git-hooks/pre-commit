@@ -3,8 +3,7 @@
 exit_on_error() {
     EXIT_CODE=$1
     # shellcheck disable=SC2086
-    if [ $EXIT_CODE -ne 0 ]
-    then
+    if [ $EXIT_CODE -ne 0 ]; then
         echo "Exit code: $EXIT_CODE"
         exit $EXIT_CODE
     fi
@@ -15,7 +14,7 @@ if git rev-parse --verify HEAD >/dev/null 2>&1; then
     AGAINST=HEAD
 else
     # Get the hash of the empty-tree commit
-    AGAINST="$(git hash-object -t tree --stdin < /dev/null)"
+    AGAINST="$(git hash-object -t tree --stdin </dev/null)"
 fi
 
 CHANGED_FILES="$(git diff-index --cached --name-only "$AGAINST")"
@@ -31,7 +30,7 @@ fi
 
 exit_on_error $EXIT_CODE
 
-if command -v shellcheck > /dev/null 2>&1; then
+if command -v shellcheck >/dev/null 2>&1; then
     echo "pre-commit: Running shellcheck..."
     for CHANGED_FILE in $CHANGED_FILES; do
         if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
@@ -39,13 +38,13 @@ if command -v shellcheck > /dev/null 2>&1; then
                 echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
             else
                 EXIT_CODE=$?
-                echo "pre-commit: shellcheck on $CHANGED_FILE FAILED";
+                echo "pre-commit: shellcheck on $CHANGED_FILE FAILED"
             fi
         fi
     done
 else
     echo "pre-commit: WARNING, shellcheck is not installed!"
-fi;
+fi
 
 exit_on_error $EXIT_CODE
 

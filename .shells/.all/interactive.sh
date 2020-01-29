@@ -6,20 +6,20 @@ FILE="${HOME}"/.extra && test -f "$FILE" && . "$FILE"
 unset FILE
 
 # Initialize rbenv if available
-if command -v rbenv > /dev/null 2>&1; then
-	eval "$(rbenv init -)"
-fi;
+if command -v rbenv >/dev/null 2>&1; then
+    eval "$(rbenv init -)"
+fi
 
 ###############################################################################
 # MOTD                                                                        #
 ###############################################################################
-if command -v sw_vers > /dev/null 2>&1; then
-	sw_vers
-fi;
+if command -v sw_vers >/dev/null 2>&1; then
+    sw_vers
+fi
 
-if command -v uname > /dev/null 2>&1; then
-	uname -snrvm
-fi;
+if command -v uname >/dev/null 2>&1; then
+    uname -snrvm
+fi
 
 ###############################################################################
 # Aliases                                                                     #
@@ -29,31 +29,31 @@ fi;
 FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
 
 # source docker aliases if docker is installed
-if command -v docker > /dev/null 2>&1; then
-	# shellcheck source=/dev/null
-	FILE="${HOME}"/.shells/.all/dockerfunctions.sh && test -f "$FILE" && . "$FILE"
-fi;
+if command -v docker >/dev/null 2>&1; then
+    # shellcheck source=/dev/null
+    FILE="${HOME}"/.shells/.all/dockerfunctions.sh && test -f "$FILE" && . "$FILE"
+fi
 
 # Check for various OS openers. Quit as soon as we find one that works.
 for opener in browser-exec xdg-open cmd.exe cygstart "start" open; do
-	if command -v $opener >/dev/null 2>&1; then
-		if [ "$opener" = "cmd.exe" ]; then
-			# shellcheck disable=SC2139
-			alias open="$opener /c start";
-		else
-			# shellcheck disable=SC2139
-			alias open="$opener";
-		fi
-		break;
-	fi
+    if command -v $opener >/dev/null 2>&1; then
+        if [ "$opener" = "cmd.exe" ]; then
+            # shellcheck disable=SC2139
+            alias open="$opener /c start"
+        else
+            # shellcheck disable=SC2139
+            alias open="$opener"
+        fi
+        break
+    fi
 done
 
 # Linux specific aliases
 if ! command -v pbcopy >/dev/null 2>&1; then
-	alias pbcopy='xclip -selection clipboard'
+    alias pbcopy='xclip -selection clipboard'
 fi
 if ! command -v pbpaste >/dev/null 2>&1; then
-	alias pbpaste='xclip -selection clipboard -o'
+    alias pbpaste='xclip -selection clipboard -o'
 fi
 
 # copy working directory
@@ -74,10 +74,10 @@ alias h="history"
 alias gc="git commit -v "
 
 # Detect which `ls` flavor is in use
-if ls --color > /dev/null 2>&1; then # GNU `ls`
-	colorflag="--color"
+if ls --color >/dev/null 2>&1; then # GNU `ls`
+    colorflag="--color"
 else # OS X `ls`
-	colorflag="-G"
+    colorflag="-G"
 fi
 
 # List all files colorized in long format
@@ -112,18 +112,18 @@ alias sudo='sudo '
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # OS X has no `md5sum`, so use `md5` as a fallback
-command -v md5sum > /dev/null || alias md5sum="md5"
+command -v md5sum >/dev/null || alias md5sum="md5"
 
 # OS X has no `sha1sum`, so use `shasum` as a fallback
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
+command -v sha1sum >/dev/null || alias sha1sum="shasum"
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
 # One of @janmoesen’s ProTip™s
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-	# shellcheck disable=SC2139,SC2140
-	alias "$method"="lwp-request -m \"$method\""
+    # shellcheck disable=SC2139,SC2140
+    alias "$method"="lwp-request -m \"$method\""
 done
 
 # vhosts
@@ -134,15 +134,15 @@ alias untar='tar xvf'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-	# shellcheck disable=SC2015
-	test -r "$HOME"/.dircolors && eval "$(dircolors -b "$HOME"/.dircolors)" || eval "$(dircolors -b)"
-	command -v ls > /dev/null || alias ls='ls --color=auto'
-	command -v dir > /dev/null || alias dir='dir --color=auto'
-	command -v vdir > /dev/null || alias vdir='vdir --color=auto'
+    # shellcheck disable=SC2015
+    test -r "$HOME"/.dircolors && eval "$(dircolors -b "$HOME"/.dircolors)" || eval "$(dircolors -b)"
+    command -v ls >/dev/null || alias ls='ls --color=auto'
+    command -v dir >/dev/null || alias dir='dir --color=auto'
+    command -v vdir >/dev/null || alias vdir='vdir --color=auto'
 
-	command -v grep > /dev/null || alias grep='grep --color=auto'
-	command -v fgrep > /dev/null || alias fgrep='fgrep --color=auto'
-	command -v sha1sum > /dev/null || alias egrep='egrep --color=auto'
+    command -v grep >/dev/null || alias grep='grep --color=auto'
+    command -v fgrep >/dev/null || alias fgrep='fgrep --color=auto'
+    command -v sha1sum >/dev/null || alias egrep='egrep --color=auto'
 fi
 
 # make less more friendly for non-text input files, see lesspipe(1)
@@ -152,8 +152,8 @@ fi
 # Prompt                                                                      #
 ###############################################################################
 
-if case "$COLORTERM" in "gnome-"*) true;; *) false;; esac && [ "$TERM" = "xterm" ] && infocmp gnome-256color >/dev/null 2>&1; then
-	export TERM='gnome-256color';
+if case "$COLORTERM" in "gnome-"*) true ;; *) false ;; esac && [ "$TERM" = "xterm" ] && infocmp gnome-256color >/dev/null 2>&1; then
+    export TERM='gnome-256color'
 elif infocmp xterm-256color >/dev/null 2>&1; then
-	export TERM='xterm-256color';
-fi;
+    export TERM='xterm-256color'
+fi

@@ -7,9 +7,9 @@
 # Expansion and globbing                                                      #
 ###############################################################################
 
-setopt GLOB_DOTS             # Do not require a leading ‘.’ in a filename to be matched explicitly. Example: Recursive globbing, e.g. `echo **/*.txt`
-unsetopt CASE_GLOB           # Make globbing (filename generation) not sensitive to case
-unsetopt NOMATCH             # Disable: If a pattern for filename generation has no matches, print an error, instead of leaving it unchanged in the argument list.
+setopt GLOB_DOTS   # Do not require a leading ‘.’ in a filename to be matched explicitly. Example: Recursive globbing, e.g. `echo **/*.txt`
+unsetopt CASE_GLOB # Make globbing (filename generation) not sensitive to case
+unsetopt NOMATCH   # Disable: If a pattern for filename generation has no matches, print an error, instead of leaving it unchanged in the argument list.
 
 ###############################################################################
 # History                                                                     #
