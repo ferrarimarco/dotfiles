@@ -45,8 +45,7 @@ githooks: ## Installs Git hooks
 	done;
 
 .PHONY: test
-test: ## Run tests
-	shellcheck psscriptanalyzer
+test: shellcheck psscriptanalyzer ## Run tests
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
