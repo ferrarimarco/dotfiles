@@ -49,6 +49,24 @@ fi;
 
 exit_on_error $EXIT_CODE
 
+if command -v shfmt >/dev/null 2>&1; then
+    echo "pre-commit: Running shfmt..."
+    for CHANGED_FILE in $CHANGED_FILES; do
+        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
+            if shfmt -d "$CHANGED_FILE"; then
+                echo "pre-commit: shfmt on $CHANGED_FILE PASSED"
+            else
+                EXIT_CODE=$?
+                echo "pre-commit: shfmt on $CHANGED_FILE FAILED"
+            fi
+        fi
+    done
+else
+    echo "pre-commit: WARNING, shfmt is not installed!"
+fi
+
+exit_on_error $EXIT_CODE
+
 unset line
 unset EXIT_CODE
 unset CHANGED_FILE
