@@ -447,10 +447,21 @@ setup_shell() {
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
     unset CURRENT_ZSH_THEME_DIR
 
-    if [ "$(dscl . -read ~/ UserShell | sed 's/UserShell: //')" != "$DEFAULT_SHELL" ]; then
+    local os_name
+    os_name="$(uname -s)"
+    user_default_shell=
+    if test "${os_name#*"Darwin"}" != "$os_name"; then
+        user_default_shell="$(dscl . -read ~/ UserShell | sed 's/UserShell: //')"
+    elif test "${os_name#*"Linux"}" != "$os_name"; then
+        user_default_shell="$(awk -F: -v user="foobar" '$1 == user {print $NF}' /etc/passwd)"
+    fi
+    unset os_name
+
+    if [ "$user_default_shell" != "$DEFAULT_SHELL" ]; then
         echo "Changing default shell to $DEFAULT_SHELL"
         chsh -s "$DEFAULT_SHELL"
     fi
+    unset user_default_shell
     echo "The default shell is set to $DEFAULT_SHELL"
 }
 
