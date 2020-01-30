@@ -50,9 +50,13 @@ git config --global commit.gpgsign false
 # Shell prompt                                                                #
 ###############################################################################
 
-export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
+ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
+if [ -d "${ZSH_THEME_PATH}" ]; then
+    export ZSH_THEME_PATH
 
-# Don't run the configuration wizard
-export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-
-export ZSH_THEME_CONFIGURATION_PATH="$HOME"/.shells/.zsh/.p10k.zsh
+    # Don't run the configuration wizard
+    export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+    export ZSH_THEME_CONFIGURATION_PATH="$HOME"/.shells/.zsh/.p10k.zsh
+else
+    unset ZSH_THEME_PATH
+fi
