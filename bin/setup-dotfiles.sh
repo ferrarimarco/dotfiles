@@ -194,16 +194,6 @@ setup_docker() {
 setup_sudo() {
     # add user to sudoers
     adduser "$TARGET_USER" sudo
-
-    # add user to systemd groups
-    # then you wont need sudo to view logs
-    if [ "$(getent group systemd-journal)" ]; then
-        gpasswd -a "$TARGET_USER" systemd-journal
-    fi
-
-    if [ "$(getent group systemd-journal)" ]; then
-        gpasswd -a "$TARGET_USER" systemd-network
-    fi
 }
 
 setup_user() {
