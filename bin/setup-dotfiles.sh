@@ -193,7 +193,7 @@ setup_docker() {
 # setup sudo for a user
 setup_sudo() {
     # add user to sudoers
-    adduser "$TARGET_USER" sudo
+    sudo adduser "$TARGET_USER" sudo
 }
 
 setup_user() {
@@ -203,12 +203,12 @@ setup_user() {
     mkdir -p "$HOME/Pictures/workspaces"
 
     # enable dbus for the user session
-    systemctl --user enable dbus.socket
+    sudo systemctl --user enable dbus.socket
 }
 
 setup_debian() {
-    apt-get update || true
-    apt-get install -y \
+    sudo apt-get update || true
+    sudo apt-get install -y \
         apt-transport-https \
         ca-certificates \
         curl \
@@ -218,27 +218,27 @@ setup_debian() {
         software-properties-common \
         --no-install-recommends
 
-    add-apt-repository main
+    sudo add-apt-repository main
 
     if case $(lsb_release -d | awk -F"\t" '{print $2}') in Ubuntu*) true ;; *) false ;; esac then
-        add-apt-repository universe
-        add-apt-repository multiverse
-        add-apt-repository restricted
+        sudo add-apt-repository universe
+        sudo add-apt-repository multiverse
+        sudo add-apt-repository restricted
     fi
 
     # Add the Google Chrome distribution URI as a package source if needed
     if ! [ -d "/opt/google/cros-containers" ]; then
         echo "Installing Chrome browser..."
         curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
-        apt install -y ./google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
         rm ./google-chrome-stable_current_amd64.deb
-        apt-get install -f
+        sudo apt-get install -f
     fi
 
-    apt-get update || true
-    apt-get -y upgrade
+    sudo apt-get update || true
+    sudo apt-get -y upgrade
 
-    apt-get install -y \
+    sudo apt-get install -y \
         adduser \
         alsa-utils \
         apparmor \
@@ -292,9 +292,9 @@ setup_debian() {
         zsh \
         --no-install-recommends
 
-    apt-get autoremove
-    apt-get autoclean
-    apt-get clean
+    sudo apt-get autoremove
+    sudo apt-get autoclean
+    sudo apt-get clean
 }
 
 setup_macos() {
