@@ -299,6 +299,7 @@ setup_debian() {
         xcompmgr \
         xz-utils \
         zip \
+        zsh \
         --no-install-recommends
 
     apt-get autoremove
