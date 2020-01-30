@@ -201,9 +201,6 @@ setup_user() {
     mkdir -p "$HOME/Pictures/Screenshots"
     mkdir -p "$HOME/Pictures/Wallpapers"
     mkdir -p "$HOME/Pictures/workspaces"
-
-    # enable dbus for the user session
-    sudo systemctl --user enable dbus.socket
 }
 
 setup_debian() {
