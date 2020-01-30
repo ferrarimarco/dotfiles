@@ -450,7 +450,7 @@ setup_shell() {
     if test "${os_name#*"Darwin"}" != "$os_name"; then
         user_default_shell="$(dscl . -read ~/ UserShell | sed 's/UserShell: //')"
     elif test "${os_name#*"Linux"}" != "$os_name"; then
-        user_default_shell="$(awk -F: -v user="foobar" '$1 == user {print $NF}' /etc/passwd)"
+        user_default_shell="$(awk -F: -v user="$USER" '$1 == user {print $NF}' /etc/passwd)"
     fi
     unset os_name
 
