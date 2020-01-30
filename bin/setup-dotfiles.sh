@@ -513,7 +513,6 @@ usage() {
     echo "  npm                                 - install npm packages"
     echo "  rubygems                            - install Ruby gems"
     echo "  update                              - update the system"
-    echo "  user                                - setup user"
 }
 
 main() {
@@ -530,19 +529,20 @@ main() {
     if [[ $cmd == "debian" ]]; then
         setup_debian
         setup_sudo
+        setup_shell
+        setup_user
     elif [[ $cmd == "docker" ]]; then
         setup_docker
     elif [[ $cmd == "macos" ]]; then
         setup_macos
         setup_shell
+        setup_user
         install_brew
         install_brew_formulae
     elif [[ $cmd == "npm" ]]; then
         install_npm
     elif [[ $cmd == "rubygems" ]]; then
         install_rubygems
-    elif [[ $cmd == "user" ]]; then
-        setup_user
     elif [[ $cmd == "update" ]]; then
         echo "Updating the system..."
         update_system
