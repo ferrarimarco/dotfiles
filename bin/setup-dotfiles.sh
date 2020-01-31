@@ -160,14 +160,21 @@ install_brew_formulae() {
     done <"$HOME"/.config/Code/extensions.txt
 }
 
-install_npm() {
-    npm install -g \
-        @google/clasp
+install_npm_packages() {
+    if command -v npm >/dev/null 2>&1; then
+        for f in \
+            @google/clasp; do
+            npm list -g "$f" || npm install -g "$f"
+        done
+    fi
 }
 
 install_rubygems() {
-    gem install \
-        bundler
+    if command -v gem >/dev/null 2>&1; then
+        gem update
+        gem install \
+            bundler
+    fi
 }
 
 setup_docker() {
@@ -499,6 +506,8 @@ update_system() {
         echo "Updating linux..."
     fi
     unset os_name
+
+    command -v npm >/dev/null 2>&1 && npm update -g
 }
 
 usage() {
@@ -507,7 +516,6 @@ usage() {
     echo "  debian                              - install base packages on a Debian system"
     echo "  docker                              - install docker"
     echo "  macos                               - setup macOS"
-    echo "  npm                                 - install npm packages"
     echo "  rubygems                            - install Ruby gems"
     echo "  update                              - update the system"
 }
@@ -528,6 +536,8 @@ main() {
         setup_sudo
         setup_shell
         setup_user
+        install_npm_packages
+        install_rubygems
     elif [[ $cmd == "docker" ]]; then
         setup_docker
     elif [[ $cmd == "macos" ]]; then
@@ -536,9 +546,7 @@ main() {
         setup_user
         install_brew
         install_brew_formulae
-    elif [[ $cmd == "npm" ]]; then
-        install_npm
-    elif [[ $cmd == "rubygems" ]]; then
+        install_npm_packages
         install_rubygems
     elif [[ $cmd == "update" ]]; then
         echo "Updating the system..."
