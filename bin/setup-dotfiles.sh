@@ -231,12 +231,15 @@ setup_debian() {
     fi
 
     # Add the Google Chrome distribution URI as a package source if needed
-    if ! [ -d "/opt/google/cros-containers" ]; then
+    # Don't install it if we're in crostini (Chrome OS linux environment) or if it's already installed
+    if ! [ -d "/opt/google/cros-containers" ] && ! dpkg -s google-chrome-stable >/dev/null 2>&1; then
         echo "Installing Chrome browser..."
         curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
         rm ./google-chrome-stable_current_amd64.deb
         sudo apt-get install -f
+    else
+        echo "Google Chrome is already installed"
     fi
 
     sudo apt-get update || true
