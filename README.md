@@ -38,17 +38,17 @@ To avoid repetitions, the customizations are categorized considering the type of
 
 There are also dotfiles for:
 
-- [Atom](atom/)
+- [Atom](atom)
 - [cURL](.curlrc)
 - [EditorConfig](.editorconfig)
-- Git: [.gitconfig](.gitconfig), [global gitignore](gitignore), [hooks](git-hooks/)
+- Git: [.gitconfig](.gitconfig), [global gitignore](gitignore), [hooks](git-hooks)
 - [readline](.inputrc)
 - [Nano](.nanorc)
 - [tmux](.tmux.conf)
-- [Visual Studio Code](.config/Code/)
+- [Visual Studio Code](.config/Code)
 - [wget](.wgetrc)
 - X: [.Xresources](.Xresources), [.xsessionrc](.xsessionrc)
-- [xfce](.config/xfce4/)
+- [xfce](.config/xfce4)
 
 ## Development
 
