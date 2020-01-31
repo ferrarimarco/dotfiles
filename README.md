@@ -38,7 +38,7 @@ To avoid repetitions, the customizations are categorized considering the type of
 
 There are also dotfiles for:
 
-- [Atom](atom)
+- [Atom](.atom)
 - [cURL](.curlrc)
 - [EditorConfig](.editorconfig)
 - Git: [.gitconfig](.gitconfig), [global gitignore](gitignore), [hooks](git-hooks)
