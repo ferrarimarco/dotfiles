@@ -6,6 +6,33 @@
 export ENV="$HOME"/.shells/.all/interactive.sh
 
 ###############################################################################
+# Shell                                                                       #
+###############################################################################
+
+export DEFAULT_SHELL
+DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
+
+# Set the default editor
+export EDITOR=/usr/bin/nano
+export TERMINAL="urxvt"
+export VISUAL=$EDITOR
+
+# Larger command history
+export HISTSIZE=50000000
+export HISTFILESIZE=$HISTSIZE
+export SAVEHIST=$HISTSIZE
+
+# Omit duplicates and commands that begin with a space from history.
+export HISTCONTROL='ignoreboth'
+
+# Prefer US English and use UTF-8
+export LANG="en_US.UTF-8"
+export LC_ALL=$LANG
+
+# Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
+export PYTHONIOENCODING='UTF-8'
+
+###############################################################################
 # Path                                                                        #
 ###############################################################################
 

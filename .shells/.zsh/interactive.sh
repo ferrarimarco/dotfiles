@@ -188,6 +188,12 @@ bindkey "^[m" copy-prev-shell-word
 # Prompt                                                                      #
 ###############################################################################
 
+export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
+
+# Don't run the configuration wizard
+export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+export ZSH_THEME_CONFIGURATION_PATH="$HOME"/.shells/.zsh/.p10k.zsh
+
 # Load the theme
 [ -f "$ZSH_THEME_PATH" ] && . "$ZSH_THEME_PATH"
 

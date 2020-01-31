@@ -7,3 +7,6 @@
 # and then start "bash" as a non-login non-interactive shell,
 # the startup scripts will correctly run.
 export BASH_ENV="$HOME"/.shells/.bash/environment.sh
+
+# Make some commands not show up in history
+export HISTIGNORE=""

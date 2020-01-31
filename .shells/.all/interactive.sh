@@ -1,10 +1,5 @@
 #!/usr/bin/env sh
 
-# shellcheck source=/dev/null
-FILE="${HOME}"/.extra && test -f "$FILE" && . "$FILE"
-
-unset FILE
-
 # Initialize rbenv if available
 if command -v rbenv >/dev/null 2>&1; then
     eval "$(rbenv init -)"
@@ -133,20 +128,20 @@ alias hosts='sudo nano /etc/hosts'
 alias untar='tar xvf'
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
+if command -v dircolors >/dev/null 2>&1; then
     # shellcheck disable=SC2015
     test -r "$HOME"/.dircolors && eval "$(dircolors -b "$HOME"/.dircolors)" || eval "$(dircolors -b)"
-    command -v ls >/dev/null || alias ls='ls --color=auto'
-    command -v dir >/dev/null || alias dir='dir --color=auto'
-    command -v vdir >/dev/null || alias vdir='vdir --color=auto'
+    command -v ls >/dev/null 2>&1 && alias ls='ls --color=auto'
+    command -v dir >/dev/null 2>&1 && alias dir='dir --color=auto'
+    command -v vdir >/dev/null && alias vdir='vdir --color=auto'
 
-    command -v grep >/dev/null || alias grep='grep --color=auto'
-    command -v fgrep >/dev/null || alias fgrep='fgrep --color=auto'
-    command -v sha1sum >/dev/null || alias egrep='egrep --color=auto'
+    command -v grep >/dev/null 2>&1 && alias grep='grep --color=auto'
+    command -v fgrep >/dev/null 2>&1 && alias fgrep='fgrep --color=auto'
+    command -v sha1sum >/dev/null 2>&1 && alias egrep='egrep --color=auto'
 fi
 
 # make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && export LESSOPEN="|lesspipe %s"
+command -v lesspipe >/dev/null 2>&1 && export LESSOPEN="|lesspipe %s"
 
 ###############################################################################
 # Prompt                                                                      #
@@ -156,4 +151,19 @@ if case "$COLORTERM" in "gnome-"*) true ;; *) false ;; esac && [ "$TERM" = "xter
     export TERM='gnome-256color'
 elif infocmp xterm-256color >/dev/null 2>&1; then
     export TERM='xterm-256color'
+fi
+
+###############################################################################
+# Git                                                                         #
+###############################################################################
+
+if command -v git >/dev/null 2>&1; then
+    GIT_AUTHOR_NAME="Marco Ferrari"
+    git config --global user.name "$GIT_AUTHOR_NAME"
+    GIT_AUTHOR_EMAIL="ferrari.marco@gmail.com"
+    git config --global user.email "$GIT_AUTHOR_EMAIL"
+    GH_USER="ferrarimarco"
+    git config --global github.user "$GH_USER"
+
+    git config --global commit.gpgsign false
 fi
