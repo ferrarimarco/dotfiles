@@ -64,6 +64,36 @@ shellcheck_dir() {
     unset dir
 }
 
+update_brew() {
+    echo "Upgrading brew and formulae"
+    brew update
+    brew upgrade
+
+    echo "Cleaning up brew..."
+    brew cleanup -s
+
+    echo "Checking for missing brew formula kegs..."
+    brew missing
+}
+
+update_system() {
+    os_name="$(uname -s)"
+    if test "${os_name#*"Darwin"}" != "$os_name"; then
+        echo "Updating macOS..."
+        sudo softwareupdate -ia
+        if command -v brew >/dev/null 2>&1; then
+            update_brew
+        fi
+    elif test "${os_name#*"Linux"}" != "$os_name"; then
+        echo "Updating linux..."
+        sudo apt-get update
+        sudo apt-get upgrade
+    fi
+    unset os_name
+
+    command -v npm >/dev/null 2>&1 && npm update -g
+}
+
 # Make a temporary directory and enter it
 tmpd() {
     dir=

@@ -68,9 +68,6 @@ install_brew() {
 }
 
 install_brew_formulae() {
-    # Make sure we’re using the latest Homebrew and formulae
-    update_brew
-
     # Save Homebrew’s installed location.
     BREW_PREFIX="$(brew --prefix)"
 
@@ -78,6 +75,7 @@ install_brew_formulae() {
         bash \
         bash-completion \
         coreutils \
+        docker-compose \
         findutils \
         gawk \
         git \
@@ -122,18 +120,19 @@ install_brew_formulae() {
         fi
     done
 
-    for f in \
-        google-cloud-sdk \
-        iterm2 \
-        virtualbox \
-        visual-studio-code; do
-        if ! brew cask ls --versions "$f" >/dev/null; then
-            echo "Installing $f cask"
-            brew cask install "$f"
-        else
-            echo "$f cask is already installed"
-        fi
-    done
+    # for f in \
+    #     docker \
+    #     google-cloud-sdk \
+    #     iterm2 \
+    #     virtualbox \
+    #     visual-studio-code; do
+    #     if ! brew cask ls --versions "$f" >/dev/null; then
+    #         echo "Installing $f cask"
+    #         brew cask install "$f"
+    #     else
+    #         echo "$f cask is already installed"
+    #     fi
+    # done
 
     if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
         echo "Add bash installed via brew to the list of allowed shells"
@@ -166,6 +165,8 @@ install_npm_packages() {
             @google/clasp; do
             npm list -g "$f" || npm install -g "$f"
         done
+    else
+        echo "WARNING: npm is not installed. Skipping npm package installation."
     fi
 }
 
@@ -174,33 +175,9 @@ install_rubygems() {
         gem update
         gem install \
             bundler
-    fi
-}
-
-setup_docker() {
-    if command -v docker >/dev/null 2>&1; then
-        echo "Docker is already installed"
     else
-        curl -sSL https://get.docker.com | sh
-
-        # create docker group
-        getent group docker >/dev/null 2>&1 || groupadd docker
-        gpasswd -a "$TARGET_USER" docker
+        echo "WARNING: gem is not installed. Skipping ruby gems installation."
     fi
-
-    if command -v docker-compose >/dev/null 2>&1; then
-        echo "Docker Compose is already installed"
-    else
-        docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
-        curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
-        chmod a+x /usr/local/bin/docker-compose
-    fi
-}
-
-# setup sudo for a user
-setup_sudo() {
-    # add user to sudoers
-    sudo adduser "$TARGET_USER" sudo
 }
 
 setup_user() {
@@ -302,12 +279,43 @@ setup_debian() {
     sudo apt-get autoremove
     sudo apt-get autoclean
     sudo apt-get clean
+
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "Installing Docker"
+        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+        sudo add-apt-repository \
+            "deb [arch=amd64] https://download.docker.com/linux/debian \
+            $(lsb_release -cs) \
+            stable"
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
+    fi
+
+    if ! command -v docker-compose >/dev/null 2>&1; then
+        echo "Installing Docker Compose"
+        docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
+        curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod a+x /usr/local/bin/docker-compose
+    fi
+
+    # add user to sudoers
+    sudo adduser "$TARGET_USER" sudo
+
+    # create docker group
+    getent group docker >/dev/null 2>&1 || groupadd docker
+
+    # Add user docker group
+    gpasswd -a "$TARGET_USER" docker
 }
 
 setup_macos() {
+    echo "Setting up macOS"
+
     ###############################################################################
     # General UI/UX                                                               #
     ###############################################################################
+
+    echo "Configuring macOS UI/UX"
 
     # Disable the sound effects on boot
     sudo nvram SystemAudioVolume=" "
@@ -318,6 +326,8 @@ setup_macos() {
     ###############################################################################
     # Mac App Store                                                               #
     ###############################################################################
+
+    echo "Configuring macOS App Store"
 
     # Enable the automatic update check
     sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate.plist AutomaticCheckEnabled -bool true
@@ -350,6 +360,8 @@ setup_macos() {
     # Dock                                                                        #
     ###############################################################################
 
+    echo "Configuring macOS Dock"
+
     # Change minimize/maximize window effect
     defaults write com.apple.dock mineffect -string "scale"
 
@@ -359,6 +371,8 @@ setup_macos() {
     ###############################################################################
     # Terminal & iTerm 2                                                          #
     ###############################################################################
+
+    echo "Configuring macOS Terminal"
 
     # Only use UTF-8 in Terminal.app
     defaults write com.apple.terminal StringEncodings -array 4
@@ -370,6 +384,8 @@ setup_macos() {
     # Trackpad                                                                    #
     ###############################################################################
 
+    echo "Configuring macOS Trackpad"
+
     # Trackpad: enable tap to click for this user
     defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
@@ -380,6 +396,8 @@ setup_macos() {
     ###############################################################################
     # Menu bar                                                                    #
     ###############################################################################
+
+    echo "Configuring macOS menu bar"
 
     # Show icons in the menu bar
     defaults write com.apple.systemuiserver menuExtras -array \
@@ -401,8 +419,10 @@ setup_macos() {
     # Adobe stuff                                                                 #
     ###############################################################################
 
+    echo "Configuring Adobe stuff in macOS"
+
     # Kill those processes
-    killall AGSService ACCFinderSync "Core Sync" AdobeCRDaemon "Adobe Creative" AdobeIPCBroker node "Adobe Desktop Service" "Adobe Crash Reporter" CCXProcess CCLibrary
+    killall AGSService ACCFinderSync "Core Sync" AdobeCRDaemon "Adobe Creative" AdobeIPCBroker node "Adobe Desktop Service" "Adobe Crash Reporter" CCXProcess CCLibrary || true
 
     # Disable Adobe autostart agents and daemons
     for i in /Library/LaunchAgents/com.adobe* \
@@ -434,13 +454,15 @@ setup_macos() {
     # Kill affected applications                                                  #
     ###############################################################################
 
+    echo "Killing and restarting affected apps"
+
     for app in "Activity Monitor" \
         "cfprefsd" \
         "Dock" \
         "Finder" \
         "SystemUIServer" \
         "Terminal"; do
-        killall "${app}" &>/dev/null
+        killall "${app}" &>/dev/null || true
     done
     echo "Done. Note that some of these changes require a logout/restart to take effect."
 }
@@ -472,55 +494,11 @@ setup_shell() {
     echo "The default shell is set to $DEFAULT_SHELL"
 }
 
-update_brew() {
-    echo "Upgrading brew and formulae"
-    brew update
-
-    while true; do
-        read -r -p "Build homebrew upgrades from source? (y/n) " yn
-        case $yn in
-        [Yy]*)
-            brew upgrade --build-from-source
-            break
-            ;;
-        [Nn]*)
-            brew upgrade
-            break
-            ;;
-        *) echo "Please answer yes or no." ;;
-        esac
-    done
-
-    echo "Cleaning up brew..."
-    brew cleanup -s
-
-    echo "Checking for missing brew formula kegs..."
-    brew missing
-}
-
-update_system() {
-    local os_name
-    os_name="$(uname -s)"
-    if test "${os_name#*"Darwin"}" != "$os_name"; then
-        echo "Updating macOS..."
-        sudo softwareupdate -ia
-        update_brew
-    elif test "${os_name#*"Linux"}" != "$os_name"; then
-        echo "Updating linux..."
-    fi
-    unset os_name
-
-    command -v npm >/dev/null 2>&1 && npm update -g
-}
-
 usage() {
     echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
     echo "Usage:"
     echo "  debian                              - install base packages on a Debian system"
-    echo "  docker                              - install docker"
     echo "  macos                               - setup macOS"
-    echo "  rubygems                            - install Ruby gems"
-    echo "  update                              - update the system"
 }
 
 main() {
@@ -536,13 +514,10 @@ main() {
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
-        setup_sudo
         setup_shell
         setup_user
         install_npm_packages
         install_rubygems
-    elif [[ $cmd == "docker" ]]; then
-        setup_docker
     elif [[ $cmd == "macos" ]]; then
         setup_macos
         setup_shell
