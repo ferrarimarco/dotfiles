@@ -209,3 +209,10 @@ if command -v brew &> /dev/null; then
     unset ZSH_SYNTAX_HIGHLIGHTING_PATH
     unset BREW_PREFIX
 fi
+
+###############################################################################
+# Aliases                                                                     #
+###############################################################################
+
+# shows the whole history
+alias history="history 0"
