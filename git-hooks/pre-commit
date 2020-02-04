@@ -25,6 +25,7 @@ echo "pre-commit: Looking for whitespace errors"
 if ! git diff-index --check --cached "$AGAINST"; then
     EXIT_CODE=$?
     echo "pre-commit: Aborting commit due to whitespace errors"
+    exit_on_error $EXIT_CODE
 else
     echo "pre-commit: No whitespace errors"
 fi
@@ -40,6 +41,7 @@ if command -v shellcheck >/dev/null 2>&1; then
             else
                 EXIT_CODE=$?
                 echo "pre-commit: shellcheck on $CHANGED_FILE FAILED"
+                exit_on_error $EXIT_CODE
             fi
         fi
     done
@@ -58,6 +60,7 @@ if command -v shfmt >/dev/null 2>&1; then
             else
                 EXIT_CODE=$?
                 echo "pre-commit: shfmt on $CHANGED_FILE FAILED"
+                exit_on_error $EXIT_CODE
             fi
         fi
     done
