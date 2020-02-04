@@ -24,10 +24,27 @@ EXIT_CODE=0
 echo "pre-commit: Looking for whitespace errors"
 if ! git diff-index --check --cached "$AGAINST"; then
     EXIT_CODE=$?
-    echo "pre-commit: Aborting commit due to whitespace errors"
+    echo "pre-commit: whitespace errors check FAILED"
     exit_on_error $EXIT_CODE
 else
-    echo "pre-commit: No whitespace errors"
+    echo "pre-commit: whitespace errors check PASSED"
+fi
+
+exit_on_error $EXIT_CODE
+
+if command -v tail >/dev/null 2>&1; then
+    echo "pre-commit: Checking if text files have a newline at the end..."
+    for CHANGED_FILE in $CHANGED_FILES; do
+        if [ -z "$(tail -c1 "$CHANGED_FILE")" ]; then
+            echo "pre-commit: $CHANGED_FILE newline at the end check PASSED"
+        else
+            EXIT_CODE=1
+            echo "pre-commit: $CHANGED_FILE newline at the end check FAILED"
+            exit_on_error $EXIT_CODE
+        fi
+    done
+else
+    echo "pre-commit: WARNING, tail is not installed!"
 fi
 
 exit_on_error $EXIT_CODE
