@@ -21,6 +21,7 @@ CHANGED_FILES="$(git diff-index --cached --name-only "$AGAINST")"
 
 EXIT_CODE=0
 
+echo "pre-commit: Looking for whitespace errors"
 if ! git diff-index --check --cached "$AGAINST"; then
     EXIT_CODE=$?
     echo "pre-commit: Aborting commit due to whitespace errors"
