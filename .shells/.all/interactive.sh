@@ -77,11 +77,11 @@ fi
 
 # List all files colorized in long format
 # shellcheck disable=SC2139
-alias l="ls -lF ${colorflag}"
+alias l="ls -lhF ${colorflag}"
 
 # List all files colorized in long format, including dot files
 # shellcheck disable=SC2139
-alias la="ls -laF ${colorflag}"
+alias la="ls -lahF ${colorflag}"
 
 # List only directories
 # shellcheck disable=SC2139
