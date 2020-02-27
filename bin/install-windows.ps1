@@ -29,6 +29,11 @@ function Install-Packages
   }
 }
 
+function Initialize-VSCode
+{
+    mklink "%APPDATA%\Code\settings.json" "%HOMEDRIVE%%HOMEPATH%\workspaces\dotfiles\.config\Code\User\settings.json"
+}
+
 function Install-VSCode-Extensions
 {
   Get-Content "..\.config\Code\extensions.txt" | ForEach-Object {
@@ -46,5 +51,6 @@ function Install-WSL
 Install-Chocolatey
 choco upgrade -y all
 Install-Packages
+Initialize-VSCode
 Install-VSCode-Extensions
 Install-WSL
