@@ -188,6 +188,9 @@ setup_user() {
 }
 
 setup_debian() {
+    echo "Setting up a Debian system"
+
+    echo "Installing the minimal set of packages"
     sudo apt-get update || true
     sudo apt-get install -y \
         apt-transport-https \
@@ -199,12 +202,23 @@ setup_debian() {
         software-properties-common \
         --no-install-recommends
 
-    sudo add-apt-repository main
+    distribution="$(lsb_release -d | awk -F"\t" '{print $2}')"
+    reqsubstr="rodete"
 
-    if case $(lsb_release -d | awk -F"\t" '{print $2}') in Ubuntu*) true ;; *) false ;; esac then
-        sudo add-apt-repository universe
-        sudo add-apt-repository multiverse
-        sudo add-apt-repository restricted
+    # If we're not in rodete
+    if [ -n "${distribution##*$reqsubstr*}" ]; then
+        echo "Adding the main APT repository"
+        sudo add-apt-repository main
+
+        case "$distribution" in
+        Ubuntu*)
+            echo "Adding other Ubuntu-specific APT repositories"
+            sudo add-apt-repository universe
+            sudo add-apt-repository multiverse
+            sudo add-apt-repository restricted
+            ;;
+        *) false ;;
+        esac
     fi
 
     # Add the Google Chrome distribution URI as a package source if needed
