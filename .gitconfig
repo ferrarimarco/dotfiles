@@ -171,8 +171,10 @@ insteadOf = "gist:"
 # Values set from my defaults in the .extra file
 [commit]
 gpgsign = false
+
 [user]
 name = Marco Ferrari
 email = ferrari.marco@gmail.com
+
 [github]
 user = ferrarimarco
