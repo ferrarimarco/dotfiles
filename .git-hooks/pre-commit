@@ -70,6 +70,11 @@ exit_on_error $EXIT_CODE
 if command -v shellcheck >/dev/null 2>&1; then
     echo "pre-commit: Running shellcheck..."
     for CHANGED_FILE in $CHANGED_FILES; do
+        if ! [ -e "$CHANGED_FILE" ]; then
+            echo "pre-commit: skipping shellcheck for $CHANGED_FILE because it was deleted"
+            continue
+        fi
+
         if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
             if shellcheck "$CHANGED_FILE"; then
                 echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
@@ -89,6 +94,11 @@ exit_on_error $EXIT_CODE
 if command -v shfmt >/dev/null 2>&1; then
     echo "pre-commit: Running shfmt..."
     for CHANGED_FILE in $CHANGED_FILES; do
+        if ! [ -e "$CHANGED_FILE" ]; then
+            echo "pre-commit: skipping shfmt for $CHANGED_FILE because it was deleted"
+            continue
+        fi
+
         if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
             if shfmt -d "$CHANGED_FILE"; then
                 echo "pre-commit: shfmt on $CHANGED_FILE PASSED"
