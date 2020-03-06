@@ -103,6 +103,28 @@ else
     echo "pre-commit: WARNING, shfmt is not installed!"
 fi
 
+if command -v terraform >/dev/null 2>&1; then
+    echo "pre-commit: Running terraform format check..."
+    for CHANGED_FILE in $CHANGED_FILES; do
+        if [ -f "$CHANGED_FILE" ] && [ -z "${CHANGED_FILE##*".tf"*}" ]; then
+            if ! [ -e "$CHANGED_FILE" ]; then
+                echo "pre-commit: skipping terraform fmt for $CHANGED_FILE because it was deleted"
+                continue
+            fi
+
+            if terraform fmt -check "$CHANGED_FILE"; then
+                echo "pre-commit: terraform fmt on $CHANGED_FILE PASSED"
+            else
+                EXIT_CODE=$?
+                echo "pre-commit: terraform fmt on $CHANGED_FILE FAILED. $CHANGED_FILE needs to be formatted"
+                exit_on_error $EXIT_CODE
+            fi
+        fi
+    done
+else
+    echo "pre-commit: WARNING, terraform is not installed!"
+fi
+
 exit_on_error $EXIT_CODE
 
 unset line
