@@ -17,6 +17,7 @@ function Install-Packages {
     'git',
     'keepass',
     'potplayer',
+    'terraform',
     'vagrant',
     'virtualbox --params "/NoDesktopShortcut /ExtensionPack"',
     'vlc',
