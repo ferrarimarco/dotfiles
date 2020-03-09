@@ -225,7 +225,7 @@ setup_debian() {
     # Don't install it if we're in crostini (Chrome OS linux environment) or if it's already installed
     if ! [ -d "/opt/google/cros-containers" ] && ! dpkg -s google-chrome-stable >/dev/null 2>&1; then
         echo "Installing Chrome browser..."
-        curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o google-chrome-stable_current_amd64.deb
+        curl -fsLo google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
         rm ./google-chrome-stable_current_amd64.deb
         sudo apt-get install -f
@@ -290,36 +290,51 @@ setup_debian() {
         zsh \
         --no-install-recommends
 
-    sudo apt-get autoremove
-    sudo apt-get autoclean
-    sudo apt-get clean
+    sudo apt-get -y autoremove
+    sudo apt-get -y autoclean
+    sudo apt-get -y clean
 
     if ! command -v docker >/dev/null 2>&1; then
         echo "Installing Docker"
         curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+        docker_distribution=
+        case "$distribution" in
+        Ubuntu*)
+            docker_distribution="ubuntu"
+            ;;
+        Debian*)
+            docker_distribution="debian"
+            ;;
+        *) exit 1 ;;
+        esac
+
         sudo add-apt-repository \
-            "deb [arch=amd64] https://download.docker.com/linux/debian \
+            "deb [arch=amd64] https://download.docker.com/linux/${docker_distribution} \
             $(lsb_release -cs) \
             stable"
         sudo apt-get update
-        sudo apt-get install docker-ce docker-ce-cli containerd.io
+        sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+
+        unset docker_distribution
     fi
 
     if ! command -v docker-compose >/dev/null 2>&1; then
-        echo "Installing Docker Compose"
+        echo "Getting Docker Compose version to install"
         docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
-        curl -sL https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)" -o /usr/local/bin/docker-compose
-        chmod a+x /usr/local/bin/docker-compose
+        echo "Installing Docker Compose $docker_compose_release"
+        sudo curl -fsLo /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)"
+        sudo chmod a+x /usr/local/bin/docker-compose
     fi
 
     # add user to sudoers
-    sudo adduser "$TARGET_USER" sudo
+    sudo gpasswd -a "$TARGET_USER" sudo
 
     # create docker group
-    getent group docker >/dev/null 2>&1 || groupadd docker
+    getent group docker >/dev/null 2>&1 || sudo groupadd docker
 
     # Add user docker group
-    gpasswd -a "$TARGET_USER" docker
+    sudo gpasswd -a "$TARGET_USER" docker
 }
 
 setup_macos() {
@@ -492,18 +507,30 @@ setup_shell() {
 
     local os_name
     os_name="$(uname -s)"
+    font_dir=
     user_default_shell=
     if test "${os_name#*"Darwin"}" != "$os_name"; then
+        font_dir="$HOME/Library/Fonts"
         user_default_shell="$(dscl . -read ~/ UserShell | sed 's/UserShell: //')"
     elif test "${os_name#*"Linux"}" != "$os_name"; then
+        font_dir="$HOME/.local/share/fonts"
         user_default_shell="$(awk -F: -v user="$USER" '$1 == user {print $NF}' /etc/passwd)"
     fi
     unset os_name
+
+    font_dir="${font_dir}/NerdFonts"
+    mkdir -p "${font_dir}"
+    ! [ -e "${font_dir}/MesloLGS NF Regular.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Regular.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+    ! [ -e "${font_dir}/MesloLGS NF Bold.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Bold.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+    ! [ -e "${font_dir}/MesloLGS NF Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+    ! [ -e "${font_dir}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
 
     if [ "$user_default_shell" != "$DEFAULT_SHELL" ]; then
         echo "Changing default shell to $DEFAULT_SHELL"
         chsh -s "$DEFAULT_SHELL"
     fi
+
+    unset font_dir
     unset user_default_shell
     echo "The default shell is set to $DEFAULT_SHELL"
 }
