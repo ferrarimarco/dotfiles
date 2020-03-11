@@ -20,3 +20,7 @@ trim_trailing_whitespace = true
 # Give operators breathing room, but not brackets
 spaces_around_operators = true
 spaces_around_brackets = false
+
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
