@@ -6,6 +6,13 @@ mkd() {
     cd "$@" || exit
 }
 
+add_ssh_known_hosts() {
+    SSH_KNOWN_HOSTS_PATH="$HOME"/.ssh/known_hosts
+    echo "Adding ${1} to known SSH hosts ($SSH_KNOWN_HOSTS_PATH)."
+    ssh-keyscan "${1}" >>"$SSH_KNOWN_HOSTS_PATH"
+    unset SSH_KNOWN_HOSTS_PATH
+}
+
 # If you install brew formulae from source, you may want to install its
 # deps from source as well
 brew_install_recursive_build_from_source() {
