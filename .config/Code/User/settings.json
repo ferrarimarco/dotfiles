@@ -12,7 +12,8 @@
     "html.format.indentInnerHtml": true,
     "html.format.indentHandlebars": true,
     "files.associations": {
-        "Vagrantfile": "ruby"
+        "Vagrantfile": "ruby",
+        "hosts": "yaml"
     },
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.cursorBlinking": true,
@@ -22,5 +23,8 @@
     "terminal.integrated.rightClickCopyPaste": true,
     "terraform.indexing.enabled": false,
     "terraform.languageServer.enabled": true,
-    "explorer.confirmDragAndDrop": false
+    "explorer.confirmDragAndDrop": false,
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    }
 }
