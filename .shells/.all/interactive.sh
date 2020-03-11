@@ -165,5 +165,5 @@ if command -v git >/dev/null 2>&1; then
     [ -z "$GH_USER" ] && GH_USER="ferrarimarco"
     [ "$(git config --global github.user)" != "$GH_USER" ] && git config --global github.user "$GH_USER"
     [ -z "$GIT_COMMIT_SIGN" ] && GIT_COMMIT_SIGN=false
-    [ "$(git config --global commit.gpgsign)" != "$GIT_COMMIT_SIGN" ] git config --global commit.gpgsign "$GIT_COMMIT_SIGN"
+    [ "$(git config --global commit.gpgsign)" != "$GIT_COMMIT_SIGN" ] && git config --global commit.gpgsign "$GIT_COMMIT_SIGN"
 fi
