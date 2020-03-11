@@ -158,12 +158,12 @@ fi
 ###############################################################################
 
 if command -v git >/dev/null 2>&1; then
-    GIT_AUTHOR_NAME="Marco Ferrari"
-    git config --global user.name "$GIT_AUTHOR_NAME"
-    GIT_AUTHOR_EMAIL="ferrari.marco@gmail.com"
-    git config --global user.email "$GIT_AUTHOR_EMAIL"
-    GH_USER="ferrarimarco"
-    git config --global github.user "$GH_USER"
-
-    git config --global commit.gpgsign false
+    [ -z "$GIT_AUTHOR_NAME" ] && GIT_AUTHOR_NAME="Marco Ferrari"
+    [ "$(git config --global user.name)" != "$GIT_AUTHOR_NAME" ] && git config --global user.name "$GIT_AUTHOR_NAME"
+    [ -z "$GIT_AUTHOR_EMAIL" ] && GIT_AUTHOR_EMAIL="ferrari.marco@gmail.com"
+    [ "$(git config --global user.email)" != "$GIT_AUTHOR_EMAIL" ] && git config --global user.email "$GIT_AUTHOR_EMAIL"
+    [ -z "$GH_USER" ] && GH_USER="ferrarimarco"
+    [ "$(git config --global github.user)" != "$GH_USER" ] && git config --global github.user "$GH_USER"
+    [ -z "$GIT_COMMIT_SIGN" ] && GIT_COMMIT_SIGN=false
+    [ "$(git config --global commit.gpgsign)" != "$GIT_COMMIT_SIGN" ] git config --global commit.gpgsign "$GIT_COMMIT_SIGN"
 fi
