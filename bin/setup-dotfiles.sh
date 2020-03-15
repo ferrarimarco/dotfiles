@@ -267,7 +267,10 @@ setup_debian() {
         jmeter \
         less \
         libc6-dev \
+        libgdbm-dev \
+        libgdbm-compat-dev \
         libpam-systemd \
+        libssl-dev \
         locales \
         lsof \
         make \
@@ -275,6 +278,8 @@ setup_debian() {
         nano \
         net-tools \
         pinentry-curses \
+        rbenv \
+        ruby-dev \
         rxvt-unicode \
         scdaemon \
         ssh \
@@ -289,6 +294,7 @@ setup_debian() {
         xcompmgr \
         xz-utils \
         zip \
+        zlib1g-dev \
         zsh \
         --no-install-recommends
 
