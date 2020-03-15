@@ -162,6 +162,7 @@ install_brew_formulae() {
 
 install_npm_packages() {
     if command -v npm >/dev/null 2>&1; then
+        echo "Installing NPM packages"
         for f in \
             @google/clasp \
             markdownlint-cli; do
@@ -174,8 +175,9 @@ install_npm_packages() {
 
 install_rubygems() {
     if command -v gem >/dev/null 2>&1; then
-        gem update
-        gem install \
+        echo "Installing Ruby gems"
+        sudo gem update
+        sudo gem install \
             bundler
     else
         echo "WARNING: gem is not installed. Skipping ruby gems installation."
@@ -526,6 +528,7 @@ setup_shell() {
     fi
     unset os_name
 
+    echo "Downloading fonts in ${font_dir}"
     font_dir="${font_dir}/NerdFonts"
     mkdir -p "${font_dir}"
     ! [ -e "${font_dir}/MesloLGS NF Regular.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Regular.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
