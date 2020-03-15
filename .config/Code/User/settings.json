@@ -6,6 +6,10 @@
     "editor.formatOnSave": true,
     "editor.renderControlCharacters": true,
     "editor.renderWhitespace": "all",
+    "editor.rulers": [
+        80,
+        120
+    ],
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "python.jediEnabled": false,
@@ -26,5 +30,8 @@
     "explorer.confirmDragAndDrop": false,
     "[dockerfile]": {
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    },
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#cfbcc391"
     }
 }
