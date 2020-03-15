@@ -5,7 +5,6 @@
 These are the dotfiles I use on my systems.
 
 ## Installation
-
 To install these dotfiles:
 
 1. Clone this repository

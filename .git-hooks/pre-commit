@@ -137,6 +137,30 @@ fi
 
 exit_on_error $EXIT_CODE
 
+if command -v markdownlint >/dev/null 2>&1; then
+    echo "pre-commit: Running markdownlint..."
+    for CHANGED_FILE in $CHANGED_FILES; do
+        if ! [ -e "$CHANGED_FILE" ]; then
+            echo "pre-commit: skipping markdownlint for $CHANGED_FILE because it was deleted"
+            continue
+        fi
+
+        if [ -f "$CHANGED_FILE" ] && case "$CHANGED_FILE" in *.md) ;; *) false ;; esac then
+            if markdownlint "$CHANGED_FILE"; then
+                echo "pre-commit: markdownlint on $CHANGED_FILE PASSED"
+            else
+                EXIT_CODE=$?
+                echo "pre-commit: markdownlint on $CHANGED_FILE FAILED"
+                exit_on_error $EXIT_CODE
+            fi
+        fi
+    done
+else
+    echo "pre-commit: WARNING, markdownlint is not installed!"
+fi
+
+exit_on_error $EXIT_CODE
+
 unset line
 unset EXIT_CODE
 unset CHANGED_FILE

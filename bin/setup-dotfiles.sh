@@ -163,7 +163,8 @@ install_brew_formulae() {
 install_npm_packages() {
     if command -v npm >/dev/null 2>&1; then
         for f in \
-            @google/clasp; do
+            @google/clasp \
+            markdownlint-cli; do
             npm list -g "$f" || npm install -g "$f"
         done
     else
