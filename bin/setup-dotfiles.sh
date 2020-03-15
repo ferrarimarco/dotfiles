@@ -511,8 +511,14 @@ setup_shell() {
 
     # Download ZSH themes
     CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
-    rm -rf "$CURRENT_ZSH_THEME_DIR"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
+    if [ -d "$CURRENT_ZSH_THEME_DIR" ]; then
+        echo "Updating ZSH theme in: $CURRENT_ZSH_THEME_DIR"
+        git -C "$CURRENT_ZSH_THEME_DIR" pull
+    else
+        echo "Downloading ZSH theme in: $CURRENT_ZSH_THEME_DIR"
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
+    fi
+
     unset CURRENT_ZSH_THEME_DIR
 
     local os_name
