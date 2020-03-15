@@ -188,7 +188,7 @@ setup_user() {
     mkdir -p "$HOME/Downloads"
     mkdir -p "$HOME/Pictures/Screenshots"
     mkdir -p "$HOME/Pictures/Wallpapers"
-    mkdir -p "$HOME/Pictures/workspaces"
+    mkdir -p "$HOME/workspaces"
 }
 
 setup_debian() {
