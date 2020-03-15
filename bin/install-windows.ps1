@@ -16,7 +16,7 @@ function Install-Packages {
     'conemu',
     'git',
     'keepass',
-    'potplayer',
+    'ruby',
     'terraform',
     'vagrant',
     'virtualbox --params "/NoDesktopShortcut /ExtensionPack"',
