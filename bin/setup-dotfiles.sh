@@ -248,6 +248,7 @@ setup_debian() {
         bash-completion \
         bc \
         bridge-utils \
+        build-essential \
         bzip2 \
         coreutils \
         dbus-user-session \
