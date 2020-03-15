@@ -72,6 +72,7 @@ install_brew_formulae() {
     BREW_PREFIX="$(brew --prefix)"
 
     for f in \
+        ansible \
         bash \
         bash-completion \
         coreutils \
