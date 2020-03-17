@@ -212,7 +212,7 @@ setup_debian() {
     # If we're not in rodete
     if [ -n "${distribution##*$reqsubstr*}" ]; then
         echo "Adding the main APT repository"
-        sudo add-apt-repository main
+        sudo add-apt-repository "main"
 
         case "$distribution" in
         Ubuntu*)
@@ -285,6 +285,7 @@ setup_debian() {
         ruby-dev \
         rxvt-unicode \
         scdaemon \
+        shellcheck \
         ssh \
         strace \
         sudo \
