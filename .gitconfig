@@ -19,6 +19,15 @@ di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD 
 # Pull in remote changes for the current repository and all its submodules
 p = !"git pull --recurse-submodules"
 
+# Get the current branch name (not so useful in itself, but used in
+# other aliases)
+branch-name = !git rev-parse --abbrev-ref HEAD
+
+# Push the current branch to the remote "origin", set it to track
+# the upstream branch, and display the URL to use to submit a PR if in a
+# GitHub-backed repository
+publish = !sh -c 'git push -u origin $(git branch-name)' -
+
 # Checkout a pull request from origin (of a github repository)
 pr = !"pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
 
