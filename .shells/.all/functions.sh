@@ -51,6 +51,25 @@ dump_defaults() {
     diff "$dir"/read-currentHost-before.out "$dir"/read-currentHost-after.out
 }
 
+check_eof_newline() {
+    dir=
+    if [ $# -eq 0 ]; then
+        dir="$(pwd)"
+    else
+        dir="${1}"
+    fi
+
+    find "$dir" -type f -not -path "*/\.git/*" >tmp
+    while IFS= read -r file; do
+        if [ -z "$(tail -c1 "$file")" ]; then
+            echo "[OK]: $file ends with a newline"
+        else
+            echo "[FAIL]: missing newline at the end of $file"
+        fi
+    done <tmp
+    rm tmp
+}
+
 # find all scripts and run `shellcheck`
 shellcheck_dir() {
     dir=
