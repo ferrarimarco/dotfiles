@@ -16,6 +16,49 @@ is_binary() {
     return 1
 }
 
+execute_command() {
+    command_name="$1"
+    command_options="$2"
+    message_prefix="$3"
+    intro_message="$4"
+    check_name="$5"
+
+    if command -v "$command_name" >/dev/null 2>&1; then
+        echo "$message_prefix: $intro_message"
+
+        for CHANGED_FILE in $CHANGED_FILES; do
+            if ! [ -e "$CHANGED_FILE" ]; then
+                echo "$message_prefix: skipping $check_name for $CHANGED_FILE because it was deleted"
+                continue
+            fi
+
+            if is_binary "$CHANGED_FILE"; then
+                echo "$message_prefix: skipping $check_name for $CHANGED_FILE because it's a binary"
+                continue
+            fi
+            command_to_run="$command_name $command_options"
+            if [ -z "$($command_to_run "$CHANGED_FILE")" ]; then
+                echo "$message_prefix: $CHANGED_FILE $check_name PASSED"
+            else
+                EXIT_CODE=1
+                echo "$message_prefix: $CHANGED_FILE $check_name FAILED"
+                unset command_to_run
+                exit_on_error $EXIT_CODE
+            fi
+        done
+    else
+        echo "$message_prefix: WARNING, $command_name is not available!"
+    fi
+
+    unset command_to_run
+    unset command_name
+    unset message_prefix
+    unset intro_message
+    unset check_name
+
+    exit_on_error $EXIT_CODE
+}
+
 # Check if this is the initial commit
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
     AGAINST=HEAD
@@ -39,33 +82,7 @@ fi
 
 exit_on_error $EXIT_CODE
 
-if command -v tail >/dev/null 2>&1; then
-    echo "pre-commit: Checking if text files have a newline at the end..."
-
-    for CHANGED_FILE in $CHANGED_FILES; do
-        if ! [ -e "$CHANGED_FILE" ]; then
-            echo "pre-commit: skipping newline check for $CHANGED_FILE because it was deleted"
-            continue
-        fi
-
-        if is_binary "$CHANGED_FILE"; then
-            echo "pre-commit: skipping newline check for $CHANGED_FILE because it's a binary"
-            continue
-        fi
-
-        if [ -z "$(tail -c1 "$CHANGED_FILE")" ]; then
-            echo "pre-commit: $CHANGED_FILE newline at the end check PASSED"
-        else
-            EXIT_CODE=1
-            echo "pre-commit: $CHANGED_FILE newline at the end check FAILED"
-            exit_on_error $EXIT_CODE
-        fi
-    done
-else
-    echo "pre-commit: WARNING, tail is not installed!"
-fi
-
-exit_on_error $EXIT_CODE
+execute_command "tail" "-c1" "pre-commit" "Checking if text files have a newline at the end..." "newline check"
 
 if command -v shellcheck >/dev/null 2>&1; then
     echo "pre-commit: Running shellcheck..."
