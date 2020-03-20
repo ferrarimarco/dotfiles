@@ -122,19 +122,32 @@ install_brew_formulae() {
         fi
     done
 
-    # for f in \
-    #     docker \
-    #     google-cloud-sdk \
-    #     iterm2 \
-    #     virtualbox \
-    #     visual-studio-code; do
-    #     if ! brew cask ls --versions "$f" >/dev/null; then
-    #         echo "Installing $f cask"
-    #         brew cask install "$f"
-    #     else
-    #         echo "$f cask is already installed"
-    #     fi
-    # done
+    while true; do
+        read -r -p "Install casks? (y/n) " yn
+        case $yn in
+        [Yy]*)
+            for f in \
+                docker \
+                google-cloud-sdk \
+                iterm2 \
+                virtualbox \
+                visual-studio-code; do
+                if ! brew cask ls --versions "$f" >/dev/null; then
+                    echo "Installing $f cask"
+                    brew cask install "$f"
+                else
+                    echo "$f cask is already installed"
+                fi
+            done
+            break
+            ;;
+        [Nn]*)
+            echo "Skipping cask installation"
+            break
+            ;;
+        *) echo "Please answer yes or no." ;;
+        esac
+    done
 
     if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
         echo "Add bash installed via brew to the list of allowed shells"
