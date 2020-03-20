@@ -80,6 +80,7 @@ install_brew_formulae() {
         findutils \
         gawk \
         git \
+        go \
         gnupg \
         gnu-getopt \
         gnu-indent \
@@ -185,6 +186,7 @@ install_rubygems() {
 }
 
 setup_user() {
+    mkdir -p "$HOME/.go"
     mkdir -p "$HOME/Downloads"
     mkdir -p "$HOME/Pictures/Screenshots"
     mkdir -p "$HOME/Pictures/Wallpapers"
