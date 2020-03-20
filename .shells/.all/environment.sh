@@ -36,15 +36,6 @@ export PYTHONIOENCODING='UTF-8'
 # Path                                                                        #
 ###############################################################################
 
-# go path
-GOPATH="${HOME}/.go"
-if [ -d "${GOPATH}" ]; then
-    export GOPATH
-    export PATH="/usr/local/go/bin:${GOPATH}/bin:${PATH}"
-else
-    unset GOPATH
-fi
-
 # ZSH related stuff
 export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
 
@@ -73,6 +64,17 @@ if [ -d "${HOMEBREW_PATH}" ]; then
     #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
 else
     unset HOMEBREW_PATH
+fi
+
+# go path
+GOPATH="${HOME}/.go"
+if [ -d "${GOPATH}" ]; then
+    export GOPATH
+    GOROOT="$(brew --prefix go)/libexec"
+    export GOROOT
+    export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
+else
+    unset GOPATH
 fi
 
 # add vs code bins to path
