@@ -612,6 +612,9 @@ main() {
     ask_for_sudo
     get_user
 
+    # shellcheck source=/dev/null
+    FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
+
     if [[ $cmd == "debian" ]]; then
         setup_debian
         setup_shell
@@ -620,20 +623,18 @@ main() {
         install_npm_packages
         install_python_packages
         install_rubygems
+        update_system
     elif [[ $cmd == "macos" ]]; then
         setup_macos
         setup_shell
         setup_user
         install_brew
+        update_system
         install_brew_formulae
         install_go_packages
         install_npm_packages
         install_python_packages
         install_rubygems
-    elif [[ $cmd == "update" ]]; then
-        echo "Updating the system..."
-        update_system
-        setup_shell
     else
         usage
     fi
