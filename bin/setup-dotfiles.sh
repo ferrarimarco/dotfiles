@@ -202,6 +202,16 @@ install_npm_packages() {
     fi
 }
 
+install_python_packages() {
+    if command -v pip3 >/dev/null 2>&1; then
+        echo "Installing Python 3 packages"
+        sudo pip3 install \
+            black
+    else
+        echo "WARNING: pip3 is not installed. Skipping Python 3 package installation."
+    fi
+}
+
 install_rubygems() {
     if command -v gem >/dev/null 2>&1; then
         echo "Installing Ruby gems"
@@ -608,6 +618,7 @@ main() {
         setup_user
         install_go_packages
         install_npm_packages
+        install_python_packages
         install_rubygems
     elif [[ $cmd == "macos" ]]; then
         setup_macos
@@ -617,6 +628,7 @@ main() {
         install_brew_formulae
         install_go_packages
         install_npm_packages
+        install_python_packages
         install_rubygems
     elif [[ $cmd == "update" ]]; then
         echo "Updating the system..."
