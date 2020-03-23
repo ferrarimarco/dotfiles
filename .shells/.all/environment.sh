@@ -52,6 +52,8 @@ if [ -d "${HOMEBREW_PATH}" ]; then
     export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
     export HOMEBREW_NO_ANALYTICS=1
 
+    GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
+
     # Uncomment the lines below if you want to use executables installed with Homebrew
     # instead of the macOS ones
     #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
@@ -72,7 +74,6 @@ export DEFAULT_SHELL
 GOPATH="${HOME}/.go"
 if [ -d "${GOPATH}" ]; then
     export GOPATH
-    GOROOT="$(brew --prefix go)/libexec"
     export GOROOT
     export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 else
