@@ -181,7 +181,15 @@ install_go_packages() {
         # Prepared the for loop, but installing only one package, so ignore
         # SC2043 for now.
         # shellcheck disable=SC2043
-        for f in golang.org/x/tools/cmd/goimports; do
+        for f in \
+            github.com/mdempsky/gocode \
+            github.com/ramya-rao-a/go-outline \
+            github.com/rogpeppe/godef \
+            github.com/sqs/goreturns \
+            github.com/stamblerre/gocode \
+            github.com/uudashr/gopkgs/v2/cmd/gopkgs \
+            golang.org/x/lint/golint \
+            golang.org/x/tools/cmd/goimports; do
             go list "$f" >/dev/null 2>&1 || echo "Installing $f" && go get "$f"
         done
     else
