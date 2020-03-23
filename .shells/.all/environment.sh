@@ -9,9 +9,6 @@ export ENV="$HOME"/.shells/.all/interactive.sh
 # Shell                                                                       #
 ###############################################################################
 
-export DEFAULT_SHELL
-DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
-
 # Set the default editor
 export EDITOR=/usr/bin/nano
 export TERMINAL="urxvt"
@@ -46,6 +43,7 @@ export PATH=$HOME/bin:$PATH
 # setup homebrew environment
 HOMEBREW_PATH=/usr/local/brew
 if [ -d "${HOMEBREW_PATH}" ]; then
+    DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
     export HOMEBREW_REPOSITORY=/usr/local/Homebrew
     export HOMEBREW_PATH
     export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
@@ -65,6 +63,10 @@ if [ -d "${HOMEBREW_PATH}" ]; then
 else
     unset HOMEBREW_PATH
 fi
+
+# Export default shell
+# Set a value for DEFAULT_SHELL for each OS
+export DEFAULT_SHELL
 
 # go path
 GOPATH="${HOME}/.go"
