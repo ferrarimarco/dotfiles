@@ -586,12 +586,12 @@ setup_shell() {
 
     if [ "$user_default_shell" != "$DEFAULT_SHELL" ]; then
         echo "Changing default shell to $DEFAULT_SHELL"
-        chsh -s "$DEFAULT_SHELL"
+        sudo chsh -s "$DEFAULT_SHELL" "$TARGET_USER"
     fi
 
     unset font_dir
     unset user_default_shell
-    echo "The default shell is set to $DEFAULT_SHELL"
+    echo "The default shell for $TARGET_USER is set to $DEFAULT_SHELL"
 }
 
 usage() {
