@@ -175,6 +175,20 @@ install_brew_formulae() {
     done <"$HOME"/.config/Code/extensions.txt
 }
 
+install_go_packages() {
+    if command -v go >/dev/null 2>&1; then
+        echo "Installing go packages"
+        # Prepared the for loop, but installing only one package, so ignore
+        # SC2043 for now.
+        # shellcheck disable=SC2043
+        for f in golang.org/x/tools/cmd/goimports; do
+            go list "$f" >/dev/null 2>&1 || echo "Installing $f" && go get "$f"
+        done
+    else
+        echo "WARNING: go is not installed. Skipping go package installation."
+    fi
+}
+
 install_npm_packages() {
     if command -v npm >/dev/null 2>&1; then
         echo "Installing NPM packages"
@@ -592,6 +606,7 @@ main() {
         setup_debian
         setup_shell
         setup_user
+        install_go_packages
         install_npm_packages
         install_rubygems
     elif [[ $cmd == "macos" ]]; then
@@ -600,6 +615,7 @@ main() {
         setup_user
         install_brew
         install_brew_formulae
+        install_go_packages
         install_npm_packages
         install_rubygems
     elif [[ $cmd == "update" ]]; then
