@@ -206,7 +206,9 @@ install_python_packages() {
     if command -v pip3 >/dev/null 2>&1; then
         echo "Installing Python 3 packages"
         sudo pip3 install \
-            black
+            black \
+            setuptools \
+            yamllint
     else
         echo "WARNING: pip3 is not installed. Skipping Python 3 package installation."
     fi
@@ -321,6 +323,7 @@ setup_debian() {
         nano \
         net-tools \
         pinentry-curses \
+        python3-pip \
         rbenv \
         ruby-dev \
         rxvt-unicode \
