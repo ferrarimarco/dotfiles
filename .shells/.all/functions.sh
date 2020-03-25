@@ -132,6 +132,23 @@ tmpd() {
     unset dir
 }
 
+yamllint_dir() {
+    dir=
+    if [ $# -eq 0 ]; then
+        dir="$(pwd)"
+    else
+        dir="${1}"
+    fi
+    find "$dir" -type f \( -iname \*.yml -o -iname \*.yaml \) -not -path "*/\\.git/*" | sort -u | while read -r f; do
+        if yamllint --strict "$f"; then
+            echo "[OK]: sucessfully linted $f"
+        else
+            echo "[FAIL]: found errors/warnings while linting $f"
+        fi
+    done
+    unset dir
+}
+
 # Use Git’s colored diff when available
 if command -v git >/dev/null 2>&1; then
     diff() {

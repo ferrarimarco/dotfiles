@@ -178,6 +178,30 @@ fi
 
 exit_on_error $EXIT_CODE
 
+if command -v yamllint >/dev/null 2>&1; then
+    echo "pre-commit: Running yamllint..."
+    for CHANGED_FILE in $CHANGED_FILES; do
+        if ! [ -e "$CHANGED_FILE" ]; then
+            echo "pre-commit: skipping yamllint for $CHANGED_FILE because it was deleted"
+            continue
+        fi
+
+        if [ -f "$CHANGED_FILE" ] && case "$CHANGED_FILE" in *.yml) ;; *.yaml) ;; *) false ;; esac then
+            if yamllint --strict "$CHANGED_FILE"; then
+                echo "pre-commit: yamllint on $CHANGED_FILE PASSED"
+            else
+                EXIT_CODE=$?
+                echo "pre-commit: yamllint on $CHANGED_FILE FAILED"
+                exit_on_error $EXIT_CODE
+            fi
+        fi
+    done
+else
+    echo "pre-commit: WARNING, yamllint is not installed!"
+fi
+
+exit_on_error $EXIT_CODE
+
 unset line
 unset EXIT_CODE
 unset CHANGED_FILE
