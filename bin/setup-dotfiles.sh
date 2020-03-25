@@ -630,11 +630,11 @@ main() {
         setup_debian
         setup_shell
         setup_user
+        update_system
         install_go_packages
         install_npm_packages
         install_python_packages
         install_rubygems
-        update_system
     elif [[ $cmd == "macos" ]]; then
         setup_macos
         setup_shell
