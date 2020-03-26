@@ -33,5 +33,7 @@
     },
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#cfbcc391"
-    }
+    },
+    "go.formatTool": "goimports",
+    "go.useLanguageServer": true
 }
