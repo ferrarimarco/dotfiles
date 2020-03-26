@@ -214,6 +214,12 @@ if command -v brew &> /dev/null; then
     unset BREW_PREFIX
 fi
 
+# Show expensive prompt segments only when needed
+typeset -g POWERLEVEL9K_GCLOUD_SHOW_ON_COMMAND='gcloud'
+typeset -g POWERLEVEL9K_GOOGLE_APP_CRED_SHOW_ON_COMMAND='gcloud'
+typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|helm|istioctl'
+typeset -g POWERLEVEL9K_TERRAFORM_SHOW_ON_COMMAND='terraform'
+
 ###############################################################################
 # Aliases                                                                     #
 ###############################################################################
