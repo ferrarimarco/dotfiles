@@ -42,7 +42,6 @@
       host                    # host
       dir                     # current directory
       vcs                     # git status
-      #prompt_char             # prompt symbol
   )
 
   # The list of segments shown on the right. Fill it with less important segments.
@@ -67,28 +66,31 @@
       # dotnet_version        # .NET version (https://dotnet.microsoft.com)
       rbenv                   # ruby version from rbenv (https://github.com/rbenv/rbenv)
       rvm                     # ruby version from rvm (https://rvm.io)
-      fvm                     # flutter version management (https://github.com/leoafarias/fvm)
+      # fvm                     # flutter version management (https://github.com/leoafarias/fvm)
       kubecontext             # current kubernetes context (https://kubernetes.io/)
       terraform               # terraform workspace (https://www.terraform.io)
-      aws                     # aws profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
+      # aws                   # aws profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
       # aws_eb_env            # aws elastic beanstalk environment (https://aws.amazon.com/elasticbeanstalk/)
       # azure                 # azure account name (https://docs.microsoft.com/en-us/cli/azure)
-      # gcloud                # google cloud cli acccount and project (https://cloud.google.com/)
-      # google_app_cred       # google application credentials (https://cloud.google.com/docs/authentication/production)
+      gcloud                  # google cloud cli acccount and project (https://cloud.google.com/)
+      google_app_cred         # google application credentials (https://cloud.google.com/docs/authentication/production)
       context                 # user@hostname
-      nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
-      ranger                  # ranger shell (https://github.com/ranger/ranger)
+      # nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
+      # ranger                  # ranger shell (https://github.com/ranger/ranger)
       vim_shell               # vim shell indicator (:sh)
       # midnight_commander    # midnight commander shell (https://midnight-commander.org/)
       vi_mode                 # vi mode (you don't need this if you've enabled prompt_char)
       # vpn_ip                # virtual private network indicator
-      # ram                   # free RAM
-      # load                  # CPU load
+      ram                     # free RAM
+      load                    # CPU load
+      disk_usage              # disk usage
       time                    # current time
       # public_ip             # public IP address
       # proxy                 # system-wide http/https/ftp proxy
-      # battery               # internal battery
+      battery                 # internal battery
       # example               # example user-defined segment (see prompt_example function below)
+      proxy                   # system-wide http/https/ftp proxy
+      wifi                    # WiFi speed
   )
 
   # display left segments on one line, and print the command prompt below it
