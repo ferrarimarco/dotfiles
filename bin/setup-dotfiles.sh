@@ -178,9 +178,6 @@ install_brew_formulae() {
 install_go_packages() {
     if command -v go >/dev/null 2>&1; then
         echo "Installing go packages"
-        # Prepared the for loop, but installing only one package, so ignore
-        # SC2043 for now.
-        # shellcheck disable=SC2043
         for f in \
             github.com/mdempsky/gocode \
             github.com/ramya-rao-a/go-outline \
@@ -189,7 +186,8 @@ install_go_packages() {
             github.com/stamblerre/gocode \
             github.com/uudashr/gopkgs/v2/cmd/gopkgs \
             golang.org/x/lint/golint \
-            golang.org/x/tools/cmd/goimports; do
+            golang.org/x/tools/cmd/goimports \
+            mvdan.cc/sh/v3/cmd/shfmt; do
             go list "$f" >/dev/null 2>&1 || echo "Installing $f" && go get "$f"
         done
     else
