@@ -203,7 +203,7 @@ install_npm_packages() {
         for f in \
             @google/clasp \
             markdownlint-cli; do
-            npm list -g "$f" || npm install -g "$f"
+            npm list -g "$f" || sudo npm install -g "$f"
         done
     else
         echo "WARNING: npm is not installed. Skipping npm package installation."
@@ -388,6 +388,12 @@ setup_debian() {
         echo "Installing Docker Compose $docker_compose_release"
         sudo curl -fsLo /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)"
         sudo chmod a+x /usr/local/bin/docker-compose
+    fi
+
+    if ! command -v node >/dev/null 2>&1; then
+        echo "Installing Node.js"
+        curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+        sudo apt-get install -y nodejs
     fi
 
     # add user to sudoers
