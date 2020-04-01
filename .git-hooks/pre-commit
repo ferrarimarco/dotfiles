@@ -133,7 +133,7 @@ fi
 if command -v terraform >/dev/null 2>&1; then
     echo "pre-commit: Running terraform format check..."
     for CHANGED_FILE in $CHANGED_FILES; do
-        if [ -f "$CHANGED_FILE" ] && [ -z "${CHANGED_FILE##*".tf"*}" ]; then
+        if [ -f "$CHANGED_FILE" ] && case "$CHANGED_FILE" in *.tf) ;; *.tfvars) ;; *) false ;; esac then
             if ! [ -e "$CHANGED_FILE" ]; then
                 echo "pre-commit: skipping terraform fmt for $CHANGED_FILE because it was deleted"
                 continue
