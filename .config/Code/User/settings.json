@@ -3,6 +3,7 @@
     "telemetry.enableCrashReporter": false,
     "explorer.confirmDelete": false,
     "workbench.startupEditor": "newUntitledFile",
+    "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.renderControlCharacters": true,
     "editor.renderWhitespace": "all",
