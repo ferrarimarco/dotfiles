@@ -34,6 +34,7 @@ export PYTHONIOENCODING='UTF-8'
 ###############################################################################
 
 # ZSH related stuff
+export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
 export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
 
 # update path

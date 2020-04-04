@@ -286,6 +286,16 @@ setup_debian() {
         echo "Google Chrome is already installed"
     fi
 
+    # Download zsh-autosuggestions
+    CURRENT_ZSH_AUTOSUGGESTIONS_DIR="$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")"
+    if [ -d "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR" ]; then
+        echo "Updating zsh-autosuggestions in: $CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
+        git -C "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR" pull
+    else
+        echo "Downloading zsh-autosuggestions in: $CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
+        git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
+    fi
+
     sudo apt-get update || true
     sudo apt-get -y upgrade
 

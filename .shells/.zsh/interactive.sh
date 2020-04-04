@@ -49,10 +49,6 @@ if command -v brew &> /dev/null; then
     [ -d "$ZSH_COMPLETIONS_PATH" ] && fpath=("$ZSH_COMPLETIONS_PATH" $fpath)
     unset ZSH_COMPLETIONS_PATH
 
-    ZSH_AUTOSUGGESTIONS_PATH="${BREW_PREFIX}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    [ -f "$ZSH_AUTOSUGGESTIONS_PATH" ] && . "$ZSH_AUTOSUGGESTIONS_PATH"
-    unset ZSH_AUTOSUGGESTIONS_PATH
-
     unset BREW_PREFIX
 fi
 
@@ -206,13 +202,22 @@ export ZSH_THEME_CONFIGURATION_PATH="$HOME"/.shells/.zsh/.p10k.zsh
 
 [ -f "$ZSH_THEME_CONFIGURATION_PATH" ] && . "$ZSH_THEME_CONFIGURATION_PATH"
 
+# Define zsh-autosuggestions path for non-macOS systems
+ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 if command -v brew &> /dev/null; then
     BREW_PREFIX="$(brew --prefix)"
     ZSH_SYNTAX_HIGHLIGHTING_PATH="${BREW_PREFIX}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     [ -f "$ZSH_SYNTAX_HIGHLIGHTING_PATH" ] && . "$ZSH_SYNTAX_HIGHLIGHTING_PATH"
     unset ZSH_SYNTAX_HIGHLIGHTING_PATH
     unset BREW_PREFIX
+
+    # On macOS, we install zsh-autosuggestions from brew
+    ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${BREW_PREFIX}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+
+[ -f "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" ] && . "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH"
+export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
 
 # Show expensive prompt segments only when needed
 typeset -g POWERLEVEL9K_GCLOUD_SHOW_ON_COMMAND='gcloud'
