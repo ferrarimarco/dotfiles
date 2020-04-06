@@ -1,8 +1,10 @@
+#Requires -RunAsAdministrator
+
 function Install-Chocolatey {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "", Justification = "Trusting Chocolatey installer")]
     param()
 
-    if (!$env:ChocolateyInstall) {
+    if (!$Env:ChocolateyInstall) {
         Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     }
     else {
@@ -29,7 +31,12 @@ function Install-Packages {
 }
 
 function Initialize-VSCode {
-    mklink "%APPDATA%\Code\User\settings.json" "%HOMEDRIVE%%HOMEPATH%\workspaces\dotfiles\.config\Code\User\settings.json"
+    Write-Host "Initializing Visual Studio Code"
+
+    $VsCodeConfigSourcePath = "$Env:HOMEDRIVE$Env:HOMEPATH\workspaces\dotfiles\.config\Code\User\settings.json"
+    $VsCodeConfigDestinationPath = "$Env:APPDATA\Code\User\settings.json"
+    Write-Host "Creating a symbolic link to the VS Code configuration files. Source: $VsCodeConfigSourcePath, destination: $VsCodeConfigDestinationPath..."
+    New-Item -Force -ItemType SymbolicLink -Path $VsCodeConfigDestinationPath -Value $VsCodeConfigSourcePath
 }
 
 function Install-VSCode-Extensions {
@@ -40,8 +47,18 @@ function Install-VSCode-Extensions {
 
 function Install-WSL {
     Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-    Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
-    Add-AppxPackage .\Ubuntu.appx
+
+    $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu18.04onWindows
+
+    if (!$WslPackage) {
+        Write-Host "Installing Ubuntu (WSL)"
+        Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
+        Add-AppxPackage .\Ubuntu.appx
+        Remove-Item .\Ubuntu.appx
+    }
+    else {
+        Write-Host "WSL package is already installed"
+    }
 }
 
 Install-Chocolatey
