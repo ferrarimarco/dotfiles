@@ -36,5 +36,8 @@
         "editorRuler.foreground": "#cfbcc391"
     },
     "go.formatTool": "goimports",
+    "go.toolsEnvVars": {
+        "GO111MODULE": "on"
+    },
     "go.useLanguageServer": true
 }
