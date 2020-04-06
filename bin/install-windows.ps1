@@ -40,7 +40,7 @@ function Initialize-VSCode {
 }
 
 function Install-VSCode-Extensions {
-    Get-Content "..\.config\Code\extensions.txt" | ForEach-Object {
+    Get-Content "..\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
         code --install-extension $_
     }
 }

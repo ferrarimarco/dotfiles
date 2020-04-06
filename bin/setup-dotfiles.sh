@@ -172,7 +172,7 @@ install_brew_formulae() {
 
     while IFS= read -r line; do
         code --install-extension "$line"
-    done <"$HOME"/.config/Code/extensions.txt
+    done <"$HOME"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
 }
 
 install_go_packages() {
