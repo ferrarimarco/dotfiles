@@ -31,11 +31,11 @@ function Install-Packages {
 }
 
 function Initialize-VSCode {
-    Write-Host "Initializing Visual Studio Code"
+    Write-Output "Initializing Visual Studio Code"
 
     $VsCodeConfigSourcePath = "$Env:HOMEDRIVE$Env:HOMEPATH\workspaces\dotfiles\.config\Code\User\settings.json"
     $VsCodeConfigDestinationPath = "$Env:APPDATA\Code\User\settings.json"
-    Write-Host "Creating a symbolic link to the VS Code configuration files. Source: $VsCodeConfigSourcePath, destination: $VsCodeConfigDestinationPath..."
+    Write-Output "Creating a symbolic link to the VS Code configuration files. Source: $VsCodeConfigSourcePath, destination: $VsCodeConfigDestinationPath..."
     New-Item -Force -ItemType SymbolicLink -Path $VsCodeConfigDestinationPath -Value $VsCodeConfigSourcePath
 }
 
@@ -51,13 +51,13 @@ function Install-WSL {
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu18.04onWindows
 
     if (!$WslPackage) {
-        Write-Host "Installing Ubuntu (WSL)"
+        Write-Output "Installing Ubuntu (WSL)"
         Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
         Add-AppxPackage .\Ubuntu.appx
         Remove-Item .\Ubuntu.appx
     }
     else {
-        Write-Host "WSL package is already installed"
+        Write-Output "WSL package is already installed"
     }
 }
 
