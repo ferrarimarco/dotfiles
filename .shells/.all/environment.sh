@@ -80,6 +80,8 @@ export DEFAULT_SHELL
 # go path
 GOPATH="${HOME}/.go"
 if [ -d "${GOPATH}" ]; then
+    GO111MODULE=on
+    export GO111MODULE
     export GOPATH
     export GOROOT
     export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"

@@ -92,7 +92,6 @@ install_brew_formulae() {
         p7zip \
         rbenv \
         shellcheck \
-        shfmt \
         terraform \
         tflint \
         tree \
