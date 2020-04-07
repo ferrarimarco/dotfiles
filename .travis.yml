@@ -57,7 +57,10 @@ jobs:
     - name: "Setup Debian"
       language: shell
       stage: setup
-      script: ./bin/setup-dotfiles.sh debian
+      script: |
+        docker run -it \
+          -v $(pwd):/usr/src:ro \
+          ubuntu:18.04 /usr/src/bin/setup-dotfiles.sh debian
 os: linux
 services:
   - docker
