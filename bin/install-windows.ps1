@@ -34,7 +34,13 @@ function Install-Packages {
     'vscode'
 
     ForEach ($Package in $Packages) {
-        choco install -y $Package
+        if (-not (& "choco" list $Package --local-only)) {
+            Write-Output "Installing $Package chocolatey package..."
+            choco install -y $Package
+        }
+        else {
+            Write-Output "$Package chocolatey package is already installed"
+        }
     }
 
     # Refresh the environment variables because we might have installed new
