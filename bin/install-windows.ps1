@@ -6,6 +6,14 @@ function Install-Chocolatey {
 
     if (!$Env:ChocolateyInstall) {
         Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+        # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
+        # variable and importing the Chocolatey profile module.
+        $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+        Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+
+        # refreshenv is now an alias for Update-SessionEnvironment
+        # (rather than invoking refreshenv.cmd, the *batch file* for use with cmd.exe)
     }
     else {
         Write-Output "Chocolatey is already installed. Upgrading..."
@@ -28,6 +36,10 @@ function Install-Packages {
     ForEach ($Package in $Packages) {
         choco install -y $Package
     }
+
+    # Refresh the environment variables because we might have installed new
+    # binaries with chocolatey.
+    refreshenv
 }
 
 function Initialize-VSCode {
