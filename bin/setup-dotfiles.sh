@@ -24,6 +24,7 @@ ask_for_sudo() {
 # Choose a user account to use for this installation
 get_user() {
     TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
+    echo "Set user to $TARGET_USER"
 }
 
 install_brew() {
