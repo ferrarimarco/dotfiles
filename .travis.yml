@@ -48,7 +48,7 @@ jobs:
     - name: "PSScriptAnalyzer"
       language: shell
       script: |
-        make PSScriptAnalyzer
+        make psscriptanalyzer
     - name: "Setup Debian"
       language: shell
       stage: setup
