@@ -69,7 +69,12 @@ if test "${os_name#*"Darwin"}" != "$os_name"; then
         unset HOMEBREW_PATH
     fi
 elif test "${os_name#*"Linux"}" != "$os_name"; then
-    DEFAULT_SHELL="$(command -v zsh)"
+    if command -v zsh >/dev/null 2>&1; then
+        DEFAULT_SHELL="$(command -v zsh)"
+    elif command -v bash >/dev/null 2>&1; then
+        DEFAULT_SHELL="$(command -v bash)"
+    fi
+
 fi
 unset os_name
 
