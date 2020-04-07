@@ -1,4 +1,5 @@
 ---
+dist: xenial
 script:
   - make test
 jobs:
@@ -21,6 +22,7 @@ jobs:
         rm tmp;
     - before_install: gem install travis --no-document
       install: echo "Overriding the default install, to avoid installing gems from the Gemfile"
+      language: shell
       name: "Travis lint"
       script: echo "n" | travis lint -x
     - name: "YAMLlint"
@@ -48,6 +50,7 @@ jobs:
       script: |
         make PSScriptAnalyzer
     - name: "Setup Debian"
+      language: shell
       stage: setup
       script: ./bin/setup-dotfiles.sh debian
 os: linux
