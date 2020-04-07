@@ -171,7 +171,7 @@ install_brew_formulae() {
     unset _vs_code_settings_dir
 
     while IFS= read -r line; do
-        code --install-extension "$line"
+        code --force --install-extension "$line"
     done <"$HOME"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
 }
 
