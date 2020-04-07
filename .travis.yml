@@ -60,7 +60,10 @@ jobs:
       script: |
         docker run -it \
           -v $(pwd):/usr/src:ro \
-          ubuntu:18.04 /usr/src/bin/setup-dotfiles.sh debian
+          ubuntu:18.04 \
+          apt-get update \
+          && apt-get install -y sudo \
+          && /usr/src/bin/setup-dotfiles.sh debian
 os: linux
 services:
   - docker
