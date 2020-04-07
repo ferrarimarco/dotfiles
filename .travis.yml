@@ -15,13 +15,18 @@ jobs:
         find "$(pwd)" -type f -not -path "*/\.git/*" >tmp; \
         while IFS= read -r file; do \
           case "$(git diff --no-index --numstat /dev/null "$file")" in \
-            "$(printf '%s\t-\t' -)"*) echo "skipping newline check for $file because it's a binary"; continue ;; \
-            *) echo "Checking $file"; [ -z "$(tail -c1 "$file")" ] || exit 1 ;; \
+            "$(printf '%s\t-\t' -)"*) \
+            echo "skipping newline check for $file because it's a binary"; \
+            continue ;; \
+            *) echo "Checking $file"; \
+            [ -z "$(tail -c1 "$file")" ] || exit 1 ;; \
           esac; \
         done <tmp; \
         rm tmp;
     - before_install: gem install travis --no-document
-      install: echo "Overriding the default install, to avoid installing gems from the Gemfile"
+      install: |
+        echo "Overriding the default install, to avoid installing gems from \
+        the Gemfile"
       language: shell
       name: "Travis lint"
       script: echo "n" | travis lint -x
