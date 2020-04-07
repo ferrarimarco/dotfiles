@@ -41,31 +41,37 @@ export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
 export PATH=/usr/local/bin:${PATH}:/sbin
 export PATH=$HOME/bin:$PATH
 
-# setup homebrew environment
-HOMEBREW_PATH=/usr/local/brew
-if [ -d "${HOMEBREW_PATH}" ]; then
-    DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
-    export HOMEBREW_REPOSITORY=/usr/local/Homebrew
-    export HOMEBREW_PATH
-    export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
-    export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
-    export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
-    export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
-    export HOMEBREW_NO_ANALYTICS=1
+os_name="$(uname -s)"
+if test "${os_name#*"Darwin"}" != "$os_name"; then
+    # setup homebrew environment
+    HOMEBREW_PATH=/usr/local/brew
+    if [ -d "${HOMEBREW_PATH}" ]; then
+        DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
+        export HOMEBREW_REPOSITORY=/usr/local/Homebrew
+        export HOMEBREW_PATH
+        export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
+        export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
+        export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
+        export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
+        export HOMEBREW_NO_ANALYTICS=1
 
-    GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
+        GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
 
-    # Uncomment the lines below if you want to use executables installed with Homebrew
-    # instead of the macOS ones
-    #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
-    #export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
-    #export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
-    #export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
-    #export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
-    #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
-else
-    unset HOMEBREW_PATH
+        # Uncomment the lines below if you want to use executables installed with Homebrew
+        # instead of the macOS ones
+        #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
+        #export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
+        #export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
+        #export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
+        #export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
+        #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
+    else
+        unset HOMEBREW_PATH
+    fi
+elif test "${os_name#*"Linux"}" != "$os_name"; then
+    DEFAULT_SHELL="$(command -v zsh)"
 fi
+unset os_name
 
 # Export default shell
 # Set a value for DEFAULT_SHELL for each OS
