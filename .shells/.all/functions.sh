@@ -117,9 +117,9 @@ update_system() {
     fi
     unset os_name
 
-    command -v npm >/dev/null 2>&1 && npm update -g
+    command -v npm >/dev/null 2>&1 && sudo npm update -g
 
-    command -v gem >/dev/null 2>&1 && gem update
+    command -v gem >/dev/null 2>&1 && sudo gem update
 }
 
 # Make a temporary directory and enter it
