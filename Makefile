@@ -51,12 +51,12 @@ psscriptanalyzer: ## Run PSScriptAnalyzer tests
 		--name df-psscriptanalyzer \
 		-v $(CURDIR):/usr/src:ro \
 		mcr.microsoft.com/powershell \
-		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse"
+		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse || exit 1 ;"
 
 .PHONY: shellcheck
 shellcheck: ## Run Shellcheck tests
 	@echo Running shellcheck
-	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
+	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -not -name "*.md"  -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
 		echo "Linting $$f"; \
 		docker run --rm -i $(DOCKER_FLAGS) \

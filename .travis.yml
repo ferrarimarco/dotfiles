@@ -1,8 +1,57 @@
 ---
-sudo: required
-
-services:
-  - docker
-
 script:
   - make test
+jobs:
+  fast_finish: true
+  include:
+    - name: "Whitespace error check"
+      language: shell
+      script: git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
+      stage: linting
+    - name: "Missing EOF newlines check"
+      language: shell
+      script: |
+        find "$(pwd)" -type f -not -path "*/\.git/*" >tmp; \
+        while IFS= read -r file; do \
+          case "$(git diff --no-index --numstat /dev/null "$file")" in \
+            "$(printf '%s\t-\t' -)"*) echo "skipping newline check for $file because it's a binary"; continue ;; \
+            *) echo "Checking $file"; [ -z "$(tail -c1 "$file")" ] || exit 1 ;; \
+          esac; \
+        done <tmp; \
+        rm tmp;
+    - before_install: gem install travis --no-document
+      install: echo "Overriding the default install, to avoid installing gems from the Gemfile"
+      name: "Travis lint"
+      script: echo "n" | travis lint -x
+    - name: "YAMLlint"
+      language: shell
+      install: sudo pip install -r requirements.txt
+      script: yamllint --strict $(git ls-files '*.yaml' '*.yml') || exit 1
+    - name: "Markdownlint"
+      install: npm install
+      language: node_js
+      node_js: node
+      script: |
+        find -name "*.md" -not -path "*/node_modules/*" \
+        | xargs markdownlint || exit 1
+    - name: "shfmt"
+      language: go
+      before_install: GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt
+      go: "1.14.1"
+      script: shfmt -d . || exit 1;
+    - name: "Shellcheck"
+      language: shell
+      script: |
+        make shellcheck
+    - name: "PSScriptAnalyzer"
+      language: shell
+      script: |
+        make PSScriptAnalyzer
+    - name: "Setup Debian"
+      stage: setup
+      script: ./bin/setup-dotfiles.sh debian
+os: linux
+services:
+  - docker
+stages:
+  - linting
