@@ -53,17 +53,16 @@ function Initialize-VSCode {
 
 function Install-VSCode-Extensions {
     Get-Content "..\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
-        $Command = "code --install-extension $_"
-        Invoke-Expression $Command
+        & "code" --install-extension $_
     }
 }
 
 function Install-WSL {
-    Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
-
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu18.04onWindows
 
     if (!$WslPackage) {
+        Write-Output "Enabling WSL"
+        Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
         Write-Output "Installing Ubuntu (WSL)"
         Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
         Add-AppxPackage .\Ubuntu.appx
@@ -76,7 +75,7 @@ function Install-WSL {
 }
 
 Install-Chocolatey
-choco upgrade -y all
+& "choco" upgrade -y all
 Install-Packages
 Initialize-VSCode
 Install-VSCode-Extensions
