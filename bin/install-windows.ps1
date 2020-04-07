@@ -33,7 +33,7 @@ function Install-Packages {
 function Initialize-VSCode {
     Write-Output "Initializing Visual Studio Code"
 
-    $VsCodeConfigSourcePath = "$Env:HOMEDRIVE$Env:HOMEPATH\workspaces\dotfiles\.config\Code\User\settings.json"
+    $VsCodeConfigSourcePath = "..\.config\Code\User\settings.json"
     $VsCodeConfigDestinationPath = "$Env:APPDATA\Code\User\settings.json"
     Write-Output "Creating a symbolic link to the VS Code configuration files. Source: $VsCodeConfigSourcePath, destination: $VsCodeConfigDestinationPath..."
     New-Item -Force -ItemType SymbolicLink -Path $VsCodeConfigDestinationPath -Value $VsCodeConfigSourcePath
