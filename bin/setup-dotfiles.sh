@@ -639,6 +639,9 @@ main() {
     get_user
 
     # shellcheck source=/dev/null
+    FILE="${HOME}"/.shells/.all/environment.sh && test -f "$FILE" && . "$FILE"
+
+    # shellcheck source=/dev/null
     FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
 
     if [[ $cmd == "debian" ]]; then
