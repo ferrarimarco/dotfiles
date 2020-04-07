@@ -59,7 +59,7 @@ function Install-VSCode-Extensions {
 }
 
 function Install-WSL {
-    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu18.04onWindows
 
@@ -68,6 +68,7 @@ function Install-WSL {
         Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
         Add-AppxPackage .\Ubuntu.appx
         Remove-Item .\Ubuntu.appx
+        Write-Output "A restart is required."
     }
     else {
         Write-Output "WSL package is already installed"
