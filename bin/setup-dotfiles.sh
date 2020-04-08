@@ -247,6 +247,7 @@ setup_debian() {
     sudo apt-get update || true
     sudo apt-get install -y \
         apt-transport-https \
+        apt-utils \
         ca-certificates \
         curl \
         dirmngr \
