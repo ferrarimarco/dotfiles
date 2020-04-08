@@ -42,7 +42,7 @@ export PATH=/usr/local/bin:${PATH}:/sbin
 export PATH=$HOME/bin:$PATH
 
 os_name="$(uname -s)"
-if test "${os_name#*"Darwin"}" != "$os_name"; then
+if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
     # setup homebrew environment
     HOMEBREW_PATH=/usr/local/brew
     if [ -d "${HOMEBREW_PATH}" ]; then
