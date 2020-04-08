@@ -187,16 +187,16 @@ bindkey "^[m" copy-prev-shell-word
 ###############################################################################
 
 # Load the theme
-source_file_if_available "$ZSH_THEME_PATH"
+source_file_if_available "$ZSH_THEME_PATH" || echo "WARNING: ZSH_THEME_PATH points to a non-existing resource"
 
 # Load the theme configuration
-source_file_if_available "$ZSH_THEME_CONFIGURATION_PATH"
+source_file_if_available "$ZSH_THEME_CONFIGURATION_PATH" || echo "WARNING: ZSH_THEME_CONFIGURATION_PATH points to a non-existing resource"
 
 # Load syntax highlighting
-source_file_if_available "$ZSH_SYNTAX_HIGHLIGHTING_PATH"
+source_file_if_available "$ZSH_SYNTAX_HIGHLIGHTING_PATH" || echo "WARNING: ZSH_SYNTAX_HIGHLIGHTING_PATH points to a non-existing resource"
 
 # Load autosuggestion configuration
-source_file_if_available "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH"
+source_file_if_available "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" || echo "WARNING: ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH points to a non-existing resource"
 
 # Show expensive prompt segments only when needed
 typeset -g POWERLEVEL9K_GCLOUD_SHOW_ON_COMMAND='gcloud'

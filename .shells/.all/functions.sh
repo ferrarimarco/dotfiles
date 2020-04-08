@@ -117,7 +117,9 @@ source_file_if_available() {
         . "$FILE"
     else
         echo "WARNING: cannot source $FILE because it doesn't exist."
+        return 1
     fi
+    return 0
 }
 
 update_brew() {
