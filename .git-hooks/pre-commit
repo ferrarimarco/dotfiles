@@ -92,7 +92,7 @@ if command -v shellcheck >/dev/null 2>&1; then
             continue
         fi
 
-        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
+        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$CHANGED_FILE"; then
             if shellcheck "$CHANGED_FILE"; then
                 echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
             else
@@ -116,7 +116,7 @@ if command -v shfmt >/dev/null 2>&1; then
             continue
         fi
 
-        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' "$CHANGED_FILE"; then
+        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$CHANGED_FILE"; then
             if shfmt -d "$CHANGED_FILE"; then
                 echo "pre-commit: shfmt on $CHANGED_FILE PASSED"
             else
