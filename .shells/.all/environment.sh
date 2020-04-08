@@ -68,6 +68,14 @@ if test "${os_name#*"Darwin"}" != "$os_name"; then
     else
         unset HOMEBREW_PATH
     fi
+
+    # add vs code bins to path
+    VS_CODE_PATH_MACOS="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
+    if [ -d "${VS_CODE_PATH_MACOS}" ]; then
+        export PATH="${VS_CODE_PATH_MACOS}:${PATH}"
+    else
+        unset VS_CODE_PATH_MACOS
+    fi
 elif test "${os_name#*"Linux"}" != "$os_name"; then
     if command -v zsh >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v zsh)"
@@ -92,12 +100,4 @@ if [ -d "${GOPATH}" ]; then
     export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 else
     unset GOPATH
-fi
-
-# add vs code bins to path
-VS_CODE_PATH_MACOS="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
-if [ -d "${VS_CODE_PATH_MACOS}" ]; then
-    export PATH="${VS_CODE_PATH_MACOS}:${PATH}"
-else
-    unset VS_CODE_PATH_MACOS
 fi
