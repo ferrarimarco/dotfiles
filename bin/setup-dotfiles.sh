@@ -287,11 +287,17 @@ setup_debian() {
         CHROME_ARCHIVE_PATH="$TEMP_DIRECTORY/$CHROME_ARCHIVE_NAME"
         curl -fsLo "$CHROME_ARCHIVE_PATH" https://dl.google.com/linux/direct/"$CHROME_ARCHIVE_NAME"
 
+        echo "Making the temporary directory world-accessible..."
+        chmod -Rv 777 "$TEMP_DIRECTORY"
+
         echo "Installing Chrome package..."
         sudo apt-get install -y "$CHROME_ARCHIVE_PATH"
 
         echo "Removing Chrome package..."
         rm "$CHROME_ARCHIVE_PATH"
+
+        echo "Removing the temporary directory..."
+        rm -rf "$TEMP_DIRECTORY"
 
         echo "Installing missing dependencies..."
         sudo apt-get install -f
