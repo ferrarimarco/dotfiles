@@ -654,8 +654,8 @@ main() {
         exit 1
     fi
 
-    ask_for_sudo
     get_user
+    ask_for_sudo
 
     # The source_file_if_available function might not be available, so
     # source the functions file "manually".
