@@ -33,10 +33,6 @@ export PYTHONIOENCODING='UTF-8'
 # Path                                                                        #
 ###############################################################################
 
-# ZSH related stuff
-export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
-export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
-
 # update path
 export PATH=/usr/local/bin:${PATH}:/sbin
 export PATH=$HOME/bin:$PATH
@@ -54,6 +50,12 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
         export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
         export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
         export HOMEBREW_NO_ANALYTICS=1
+
+        ZSH_SYNTAX_HIGHLIGHTING_PATH="${HOMEBREW_PATH}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+        ZSH_COMPLETIONS_PATH="${HOMEBREW_PATH}"/share/zsh-completions
+
+        # On macOS, we install zsh-autosuggestions from brew
+        ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${HOMEBREW_PATH}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
         GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
 
@@ -85,8 +87,18 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
 
     GOROOT="${HOME}/bin/go"
 
+    ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 fi
 unset os_name
+
+# ZSH related stuff that we might need during setup
+export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
+export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
+export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
+export ZSH_SYNTAX_HIGHLIGHTING_PATH
+export ZSH_COMPLETIONS_PATH
+export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
 
 # Export default shell
 # Set a value for DEFAULT_SHELL for each OS
