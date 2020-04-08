@@ -639,6 +639,11 @@ setup_shell() {
     ! [ -e "${font_dir}/MesloLGS NF Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
     ! [ -e "${font_dir}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
 
+    if [ -z "$DEFAULT_SHELL" ]; then
+        echo "The DEFAULT_SHELL variable is not set, or set to an empty string"
+        exit 1
+    fi
+
     if [ "$user_default_shell" != "$DEFAULT_SHELL" ]; then
         echo "Changing default shell to $DEFAULT_SHELL"
         sudo chsh -s "$DEFAULT_SHELL" "$TARGET_USER"
