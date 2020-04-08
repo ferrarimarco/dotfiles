@@ -245,7 +245,7 @@ setup_debian() {
 
     echo "Installing the minimal set of packages"
     sudo apt-get update || true
-    sudo apt-get install -y \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         apt-transport-https \
         apt-utils \
         ca-certificates \
@@ -335,7 +335,7 @@ setup_debian() {
     sudo apt-get update || true
     sudo apt-get -y upgrade
 
-    sudo apt-get install -y \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         adduser \
         alsa-utils \
         apparmor \
