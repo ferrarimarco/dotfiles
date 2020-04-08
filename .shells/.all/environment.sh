@@ -24,6 +24,7 @@ export HISTCONTROL='ignoreboth'
 
 # Prefer US English and use UTF-8
 export LANG="en_US.UTF-8"
+export LANGUAGE=$LANG
 export LC_ALL=$LANG
 
 # Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
