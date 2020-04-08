@@ -569,7 +569,7 @@ setup_macos() {
         "Finder" \
         "SystemUIServer" \
         "Terminal"; do
-        killall "${app}" &>/dev/null || true
+        killall "${app}" >/dev/null 2>&1 || true
     done
     echo "Done. Note that some of these changes require a logout/restart to take effect."
 }
