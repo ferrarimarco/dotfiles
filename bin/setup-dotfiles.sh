@@ -658,6 +658,7 @@ source_from_home_or_repo() {
     # source the functions file "manually".
     FILE_PATH_SUFFIX="${1}"
     FILE_PATH="${HOME}/${FILE_PATH_SUFFIX}"
+    echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
     if ! [ -f "$FILE_PATH" ]; then
         echo "Falling back to loading $FILE_PATH_SUFFIX from the git repository."
         FILE_PATH="../${FILE_PATH_SUFFIX}"
@@ -692,6 +693,8 @@ main() {
 
     get_user
     ask_for_sudo
+
+    echo "Current working directory: $(pwd)"
 
     # The source_file_if_available function might not be available, so
     # sourcing it with a function in this script
