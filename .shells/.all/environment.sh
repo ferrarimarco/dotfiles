@@ -37,6 +37,11 @@ export PYTHONIOENCODING='UTF-8'
 export PATH=/usr/local/bin:${PATH}:/sbin
 export PATH=$HOME/bin:$PATH
 
+# ZSH related stuff that we might need during setup
+export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
+export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
+export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
+
 os_name="$(uname -s)"
 if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
     # setup homebrew environment
@@ -93,15 +98,11 @@ fi
 unset os_name
 
 # ZSH related stuff that we might need during setup
-export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
-export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
-export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
 export ZSH_SYNTAX_HIGHLIGHTING_PATH
 export ZSH_COMPLETIONS_PATH
 export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
 
 # Export default shell
-# Set a value for DEFAULT_SHELL for each OS
 export DEFAULT_SHELL
 
 # go path
