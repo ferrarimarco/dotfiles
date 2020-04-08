@@ -63,7 +63,8 @@ jobs:
           -w="/usr/src" \
           ubuntu:18.04 \
           /bin/bash -c " \
-          apt-get update \
+          export DEBIAN_FRONTEND=noninteractive \
+          && apt-get update \
           && apt-get install -y sudo \
           && /usr/src/bin/setup-dotfiles.sh debian"
 os: linux

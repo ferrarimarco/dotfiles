@@ -250,6 +250,7 @@ setup_debian() {
         apt-utils \
         ca-certificates \
         curl \
+        dialog \
         dirmngr \
         gnupg2 \
         lsb-release \
@@ -281,16 +282,24 @@ setup_debian() {
         echo "Installing Chrome browser..."
 
         echo "Downloading Chrome package..."
-        curl -fsLo google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        TEMP_DIRECTORY="$(mktemp -d)"
+        CHROME_ARCHIVE_NAME=google-chrome-stable_current_amd64.deb
+        CHROME_ARCHIVE_PATH="$TEMP_DIRECTORY/$CHROME_ARCHIVE_NAME"
+        curl -fsLo "$CHROME_ARCHIVE_PATH" https://dl.google.com/linux/direct/"$CHROME_ARCHIVE_NAME"
 
         echo "Installing Chrome package..."
-        sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
+        sudo apt-get install -y "$CHROME_ARCHIVE_PATH"
 
         echo "Removing Chrome package..."
-        rm ./google-chrome-stable_current_amd64.deb
+        rm "$CHROME_ARCHIVE_PATH"
 
         echo "Installing missing dependencies..."
         sudo apt-get install -f
+
+        unset TEMP_DIRECTORY
+        unset CHROME_ARCHIVE_NAME
+        unset CHROME_ARCHIVE_PATH
+
     else
         echo "Google Chrome is already installed"
     fi
