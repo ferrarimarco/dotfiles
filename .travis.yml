@@ -60,6 +60,7 @@ jobs:
       script: |
         docker run -it \
           -v $(pwd):/usr/src:ro \
+          -w="/usr/src" \
           ubuntu:18.04 \
           /bin/bash -c " \
           apt-get update \
