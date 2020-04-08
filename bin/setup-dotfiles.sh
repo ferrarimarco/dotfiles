@@ -252,6 +252,7 @@ setup_debian() {
         curl \
         dialog \
         dirmngr \
+        git \
         gnupg2 \
         lsb-release \
         software-properties-common \
@@ -345,7 +346,6 @@ setup_debian() {
         fwupd \
         fwupdate \
         gcc \
-        git \
         glogg \
         gnupg \
         gnupg-agent \
