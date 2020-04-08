@@ -115,6 +115,8 @@ source_file_if_available() {
     if [ -f "$FILE" ]; then
         # shellcheck source=/dev/null
         . "$FILE"
+    else
+        echo "WARNING: cannot source $FILE because it doesn't exist."
     fi
 }
 
