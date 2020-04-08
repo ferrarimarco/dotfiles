@@ -90,6 +90,12 @@ shellcheck_dir() {
     unset dir
 }
 
+source_file_if_available() {
+    file_path="${1}"
+    # shellcheck source=/dev/null
+    FILE="${file_path}" && test -f "$FILE" && . "$FILE"
+}
+
 update_brew() {
     echo "Upgrading brew and formulae"
     brew update

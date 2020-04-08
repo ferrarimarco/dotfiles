@@ -657,11 +657,13 @@ main() {
     ask_for_sudo
     get_user
 
-    # shellcheck source=/dev/null
-    FILE="${HOME}"/.shells/.all/environment.sh && test -f "$FILE" && . "$FILE"
-
+    # The source_file_if_available function might not be available, so
+    # source the functions file "manually".
     # shellcheck source=/dev/null
     FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
+
+    # Use the source_file_if_available function now that's available
+    source_file_if_available "${HOME}"/.shells/.all/environment.sh
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
