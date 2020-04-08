@@ -243,10 +243,6 @@ setup_user() {
 setup_debian() {
     echo "Setting up a Debian system"
 
-    echo "Ensuring the $LANG locale is available..."
-    sudo locale-gen "$LANG"
-    sudo dpkg-reconfigure locales
-
     echo "Installing the minimal set of packages"
     sudo apt-get update || true
     sudo apt-get install -y \
@@ -258,9 +254,14 @@ setup_debian() {
         dirmngr \
         git \
         gnupg2 \
+        locales \
         lsb-release \
         software-properties-common \
         --no-install-recommends
+
+    echo "Ensuring the $LANG locale is available..."
+    sudo locale-gen "$LANG"
+    sudo dpkg-reconfigure locales
 
     distribution="$(lsb_release -d | awk -F"\t" '{print $2}')"
     reqsubstr="rodete"
