@@ -70,6 +70,26 @@ check_eof_newline() {
     rm tmp
 }
 
+# find all scripts and run `shfmt`
+shfmt_dir() {
+    dir=
+    if [ $# -eq 0 ]; then
+        dir="$(pwd)"
+    else
+        dir="${1}"
+    fi
+    find "$dir" -type f -not -path "*/\\.git/*" | sort -u | while read -r f; do
+        if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$f"; then
+            if shfmt -d "$f"; then
+                echo "shfmt on $f PASSED"
+            else
+                echo "shfmt on $f FAILED"
+            fi
+        fi
+    done
+    unset dir
+}
+
 # find all scripts and run `shellcheck`
 shellcheck_dir() {
     dir=
