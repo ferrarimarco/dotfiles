@@ -653,6 +653,28 @@ setup_shell() {
     echo "The default shell for $TARGET_USER is set to $DEFAULT_SHELL"
 }
 
+source_from_home_or_repo() {
+    # The source_file_if_available function might not be available, so
+    # source the functions file "manually".
+    FILE_PATH_SUFFIX="${1}"
+    FILE_PATH="${HOME}/${FILE_PATH_SUFFIX}"
+    if ! [ -f "$FILE_PATH" ]; then
+        echo "Falling back to loading $FILE_PATH_SUFFIX from the git repository."
+        FILE_PATH="../${FILE_PATH_SUFFIX}"
+    fi
+
+    echo "Loading $FILE_PATH..."
+    if [ -f "$FILE_PATH" ]; then
+        # shellcheck source=/dev/null
+        . "$FILE_PATH"
+    else
+        echo "ERROR: Cannot find the $FILE_PATH file."
+        exit 1
+    fi
+    unset FILE_PATH
+    unset FILE_PATH_SUFFIX
+}
+
 usage() {
     echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
     echo "Usage:"
@@ -672,19 +694,18 @@ main() {
     ask_for_sudo
 
     # The source_file_if_available function might not be available, so
-    # source the functions file "manually".
-    # shellcheck source=/dev/null
-    FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
+    # sourcing it with a function in this script
+    source_from_home_or_repo ".shells/.all/functions.sh"
 
-    # Use the source_file_if_available function now that's available
-    source_file_if_available "${HOME}"/.shells/.all/environment.sh
+    # Source the environment, because we it during setup
+    source_from_home_or_repo ".shells/.all/environment.sh"
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
 
         # Refresh the environment variables because there could be stale values,
         # after we installed packages, such as new shells.
-        source_file_if_available "${HOME}"/.shells/.all/environment.sh
+        source_from_home_or_repo ".shells/.all/environment.sh"
 
         setup_shell
         setup_user
