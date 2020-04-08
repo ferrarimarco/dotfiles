@@ -287,6 +287,11 @@ setup_debian() {
     fi
 
     # Download zsh-autosuggestions
+    if [ -z "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" ]; then
+        echo "The ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH variable is not set, or set to an empty string"
+        exit 1
+    fi
+
     CURRENT_ZSH_AUTOSUGGESTIONS_DIR="$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")"
     if [ -d "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR" ]; then
         echo "Updating zsh-autosuggestions in: $CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
@@ -595,6 +600,11 @@ setup_macos() {
 
 setup_shell() {
     echo "Setting up the shell..."
+
+    if [ -z "$ZSH_THEME_PATH" ]; then
+        echo "The ZSH_THEME_PATH variable is not set, or set to an empty string"
+        exit 1
+    fi
 
     # Download ZSH themes
     CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
