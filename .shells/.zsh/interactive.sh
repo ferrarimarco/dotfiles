@@ -45,9 +45,7 @@ if command -v brew &> /dev/null; then
     typeset -U FPATH fpath
     fpath=("$BREW_PREFIX"/share/zsh/site-functions $fpath)
 
-    ZSH_COMPLETIONS_PATH="$BREW_PREFIX"/share/zsh-completions
     [ -d "$ZSH_COMPLETIONS_PATH" ] && fpath=("$ZSH_COMPLETIONS_PATH" $fpath)
-    unset ZSH_COMPLETIONS_PATH
 
     unset BREW_PREFIX
 fi
@@ -188,36 +186,17 @@ bindkey "^[m" copy-prev-shell-word
 # Prompt                                                                      #
 ###############################################################################
 
-export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
-
-# Don't run the configuration wizard
-export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-export ZSH_THEME_CONFIGURATION_PATH="$HOME"/.shells/.zsh/.p10k.zsh
-
 # Load the theme
-[ -f "$ZSH_THEME_PATH" ] && . "$ZSH_THEME_PATH"
+source_file_if_available "$ZSH_THEME_PATH"
 
 # Load the theme configuration
-[ -f "$ZSH_THEME_CONFIGURATION_PATH" ] && . "$ZSH_THEME_CONFIGURATION_PATH"
+source_file_if_available "$ZSH_THEME_CONFIGURATION_PATH"
 
-[ -f "$ZSH_THEME_CONFIGURATION_PATH" ] && . "$ZSH_THEME_CONFIGURATION_PATH"
+# Load syntax highlighting
+source_file_if_available "$ZSH_SYNTAX_HIGHLIGHTING_PATH"
 
-# Define zsh-autosuggestions path for non-macOS systems
-ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-if command -v brew &> /dev/null; then
-    BREW_PREFIX="$(brew --prefix)"
-    ZSH_SYNTAX_HIGHLIGHTING_PATH="${BREW_PREFIX}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    [ -f "$ZSH_SYNTAX_HIGHLIGHTING_PATH" ] && . "$ZSH_SYNTAX_HIGHLIGHTING_PATH"
-    unset ZSH_SYNTAX_HIGHLIGHTING_PATH
-    unset BREW_PREFIX
-
-    # On macOS, we install zsh-autosuggestions from brew
-    ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${BREW_PREFIX}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-[ -f "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" ] && . "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH"
-export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
+# Load autosuggestion configuration
+source_file_if_available "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH"
 
 # Show expensive prompt segments only when needed
 typeset -g POWERLEVEL9K_GCLOUD_SHOW_ON_COMMAND='gcloud'

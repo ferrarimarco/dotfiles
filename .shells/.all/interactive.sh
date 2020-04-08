@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# We don't have the source_file_if_available function yet
+# shellcheck source=/dev/null
+FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
+
 # Initialize rbenv if available
 if command -v rbenv >/dev/null 2>&1; then
     eval "$(rbenv init -)"
@@ -20,13 +24,9 @@ fi
 # Aliases                                                                     #
 ###############################################################################
 
-# shellcheck source=/dev/null
-FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
-
 # source docker aliases if docker is installed
 if command -v docker >/dev/null 2>&1; then
-    # shellcheck source=/dev/null
-    FILE="${HOME}"/.shells/.all/dockerfunctions.sh && test -f "$FILE" && . "$FILE"
+    source_file_if_available "${HOME}"/.shells/.all/dockerfunctions.sh
 fi
 
 # Check for various OS openers. Quit as soon as we find one that works.
