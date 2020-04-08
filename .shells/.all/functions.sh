@@ -111,9 +111,11 @@ shellcheck_dir() {
 }
 
 source_file_if_available() {
-    file_path="${1}"
-    # shellcheck source=/dev/null
-    FILE="${file_path}" && test -f "$FILE" && . "$FILE"
+    FILE="${1}"
+    if [ -f "$FILE" ]; then
+        # shellcheck source=/dev/null
+        . "$FILE"
+    fi
 }
 
 update_brew() {
