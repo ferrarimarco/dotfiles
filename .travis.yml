@@ -61,10 +61,10 @@ jobs:
         docker run -it \
           -v $(pwd):/usr/src:ro \
           ubuntu:18.04 \
-          whoami \
-          && apt-get update \
+          /bin/bash -c " \
+          apt-get update \
           && apt-get install -y sudo \
-          && /usr/src/bin/setup-dotfiles.sh debian
+          && /usr/src/bin/setup-dotfiles.sh debian"
 os: linux
 services:
   - docker
