@@ -64,6 +64,8 @@ jobs:
           ubuntu:18.04 \
           /bin/bash -c " \
           export DEBIAN_FRONTEND=noninteractive \
+          echo 'debconf debconf/frontend select Noninteractive' \
+          | debconf-set-selections \
           && apt-get update \
           && apt-get install -y sudo \
           && /usr/src/bin/setup-dotfiles.sh debian"
