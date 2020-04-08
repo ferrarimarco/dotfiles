@@ -61,7 +61,8 @@ jobs:
         docker run -it \
           -v $(pwd):/usr/src:ro \
           ubuntu:18.04 \
-          apt-get update \
+          whoami \
+          && apt-get update \
           && apt-get install -y sudo \
           && /usr/src/bin/setup-dotfiles.sh debian
 os: linux
