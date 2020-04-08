@@ -261,7 +261,8 @@ setup_debian() {
 
     echo "Ensuring the $LANG locale is available..."
     sudo locale-gen "$LANG"
-    sudo dpkg-reconfigure locales
+    sudo dpkg-reconfigure --frontend=noninteractive locales
+    sudo update-locale LANG="$LANG" LANGUAGE="$LANGUAGE" LC_ALL="$LC_ALL"
 
     distribution="$(lsb_release -d | awk -F"\t" '{print $2}')"
     reqsubstr="rodete"
