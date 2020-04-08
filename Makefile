@@ -34,7 +34,7 @@ dotfiles: ## Installs dotfiles
 	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
 
 .PHONY: test
-test: shellcheck psscriptanalyzer ## Run tests
+test: shfmt shellcheck psscriptanalyzer ## Run tests
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -52,6 +52,15 @@ psscriptanalyzer: ## Run PSScriptAnalyzer tests
 		-v $(CURDIR):/usr/src:ro \
 		mcr.microsoft.com/powershell \
 		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse || exit 1 ;"
+
+.PHONY: shfmt
+shfmt: ## Run shfmt tests
+	@echo Running shfmt
+	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -not -name "*.md"  -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
+		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
+		echo "Linting $$f"; \
+		shfmt -d "$$f" || exit 1 ; \
+	done;
 
 .PHONY: shellcheck
 shellcheck: ## Run Shellcheck tests
