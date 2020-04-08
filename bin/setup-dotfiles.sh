@@ -681,11 +681,11 @@ main() {
         install_rubygems
     elif [[ $cmd == "macos" ]]; then
         setup_macos
+        install_brew
+        install_brew_formulae
         setup_shell
         setup_user
-        install_brew
         update_system
-        install_brew_formulae
         install_go_packages
         install_npm_packages
         install_python_packages
