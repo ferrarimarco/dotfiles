@@ -243,6 +243,10 @@ setup_user() {
 setup_debian() {
     echo "Setting up a Debian system"
 
+    echo "Ensuring the $LANG locale is available..."
+    sudo locale-gen "$LANG"
+    sudo dpkg-reconfigure locales
+
     echo "Installing the minimal set of packages"
     sudo apt-get update || true
     sudo apt-get install -y \
