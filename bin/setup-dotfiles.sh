@@ -315,7 +315,6 @@ setup_debian() {
         build-essential \
         bzip2 \
         coreutils \
-        dbus-user-session \
         dnsutils \
         file \
         findutils \
