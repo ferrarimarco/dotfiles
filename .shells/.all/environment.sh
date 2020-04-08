@@ -83,6 +83,8 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
         DEFAULT_SHELL="$(command -v bash)"
     fi
 
+    GOROOT="${HOME}/bin/go"
+
 fi
 unset os_name
 
