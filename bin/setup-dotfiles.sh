@@ -660,11 +660,18 @@ source_from_home_or_repo() {
     FILE_PATH="${HOME}/${FILE_PATH_SUFFIX}"
     echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
     if ! [ -f "$FILE_PATH" ]; then
-        echo "Falling back to loading $FILE_PATH_SUFFIX from the git repository."
-        FILE_PATH="../${FILE_PATH_SUFFIX}"
+        # Get the absolute path to this script
+        SCRIPT_PATH="$(readlink -f "$0")"
+        SCRIPT_DIRECTORY="$(dirname "$SCRIPT_PATH")"
+        # Go back one level to get the root of the repository
+        FILE_PATH="${SCRIPT_DIRECTORY}/../${FILE_PATH_SUFFIX}"
+
+        echo "Falling back to loading $FILE_PATH_SUFFIX from the git repository, in ${SCRIPT_DIRECTORY}."
+
+        unset SCRIPT_PATH
     fi
 
-    echo "Loading $FILE_PATH..."
+    echo "Sourcing $FILE_PATH..."
     if [ -f "$FILE_PATH" ]; then
         # shellcheck source=/dev/null
         . "$FILE_PATH"
@@ -674,6 +681,7 @@ source_from_home_or_repo() {
     fi
     unset FILE_PATH
     unset FILE_PATH_SUFFIX
+    unset SCRIPT_DIRECTORY
 }
 
 usage() {
