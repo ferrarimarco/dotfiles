@@ -667,6 +667,11 @@ main() {
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
+
+        # Refresh the environment variables because there could be stale values,
+        # after we installed packages, such as new shells.
+        source_file_if_available "${HOME}"/.shells/.all/environment.sh
+
         setup_shell
         setup_user
         update_system
