@@ -786,8 +786,6 @@ source_from_home_or_repo() {
         echo "Falling back to loading $FILE_PATH_SUFFIX from ${FILE_PATH}."
 
         unset SCRIPT_PATH
-
-        ech
     fi
 
     echo "Sourcing $FILE_PATH..."
