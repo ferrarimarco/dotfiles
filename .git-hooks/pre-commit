@@ -1,5 +1,15 @@
 #!/usr/bin/env sh
 
+set -e
+
+ends_with_newline() {
+    if [ -z "$(tail -c1 "${1}")" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 exit_on_error() {
     EXIT_CODE=$1
     # shellcheck disable=SC2086
@@ -16,33 +26,49 @@ is_binary() {
     return 1
 }
 
+is_supported_shell_script() {
+    grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "${1}"
+    CHECK_RETURN_CODE=$?
+    return $CHECK_RETURN_CODE
+}
+
 execute_command() {
-    command_name="$1"
-    command_options="$2"
+    check_name="$1"
+    command_name="$2"
     message_prefix="$3"
     intro_message="$4"
-    check_name="$5"
+    check_name_output="$5"
+    include_file_condition=$6
+
+    EXIT_CODE=0
 
     if command -v "$command_name" >/dev/null 2>&1; then
         echo "$message_prefix: $intro_message"
 
         for CHANGED_FILE in $CHANGED_FILES; do
             if ! [ -e "$CHANGED_FILE" ]; then
-                echo "$message_prefix: skipping $check_name for $CHANGED_FILE because it was deleted"
+                echo "$message_prefix: skipping $check_name_output for $CHANGED_FILE because it was deleted"
                 continue
             fi
 
             if is_binary "$CHANGED_FILE"; then
-                echo "$message_prefix: skipping $check_name for $CHANGED_FILE because it's a binary"
+                echo "$message_prefix: skipping $check_name_output for $CHANGED_FILE because it's a binary"
                 continue
             fi
-            command_to_run="$command_name $command_options"
-            if [ -z "$($command_to_run "$CHANGED_FILE")" ]; then
-                echo "$message_prefix: $CHANGED_FILE $check_name PASSED"
+
+            # If there's a condition to check use it
+            if [ -n "$include_file_condition" ]; then
+                # Skip this file if it doesn't pass the include condition
+                if ! $include_file_condition "$CHANGED_FILE"; then
+                    continue
+                fi
+            fi
+
+            if $check_name "$CHANGED_FILE"; then
+                echo "$message_prefix: $check_name_output on $CHANGED_FILE PASSED"
             else
                 EXIT_CODE=1
-                echo "$message_prefix: $CHANGED_FILE $check_name FAILED"
-                unset command_to_run
+                echo "$message_prefix: $check_name_output on $CHANGED_FILE FAILED"
                 exit_on_error $EXIT_CODE
             fi
         done
@@ -50,8 +76,6 @@ execute_command() {
         echo "$message_prefix: WARNING, $command_name is not available!"
     fi
 
-    unset command_to_run
-    unset command_name
     unset message_prefix
     unset intro_message
     unset check_name
@@ -82,53 +106,9 @@ fi
 
 exit_on_error $EXIT_CODE
 
-execute_command "tail" "-c1" "pre-commit" "Checking if text files have a newline at the end..." "newline check"
-
-if command -v shellcheck >/dev/null 2>&1; then
-    echo "pre-commit: Running shellcheck..."
-    for CHANGED_FILE in $CHANGED_FILES; do
-        if ! [ -e "$CHANGED_FILE" ]; then
-            echo "pre-commit: skipping shellcheck for $CHANGED_FILE because it was deleted"
-            continue
-        fi
-
-        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$CHANGED_FILE"; then
-            if shellcheck "$CHANGED_FILE"; then
-                echo "pre-commit: shellcheck on $CHANGED_FILE PASSED"
-            else
-                EXIT_CODE=$?
-                echo "pre-commit: shellcheck on $CHANGED_FILE FAILED"
-                exit_on_error $EXIT_CODE
-            fi
-        fi
-    done
-else
-    echo "pre-commit: WARNING, shellcheck is not installed!"
-fi
-
-exit_on_error $EXIT_CODE
-
-if command -v shfmt >/dev/null 2>&1; then
-    echo "pre-commit: Running shfmt..."
-    for CHANGED_FILE in $CHANGED_FILES; do
-        if ! [ -e "$CHANGED_FILE" ]; then
-            echo "pre-commit: skipping shfmt for $CHANGED_FILE because it was deleted"
-            continue
-        fi
-
-        if [ -f "$CHANGED_FILE" ] && grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$CHANGED_FILE"; then
-            if shfmt -d "$CHANGED_FILE"; then
-                echo "pre-commit: shfmt on $CHANGED_FILE PASSED"
-            else
-                EXIT_CODE=$?
-                echo "pre-commit: shfmt on $CHANGED_FILE FAILED"
-                exit_on_error $EXIT_CODE
-            fi
-        fi
-    done
-else
-    echo "pre-commit: WARNING, shfmt is not installed!"
-fi
+execute_command ends_with_newline "tail" "pre-commit" "Checking if text files have a newline at the end..." "newline check"
+execute_command shellcheck "shellcheck" "pre-commit" "Running shellcheck..." "shellcheck" is_supported_shell_script
+execute_command "shfmt -d" "shfmt" "pre-commit" "Running shfmt..." "shfmt" is_supported_shell_script
 
 if command -v terraform >/dev/null 2>&1; then
     echo "pre-commit: Running terraform format check..."
@@ -207,3 +187,5 @@ unset EXIT_CODE
 unset CHANGED_FILE
 unset CHANGED_FILES
 unset AGAINST
+
+set +e
