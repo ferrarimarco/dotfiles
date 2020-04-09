@@ -430,6 +430,11 @@ setup_debian() {
         unset docker_distribution
     fi
 
+    DOCKER_GROUP_NAME="docker"
+    echo "Creating the $DOCKER_GROUP_NAME group for Docker"
+    getent group "$DOCKER_GROUP_NAME" >/dev/null 2>&1 || sudo groupadd "$DOCKER_GROUP_NAME"
+    unset DOCKER_GROUP_NAME
+
     if ! command -v docker-compose >/dev/null 2>&1; then
         echo "Getting Docker Compose version to install"
         docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
