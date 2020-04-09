@@ -728,16 +728,18 @@ source_from_home_or_repo() {
     if ! [ -f "$FILE_PATH" ]; then
         echo "$FILE_PATH doesn't exist. Falling back to loading from the git repository..."
         SCRIPT_PATH="$0"
-        echo "The absolute path of this script is: $SCRIPT_PATH. Checking if it's a link and following it..."
+        echo "The path to this script is: $SCRIPT_PATH. Checking if it's a link and following it..."
         local os_name
         os_name="$(uname -s)"
         if test "${os_name#*"Darwin"}" != "$os_name"; then
+            CURRENT_WORKING_DIRECTORY="$(pwd)"
+            echo "The current working directory is $CURRENT_WORKING_DIRECTORY"
             DIR="$(dirname "$SCRIPT_PATH")"
             echo "Changing directory to $DIR..."
             cd "$DIR"
             TARGET_FILE="$(basename "$SCRIPT_PATH")"
 
-            echo "Checking $TARGET_FILE is a link..."
+            echo "Checking if $TARGET_FILE is a link..."
             # Iterate down a (possible) chain of symlinks
             while [ -L "$TARGET_FILE" ]; do
                 LINK_TARGET="$(readlink "$TARGET_FILE")"
@@ -748,7 +750,7 @@ source_from_home_or_repo() {
                 echo "Changing directory to $DIR..."
                 cd "$DIR"
                 TARGET_FILE="$(basename "$TARGET_FILE")"
-                echo "Checking $TARGET_FILE is a link..."
+                echo "Checking if $TARGET_FILE is a link..."
             done
 
             echo "$TARGET_FILE is not a link. Reached the end of the chain."
@@ -759,6 +761,10 @@ source_from_home_or_repo() {
             echo "The current working directory is: $PHYS_DIR. Using it to build the absolute path to $SCRIPT_PATH"
             SCRIPT_PATH="$PHYS_DIR/$TARGET_FILE"
 
+            echo "Going back to the previous working directory: $CURRENT_WORKING_DIRECTORY"
+            cd "$CURRENT_WORKING_DIRECTORY"
+
+            unset CURRENT_WORKING_DIRECTORY
             unset DIR
             unset TARGET_FILE
             unset LINK_TARGET
@@ -780,6 +786,8 @@ source_from_home_or_repo() {
         echo "Falling back to loading $FILE_PATH_SUFFIX from ${FILE_PATH}."
 
         unset SCRIPT_PATH
+
+        ech
     fi
 
     echo "Sourcing $FILE_PATH..."
@@ -793,7 +801,6 @@ source_from_home_or_repo() {
     unset FILE_PATH
     unset FILE_PATH_SUFFIX
     unset SCRIPT_DIRECTORY
-    unset REPOSITORY_DIRECTORY
 }
 
 usage() {
