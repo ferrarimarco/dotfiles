@@ -216,10 +216,14 @@ install_npm_packages() {
 
 install_python_packages() {
     if command -v pip3 >/dev/null 2>&1; then
-        echo "Installing Python 3 packages"
+        echo "Installing pip3 packages..."
+
+        echo "Installing setuptools first..."
+        sudo pip3 setuptools
+
+        echo "Installing other pip3 packages"
         sudo pip3 install \
             black \
-            setuptools \
             yamllint
     else
         echo "WARNING: pip3 is not installed. Skipping Python 3 package installation."
