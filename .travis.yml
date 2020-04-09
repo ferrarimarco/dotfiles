@@ -69,6 +69,11 @@ jobs:
           && apt-get -q update \
           && apt-get -qy install sudo \
           && /usr/src/bin/setup-dotfiles.sh debian"
+    - name: "Setup macOS"
+      os: osx
+      osx_image: xcode11.3
+      script: |
+        bin/setup-dotfiles.sh macos
 os: linux
 services:
   - docker
