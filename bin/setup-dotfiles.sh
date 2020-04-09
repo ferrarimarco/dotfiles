@@ -23,6 +23,7 @@ ask_for_sudo() {
 
 # Choose a user account to use for this installation
 get_user() {
+    echo "Setting TARGET_USER. The order of preference is: USER ($USER), USERNAME ($USERNAME), LOGNAME ($LOGNAME)"
     TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
     echo "Setting TARGET_USER user to: $TARGET_USER"
 
@@ -238,7 +239,7 @@ install_rubygems() {
 }
 
 setup_user() {
-    mkdir -p "$HOME/.go"
+    echo "Creating directories for the $TARGET_USER in $HOME"
     mkdir -p "$HOME/Downloads"
     mkdir -p "$HOME/Pictures/Screenshots"
     mkdir -p "$HOME/Pictures/Wallpapers"
