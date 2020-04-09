@@ -262,6 +262,7 @@ setup_debian() {
         locales \
         lsb-release \
         software-properties-common \
+        sudo \
         --no-install-recommends
 
     echo "Ensuring the $LANG locale is available..."
@@ -387,7 +388,6 @@ setup_debian() {
         shellcheck \
         ssh \
         strace \
-        sudo \
         systemd \
         tar \
         tree \
