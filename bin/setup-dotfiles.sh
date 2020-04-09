@@ -24,7 +24,12 @@ ask_for_sudo() {
 # Choose a user account to use for this installation
 get_user() {
     TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
-    echo "Set user to $TARGET_USER"
+    echo "Setting TARGET_USER user to: $TARGET_USER"
+
+    if [ -z "$TARGET_USER" ]; then
+        echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
+        exit 1
+    fi
 }
 
 install_brew() {
@@ -475,11 +480,13 @@ setup_debian() {
         unset TEMP_DIRECTORY
     fi
 
-    # add user to sudoers
-    sudo gpasswd -a "$TARGET_USER" sudo
+    if [ -z "$TARGET_USER" ]; then
+        echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
+        exit 1
+    fi
 
-    # create docker group
-    getent group docker >/dev/null 2>&1 || sudo groupadd docker
+    echo "Adding $TARGET_USER user to the sudoers group"
+    sudo gpasswd -a "$TARGET_USER" sudo
 
     # Add user docker group
     sudo gpasswd -a "$TARGET_USER" docker
