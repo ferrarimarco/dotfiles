@@ -219,7 +219,7 @@ install_python_packages() {
         echo "Installing pip3 packages..."
 
         echo "Installing setuptools first..."
-        sudo pip3 setuptools
+        sudo pip3 install setuptools
 
         echo "Installing other pip3 packages"
         sudo pip3 install \
