@@ -22,7 +22,8 @@ To install these dotfiles:
 1. Run `make` (all the dotfiles and binaries will be symlinked to their
    destinations so you can update them just by `git pull`ing the latest changes)
 
-Run `make help` for a list of the available run targets.
+Run `make help` for a list of the available run targets, including the ones
+useful for development.
 
 ## Contents
 
@@ -64,12 +65,6 @@ There are also dotfiles for:
 - [wget](.wgetrc)
 - X: [.Xresources](.Xresources), [.xsessionrc](.xsessionrc)
 - [xfce](.config/xfce4)
-
-## Development
-
-- `make`: install dotfiles, bins and configuration files
-- `make help`: shows the help text
-- `make test`: run tests
 
 ## Thanks
 
