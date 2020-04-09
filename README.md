@@ -4,11 +4,21 @@
 
 These are the dotfiles I use on my systems.
 
+## Dependencies
+
+### Linux and macOS
+
+- sudo >= 1.8.29
+
 ## Installation
 
 To install these dotfiles:
 
-1. Clone this repository
+1. Clone this repository.
+1. `cd` to the root directory of the cloned repository.
+1. Run:
+    1. `bin/setup-dotfiles.sh` on Linux-based or macOS systems.
+    1. `bin/install-windows.ps1` from a Powershell shell on Windows.
 1. Run `make` (all the dotfiles and binaries will be symlinked to their
    destinations so you can update them just by `git pull`ing the latest changes)
 
@@ -63,8 +73,8 @@ There are also dotfiles for:
 
 ## Thanks
 
-- [Jessie Frazelle](https://github.com/jessfraz/dotfiles).
-- [Kevin Suttle](https://github.com/kevinSuttle/dotfiles).
-- [Mathias Bynens](https://github.com/mathiasbynens/dotfiles).
-- [Nicolas Gallagher](https://github.com/necolas/dotfiles).
-- [Peter Ward](https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html).
+- [Jessie Frazelle](https://github.com/jessfraz/dotfiles)
+- [Kevin Suttle](https://github.com/kevinSuttle/dotfiles)
+- [Mathias Bynens](https://github.com/mathiasbynens/dotfiles)
+- [Nicolas Gallagher](https://github.com/necolas/dotfiles)
+- [Peter Ward](https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html)
