@@ -727,7 +727,29 @@ source_from_home_or_repo() {
     echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
     if ! [ -f "$FILE_PATH" ]; then
         # Get the absolute path to this script
-        SCRIPT_PATH="$(readlink -f "$0")"
+        local os_name
+        os_name="$(uname -s)"
+        if test "${os_name#*"Darwin"}" != "$os_name"; then
+            cd "$(dirname "$FILE_PATH")"
+            TARGET_FILE="$(basename "$FILE_PATH")"
+
+            # Iterate down a (possible) chain of symlinks
+            while [ -L "$TARGET_FILE" ]; do
+                TARGET_FILE="$(readlink "$FILE_PATH")"
+                cd "$(dirname "$FILE_PATH")"
+                TARGET_FILE="$(basename "$FILE_PATH")"
+            done
+
+            # Compute the canonicalized name by finding the physical path
+            # for the directory we're in and appending the target file.
+            PHYS_DIR="$(pwd -P)"
+            SCRIPT_PATH="$PHYS_DIR/$FILE_PATH"
+        elif test "${os_name#*"Linux"}" != "$os_name"; then
+            # Use readlink -f directly
+            SCRIPT_PATH="$(readlink -f "$0")"
+        fi
+        unset os_name
+
         SCRIPT_DIRECTORY="$(dirname "$SCRIPT_PATH")"
         # Go back one level to get the root of the repository
         FILE_PATH="${SCRIPT_DIRECTORY}/../${FILE_PATH_SUFFIX}"
