@@ -726,8 +726,9 @@ source_from_home_or_repo() {
     FILE_PATH="${HOME}/${FILE_PATH_SUFFIX}"
     echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
     if ! [ -f "$FILE_PATH" ]; then
+        echo "$FILE_PATH doesn't exist. Falling back to loading from the git repository..."
         SCRIPT_PATH="$0"
-        # Get the absolute path to this script
+        echo "The absolute path of this script is: $SCRIPT_PATH. Checking if it's a link and following it..."
         local os_name
         os_name="$(uname -s)"
         if test "${os_name#*"Darwin"}" != "$os_name"; then
@@ -748,10 +749,14 @@ source_from_home_or_repo() {
         elif test "${os_name#*"Linux"}" != "$os_name"; then
             # Use readlink -f directly
             SCRIPT_PATH="$(readlink -f "$0")"
+            echo "The script directory is: $SCRIPT_DIRECTORY"
         fi
         unset os_name
 
+        echo "The script path after following links is: $SCRIPT_PATH"
+
         SCRIPT_DIRECTORY="$(dirname "$SCRIPT_PATH")"
+        echo "The script directory is: $SCRIPT_DIRECTORY"
         # Go back one level to get the root of the repository
         FILE_PATH="${SCRIPT_DIRECTORY}/../${FILE_PATH_SUFFIX}"
 
