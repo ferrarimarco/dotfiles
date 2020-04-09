@@ -732,20 +732,37 @@ source_from_home_or_repo() {
         local os_name
         os_name="$(uname -s)"
         if test "${os_name#*"Darwin"}" != "$os_name"; then
-            cd "$(dirname "$SCRIPT_PATH")"
+            DIR="$(dirname "$SCRIPT_PATH")"
+            echo "Changing directory to $DIR..."
+            cd "$DIR"
             TARGET_FILE="$(basename "$SCRIPT_PATH")"
 
+            echo "Checking $TARGET_FILE is a link..."
             # Iterate down a (possible) chain of symlinks
             while [ -L "$TARGET_FILE" ]; do
-                TARGET_FILE="$(readlink "$SCRIPT_PATH")"
-                cd "$(dirname "$SCRIPT_PATH")"
-                TARGET_FILE="$(basename "$SCRIPT_PATH")"
+                LINK_TARGET="$(readlink "$TARGET_FILE")"
+                echo "$TARGET_FILE is a link to $LINK_TARGET. Following the link..."
+
+                TARGET_FILE="$LINK_TARGET"
+                DIR="$(dirname "$TARGET_FILE")"
+                echo "Changing directory to $DIR..."
+                cd "$DIR"
+                TARGET_FILE="$(basename "$TARGET_FILE")"
+                echo "Checking $TARGET_FILE is a link..."
             done
+
+            echo "$TARGET_FILE is not a link. Reached the end of the chain."
 
             # Compute the canonicalized name by finding the physical path
             # for the directory we're in and appending the target file.
             PHYS_DIR="$(pwd -P)"
-            SCRIPT_PATH="$PHYS_DIR/$SCRIPT_PATH"
+            echo "The current working directory is: $PHYS_DIR. Using it to build the absolute path to $SCRIPT_PATH"
+            SCRIPT_PATH="$PHYS_DIR/$TARGET_FILE"
+            echo "Absolute path to $0 is $SCRIPT_PATH"
+
+            unset DIR
+            unset TARGET_FILE
+            unset LINK_TARGET
         elif test "${os_name#*"Linux"}" != "$os_name"; then
             # Use readlink -f directly
             SCRIPT_PATH="$(readlink -f "$0")"
