@@ -758,7 +758,6 @@ source_from_home_or_repo() {
             PHYS_DIR="$(pwd -P)"
             echo "The current working directory is: $PHYS_DIR. Using it to build the absolute path to $SCRIPT_PATH"
             SCRIPT_PATH="$PHYS_DIR/$TARGET_FILE"
-            echo "Absolute path to $0 is $SCRIPT_PATH"
 
             unset DIR
             unset TARGET_FILE
@@ -766,18 +765,19 @@ source_from_home_or_repo() {
         elif test "${os_name#*"Linux"}" != "$os_name"; then
             # Use readlink -f directly
             SCRIPT_PATH="$(readlink -f "$0")"
-            echo "The script directory is: $SCRIPT_DIRECTORY"
         fi
         unset os_name
 
-        echo "The script path after following links is: $SCRIPT_PATH"
+        echo "The absolute path to $0 after following links is: $SCRIPT_PATH"
 
         SCRIPT_DIRECTORY="$(dirname "$SCRIPT_PATH")"
         echo "The script directory is: $SCRIPT_DIRECTORY"
-        # Go back one level to get the root of the repository
-        FILE_PATH="${SCRIPT_DIRECTORY}/../${FILE_PATH_SUFFIX}"
 
-        echo "Falling back to loading $FILE_PATH_SUFFIX from the git repository, in ${SCRIPT_DIRECTORY}."
+        # Go back one level to get the root of the repository
+        REPOSITORY_DIRECTORY="$(dirname "$SCRIPT_DIRECTORY")"
+        echo "The repository directory is: $REPOSITORY_DIRECTORY"
+        FILE_PATH="${REPOSITORY_DIRECTORY}/${FILE_PATH_SUFFIX}"
+        echo "Falling back to loading $FILE_PATH_SUFFIX from ${FILE_PATH}."
 
         unset SCRIPT_PATH
     fi
@@ -793,6 +793,7 @@ source_from_home_or_repo() {
     unset FILE_PATH
     unset FILE_PATH_SUFFIX
     unset SCRIPT_DIRECTORY
+    unset REPOSITORY_DIRECTORY
 }
 
 usage() {
