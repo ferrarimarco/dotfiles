@@ -348,7 +348,7 @@ setup_debian() {
     sudo apt-get update || true
     sudo apt-get -qy upgrade
 
-    sudo DEBIAN_FRONTEND=noninteractive apt-get -qy install \
+    sudo apt-get -qy install \
         adduser \
         alsa-utils \
         apparmor \
