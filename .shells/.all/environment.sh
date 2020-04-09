@@ -106,14 +106,10 @@ export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
 # Export default shell
 export DEFAULT_SHELL
 
-# go path
+# Set up Go paths
+export GOROOT
+GO111MODULE=on
+export GO111MODULE
 GOPATH="${HOME}/.go"
-if [ -d "${GOPATH}" ]; then
-    GO111MODULE=on
-    export GO111MODULE
-    export GOPATH
-    export GOROOT
-    export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
-else
-    unset GOPATH
-fi
+export GOPATH
+export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"

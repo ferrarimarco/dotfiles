@@ -444,16 +444,33 @@ setup_debian() {
         echo "Installing go $GO_VERSION..."
         GO_ARCHIVE_NAME=go"$GO_VERSION".linux-amd64.tar.gz
         TEMP_DIRECTORY="$(mktemp -d)"
-        curl -fsLo "$TEMP_DIRECTORY/$GO_ARCHIVE_NAME" https://dl.google.com/go/"$GO_ARCHIVE_NAME"
+        GO_ARCHIVE_PATH="$TEMP_DIRECTORY/$GO_ARCHIVE_NAME"
 
-        echo "Extracting go archive..."
+        echo "Installing $GO_ARCHIVE_NAME..."
+        curl -fsLo "$GO_ARCHIVE_PATH" https://dl.google.com/go/"$GO_ARCHIVE_NAME"
+
+        if [ -z "$GOROOT" ]; then
+            echo "ERROR: The GOROOT variable is not set, or set to an empty string"
+            exit 1
+        fi
+
+        echo "Extracting go archive in $GOROOT..."
         mkdir -p "$GOROOT"
-        tar -C "$GOROOT" --strip-components=1 -xzf "$TEMP_DIRECTORY/$GO_ARCHIVE_NAME"
+        tar -C "$GOROOT" --strip-components=1 -xzf "$GO_ARCHIVE_PATH"
 
+        echo "Deleting $GO_ARCHIVE_PATH"
+        rm -f "$GO_ARCHIVE_PATH"
+
+        echo "Deleting $TEMP_DIRECTORY"
+        rm -rf "$TEMP_DIRECTORY"
+
+        echo "Creating sub-directories in $GOPATH"
         mkdir -p "$GOPATH"/{src,pkg,bin}
-        rm -f "$TEMP_DIRECTORY/$GO_ARCHIVE_NAME"
+
         echo "Installed go $GO_VERSION. Verifying with go version: $(go version)"
+
         unset GO_VERSION
+        unset GO_ARCHIVE_PATH
         unset GO_ARCHIVE_NAME
         unset TEMP_DIRECTORY
     fi
