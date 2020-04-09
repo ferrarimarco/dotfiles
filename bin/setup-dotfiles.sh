@@ -256,7 +256,7 @@ setup_debian() {
     echo "Setting up a Debian system"
 
     echo "Installing the minimal set of packages"
-    sudo apt-get update || true
+    sudo apt-get -q update || true
     sudo DEBIAN_FRONTEND=noninteractive apt-get -qy install \
         apt-transport-https \
         apt-utils \
@@ -345,7 +345,7 @@ setup_debian() {
         git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
     fi
 
-    sudo apt-get update || true
+    sudo apt-get -q update || true
     sudo apt-get -qy upgrade
 
     sudo apt-get -qy install \
@@ -408,9 +408,9 @@ setup_debian() {
         zsh \
         --no-install-recommends
 
-    sudo apt-get -y autoremove
-    sudo apt-get -y autoclean
-    sudo apt-get -y clean
+    sudo apt-get -qy autoremove
+    sudo apt-get -qy autoclean
+    sudo apt-get -qy clean
 
     if ! command -v docker >/dev/null 2>&1; then
         echo "Installing Docker"
@@ -431,7 +431,7 @@ setup_debian() {
             "deb [arch=amd64] https://download.docker.com/linux/${docker_distribution} \
             $(lsb_release -cs) \
             stable"
-        sudo apt-get update
+        sudo apt-get -q update
         sudo apt-get -qy install docker-ce docker-ce-cli containerd.io
 
         unset docker_distribution
