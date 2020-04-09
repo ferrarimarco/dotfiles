@@ -218,8 +218,10 @@ install_python_packages() {
     if command -v pip3 >/dev/null 2>&1; then
         echo "Installing pip3 packages..."
 
-        echo "Installing setuptools first..."
-        sudo pip3 install setuptools
+        echo "Installing setuptools and wheel first..."
+        sudo pip3 install \
+            setuptools \
+            wheel
 
         echo "Installing other pip3 packages"
         sudo pip3 install \
