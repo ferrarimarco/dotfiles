@@ -325,7 +325,7 @@ setup_debian() {
 
     # Download zsh-autosuggestions
     if [ -z "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" ]; then
-        echo "The ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH variable is not set, or set to an empty string"
+        echo "ERROR: The ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH variable is not set, or set to an empty string"
         exit 1
     fi
 
@@ -655,7 +655,7 @@ setup_shell() {
     echo "Setting up the shell..."
 
     if [ -z "$ZSH_THEME_PATH" ]; then
-        echo "The ZSH_THEME_PATH variable is not set, or set to an empty string"
+        echo "ERROR: The ZSH_THEME_PATH variable is not set, or set to an empty string"
         exit 1
     fi
 
@@ -693,7 +693,7 @@ setup_shell() {
     ! [ -e "${font_dir}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
 
     if [ -z "$DEFAULT_SHELL" ]; then
-        echo "The DEFAULT_SHELL variable is not set, or set to an empty string"
+        echo "ERROR: The DEFAULT_SHELL variable is not set, or set to an empty string"
         exit 1
     fi
 
