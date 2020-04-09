@@ -251,7 +251,7 @@ setup_debian() {
 
     echo "Installing the minimal set of packages"
     sudo apt-get update || true
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -qy install \
         apt-transport-https \
         apt-utils \
         ca-certificates \
@@ -305,7 +305,7 @@ setup_debian() {
         chmod -Rv 777 "$TEMP_DIRECTORY"
 
         echo "Installing Chrome package..."
-        sudo apt-get install -y "$CHROME_ARCHIVE_PATH"
+        sudo apt-get -qy install "$CHROME_ARCHIVE_PATH"
 
         echo "Removing Chrome package..."
         rm "$CHROME_ARCHIVE_PATH"
@@ -314,7 +314,7 @@ setup_debian() {
         rm -rf "$TEMP_DIRECTORY"
 
         echo "Installing missing dependencies..."
-        sudo apt-get install -f
+        sudo apt-get -fq install
 
         unset TEMP_DIRECTORY
         unset CHROME_ARCHIVE_NAME
@@ -340,9 +340,9 @@ setup_debian() {
     fi
 
     sudo apt-get update || true
-    sudo apt-get -y upgrade
+    sudo apt-get -qy upgrade
 
-    sudo DEBIAN_FRONTEND=noninteractive apt-get install -qy \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -qy install \
         adduser \
         alsa-utils \
         apparmor \
@@ -426,7 +426,7 @@ setup_debian() {
             $(lsb_release -cs) \
             stable"
         sudo apt-get update
-        sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+        sudo apt-get -qy install docker-ce docker-ce-cli containerd.io
 
         unset docker_distribution
     fi
@@ -447,7 +447,7 @@ setup_debian() {
     if ! command -v node >/dev/null 2>&1; then
         echo "Installing Node.js"
         curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-        sudo apt-get install -y nodejs
+        sudo apt-get -qy install nodejs
     fi
 
     if ! command -v go >/dev/null 2>&1; then
