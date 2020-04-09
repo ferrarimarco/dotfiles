@@ -23,9 +23,9 @@ ask_for_sudo() {
 
 # Choose a user account to use for this installation
 get_user() {
-    echo "Setting TARGET_USER. The order of preference is: USER ($USER), USERNAME ($USERNAME), LOGNAME ($LOGNAME)"
-    TARGET_USER=${USER:-${USERNAME:-${LOGNAME}}}
-    echo "Setting TARGET_USER user to: $TARGET_USER"
+    echo "Setting TARGET_USER. The order of preference is: USER ($USER), USERNAME ($USERNAME), LOGNAME ($LOGNAME), whoami ($(whoami))"
+    TARGET_USER=${USER:-${USERNAME:-${LOGNAME:-$(whoami)}}}
+    echo "Setting TARGET_USER to: $TARGET_USER"
 
     if [ -z "$TARGET_USER" ]; then
         echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
