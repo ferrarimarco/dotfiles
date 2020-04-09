@@ -726,24 +726,25 @@ source_from_home_or_repo() {
     FILE_PATH="${HOME}/${FILE_PATH_SUFFIX}"
     echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
     if ! [ -f "$FILE_PATH" ]; then
+        SCRIPT_PATH="$0"
         # Get the absolute path to this script
         local os_name
         os_name="$(uname -s)"
         if test "${os_name#*"Darwin"}" != "$os_name"; then
-            cd "$(dirname "$FILE_PATH")"
-            TARGET_FILE="$(basename "$FILE_PATH")"
+            cd "$(dirname "$SCRIPT_PATH")"
+            TARGET_FILE="$(basename "$SCRIPT_PATH")"
 
             # Iterate down a (possible) chain of symlinks
             while [ -L "$TARGET_FILE" ]; do
-                TARGET_FILE="$(readlink "$FILE_PATH")"
-                cd "$(dirname "$FILE_PATH")"
-                TARGET_FILE="$(basename "$FILE_PATH")"
+                TARGET_FILE="$(readlink "$SCRIPT_PATH")"
+                cd "$(dirname "$SCRIPT_PATH")"
+                TARGET_FILE="$(basename "$SCRIPT_PATH")"
             done
 
             # Compute the canonicalized name by finding the physical path
             # for the directory we're in and appending the target file.
             PHYS_DIR="$(pwd -P)"
-            SCRIPT_PATH="$PHYS_DIR/$FILE_PATH"
+            SCRIPT_PATH="$PHYS_DIR/$SCRIPT_PATH"
         elif test "${os_name#*"Linux"}" != "$os_name"; then
             # Use readlink -f directly
             SCRIPT_PATH="$(readlink -f "$0")"
