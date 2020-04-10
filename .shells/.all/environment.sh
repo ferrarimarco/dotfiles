@@ -45,11 +45,22 @@ export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
 
 os_name="$(uname -s)"
 if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
+
+    # Might be needed to install Homebrew, so exporting in any case
+    export HOMEBREW_REPOSITORY=/usr/local/Homebrew
+
     # setup homebrew environment
-    HOMEBREW_PATH=/usr/local/brew
+    if ! command -v brew >/dev/null 2>&1; then
+        # brew is not yet in the path because it was (likely) installed manually by setup-dotfiles.sh
+        # So falling back to a known location.
+        HOMEBREW_PATH=/usr/local/brew
+    else
+        HOMEBREW_PATH="$(brew --prefix)"
+    fi
+
     if [ -d "${HOMEBREW_PATH}" ]; then
         DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
-        export HOMEBREW_REPOSITORY=/usr/local/Homebrew
+
         export HOMEBREW_PATH
         export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
         export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
