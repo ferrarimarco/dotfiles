@@ -8,6 +8,7 @@ These are the dotfiles I use on my systems.
 
 ### Linux and macOS
 
+- git
 - sudo >= 1.8.29
 
 ## Installation

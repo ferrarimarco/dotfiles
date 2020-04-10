@@ -67,7 +67,7 @@ jobs:
           && echo 'debconf debconf/frontend select Noninteractive' \
           | debconf-set-selections \
           && apt-get -q update \
-          && apt-get -qy install sudo \
+          && apt-get -qy install git sudo \
           && /usr/src/bin/setup-dotfiles.sh debian"
     - name: "Setup macOS"
       os: osx
