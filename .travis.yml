@@ -68,12 +68,15 @@ jobs:
           | debconf-set-selections \
           && apt-get -q update \
           && apt-get -qy install git sudo \
-          && /usr/src/bin/setup-dotfiles.sh debian"
+          && /usr/src/bin/setup-dotfiles.sh debian \
+          && make"
     - name: "Setup macOS"
       os: osx
       osx_image: xcode11.3
+      services:
       script: |
-        bin/setup-dotfiles.sh macos
+        bin/setup-dotfiles.sh macos \
+        && make
 os: linux
 services:
   - docker

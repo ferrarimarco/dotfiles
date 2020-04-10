@@ -18,8 +18,9 @@ To install these dotfiles:
 1. Clone this repository.
 1. `cd` to the root directory of the cloned repository.
 1. Run:
-    1. `bin/setup-dotfiles.sh` on Linux-based or macOS systems.
     1. `bin/install-windows.ps1` from a Powershell shell on Windows.
+    1. `bin/setup-dotfiles.sh` on Linux-based system, Windows Subsystem for
+        Linux, or macOS.
 1. Run `make` (all the dotfiles and binaries will be symlinked to their
    destinations so you can update them just by `git pull`ing the latest changes)
 
@@ -37,7 +38,8 @@ shell they are applicable to. All the customizations are in the
 - The [`.bash`](.shells/.bash/) directory contains scripts for Bash.
 - The [`.sh`](.shells/.sh/) directory contains scripts for the Bourne shell.
 - The [`.zsh`](.shells/.zsh/) directory contains scripts for the Z shell.
-- The scripts in the [`.all`](.shells/.all/) directory are executed by all the shells.
+- The scripts in the [`.all`](.shells/.all/) directory are executed by all the
+    shells.
 
 ### Binaries
 
@@ -58,7 +60,8 @@ There are also dotfiles for:
 - [Atom](.atom)
 - [cURL](.curlrc)
 - [EditorConfig](.editorconfig)
-- Git: [.gitconfig](.gitconfig), [global gitignore](gitignore), [hooks](git-hooks)
+- Git: [.gitconfig](.gitconfig), [global gitignore](gitignore),
+    [hooks](git-hooks)
 - [readline](.inputrc)
 - [Nano](.nanorc)
 - [tmux](.tmux.conf)
