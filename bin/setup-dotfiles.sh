@@ -711,6 +711,67 @@ setup_shell() {
     echo "The default shell for $TARGET_USER is set to $DEFAULT_SHELL"
 }
 
+set_repository_path() {
+    SCRIPT_PATH="$0"
+    echo "The path to this script is: $SCRIPT_PATH. Checking if it's a link and following it..."
+
+    CURRENT_WORKING_DIRECTORY="$(pwd)"
+    echo "The current working directory is $CURRENT_WORKING_DIRECTORY"
+
+    os_name="$(uname -s)"
+    if test "${os_name#*"Darwin"}" != "$os_name"; then
+        DIR="$(dirname "$SCRIPT_PATH")"
+        echo "Changing directory to $DIR..."
+        cd "$DIR"
+        TARGET_FILE="$(basename "$SCRIPT_PATH")"
+
+        echo "Checking if $TARGET_FILE is a link..."
+        # Iterate down a (possible) chain of symlinks
+        while [ -L "$TARGET_FILE" ]; do
+            LINK_TARGET="$(readlink "$TARGET_FILE")"
+            echo "$TARGET_FILE is a link to $LINK_TARGET. Following the link..."
+
+            TARGET_FILE="$LINK_TARGET"
+            DIR="$(dirname "$TARGET_FILE")"
+            echo "Changing directory to $DIR..."
+            cd "$DIR"
+            TARGET_FILE="$(basename "$TARGET_FILE")"
+            echo "Checking if $TARGET_FILE is a link..."
+        done
+
+        unset DIR
+        unset LINK_TARGET
+
+        echo "$TARGET_FILE is not a link. Reached the end of the chain."
+
+        # Compute the canonicalized name by finding the physical path
+        # for the directory we're in and appending the target file.
+        PHYS_DIR="$(pwd -P)"
+        echo "The current working directory is: $PHYS_DIR. Using it to build the absolute path to $SCRIPT_PATH"
+        ABSOLUTE_SCRIPT_PATH="$PHYS_DIR/$TARGET_FILE"
+
+        unset TARGET_FILE
+    elif test "${os_name#*"Linux"}" != "$os_name"; then
+        # Use readlink -f directly
+        ABSOLUTE_SCRIPT_PATH="$(readlink -f "$0")"
+    fi
+    unset os_name
+
+    echo "The absolute path to this script is: $ABSOLUTE_SCRIPT_PATH. Using it to build the absolute path to the repository directory..."
+    SCRIPT_DIRECTORY="$(dirname "$ABSOLUTE_SCRIPT_PATH")"
+    unset ABSOLUTE_SCRIPT_PATH
+    echo "The script directory is: $SCRIPT_DIRECTORY. Using it to set the working directory for git..."
+
+    # This is a git repository, so use this fact to get the root of the repository
+    REPOSITORY_DIRECTORY="$(git -C "$SCRIPT_DIRECTORY" rev-parse --show-toplevel)"
+    unset SCRIPT_DIRECTORY
+    echo "The repository directory is: $REPOSITORY_DIRECTORY"
+
+    echo "Going back to the previous working directory: $CURRENT_WORKING_DIRECTORY"
+    cd "$CURRENT_WORKING_DIRECTORY"
+    unset CURRENT_WORKING_DIRECTORY
+}
+
 source_from_home_or_repo() {
     # The source_file_if_available function might not be available, so
     # source the functions file "manually".
@@ -719,65 +780,8 @@ source_from_home_or_repo() {
     echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
     if ! [ -f "$FILE_PATH" ]; then
         echo "$FILE_PATH doesn't exist. Falling back to loading from the git repository..."
-        SCRIPT_PATH="$0"
-        echo "The path to this script is: $SCRIPT_PATH. Checking if it's a link and following it..."
-        local os_name
-        os_name="$(uname -s)"
-        if test "${os_name#*"Darwin"}" != "$os_name"; then
-            CURRENT_WORKING_DIRECTORY="$(pwd)"
-            echo "The current working directory is $CURRENT_WORKING_DIRECTORY"
-            DIR="$(dirname "$SCRIPT_PATH")"
-            echo "Changing directory to $DIR..."
-            cd "$DIR"
-            TARGET_FILE="$(basename "$SCRIPT_PATH")"
-
-            echo "Checking if $TARGET_FILE is a link..."
-            # Iterate down a (possible) chain of symlinks
-            while [ -L "$TARGET_FILE" ]; do
-                LINK_TARGET="$(readlink "$TARGET_FILE")"
-                echo "$TARGET_FILE is a link to $LINK_TARGET. Following the link..."
-
-                TARGET_FILE="$LINK_TARGET"
-                DIR="$(dirname "$TARGET_FILE")"
-                echo "Changing directory to $DIR..."
-                cd "$DIR"
-                TARGET_FILE="$(basename "$TARGET_FILE")"
-                echo "Checking if $TARGET_FILE is a link..."
-            done
-
-            echo "$TARGET_FILE is not a link. Reached the end of the chain."
-
-            # Compute the canonicalized name by finding the physical path
-            # for the directory we're in and appending the target file.
-            PHYS_DIR="$(pwd -P)"
-            echo "The current working directory is: $PHYS_DIR. Using it to build the absolute path to $SCRIPT_PATH"
-            SCRIPT_PATH="$PHYS_DIR/$TARGET_FILE"
-
-            echo "Going back to the previous working directory: $CURRENT_WORKING_DIRECTORY"
-            cd "$CURRENT_WORKING_DIRECTORY"
-
-            unset CURRENT_WORKING_DIRECTORY
-            unset DIR
-            unset TARGET_FILE
-            unset LINK_TARGET
-        elif test "${os_name#*"Linux"}" != "$os_name"; then
-            # Use readlink -f directly
-            SCRIPT_PATH="$(readlink -f "$0")"
-        fi
-        unset os_name
-
-        echo "The absolute path to $0 after following links is: $SCRIPT_PATH"
-
-        SCRIPT_DIRECTORY="$(dirname "$SCRIPT_PATH")"
-        echo "The script directory is: $SCRIPT_DIRECTORY"
-
-        # Go back one level to get the root of the repository
-        REPOSITORY_DIRECTORY="$(dirname "$SCRIPT_DIRECTORY")"
-        echo "The repository directory is: $REPOSITORY_DIRECTORY"
         FILE_PATH="${REPOSITORY_DIRECTORY}/${FILE_PATH_SUFFIX}"
-        echo "Falling back to loading $FILE_PATH_SUFFIX from ${FILE_PATH}."
-
-        unset SCRIPT_PATH
+        echo "Falling back to loading $FILE_PATH_SUFFIX from ${FILE_PATH}..."
     fi
 
     echo "Sourcing $FILE_PATH..."
@@ -790,7 +794,6 @@ source_from_home_or_repo() {
     fi
     unset FILE_PATH
     unset FILE_PATH_SUFFIX
-    unset SCRIPT_DIRECTORY
 }
 
 usage() {
@@ -812,6 +815,14 @@ main() {
     ask_for_sudo
 
     echo "Current working directory: $(pwd)"
+
+    echo "Setting the REPOSITORY_PATH variable..."
+    set_repository_path
+    if [ -z "$REPOSITORY_PATH" ]; then
+        echo "ERROR: The REPOSITORY_PATH variable is empty or not set. Exiting..."
+        exit 1
+    fi
+    echo "Path to the repository: $REPOSITORY_PATH"
 
     # The source_file_if_available function might not be available, so
     # sourcing it with a function in this script
