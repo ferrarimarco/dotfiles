@@ -849,6 +849,11 @@ main() {
         setup_macos
         install_brew
         install_brew_formulae
+
+        # Refresh the environment variables because there could be stale values,
+        # after we installed packages, such as new shells.
+        source_from_home_or_repo ".shells/.all/environment.sh"
+
         setup_shell
         setup_user
         update_system
