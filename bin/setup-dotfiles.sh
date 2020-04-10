@@ -135,27 +135,41 @@ install_brew_formulae() {
         fi
     done
 
+    echo "Adding shells installed via brew to the list of allowed shells..."
+
+    # Save Homebrew’s installed location.
+    BREW_PREFIX="$(brew --prefix)"
+
+    if [ -z "$BREW_PREFIX" ]; then
+        echo "ERROR: The BREW_PREFIX variable is not set, or set to an empty string"
+        exit 1
+    fi
+
     if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
-        echo "Add bash installed via brew to the list of allowed shells"
+        echo "Add bash installed via brew to the list of allowed shells..."
         echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells
+    else
+        echo "Bash installed via brew is already in the list of allowed shells."
     fi
 
     if ! grep -Fq "${BREW_PREFIX}/bin/zsh" /etc/shells; then
-        echo "Add zsh installed via brew to the list of allowed shells"
+        echo "Add zsh installed via brew to the list of allowed shells..."
         echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells
+    else
+        echo "zsh installed via brew is already in the list of allowed shells."
     fi
 
-    echo "Removing outdated versions from the cellar."
+    echo "Running brew cleanup..."
     brew cleanup
 
-    echo "Setting up Visual Studio Code"
-    local _vs_code_settings_dir="$HOME"/Library/Application\ Support/Code/User
-    local _vs_code_settings_path="$_vs_code_settings_dir"/settings.json
+    echo "Setting up Visual Studio Code settings..."
+    _vs_code_settings_path="$HOME"/Library/Application\ Support/Code/User/settings.json
     ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
     unset _vs_code_settings_path
-    unset _vs_code_settings_dir
 
+    echo "Installing or updating Visual Studio Code extensions..."
     while IFS= read -r line; do
+        echo "Installing or updating $line extension..."
         code --force --install-extension "$line"
     done <"$HOME"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
 }
@@ -309,7 +323,6 @@ setup_debian() {
         echo "Google Chrome is already installed"
     fi
 
-    # Download zsh-autosuggestions
     if [ -z "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" ]; then
         echo "ERROR: The ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH variable is not set, or set to an empty string"
         exit 1
