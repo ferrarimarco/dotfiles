@@ -75,8 +75,12 @@ install_brew() {
 }
 
 install_brew_formulae() {
-    # Save Homebrew’s installed location.
-    BREW_PREFIX="$(brew --prefix)"
+    echo "Installing brew formulae..."
+
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "ERROR: the brew command is not available. Exiting..."
+        exit 1
+    fi
 
     for f in \
         ansible \
