@@ -763,9 +763,9 @@ set_repository_path() {
     echo "The script directory is: $SCRIPT_DIRECTORY. Using it to set the working directory for git..."
 
     # This is a git repository, so use this fact to get the root of the repository
-    REPOSITORY_DIRECTORY="$(git -C "$SCRIPT_DIRECTORY" rev-parse --show-toplevel)"
+    REPOSITORY_PATH="$(git -C "$SCRIPT_DIRECTORY" rev-parse --show-toplevel)"
     unset SCRIPT_DIRECTORY
-    echo "The repository directory is: $REPOSITORY_DIRECTORY"
+    echo "The repository path is: $REPOSITORY_PATH"
 
     echo "Going back to the previous working directory: $CURRENT_WORKING_DIRECTORY"
     cd "$CURRENT_WORKING_DIRECTORY"
