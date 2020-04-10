@@ -124,7 +124,6 @@ install_brew_formulae() {
         google-cloud-sdk \
         iterm2 \
         vagrant \
-        virtualbox \
         visual-studio-code; do
         if ! brew cask ls --versions "$f" >/dev/null; then
             echo "Installing $f cask"
