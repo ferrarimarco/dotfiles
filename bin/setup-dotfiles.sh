@@ -25,7 +25,7 @@ ask_for_sudo() {
 get_user() {
     echo "Setting TARGET_USER. The order of preference is: USER ($USER), USERNAME ($USERNAME), LOGNAME ($LOGNAME), whoami ($(whoami))"
     TARGET_USER=${USER:-${USERNAME:-${LOGNAME:-$(whoami)}}}
-    echo "Setting TARGET_USER to: $TARGET_USER"
+    echo "TARGET_USER set to: $TARGET_USER"
 
     if [ -z "$TARGET_USER" ]; then
         echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
@@ -106,7 +106,6 @@ install_brew_formulae() {
         terraform \
         tflint \
         tree \
-        vagrant \
         wget \
         zsh \
         zsh-autosuggestions \
@@ -125,6 +124,7 @@ install_brew_formulae() {
         docker \
         google-cloud-sdk \
         iterm2 \
+        vagrant \
         virtualbox \
         visual-studio-code; do
         if ! brew cask ls --versions "$f" >/dev/null; then
