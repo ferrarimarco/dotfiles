@@ -67,9 +67,6 @@ install_brew() {
     else
         echo "Homebrew is already installed"
     fi
-
-    echo "Disabling homebrew usage analytics"
-    brew analytics off
 }
 
 install_brew_formulae() {
@@ -79,6 +76,9 @@ install_brew_formulae() {
         echo "ERROR: the brew command is not available. Exiting..."
         exit 1
     fi
+
+    echo "Disabling homebrew usage analytics..."
+    brew analytics off
 
     for f in \
         ansible \
