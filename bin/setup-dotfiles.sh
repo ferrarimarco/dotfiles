@@ -39,6 +39,7 @@ install_brew() {
         XCODE_DIRECTORY=/Applications/Xcode.app/Contents/Developer
         echo "Setting Xcode directory to $XCODE_DIRECTORY..."
         sudo xcode-select -s "$XCODE_DIRECTORY"
+        unset XCODE_DIRECTORY
 
         echo "Accepting Xcode license..."
         sudo xcodebuild -license accept
@@ -52,7 +53,7 @@ install_brew() {
 
         echo "Initializing Homebrew repository path (${HOMEBREW_REPOSITORY}) and Homebrew path (${HOMEBREW_PATH})..."
         HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
-        sudo install -d -o "$(whoami)" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
+        sudo install -d -o "$TARGET_USER" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_PATH}"/sbin "${HOMEBREW_REPOSITORY}"
 
         # Download and install Homebrew
         echo "Installing Homebrew..."
