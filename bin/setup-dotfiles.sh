@@ -114,50 +114,25 @@ install_brew_formulae() {
         zsh-syntax-highlighting; do
         if ! brew ls --versions "$f" >/dev/null; then
             echo "Installing $f"
-            while true; do
-                read -r -p "Build from source? (y/n) " yn
-                case $yn in
-                [Yy]*)
-                    brew_install_recursive_build_from_source "$f"
-                    break
-                    ;;
-                [Nn]*)
-                    brew install "$f"
-                    break
-                    ;;
-                *) echo "Please answer yes or no." ;;
-                esac
-            done
+            brew install "$f"
         else
             echo "$f is already installed"
         fi
     done
 
-    while true; do
-        read -r -p "Install casks? (y/n) " yn
-        case $yn in
-        [Yy]*)
-            for f in \
-                docker \
-                google-cloud-sdk \
-                iterm2 \
-                virtualbox \
-                visual-studio-code; do
-                if ! brew cask ls --versions "$f" >/dev/null; then
-                    echo "Installing $f cask"
-                    brew cask install "$f"
-                else
-                    echo "$f cask is already installed"
-                fi
-            done
-            break
-            ;;
-        [Nn]*)
-            echo "Skipping cask installation"
-            break
-            ;;
-        *) echo "Please answer yes or no." ;;
-        esac
+    echo "Installing brew casks..."
+    for f in \
+        docker \
+        google-cloud-sdk \
+        iterm2 \
+        virtualbox \
+        visual-studio-code; do
+        if ! brew cask ls --versions "$f" >/dev/null; then
+            echo "Installing $f cask"
+            brew cask install "$f"
+        else
+            echo "$f cask is already installed"
+        fi
     done
 
     if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
