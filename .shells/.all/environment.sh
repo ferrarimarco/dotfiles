@@ -89,12 +89,8 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
     fi
 
     # add vs code bins to path
-    VS_CODE_PATH_MACOS="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
-    if [ -d "${VS_CODE_PATH_MACOS}" ]; then
-        export PATH="${VS_CODE_PATH_MACOS}:${PATH}"
-    else
-        unset VS_CODE_PATH_MACOS
-    fi
+    VS_CODE_BIN_DIRECTORY_PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
+
 elif test "${os_name#*"Linux"}" != "$os_name"; then
     if command -v zsh >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v zsh)"
@@ -108,6 +104,9 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
 
 fi
 unset os_name
+
+[ -d "${VS_CODE_BIN_DIRECTORY_PATH}" ] && export PATH="${VS_CODE_BIN_DIRECTORY_PATH}:${PATH}"
+unset VS_CODE_BIN_DIRECTORY_PATH
 
 # ZSH related stuff that we might need during setup
 export ZSH_SYNTAX_HIGHLIGHTING_PATH
