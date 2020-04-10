@@ -772,30 +772,6 @@ set_repository_path() {
     unset CURRENT_WORKING_DIRECTORY
 }
 
-source_from_home_or_repo() {
-    # The source_file_if_available function might not be available, so
-    # source the functions file "manually".
-    FILE_PATH_SUFFIX="${1}"
-    FILE_PATH="${HOME}/${FILE_PATH_SUFFIX}"
-    echo "Loading $FILE_PATH_SUFFIX from $FILE_PATH..."
-    if ! [ -f "$FILE_PATH" ]; then
-        echo "$FILE_PATH doesn't exist. Falling back to loading from the git repository..."
-        FILE_PATH="${REPOSITORY_DIRECTORY}/${FILE_PATH_SUFFIX}"
-        echo "Falling back to loading $FILE_PATH_SUFFIX from ${FILE_PATH}..."
-    fi
-
-    echo "Sourcing $FILE_PATH..."
-    if [ -f "$FILE_PATH" ]; then
-        # shellcheck source=/dev/null
-        . "$FILE_PATH"
-    else
-        echo "ERROR: Cannot find the $FILE_PATH file."
-        exit 1
-    fi
-    unset FILE_PATH
-    unset FILE_PATH_SUFFIX
-}
-
 usage() {
     echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
     echo "Usage:"
@@ -825,18 +801,27 @@ main() {
     echo "Path to the repository: $REPOSITORY_PATH"
 
     # The source_file_if_available function might not be available, so
-    # sourcing it with a function in this script
-    source_from_home_or_repo ".shells/.all/functions.sh"
+    # sourcing the functions file it explicitly
+    FUNCTIONS_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.all/functions.sh"
+    echo "Sourcing $FUNCTIONS_FILE_ABSOLUTE_PATH..."
+    if [ -f "$FUNCTIONS_FILE_ABSOLUTE_PATH" ]; then
+        # shellcheck source=/dev/null
+        . "$FUNCTIONS_FILE_ABSOLUTE_PATH"
+    else
+        echo "ERROR: Cannot find the $FUNCTIONS_FILE_ABSOLUTE_PATH file. Exiting..."
+        exit 1
+    fi
+    # From now on, the source_file_if_available function is available
 
     # Source the environment, because we it during setup
-    source_from_home_or_repo ".shells/.all/environment.sh"
+    source_file_if_available "$REPOSITORY_PATH/.shells/.all/environment.sh"
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
 
         # Refresh the environment variables because there could be stale values,
         # after we installed packages, such as new shells.
-        source_from_home_or_repo ".shells/.all/environment.sh"
+        source_file_if_available "$REPOSITORY_PATH/.shells/.all/environment.sh"
 
         setup_shell
         setup_user
@@ -852,7 +837,7 @@ main() {
 
         # Refresh the environment variables because there could be stale values,
         # after we installed packages, such as new shells.
-        source_from_home_or_repo ".shells/.all/environment.sh"
+        source_file_if_available "$REPOSITORY_PATH/.shells/.all/environment.sh"
 
         setup_shell
         setup_user
