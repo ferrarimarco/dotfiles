@@ -162,14 +162,19 @@ install_brew_formulae() {
 
     echo "Setting up Visual Studio Code settings..."
     _vs_code_settings_path="$HOME"/Library/Application\ Support/Code/User/settings.json
-    ln -sfn "$HOME"/.config/Code/User/settings.json "$_vs_code_settings_path"
+    echo "Ensuring that the Visual Studio Code settings directory ($_vs_code_settings_path) is available..."
+    mkdir -p "$_vs_code_settings_path"
+    VS_CODE_SETTINGS_FILE_PATH="$HOME"/.config/Code/User/settings.json
+    echo "Creating a symbolic link from $VS_CODE_SETTINGS_FILE_PATH to $_vs_code_settings_path"
+    ln -sfn "$VS_CODE_SETTINGS_FILE_PATH" "$_vs_code_settings_path"
     unset _vs_code_settings_path
+    unset VS_CODE_SETTINGS_FILE_PATH
 
     echo "Installing or updating Visual Studio Code extensions..."
     while IFS= read -r line; do
         echo "Installing or updating $line extension..."
         code --force --install-extension "$line"
-    done <"$HOME"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
+    done <"$REPOSITORY_PATH"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
 }
 
 install_go_packages() {
