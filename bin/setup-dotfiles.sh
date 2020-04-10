@@ -37,27 +37,25 @@ install_brew() {
     if ! command -v brew >/dev/null 2>&1; then
         # Set xcode directory
         XCODE_DIRECTORY=/Applications/Xcode.app/Contents/Developer
-        echo "Setting Xcode directory to $XCODE_DIRECTORY"
+        echo "Setting Xcode directory to $XCODE_DIRECTORY..."
         sudo xcode-select -s "$XCODE_DIRECTORY"
 
-        echo "Accepting Xcode license"
+        echo "Accepting Xcode license..."
         sudo xcodebuild -license accept
 
         if ! xcode-select -p >/dev/null 2>&1; then
-            echo "Installing Xcode CLI"
+            echo "Installing Xcode CLI..."
             xcode-select --install
         else
             echo "Xcode is already installed"
         fi
 
-        # Create dirs
-        echo "Initializing Homebrew repository path: ${HOMEBREW_REPOSITORY} and Homebrew path: ${HOMEBREW_PATH}"
-
+        echo "Initializing Homebrew repository path (${HOMEBREW_REPOSITORY}) and Homebrew path (${HOMEBREW_PATH})..."
         HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
         sudo install -d -o "$(whoami)" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_REPOSITORY}"
 
         # Download and install Homebrew
-        echo "Installing Homebrew"
+        echo "Installing Homebrew..."
         cd "${HOMEBREW_REPOSITORY}" || exit
         git init -q
         git config remote.origin.url "https://github.com/Homebrew/brew"
@@ -813,15 +811,15 @@ main() {
     fi
     # From now on, the source_file_if_available function is available
 
-    # Source the environment, because we it during setup
-    source_file_if_available "$REPOSITORY_PATH/.shells/.all/environment.sh"
+    ENVIRONMENT_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.all/environment.sh"
+    echo "Sourcing environment variables configuration file..."
+    source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
 
-        # Refresh the environment variables because there could be stale values,
-        # after we installed packages, such as new shells.
-        source_file_if_available "$REPOSITORY_PATH/.shells/.all/environment.sh"
+        echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
+        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
         setup_shell
         setup_user
@@ -833,11 +831,14 @@ main() {
     elif [[ $cmd == "macos" ]]; then
         setup_macos
         install_brew
+
+        echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
+        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
+
         install_brew_formulae
 
-        # Refresh the environment variables because there could be stale values,
-        # after we installed packages, such as new shells.
-        source_file_if_available "$REPOSITORY_PATH/.shells/.all/environment.sh"
+        echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
+        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
         setup_shell
         setup_user
