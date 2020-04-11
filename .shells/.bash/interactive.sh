@@ -70,11 +70,7 @@ if command -v defaults &>/dev/null; then
     complete -W "NSGlobalDomain" defaults
 fi
 
-# source kubectl bash completion
-if command -v kubectl &>/dev/null; then
-    # shellcheck source=/dev/null
-    . <(kubectl completion bash)
-fi
+enable_kubectl_completion "bash"
 
 ###############################################################################
 # Bash prompt                                                                 #
@@ -149,17 +145,23 @@ if tput setaf 1 &>/dev/null; then
 else
     bold=''
     reset="\e[0m"
-    # shellcheck disable=SC2034  # Unused variables left for future use
+    # Unused variables left for future use
+    # shellcheck disable=SC2034
     black="\e[1;30m"
-    # shellcheck disable=SC2034  # Unused variables left for future use
+    # Unused variables left for future use
+    # shellcheck disable=SC2034
     blue="\e[1;34m"
-    # shellcheck disable=SC2034  # Unused variables left for future use
+    # Unused variables left for future use
+    # shellcheck disable=SC2034
     cyan="\e[1;36m"
-    # shellcheck disable=SC2034  # Unused variables left for future use
+    # Unused variables left for future use
+    # shellcheck disable=SC2034
     green="\e[1;32m"
-    # shellcheck disable=SC2034  # Unused variables left for future use
+    # Unused variables left for future use
+    # shellcheck disable=SC2034
     orange="\e[1;33m"
-    # shellcheck disable=SC2034  # Unused variables left for future use
+    # Unused variables left for future use
+    # shellcheck disable=SC2034
     purple="\e[1;35m"
     red="\e[1;31m"
     violet="\e[1;35m"

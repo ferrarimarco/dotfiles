@@ -68,6 +68,7 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
         export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
         export HOMEBREW_NO_ANALYTICS=1
 
+        ZSH_SITE_FUNCTIONS_PATH="${HOMEBREW_PATH}"/share/zsh/site-functions
         ZSH_SYNTAX_HIGHLIGHTING_PATH="${HOMEBREW_PATH}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         ZSH_COMPLETIONS_PATH="${HOMEBREW_PATH}"/share/zsh-completions
 
@@ -109,6 +110,7 @@ unset os_name
 unset VS_CODE_BIN_DIRECTORY_PATH
 
 # ZSH related stuff that we might need during setup
+export ZSH_SITE_FUNCTIONS_PATH
 export ZSH_SYNTAX_HIGHLIGHTING_PATH
 export ZSH_COMPLETIONS_PATH
 export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH

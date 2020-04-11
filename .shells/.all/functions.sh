@@ -70,6 +70,14 @@ check_eof_newline() {
     rm tmp
 }
 
+enable_kubectl_completion() {
+    if command -v kubectl >/dev/null 2>&1; then
+        SHELL_NAME="${1}"
+        # shellcheck source=/dev/null
+        . <(kubectl completion $SHELL_NAME)
+    fi
+}
+
 # find all scripts and run `shfmt`
 shfmt_dir() {
     dir=
@@ -112,11 +120,12 @@ shellcheck_dir() {
 
 source_file_if_available() {
     FILE="${1}"
+    VARIABLE_NAME="${2}"
     if [ -f "$FILE" ]; then
         # shellcheck source=/dev/null
         . "$FILE"
     else
-        echo "WARNING: cannot source $FILE because it doesn't exist."
+        echo "WARNING: Cannot source $VARIABLE_NAME (set to: $FILE) because it doesn't exist or it's empty."
         return 1
     fi
     return 0

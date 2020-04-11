@@ -26,7 +26,9 @@ fi
 
 # source docker aliases if docker is installed
 if command -v docker >/dev/null 2>&1; then
-    source_file_if_available "${HOME}"/.shells/.all/dockerfunctions.sh
+    DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
+    source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
+    unset DOCKERFUNCTIONS_PATH
 fi
 
 # Check for various OS openers. Quit as soon as we find one that works.

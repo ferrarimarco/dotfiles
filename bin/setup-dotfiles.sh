@@ -818,13 +818,13 @@ main() {
 
     ENVIRONMENT_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.all/environment.sh"
     echo "Sourcing environment variables configuration file..."
-    source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
+    source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
     if [[ $cmd == "debian" ]]; then
         setup_debian
 
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
-        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
+        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
         setup_shell
         setup_user
@@ -838,12 +838,12 @@ main() {
         install_brew
 
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
-        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
+        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
         install_brew_formulae
 
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
-        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH"
+        source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
         setup_shell
         setup_user

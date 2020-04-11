@@ -38,22 +38,20 @@ setopt COMPLETE_IN_WORD   # If unset, the cursor is set to the end of the word i
 unsetopt COMPLETE_ALIASES # Complete aliases on the command line
 unsetopt MENU_COMPLETE    # If MENU_COMPLETE is enabled, on an ambiguous completion, instead of listing possibilities or beeping, insert the first match immediately.
 
-# Add tab completion for brew and installed formulae on macOS
-if command -v brew &> /dev/null; then
-    BREW_PREFIX="$(brew --prefix)"
-
+add_to_fpath() {
+    PATH_TO_ADD="${1}"
+    VARIABLE_NAME="${2}"
     typeset -U FPATH fpath
-    fpath=("$BREW_PREFIX"/share/zsh/site-functions $fpath)
+    if [ -d "$PATH_TO_ADD" ]; then
+        fpath=("$PATH_TO_ADD" $fpath)
+    else
+        echo "WARNING: Cannot add $VARIABLE_NAME (set to: $PATH_TO_ADD) to fpath because it doesn't exist or it's empty."
+    fi
+}
 
-    [ -d "$ZSH_COMPLETIONS_PATH" ] && fpath=("$ZSH_COMPLETIONS_PATH" $fpath)
-
-    unset BREW_PREFIX
-fi
-
-if command -v kubectl &> /dev/null; then
-	# shellcheck source=/dev/null
-	. <(kubectl completion zsh)
-fi
+add_to_fpath "$ZSH_SITE_FUNCTIONS_PATH" "ZSH_SITE_FUNCTIONS_PATH"
+add_to_fpath "$ZSH_COMPLETIONS_PATH" "ZSH_COMPLETIONS_PATH"
+enable_kubectl_completion "zsh"
 
 zmodload -i zsh/complist
 
@@ -187,16 +185,16 @@ bindkey "^[m" copy-prev-shell-word
 ###############################################################################
 
 # Load the theme
-source_file_if_available "$ZSH_THEME_PATH" || echo "WARNING: ZSH_THEME_PATH points to a non-existing resource"
+source_file_if_available "$ZSH_THEME_PATH" "ZSH_THEME_PATH"
 
 # Load the theme configuration
-source_file_if_available "$ZSH_THEME_CONFIGURATION_PATH" || echo "WARNING: ZSH_THEME_CONFIGURATION_PATH points to a non-existing resource"
+source_file_if_available "$ZSH_THEME_CONFIGURATION_PATH" "ZSH_THEME_CONFIGURATION_PATH"
 
 # Load syntax highlighting
-source_file_if_available "$ZSH_SYNTAX_HIGHLIGHTING_PATH" || echo "WARNING: ZSH_SYNTAX_HIGHLIGHTING_PATH points to a non-existing resource"
+source_file_if_available "$ZSH_SYNTAX_HIGHLIGHTING_PATH" "ZSH_SYNTAX_HIGHLIGHTING_PATH"
 
 # Load autosuggestion configuration
-source_file_if_available "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" || echo "WARNING: ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH points to a non-existing resource"
+source_file_if_available "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" "ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH"
 
 # Show expensive prompt segments only when needed
 typeset -g POWERLEVEL9K_GCLOUD_SHOW_ON_COMMAND='gcloud'
