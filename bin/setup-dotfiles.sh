@@ -387,7 +387,6 @@ setup_debian() {
         ruby-dev \
         rxvt-unicode \
         scdaemon \
-        shellcheck \
         ssh \
         strace \
         systemd \
@@ -407,6 +406,38 @@ setup_debian() {
     sudo apt-get -qy autoremove
     sudo apt-get -qy autoclean
     sudo apt-get -qy clean
+
+    if ! command -v shellcheck >/dev/null 2>&1; then
+        SHELLCHECK_VERSION="0.7.1"
+        echo "Installing shellcheck $SHELLCHECK_VERSION..."
+        SHELLCHECK_DIRECTORY_PATH=/usr/local/bin
+        SHELLCHECK_PATH="$SHELLCHECK_DIRECTORY_PATH"/shellcheck
+        SHELLCHECK_ARCHIVE_NAME=shellcheck-v"$SHELLCHECK_VERSION".linux.x86_64.tar.xz
+
+        TEMP_DIRECTORY="$(mktemp -d)"
+        SHELLCHECK_ARCHIVE_PATH="$TEMP_DIRECTORY/$SHELLCHECK_ARCHIVE_NAME"
+        echo "Downloading $SHELLCHECK_ARCHIVE_NAME to $SHELLCHECK_ARCHIVE_PATH..."
+
+        curl -fsLo "$SHELLCHECK_ARCHIVE_PATH" https://github.com/koalaman/shellcheck/releases/download/v"$SHELLCHECK_VERSION"/"$SHELLCHECK_ARCHIVE_NAME"
+        echo "Extracting shellcheck archive in $SHELLCHECK_DIRECTORY_PATH..."
+        sudo tar -C "$SHELLCHECK_DIRECTORY_PATH" --strip-components=1 -xJf "$SHELLCHECK_ARCHIVE_PATH" shellcheck-v"$SHELLCHECK_VERSION"/shellcheck
+        sudo chmod a+x "$SHELLCHECK_PATH"
+
+        echo "Deleting $SHELLCHECK_ARCHIVE_PATH"
+        rm -f "$SHELLCHECK_ARCHIVE_PATH"
+
+        echo "Deleting $TEMP_DIRECTORY"
+        rm -rf "$TEMP_DIRECTORY"
+
+        echo "Installed shellcheck $SHELLCHECK_VERSION. Verifying with go version: $(shellcheck --version)"
+
+        unset SHELLCHECK_VERSION
+        unset SHELLCHECK_DIRECTORY_PATH
+        unset SHELLCHECK_PATH
+        unset SHELLCHECK_ARCHIVE_NAME
+        unset TEMP_DIRECTORY
+        unset SHELLCHECK_ARCHIVE_PATH
+    fi
 
     if ! command -v docker >/dev/null 2>&1; then
         echo "Installing Docker"
