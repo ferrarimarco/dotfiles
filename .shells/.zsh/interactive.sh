@@ -51,7 +51,9 @@ add_to_fpath() {
 
 add_to_fpath "$ZSH_SITE_FUNCTIONS_PATH" "ZSH_SITE_FUNCTIONS_PATH"
 add_to_fpath "$ZSH_COMPLETIONS_PATH" "ZSH_COMPLETIONS_PATH"
-enable_kubectl_completion "zsh"
+
+# shellcheck source=/dev/null
+. <(kubectl completion bash)
 
 zmodload -i zsh/complist
 

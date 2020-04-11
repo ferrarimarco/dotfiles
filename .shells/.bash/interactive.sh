@@ -70,7 +70,8 @@ if command -v defaults &>/dev/null; then
     complete -W "NSGlobalDomain" defaults
 fi
 
-enable_kubectl_completion "bash"
+# shellcheck source=/dev/null
+. <(kubectl completion bash)
 
 ###############################################################################
 # Bash prompt                                                                 #

@@ -70,14 +70,6 @@ check_eof_newline() {
     rm tmp
 }
 
-enable_kubectl_completion() {
-    if command -v kubectl >/dev/null 2>&1; then
-        SHELL_NAME="${1}"
-        # shellcheck source=/dev/null
-        . <(kubectl completion "$SHELL_NAME")
-    fi
-}
-
 # find all scripts and run `shfmt`
 shfmt_dir() {
     dir=
