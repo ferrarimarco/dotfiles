@@ -71,7 +71,7 @@ if command -v defaults &>/dev/null; then
 fi
 
 # shellcheck source=/dev/null
-. <(kubectl completion bash)
+command -v kubectl >/dev/null 2>&1 && . <(kubectl completion bash)
 
 ###############################################################################
 # Bash prompt                                                                 #
