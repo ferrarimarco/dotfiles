@@ -401,6 +401,7 @@ setup_debian() {
         zip \
         zlib1g-dev \
         zsh \
+        zsh-syntax-highlighting \
         --no-install-recommends
 
     sudo apt-get -qy autoremove
