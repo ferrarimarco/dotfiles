@@ -74,7 +74,7 @@ enable_kubectl_completion() {
     if command -v kubectl >/dev/null 2>&1; then
         SHELL_NAME="${1}"
         # shellcheck source=/dev/null
-        . <(kubectl completion $SHELL_NAME)
+        . <(kubectl completion "$SHELL_NAME")
     fi
 }
 
@@ -107,7 +107,7 @@ shellcheck_dir() {
         dir="${1}"
     fi
     find "$dir" -type f -not -path "*/\\.git/*" | sort -u | while read -r f; do
-        if file "$f" | grep 'shell\| sh' | grep -v 'zsh'; then
+        if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$f"; then
             if shellcheck "$f"; then
                 echo "[OK]: sucessfully linted $f"
             else

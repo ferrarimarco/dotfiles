@@ -25,7 +25,7 @@ fi
 ###############################################################################
 
 # source docker aliases if docker is installed
-if command -v docker >/dev/null 2>&1; then
+if command -v docker >/dev/null 2>&1 && [ -f /var/run/docker.sock ]; then
     DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
     source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
     unset DOCKERFUNCTIONS_PATH
