@@ -3,8 +3,6 @@
 set -e
 set -o pipefail
 
-export DEBIAN_FRONTEND=noninteractive
-
 ask_for_sudo() {
     echo "Prompting for sudo password..."
     if sudo -v; then
@@ -253,7 +251,7 @@ setup_debian() {
 
     echo "Installing the minimal set of packages"
     sudo apt-get -q update || true
-    sudo DEBIAN_FRONTEND=noninteractive apt-get -qy install \
+    sudo apt-get -qy install \
         apt-transport-https \
         apt-utils \
         ca-certificates \
@@ -338,6 +336,20 @@ setup_debian() {
     else
         echo "Downloading zsh-autosuggestions in: $CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
         git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
+    fi
+
+    if [ -z "$ZSH_COMPLETIONS_PATH" ]; then
+        echo "ERROR: The ZSH_COMPLETIONS_PATH variable is not set, or set to an empty string"
+        exit 1
+    fi
+
+    CURRENT_ZSH_CEOMPLETIONS_DIR="$(dirname "$ZSH_COMPLETIONS_PATH")"
+    if [ -d "$CURRENT_ZSH_CEOMPLETIONS_DIR" ]; then
+        echo "Updating zsh-completions in: $CURRENT_ZSH_CEOMPLETIONS_DIR"
+        git -C "$CURRENT_ZSH_CEOMPLETIONS_DIR" pull
+    else
+        echo "Downloading zsh-completions in: $CURRENT_ZSH_CEOMPLETIONS_DIR"
+        git clone --depth=1 https://github.com/zsh-users/zsh-completions.git "$CURRENT_ZSH_CEOMPLETIONS_DIR"
     fi
 
     sudo apt-get -q update || true

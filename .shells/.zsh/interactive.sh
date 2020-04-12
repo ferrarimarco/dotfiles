@@ -45,7 +45,7 @@ add_to_fpath() {
     if [ -d "$PATH_TO_ADD" ]; then
         fpath=("$PATH_TO_ADD" $fpath)
     else
-        echo "WARNING: Cannot add $VARIABLE_NAME (set to: $PATH_TO_ADD) to fpath because it doesn't exist or it's empty."
+        echo "WARNING: Cannot add $VARIABLE_NAME (set to: $PATH_TO_ADD) to fpath because the destination doesn't exist or the variable is set to an empty value."
     fi
 }
 

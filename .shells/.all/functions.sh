@@ -117,7 +117,7 @@ source_file_if_available() {
         # shellcheck source=/dev/null
         . "$FILE"
     else
-        echo "WARNING: Cannot source $VARIABLE_NAME (set to: $FILE) because it doesn't exist or it's empty."
+        echo "WARNING: Cannot source $VARIABLE_NAME (set to: $FILE) because the destination doesn't exist or the variable is set to an empty value."
         return 1
     fi
     return 0
