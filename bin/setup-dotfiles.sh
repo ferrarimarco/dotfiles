@@ -531,6 +531,38 @@ setup_debian() {
         unset TEMP_DIRECTORY
     fi
 
+    if ! command -v terraform >/dev/null 2>&1; then
+        VERSION="0.12.24"
+        echo "Installing terraform $VERSION..."
+        DESTINATION_DIRECTORY_PATH=/usr/local/bin
+        EXECUTABLE_PATH="$DESTINATION_DIRECTORY_PATH"/terraform
+        ARCHIVE_NAME=terraform_"$VERSION"_linux_amd64.zip
+
+        TEMP_DIRECTORY="$(mktemp -d)"
+        ARCHIVE_PATH="$TEMP_DIRECTORY/$ARCHIVE_NAME"
+        echo "Downloading $ARCHIVE_NAME to $ARCHIVE_PATH..."
+
+        curl -fsLo "$ARCHIVE_PATH" https://releases.hashicorp.com/terraform/"$VERSION"/"$ARCHIVE_NAME"
+        echo "Extracting terraform archive in $DESTINATION_DIRECTORY_PATH..."
+        sudo unzip "$ARCHIVE_PATH" terraform -d "$DESTINATION_DIRECTORY_PATH"
+        sudo chmod a+x "$EXECUTABLE_PATH"
+
+        echo "Deleting $ARCHIVE_PATH"
+        rm -f "$ARCHIVE_PATH"
+
+        echo "Deleting $TEMP_DIRECTORY"
+        rm -rf "$TEMP_DIRECTORY"
+
+        echo "Installed terraform $VERSION. Verifying with go version: $(terraform version)"
+
+        unset VERSION
+        unset DESTINATION_DIRECTORY_PATH
+        unset EXECUTABLE_PATH
+        unset ARCHIVE_NAME
+        unset TEMP_DIRECTORY
+        unset ARCHIVE_PATH
+    fi
+
     if [ -z "$TARGET_USER" ]; then
         echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
         exit 1
