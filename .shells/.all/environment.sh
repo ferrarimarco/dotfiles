@@ -101,6 +101,7 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
 
     GOROOT="${HOME}/bin/go"
 
+    ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
     ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
     ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
     ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
