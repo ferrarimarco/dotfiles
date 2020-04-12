@@ -32,6 +32,10 @@ is_supported_shell_script() {
     return $CHECK_RETURN_CODE
 }
 
+is_supported_terraform_file() {
+    case "${1}" in *.tf) return 0 ;; *.tfvars) return 0 ;; *) return 1 ;; esac
+}
+
 execute_command() {
     check_name="$1"
     command_name="$2"
@@ -109,30 +113,7 @@ exit_on_error $EXIT_CODE
 execute_command ends_with_newline "tail" "pre-commit" "Checking if text files have a newline at the end..." "newline check"
 execute_command shellcheck "shellcheck" "pre-commit" "Running shellcheck..." "shellcheck" is_supported_shell_script
 execute_command "shfmt -d" "shfmt" "pre-commit" "Running shfmt..." "shfmt" is_supported_shell_script
-
-if command -v terraform >/dev/null 2>&1; then
-    echo "pre-commit: Running terraform format check..."
-    for CHANGED_FILE in $CHANGED_FILES; do
-        if [ -f "$CHANGED_FILE" ] && case "$CHANGED_FILE" in *.tf) ;; *.tfvars) ;; *) false ;; esac; then
-            if ! [ -e "$CHANGED_FILE" ]; then
-                echo "pre-commit: skipping terraform fmt for $CHANGED_FILE because it was deleted"
-                continue
-            fi
-
-            if terraform fmt -check "$CHANGED_FILE"; then
-                echo "pre-commit: terraform fmt on $CHANGED_FILE PASSED"
-            else
-                EXIT_CODE=$?
-                echo "pre-commit: terraform fmt on $CHANGED_FILE FAILED. $CHANGED_FILE needs to be formatted"
-                exit_on_error $EXIT_CODE
-            fi
-        fi
-    done
-else
-    echo "pre-commit: WARNING, terraform is not installed!"
-fi
-
-exit_on_error $EXIT_CODE
+execute_command "terraform fmt -check" "terraform" "pre-commit" "Running terraform format check..." "terraform format check" is_supported_terraform_file
 
 if command -v markdownlint >/dev/null 2>&1; then
     echo "pre-commit: Running markdownlint..."
