@@ -169,3 +169,10 @@ if command -v git >/dev/null 2>&1; then
     [ -z "$GIT_COMMIT_SIGN" ] && GIT_COMMIT_SIGN=false
     [ "$(git config --global commit.gpgsign)" != "$GIT_COMMIT_SIGN" ] && git config --global commit.gpgsign "$GIT_COMMIT_SIGN"
 fi
+
+###############################################################################
+# Completion                                                                  #
+###############################################################################
+
+# Travis CI
+[ -f "$HOME"/.travis/travis.sh ] && . "$HOME"/.travis/travis.sh
