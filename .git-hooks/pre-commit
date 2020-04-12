@@ -26,6 +26,10 @@ is_binary() {
     return 1
 }
 
+is_supported_markdown_file() {
+    case "${1}" in *.md) return 0 ;; *) return 1 ;; esac
+}
+
 is_supported_shell_script() {
     grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "${1}"
     CHECK_RETURN_CODE=$?
@@ -34,6 +38,10 @@ is_supported_shell_script() {
 
 is_supported_terraform_file() {
     case "${1}" in *.tf) return 0 ;; *.tfvars) return 0 ;; *) return 1 ;; esac
+}
+
+is_supported_yaml_file() {
+    case "${1}" in *.yml) return 0 ;; *.yaml) return 0 ;; *) return 1 ;; esac
 }
 
 execute_command() {
@@ -80,11 +88,16 @@ execute_command() {
         echo "$message_prefix: WARNING, $command_name is not available!"
     fi
 
+    unset command_name
     unset message_prefix
     unset intro_message
     unset check_name
+    unset check_name_output
+    unset include_file_condition
 
     exit_on_error $EXIT_CODE
+
+    unset EXIT_CODE
 }
 
 # Check if this is the initial commit
@@ -94,8 +107,6 @@ else
     # Get the hash of the empty-tree commit
     AGAINST="$(git hash-object -t tree --stdin </dev/null)"
 fi
-
-CHANGED_FILES="$(git diff-index --cached --name-only "$AGAINST")"
 
 EXIT_CODE=0
 
@@ -110,60 +121,15 @@ fi
 
 exit_on_error $EXIT_CODE
 
+CHANGED_FILES="$(git diff-index --cached --name-only "$AGAINST")"
+
 execute_command ends_with_newline "tail" "pre-commit" "Checking if text files have a newline at the end..." "newline check"
 execute_command shellcheck "shellcheck" "pre-commit" "Running shellcheck..." "shellcheck" is_supported_shell_script
 execute_command "shfmt -d" "shfmt" "pre-commit" "Running shfmt..." "shfmt" is_supported_shell_script
 execute_command "terraform fmt -check" "terraform" "pre-commit" "Running terraform format check..." "terraform format check" is_supported_terraform_file
+execute_command "markdownlint" "markdownlint" "pre-commit" "Running markdownlint..." "markdownlint" is_supported_markdown_file
+execute_command "yamllint" "yamllint" "pre-commit" "Running yamllint..." "markdownyamllintlint" is_supported_yaml_file
 
-if command -v markdownlint >/dev/null 2>&1; then
-    echo "pre-commit: Running markdownlint..."
-    for CHANGED_FILE in $CHANGED_FILES; do
-        if ! [ -e "$CHANGED_FILE" ]; then
-            echo "pre-commit: skipping markdownlint for $CHANGED_FILE because it was deleted"
-            continue
-        fi
-
-        if [ -f "$CHANGED_FILE" ] && case "$CHANGED_FILE" in *.md) ;; *) false ;; esac; then
-            if markdownlint "$CHANGED_FILE"; then
-                echo "pre-commit: markdownlint on $CHANGED_FILE PASSED"
-            else
-                EXIT_CODE=$?
-                echo "pre-commit: markdownlint on $CHANGED_FILE FAILED"
-                exit_on_error $EXIT_CODE
-            fi
-        fi
-    done
-else
-    echo "pre-commit: WARNING, markdownlint is not installed!"
-fi
-
-exit_on_error $EXIT_CODE
-
-if command -v yamllint >/dev/null 2>&1; then
-    echo "pre-commit: Running yamllint..."
-    for CHANGED_FILE in $CHANGED_FILES; do
-        if ! [ -e "$CHANGED_FILE" ]; then
-            echo "pre-commit: skipping yamllint for $CHANGED_FILE because it was deleted"
-            continue
-        fi
-
-        if [ -f "$CHANGED_FILE" ] && case "$CHANGED_FILE" in *.yml) ;; *.yaml) ;; *) false ;; esac; then
-            if yamllint --strict "$CHANGED_FILE"; then
-                echo "pre-commit: yamllint on $CHANGED_FILE PASSED"
-            else
-                EXIT_CODE=$?
-                echo "pre-commit: yamllint on $CHANGED_FILE FAILED"
-                exit_on_error $EXIT_CODE
-            fi
-        fi
-    done
-else
-    echo "pre-commit: WARNING, yamllint is not installed!"
-fi
-
-exit_on_error $EXIT_CODE
-
-unset line
 unset EXIT_CODE
 unset CHANGED_FILE
 unset CHANGED_FILES
