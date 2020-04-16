@@ -29,7 +29,7 @@ jobs:
         the Gemfile"
       language: shell
       name: "Travis lint"
-      script: echo "n" | travis lint -x
+      script: travis lint --skip-completion-check -x
     - name: "YAMLlint"
       language: shell
       install: sudo pip install -r requirements.txt
