@@ -133,7 +133,7 @@ execute_command "shfmt -d" "shfmt" "pre-commit" "Running shfmt..." "shfmt" is_su
 execute_command "terraform fmt -check" "terraform" "pre-commit" "Running terraform format check..." "terraform format check" is_supported_terraform_file
 execute_command "markdownlint" "markdownlint" "pre-commit" "Running markdownlint..." "markdownlint" is_supported_markdown_file
 execute_command "yamllint" "yamllint" "pre-commit" "Running yamllint..." "yamllint" is_supported_yaml_file
-execute_command "travis lint" "travis" "pre-commit" "Running travis lint..." "travis lint" is_supported_travis_file
+execute_command "travis lint -x" "travis" "pre-commit" "Running travis lint..." "travis lint" is_supported_travis_file
 
 unset EXIT_CODE
 unset CHANGED_FILE
