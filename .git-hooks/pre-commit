@@ -62,6 +62,14 @@ execute_command() {
         echo "$message_prefix: $intro_message"
 
         for CHANGED_FILE in $CHANGED_FILES; do
+            # If there's a condition to check use it
+            if [ -n "$include_file_condition" ]; then
+                # Skip this file if it doesn't pass the include condition
+                if ! $include_file_condition "$CHANGED_FILE"; then
+                    continue
+                fi
+            fi
+
             if ! [ -e "$CHANGED_FILE" ]; then
                 echo "$message_prefix: skipping $check_name_output for $CHANGED_FILE because it was deleted"
                 continue
@@ -70,14 +78,6 @@ execute_command() {
             if is_binary "$CHANGED_FILE"; then
                 echo "$message_prefix: skipping $check_name_output for $CHANGED_FILE because it's a binary"
                 continue
-            fi
-
-            # If there's a condition to check use it
-            if [ -n "$include_file_condition" ]; then
-                # Skip this file if it doesn't pass the include condition
-                if ! $include_file_condition "$CHANGED_FILE"; then
-                    continue
-                fi
             fi
 
             if $check_name "$CHANGED_FILE"; then
