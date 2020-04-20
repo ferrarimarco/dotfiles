@@ -73,6 +73,9 @@ fi
 # shellcheck source=/dev/null
 command -v kubectl >/dev/null 2>&1 && . <(kubectl completion bash)
 
+# shellcheck source=/dev/null
+command -v rbenv >/dev/null 2>&1 && . "${RBENV_DIRECTORY_PATH}"/.rbenv/completions/rbenv.bash
+
 ###############################################################################
 # Bash prompt                                                                 #
 ###############################################################################

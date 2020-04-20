@@ -5,9 +5,7 @@
 FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
 
 # Initialize rbenv if available
-if command -v rbenv >/dev/null 2>&1; then
-    eval "$(rbenv init -)"
-fi
+command -v rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
 
 ###############################################################################
 # MOTD                                                                        #

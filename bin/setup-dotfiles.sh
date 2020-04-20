@@ -19,6 +19,11 @@ ask_for_sudo() {
     fi
 }
 
+fix_permissions() {
+    echo "Setting home directory ($HOME) permissions..."
+    chmod -R o-rwx "$HOME"
+}
+
 # Choose a user account to use for this installation
 get_user() {
     echo "Setting TARGET_USER. The order of preference is: USER ($USER), USERNAME ($USERNAME), LOGNAME ($LOGNAME), whoami ($(whoami))"
@@ -226,6 +231,16 @@ install_python_packages() {
     fi
 }
 
+install_ruby() {
+    if command -v rbenv >/dev/null 2>&1; then
+        read -r RUBY_VERSION <"${REPOSITORY_PATH}"/.rbenv/version
+        echo "Installing Ruby $RUBY_VERSION"
+        rbenv install "$RUBY_VERSION"
+    else
+        echo "WARNING: rbenv is not installed. Skipping ruby installation."
+    fi
+}
+
 install_rubygems() {
     if command -v gem >/dev/null 2>&1; then
         echo "Installing Ruby gems"
@@ -395,8 +410,6 @@ setup_debian() {
         net-tools \
         pinentry-curses \
         python3-pip \
-        rbenv \
-        ruby-dev \
         rxvt-unicode \
         scdaemon \
         ssh \
@@ -487,6 +500,18 @@ setup_debian() {
         echo "Installing Docker Compose $docker_compose_release"
         sudo curl -fsLo /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)"
         sudo chmod a+x /usr/local/bin/docker-compose
+    fi
+
+    if [ -d "$RBENV_DIRECTORY_PATH" ]; then
+        echo "Updating rbenv in: $RBENV_DIRECTORY_PATH"
+        git -C "$RBENV_DIRECTORY_PATH" pull
+        git -C "$RBENV_DIRECTORY_PATH"/plugins/ruby-build pull
+    else
+        echo "Downloading rbenv in: $RBENV_DIRECTORY_PATH"
+        mkdir -p "$(dirname "$RBENV_DIRECTORY_PATH")"
+        git clone https://github.com/rbenv/rbenv.git "$RBENV_DIRECTORY_PATH"
+        mkdir -p "$RBENV_DIRECTORY_PATH"/plugins
+        git clone https://github.com/rbenv/ruby-build.git "$RBENV_DIRECTORY_PATH"/plugins/ruby-build
     fi
 
     if ! command -v node >/dev/null 2>&1; then
@@ -902,6 +927,7 @@ main() {
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
         source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
+        install_ruby
         setup_shell
         setup_user
         update_system
@@ -909,6 +935,7 @@ main() {
         install_npm_packages
         install_python_packages
         install_rubygems
+        fix_permissions
     elif [[ $cmd == "macos" ]]; then
         setup_macos
         install_brew
@@ -921,6 +948,7 @@ main() {
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
         source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
+        install_ruby
         setup_shell
         setup_user
         update_system
@@ -928,6 +956,7 @@ main() {
         install_npm_packages
         install_python_packages
         install_rubygems
+        fix_permissions
     else
         usage
     fi
