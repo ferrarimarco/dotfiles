@@ -235,7 +235,7 @@ install_ruby() {
     if command -v rbenv >/dev/null 2>&1; then
         read -r RUBY_VERSION <"${REPOSITORY_PATH}"/.rbenv/version
         echo "Installing Ruby $RUBY_VERSION"
-        rbenv install "$RUBY_VERSION"
+        rbenv install --skip-existing "$RUBY_VERSION"
     else
         echo "WARNING: rbenv is not installed. Skipping ruby installation."
     fi
