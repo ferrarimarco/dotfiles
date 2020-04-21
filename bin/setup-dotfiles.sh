@@ -340,11 +340,38 @@ setup_debian() {
         echo "Google Chrome is already installed"
     fi
 
+    if ! command -v node >/dev/null 2>&1; then
+        echo "Configuring Node.js repository"
+        curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+    fi
+
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "Installing Docker"
+        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+        docker_distribution=
+        case "$distribution" in
+        Ubuntu*)
+            docker_distribution="ubuntu"
+            ;;
+        Debian*)
+            docker_distribution="debian"
+            ;;
+        *) exit 1 ;;
+        esac
+
+        sudo add-apt-repository \
+            "deb [arch=amd64] https://download.docker.com/linux/${docker_distribution} \
+            $(lsb_release -cs) \
+            stable"
+
+        unset docker_distribution
+    fi
+
     clone_git_repository_if_not_cloned_already "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" "zsh-autosuggestions"
     clone_git_repository_if_not_cloned_already "$ZSH_COMPLETIONS_PATH" "zsh-completions"
 
     sudo apt-get -q update || true
-    sudo apt-get -qy upgrade
 
     sudo apt-get -qy install \
         adduser \
@@ -356,7 +383,10 @@ setup_debian() {
         bridge-utils \
         build-essential \
         bzip2 \
+        containerd.io \
         coreutils \
+        docker-ce \
+        docker-ce-cli \
         dnsutils \
         file \
         findutils \
@@ -384,6 +414,7 @@ setup_debian() {
         mount \
         nano \
         net-tools \
+        nodejs \
         pinentry-curses \
         python3-pip \
         rxvt-unicode \
@@ -440,31 +471,6 @@ setup_debian() {
         unset SHELLCHECK_ARCHIVE_PATH
     fi
 
-    if ! command -v docker >/dev/null 2>&1; then
-        echo "Installing Docker"
-        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
-        docker_distribution=
-        case "$distribution" in
-        Ubuntu*)
-            docker_distribution="ubuntu"
-            ;;
-        Debian*)
-            docker_distribution="debian"
-            ;;
-        *) exit 1 ;;
-        esac
-
-        sudo add-apt-repository \
-            "deb [arch=amd64] https://download.docker.com/linux/${docker_distribution} \
-            $(lsb_release -cs) \
-            stable"
-        sudo apt-get -q update
-        sudo apt-get -qy install docker-ce docker-ce-cli containerd.io
-
-        unset docker_distribution
-    fi
-
     DOCKER_GROUP_NAME="docker"
     echo "Creating the $DOCKER_GROUP_NAME group for Docker"
     getent group "$DOCKER_GROUP_NAME" >/dev/null 2>&1 || sudo groupadd "$DOCKER_GROUP_NAME"
@@ -480,12 +486,6 @@ setup_debian() {
 
     clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "rbenv"
     clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH"/plugins/ruby-build "ruby-build"
-
-    if ! command -v node >/dev/null 2>&1; then
-        echo "Installing Node.js"
-        curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-        sudo apt-get -qy install nodejs
-    fi
 
     if ! command -v go >/dev/null 2>&1; then
         GO_VERSION=1.14.1
