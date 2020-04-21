@@ -70,6 +70,28 @@ check_eof_newline() {
     rm tmp
 }
 
+clone_git_repository_if_not_cloned_already() {
+    destination_dir="$(dirname "$1")"
+    program_name="$2"
+    git_repository_url="$3"
+
+    if [ -z "$destination_dir" ]; then
+        echo "ERROR while cloning the git repository for $program_name: The destination_dir variable is not set, or set to an empty string"
+        exit 1
+    fi
+
+    if [ -d "$destination_dir" ]; then
+        echo "$destination_dir already exists. Skipping..."
+    else
+        mkdir -p "$destination_dir"
+        echo "Cloning $git_repository_url in $destination_dir"
+        git clone "$git_repository_url" "$destination_dir"
+    fi
+    unset destination_dir
+    unset program_name
+    unset git_repository_url
+}
+
 # find all scripts and run `shfmt`
 shfmt_dir() {
     dir=
@@ -135,6 +157,19 @@ update_brew() {
     brew missing
 }
 
+pull_from_git_repository() {
+    destination_dir="$1"
+    program_name="$2"
+    if [ -d "$destination_dir" ]; then
+        echo "Updating $program_name in: $destination_dir"
+        git -C "$destination_dir" pull
+    else
+        echo "WARNING: $destination_dir doesn't exists"
+    fi
+    unset destination_dir
+    unset program_name
+}
+
 update_system() {
     os_name="$(uname -s)"
     if test "${os_name#*"Darwin"}" != "$os_name"; then
@@ -147,6 +182,12 @@ update_system() {
         echo "Updating linux..."
         sudo apt-get update
         sudo apt-get upgrade
+        pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
+        pull_from_git_repository "$ZSH_COMPLETIONS_PATH" "zsh-completions"
+        pull_from_git_repository "$RBENV_DIRECTORY_PATH" "rbenv"
+        pull_from_git_repository "$RBENV_DIRECTORY_PATH"/plugins/ruby-build "ruby-build"
+        pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
+
     fi
     unset os_name
 

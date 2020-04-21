@@ -340,33 +340,8 @@ setup_debian() {
         echo "Google Chrome is already installed"
     fi
 
-    if [ -z "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" ]; then
-        echo "ERROR: The ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH variable is not set, or set to an empty string"
-        exit 1
-    fi
-
-    CURRENT_ZSH_AUTOSUGGESTIONS_DIR="$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")"
-    if [ -d "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR" ]; then
-        echo "Updating zsh-autosuggestions in: $CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
-        git -C "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR" pull
-    else
-        echo "Downloading zsh-autosuggestions in: $CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
-        git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git "$CURRENT_ZSH_AUTOSUGGESTIONS_DIR"
-    fi
-
-    if [ -z "$ZSH_COMPLETIONS_PATH" ]; then
-        echo "ERROR: The ZSH_COMPLETIONS_PATH variable is not set, or set to an empty string"
-        exit 1
-    fi
-
-    CURRENT_ZSH_CEOMPLETIONS_DIR="$(dirname "$ZSH_COMPLETIONS_PATH")"
-    if [ -d "$CURRENT_ZSH_CEOMPLETIONS_DIR" ]; then
-        echo "Updating zsh-completions in: $CURRENT_ZSH_CEOMPLETIONS_DIR"
-        git -C "$CURRENT_ZSH_CEOMPLETIONS_DIR" pull
-    else
-        echo "Downloading zsh-completions in: $CURRENT_ZSH_CEOMPLETIONS_DIR"
-        git clone --depth=1 https://github.com/zsh-users/zsh-completions.git "$CURRENT_ZSH_CEOMPLETIONS_DIR"
-    fi
+    clone_git_repository_if_not_cloned_already "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" "zsh-autosuggestions"
+    clone_git_repository_if_not_cloned_already "$ZSH_COMPLETIONS_PATH" "zsh-completions"
 
     sudo apt-get -q update || true
     sudo apt-get -qy upgrade
@@ -503,17 +478,8 @@ setup_debian() {
         sudo chmod a+x /usr/local/bin/docker-compose
     fi
 
-    if [ -d "$RBENV_DIRECTORY_PATH" ]; then
-        echo "Updating rbenv in: $RBENV_DIRECTORY_PATH"
-        git -C "$RBENV_DIRECTORY_PATH" pull
-        git -C "$RBENV_DIRECTORY_PATH"/plugins/ruby-build pull
-    else
-        echo "Downloading rbenv in: $RBENV_DIRECTORY_PATH"
-        mkdir -p "$(dirname "$RBENV_DIRECTORY_PATH")"
-        git clone https://github.com/rbenv/rbenv.git "$RBENV_DIRECTORY_PATH"
-        mkdir -p "$RBENV_DIRECTORY_PATH"/plugins
-        git clone https://github.com/rbenv/ruby-build.git "$RBENV_DIRECTORY_PATH"/plugins/ruby-build
-    fi
+    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "rbenv"
+    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH"/plugins/ruby-build "ruby-build"
 
     if ! command -v node >/dev/null 2>&1; then
         echo "Installing Node.js"
@@ -763,22 +729,7 @@ setup_macos() {
 setup_shell() {
     echo "Setting up the shell..."
 
-    if [ -z "$ZSH_THEME_PATH" ]; then
-        echo "ERROR: The ZSH_THEME_PATH variable is not set, or set to an empty string"
-        exit 1
-    fi
-
-    # Download ZSH themes
-    CURRENT_ZSH_THEME_DIR="$(dirname "$ZSH_THEME_PATH")"
-    if [ -d "$CURRENT_ZSH_THEME_DIR" ]; then
-        echo "Updating ZSH theme in: $CURRENT_ZSH_THEME_DIR"
-        git -C "$CURRENT_ZSH_THEME_DIR" pull
-    else
-        echo "Downloading ZSH theme in: $CURRENT_ZSH_THEME_DIR"
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$CURRENT_ZSH_THEME_DIR"
-    fi
-
-    unset CURRENT_ZSH_THEME_DIR
+    clone_git_repository_if_not_cloned_already "$ZSH_THEME_PATH" "powerlevel10k"
 
     local os_name
     os_name="$(uname -s)"
