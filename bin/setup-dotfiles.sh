@@ -225,6 +225,7 @@ install_python_packages() {
         echo "Installing other pip3 packages"
         sudo pip3 install \
             black \
+            virtualenv \
             yamllint
     else
         echo "WARNING: pip3 is not installed. Skipping Python 3 package installation."
