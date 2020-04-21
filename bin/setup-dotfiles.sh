@@ -368,8 +368,8 @@ setup_debian() {
         unset docker_distribution
     fi
 
-    clone_git_repository_if_not_cloned_already "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" "zsh-autosuggestions"
-    clone_git_repository_if_not_cloned_already "$ZSH_COMPLETIONS_PATH" "zsh-completions"
+    clone_git_repository_if_not_cloned_already "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH" "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions.git"
+    clone_git_repository_if_not_cloned_already "$ZSH_COMPLETIONS_PATH" "zsh-completions" "https://github.com/zsh-users/zsh-completions.git"
 
     sudo apt-get -q update || true
 
