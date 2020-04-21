@@ -484,8 +484,8 @@ setup_debian() {
         sudo chmod a+x /usr/local/bin/docker-compose
     fi
 
-    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "rbenv"
-    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH"/plugins/ruby-build "ruby-build"
+    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "rbenv" "https://github.com/rbenv/rbenv.git"
+    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH"/plugins/ruby-build "ruby-build" "https://github.com/rbenv/ruby-build.git"
 
     if ! command -v go >/dev/null 2>&1; then
         GO_VERSION=1.14.1
@@ -729,7 +729,7 @@ setup_macos() {
 setup_shell() {
     echo "Setting up the shell..."
 
-    clone_git_repository_if_not_cloned_already "$ZSH_THEME_PATH" "powerlevel10k"
+    clone_git_repository_if_not_cloned_already "$ZSH_THEME_PATH" "powerlevel10k" "https://github.com/romkatv/powerlevel10k.git"
 
     local os_name
     os_name="$(uname -s)"
