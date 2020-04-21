@@ -55,9 +55,6 @@ add_to_fpath "$ZSH_COMPLETIONS_PATH" "ZSH_COMPLETIONS_PATH"
 # shellcheck source=/dev/null
 command -v kubectl >/dev/null 2>&1 && . <(kubectl completion zsh)
 
-# shellcheck source=/dev/null
-command -v rbenv >/dev/null 2>&1 && . "${RBENV_DIRECTORY_PATH}"/completions/rbenv.zsh
-
 zmodload -i zsh/complist
 
 WORDCHARS=''

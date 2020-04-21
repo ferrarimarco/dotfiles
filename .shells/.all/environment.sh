@@ -60,6 +60,7 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
 
     if [ -d "${HOMEBREW_PATH}" ]; then
         DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
+        DEFAULT_SHELL_SHORT="zsh"
 
         export HOMEBREW_PATH
         export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
@@ -95,14 +96,15 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
 elif test "${os_name#*"Linux"}" != "$os_name"; then
     if command -v zsh >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v zsh)"
+        DEFAULT_SHELL_SHORT="zsh"
     elif command -v bash >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v bash)"
+        DEFAULT_SHELL_SHORT="bash"
     fi
 
     GOROOT="${HOME}/bin/go"
 
     RBENV_DIRECTORY_PATH="${HOME}/.rbenv"
-
     export RBENV_DIRECTORY_PATH
     export PATH="${RBENV_DIRECTORY_PATH}/bin:${PATH}"
 
@@ -125,6 +127,7 @@ export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
 
 # Export default shell
 export DEFAULT_SHELL
+export DEFAULT_SHELL_SHORT
 
 # Set up Go paths
 export GOROOT
