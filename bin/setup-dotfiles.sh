@@ -170,7 +170,7 @@ install_brew_formulae() {
     echo "Setting up Visual Studio Code settings..."
     _vs_code_settings_path="$HOME"/Library/Application\ Support/Code/User/settings.json
     echo "Ensuring that the Visual Studio Code settings directory ($_vs_code_settings_path) is available..."
-    mkdir -p "$_vs_code_settings_path"
+    mkdir -p "$(dirname "$_vs_code_settings_path")"
     VS_CODE_SETTINGS_FILE_PATH="$HOME"/.config/Code/User/settings.json
     echo "Creating a symbolic link from $VS_CODE_SETTINGS_FILE_PATH to $_vs_code_settings_path"
     ln -sfn "$VS_CODE_SETTINGS_FILE_PATH" "$_vs_code_settings_path"
