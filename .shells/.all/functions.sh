@@ -71,7 +71,7 @@ check_eof_newline() {
 }
 
 clone_git_repository_if_not_cloned_already() {
-    destination_dir="$(dirname "$1")"
+    destination_dir="$1"
     program_name="$2"
     git_repository_url="$3"
 
@@ -185,7 +185,7 @@ update_system() {
         pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
         pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
         pull_from_git_repository "$RBENV_DIRECTORY_PATH" "rbenv"
-        pull_from_git_repository "$RBENV_DIRECTORY_PATH"/plugins/ruby-build "ruby-build"
+        pull_from_git_repository "$RUBY_BUILD_DIRECTORY_PATH" "ruby-build"
         pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
 
     fi
