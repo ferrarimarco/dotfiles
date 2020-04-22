@@ -180,8 +180,8 @@ update_system() {
         fi
     elif test "${os_name#*"Linux"}" != "$os_name"; then
         echo "Updating linux..."
-        sudo apt-get update
-        sudo apt-get upgrade
+        sudo apt-get -q update
+        sudo apt-get -qy upgrade
         pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
         pull_from_git_repository "$ZSH_COMPLETIONS_PATH" "zsh-completions"
         pull_from_git_repository "$RBENV_DIRECTORY_PATH" "rbenv"
