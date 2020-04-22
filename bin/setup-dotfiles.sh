@@ -134,7 +134,11 @@ install_brew_formulae() {
         visual-studio-code; do
         if ! brew cask ls --versions "$f" >/dev/null; then
             echo "Installing $f cask"
-            brew cask install "$f"
+            if ! brew cask install "$f"; then
+                # If the installation failed, retry with verbose output enabled.
+                # Useful for CI builds.
+                brew cask install --verbose "$f"
+            fi
         else
             echo "$f cask is already installed"
         fi
