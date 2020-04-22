@@ -372,8 +372,8 @@ setup_debian() {
         unset docker_distribution
     fi
 
-    clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions.git"
-    clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions" "https://github.com/zsh-users/zsh-completions.git"
+    clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
+    clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "https://github.com/zsh-users/zsh-completions.git"
 
     sudo apt-get -q update || true
 
@@ -488,8 +488,8 @@ setup_debian() {
         sudo chmod a+x /usr/local/bin/docker-compose
     fi
 
-    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "rbenv" "https://github.com/rbenv/rbenv.git"
-    clone_git_repository_if_not_cloned_already "$RUBY_BUILD_DIRECTORY_PATH" "ruby-build" "https://github.com/rbenv/ruby-build.git"
+    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "https://github.com/rbenv/rbenv.git"
+    clone_git_repository_if_not_cloned_already "$RUBY_BUILD_DIRECTORY_PATH" "https://github.com/rbenv/ruby-build.git"
 
     if ! command -v go >/dev/null 2>&1; then
         GO_VERSION=1.14.1
@@ -733,7 +733,7 @@ setup_macos() {
 setup_shell() {
     echo "Setting up the shell..."
 
-    clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k" "https://github.com/romkatv/powerlevel10k.git"
+    clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_THEME_PATH")" "https://github.com/romkatv/powerlevel10k.git"
 
     local os_name
     os_name="$(uname -s)"

@@ -72,11 +72,10 @@ check_eof_newline() {
 
 clone_git_repository_if_not_cloned_already() {
     destination_dir="$1"
-    program_name="$2"
     git_repository_url="$3"
 
     if [ -z "$destination_dir" ]; then
-        echo "ERROR while cloning the git repository for $program_name: The destination_dir variable is not set, or set to an empty string"
+        echo "ERROR while cloning the $git_repository_url git repository: The destination_dir variable is not set, or set to an empty string"
         exit 1
     fi
 
@@ -88,7 +87,6 @@ clone_git_repository_if_not_cloned_already() {
         git clone "$git_repository_url" "$destination_dir"
     fi
     unset destination_dir
-    unset program_name
     unset git_repository_url
 }
 
