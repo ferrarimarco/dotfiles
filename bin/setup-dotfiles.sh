@@ -115,7 +115,11 @@ install_brew_formulae() {
         zsh-syntax-highlighting; do
         if ! brew ls --versions "$f" >/dev/null; then
             echo "Installing $f"
-            brew install "$f"
+            if ! brew install "$f"; then
+                # If the installation failed, retry with verbose output enabled.
+                # Useful for CI builds.
+                brew install --verbose "$f"
+            fi
         else
             echo "$f is already installed"
         fi
