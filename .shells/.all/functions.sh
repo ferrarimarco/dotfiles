@@ -72,7 +72,7 @@ check_eof_newline() {
 
 clone_git_repository_if_not_cloned_already() {
     destination_dir="$1"
-    git_repository_url="$3"
+    git_repository_url="$2"
 
     if [ -z "$destination_dir" ]; then
         echo "ERROR while cloning the $git_repository_url git repository: The destination_dir variable is not set, or set to an empty string"
