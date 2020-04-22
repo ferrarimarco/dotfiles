@@ -187,13 +187,18 @@ update_system() {
         pull_from_git_repository "$RBENV_DIRECTORY_PATH" "rbenv"
         pull_from_git_repository "$RUBY_BUILD_DIRECTORY_PATH" "ruby-build"
         pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
-
     fi
     unset os_name
 
-    command -v npm >/dev/null 2>&1 && sudo npm update -g
+    if command -v npm >/dev/null 2>&1; then
+        echo "Updating npm packages"
+        sudo npm update -g
+    fi
 
-    command -v gem >/dev/null 2>&1 && sudo gem update
+    if command -v gem >/dev/null 2>&1; then
+        echo "Updating gems"
+        sudo gem update
+    fi
 }
 
 # Make a temporary directory and enter it
