@@ -737,24 +737,25 @@ setup_shell() {
 
     local os_name
     os_name="$(uname -s)"
-    font_dir=
     user_default_shell=
     if test "${os_name#*"Darwin"}" != "$os_name"; then
-        font_dir="$HOME/Library/Fonts"
         user_default_shell="$(dscl . -read ~/ UserShell | sed 's/UserShell: //')"
     elif test "${os_name#*"Linux"}" != "$os_name"; then
-        font_dir="$HOME/.local/share/fonts"
         user_default_shell="$(awk -F: -v user="$USER" '$1 == user {print $NF}' /etc/passwd)"
     fi
     unset os_name
 
-    echo "Downloading fonts in ${font_dir}"
-    font_dir="${font_dir}/NerdFonts"
-    mkdir -p "${font_dir}"
-    ! [ -e "${font_dir}/MesloLGS NF Regular.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Regular.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-    ! [ -e "${font_dir}/MesloLGS NF Bold.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Bold.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
-    ! [ -e "${font_dir}/MesloLGS NF Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
-    ! [ -e "${font_dir}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${font_dir}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+    if [ -z "$USER_FONTS_DIRECTORY" ]; then
+        echo "ERROR: The USER_FONTS_DIRECTORY variable is not set, or set to an empty string"
+        exit 1
+    fi
+
+    echo "Downloading fonts in ${USER_FONTS_DIRECTORY}"
+    mkdir -p "${USER_FONTS_DIRECTORY}"
+    ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Regular.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Regular.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+    ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+    ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Italic.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+    ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
 
     if [ -z "$DEFAULT_SHELL" ]; then
         echo "ERROR: The DEFAULT_SHELL variable is not set, or set to an empty string"
@@ -766,7 +767,6 @@ setup_shell() {
         sudo chsh -s "$DEFAULT_SHELL" "$TARGET_USER"
     fi
 
-    unset font_dir
     unset user_default_shell
     echo "The default shell for $TARGET_USER is set to $DEFAULT_SHELL"
 }

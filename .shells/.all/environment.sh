@@ -93,6 +93,8 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
     # add vs code bins to path
     VS_CODE_BIN_DIRECTORY_PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
 
+    USER_FONTS_DIRECTORY="$HOME/Library/Fonts"
+
 elif test "${os_name#*"Linux"}" != "$os_name"; then
     if command -v zsh >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v zsh)"
@@ -115,6 +117,7 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
     ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
     ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+    USER_FONTS_DIRECTORY="$HOME/.local/share/fonts"
 fi
 unset os_name
 
@@ -130,6 +133,8 @@ export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
 # Export default shell
 export DEFAULT_SHELL
 export DEFAULT_SHELL_SHORT
+
+export USER_FONTS_DIRECTORY
 
 # Set up Go paths
 export GOROOT
