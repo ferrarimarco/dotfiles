@@ -883,10 +883,10 @@ main() {
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
         source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
-        install_ruby
         setup_shell
         setup_user
         update_system
+        install_ruby
         install_go_packages
         install_npm_packages
         install_python_packages
@@ -904,10 +904,10 @@ main() {
         echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
         source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
-        install_ruby
         setup_shell
         setup_user
         update_system
+        install_ruby
         install_go_packages
         install_npm_packages
         install_python_packages
