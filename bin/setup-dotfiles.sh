@@ -253,8 +253,8 @@ install_ruby() {
 install_rubygems() {
     if command -v gem >/dev/null 2>&1; then
         echo "Installing Ruby gems"
-        sudo gem update
-        sudo gem install \
+        gem update
+        gem install \
             bundler \
             travis
     else

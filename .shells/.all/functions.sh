@@ -195,7 +195,7 @@ update_system() {
 
     if command -v gem >/dev/null 2>&1; then
         echo "Updating gems"
-        sudo gem update
+        gem update
     fi
 }
 
