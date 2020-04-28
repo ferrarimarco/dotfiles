@@ -148,6 +148,11 @@ autocorrect = 1
 # Include summaries of merged commits in newly created merge commit messages
 log = true
 
+[pull]
+# Allow fast-forward pulls only
+ff = only
+
+
 [push]
 # change to maching for machines with older versions of git 1.x.x
 default = simple
