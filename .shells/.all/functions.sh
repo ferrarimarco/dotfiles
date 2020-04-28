@@ -90,6 +90,17 @@ clone_git_repository_if_not_cloned_already() {
     unset git_repository_url
 }
 
+is_wsl() {
+    VERSION_FILE_PATH=/proc/version
+    if [ -f "$VERSION_FILE_PATH" ] && grep -q "Microsoft" "$VERSION_FILE_PATH"; then
+        unset VERSION_FILE_PATH
+        return 0
+    else
+        unset VERSION_FILE_PATH
+        return 1
+    fi
+}
+
 # find all scripts and run `shfmt`
 shfmt_dir() {
     dir=

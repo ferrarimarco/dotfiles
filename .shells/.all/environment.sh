@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# We don't have the source_file_if_available function yet
+# shellcheck source=/dev/null
+FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
+
 # Set ENV so that if you use a shell as your login shell,
 # and then start "sh" as a non-login interactive shell the startup scripts will
 # correctly run.
@@ -120,6 +124,11 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
     USER_FONTS_DIRECTORY="$HOME/.local/share/fonts"
 fi
 unset os_name
+
+if is_wsl; then
+    VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+    export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS
+fi
 
 [ -d "${VS_CODE_BIN_DIRECTORY_PATH}" ] && export PATH="${VS_CODE_BIN_DIRECTORY_PATH}:${PATH}"
 unset VS_CODE_BIN_DIRECTORY_PATH
