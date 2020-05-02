@@ -20,6 +20,7 @@ clean: ## Uninstalls dotfiles and binaries
 	for file in $(shell find $(HOME) -type l -ilname "*dotfiles*"); do \
 		rm $$file; \
 	done;
+	sudo rm -f /etc/wsl.conf
 
 .PHONY: dotfiles
 dotfiles: ## Installs dotfiles
@@ -31,7 +32,8 @@ dotfiles: ## Installs dotfiles
 		mkdir -p $$(dirname $$file_path); \
 		ln -sfn $$file $$file_path; \
 	done; \
-	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
+	ln -sfn $(HOME)/gitignore $(HOME)/.gitignore;
+	sudo cp $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf;
 
 .PHONY: test
 test: shfmt shellcheck psscriptanalyzer ## Run tests
