@@ -226,12 +226,12 @@ install_python_packages() {
         echo "Installing pip3 packages..."
 
         echo "Installing setuptools and wheel first..."
-        sudo pip3 install \
+        pip3 install \
             setuptools \
             wheel
 
         echo "Installing other pip3 packages"
-        sudo pip3 install \
+        pip3 install \
             black \
             virtualenv \
             yamllint
