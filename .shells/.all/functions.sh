@@ -201,7 +201,7 @@ update_system() {
 
     if command -v npm >/dev/null 2>&1; then
         echo "Updating npm packages"
-        sudo npm update -g
+        npm update -g
     fi
 
     if command -v gem >/dev/null 2>&1; then
