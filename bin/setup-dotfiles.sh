@@ -889,8 +889,8 @@ main() {
 
         setup_shell
         setup_user
-        update_system
         install_ruby
+        update_system
         install_go_packages
         install_npm_packages
         install_python_packages
@@ -910,8 +910,8 @@ main() {
 
         setup_shell
         setup_user
-        update_system
         install_ruby
+        update_system
         install_go_packages
         install_npm_packages
         install_python_packages
