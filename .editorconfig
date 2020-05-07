@@ -21,8 +21,7 @@ trim_trailing_whitespace = true
 spaces_around_operators = true
 spaces_around_brackets = false
 
-[{Makefile,**.mk}]
-# Use tabs for indentation (Makefiles require tabs)
+[{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules}]
 indent_style = tab
 
 [*.{yml,yaml}]
