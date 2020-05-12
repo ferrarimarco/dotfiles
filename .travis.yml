@@ -82,3 +82,4 @@ services:
   - docker
 stages:
   - linting
+  - setup
