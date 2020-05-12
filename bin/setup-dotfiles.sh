@@ -275,8 +275,8 @@ setup_debian() {
     echo "Setting up a Debian system"
 
     echo "Installing the minimal set of packages"
-    sudo apt-get -q update || true
-    sudo apt-get -qy install \
+    sudo apt-get -qq update || true
+    sudo apt-get -qqy install \
         apt-transport-https \
         apt-utils \
         ca-certificates \
@@ -330,7 +330,7 @@ setup_debian() {
         chmod -Rv 777 "$TEMP_DIRECTORY"
 
         echo "Installing Chrome package..."
-        sudo apt-get -qy install "$CHROME_ARCHIVE_PATH"
+        sudo apt-get -qqy install "$CHROME_ARCHIVE_PATH"
 
         echo "Removing Chrome package..."
         rm "$CHROME_ARCHIVE_PATH"
@@ -339,7 +339,7 @@ setup_debian() {
         rm -rf "$TEMP_DIRECTORY"
 
         echo "Installing missing dependencies..."
-        sudo apt-get -fq install
+        sudo apt-get -fqq install
 
         unset TEMP_DIRECTORY
         unset CHROME_ARCHIVE_NAME
@@ -380,9 +380,9 @@ setup_debian() {
     clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
     clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "https://github.com/zsh-users/zsh-completions.git"
 
-    sudo apt-get -q update || true
+    sudo apt-get -qq update || true
 
-    sudo apt-get -qy install \
+    sudo apt-get -qqy install \
         adduser \
         alsa-utils \
         apparmor \
@@ -444,9 +444,9 @@ setup_debian() {
         zsh-syntax-highlighting \
         --no-install-recommends
 
-    sudo apt-get -qy autoremove
-    sudo apt-get -qy autoclean
-    sudo apt-get -qy clean
+    sudo apt-get -qqy autoremove
+    sudo apt-get -qqy autoclean
+    sudo apt-get -qqy clean
 
     if ! command -v shellcheck >/dev/null 2>&1; then
         SHELLCHECK_VERSION="0.7.1"
