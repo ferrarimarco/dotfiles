@@ -130,6 +130,7 @@ install_brew_formulae() {
         docker \
         google-cloud-sdk \
         iterm2 \
+        obs \
         vagrant \
         visual-studio-code; do
         if ! brew cask ls --versions "$f" >/dev/null; then
