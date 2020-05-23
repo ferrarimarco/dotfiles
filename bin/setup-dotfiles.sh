@@ -226,16 +226,10 @@ install_python_packages() {
     if command -v pip3 >/dev/null 2>&1; then
         echo "Installing pip3 packages..."
 
-        echo "Installing setuptools and wheel first..."
+        echo "Installing setuptools and wheel..."
         pip3 install \
             setuptools \
             wheel
-
-        echo "Installing other pip3 packages"
-        pip3 install \
-            black \
-            virtualenv \
-            yamllint
     else
         echo "WARNING: pip3 is not installed. Skipping Python 3 package installation."
     fi
