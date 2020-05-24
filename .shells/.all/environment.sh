@@ -99,6 +99,7 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
 
     USER_FONTS_DIRECTORY="$HOME/Library/Fonts"
 
+    PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
 elif test "${os_name#*"Linux"}" != "$os_name"; then
     if command -v zsh >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v zsh)"
@@ -122,6 +123,8 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
     ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
     USER_FONTS_DIRECTORY="$HOME/.local/share/fonts"
+
+    PYTHON_2_BIN_PATH=
 fi
 unset os_name
 
@@ -132,6 +135,9 @@ fi
 
 [ -d "${VS_CODE_BIN_DIRECTORY_PATH}" ] && export PATH="${VS_CODE_BIN_DIRECTORY_PATH}:${PATH}"
 unset VS_CODE_BIN_DIRECTORY_PATH
+
+[ -d "${PYTHON_2_BIN_PATH}" ] && export PATH="${PYTHON_2_BIN_PATH}:${PATH}"
+unset PYTHON_2_BIN_PATH
 
 # ZSH related stuff that we might need during setup
 export ZSH_SITE_FUNCTIONS_PATH

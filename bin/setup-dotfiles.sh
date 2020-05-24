@@ -226,6 +226,16 @@ install_npm_packages() {
 }
 
 install_python_packages() {
+    if ! command -v pip >/dev/null 2>&1; then
+        echo "Installing pip for python 2..."
+
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+        python get-pip.py
+        rm get-pip.py
+    else
+        echo "pip for python 2 is already installed."
+    fi
+
     if command -v pip3 >/dev/null 2>&1; then
         echo "Installing pip3 packages..."
 
