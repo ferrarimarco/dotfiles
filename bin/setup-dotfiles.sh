@@ -88,8 +88,10 @@ install_brew_formulae() {
         ansible \
         bash \
         bash-completion \
+        ccache \
+        cmake \
         coreutils \
-        docker-compose \
+        dfu-util \
         findutils \
         gawk \
         git \
@@ -102,6 +104,7 @@ install_brew_formulae() {
         grep \
         make \
         nano \
+        ninja \
         p7zip \
         rbenv \
         shellcheck \
