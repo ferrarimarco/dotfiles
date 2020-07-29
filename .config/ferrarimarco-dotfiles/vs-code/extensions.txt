@@ -1,11 +1,11 @@
 davidanson.vscode-markdownlint
 editorconfig.editorconfig
-mauve.terraform
+golang.Go
+HashiCorp.terraform
 ms-azuretools.vscode-docker
 ms-python.python
 ms-vscode.cmake-tools
 ms-vscode.cpptools
-ms-vscode.go
 ms-vscode.powershell
 ms-vscode-remote.vscode-remote-extensionpack
 timonwong.shellcheck
