@@ -187,7 +187,7 @@ update_brew() {
 pull_from_git_repository() {
     destination_dir="$1"
     program_name="$2"
-    if [ -d "$destination_dir" ]; then
+    if [ -d "$destination_dir/.git" ]; then
         echo "Updating $program_name in: $destination_dir"
         git -C "$destination_dir" pull
     else
