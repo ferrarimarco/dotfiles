@@ -231,9 +231,10 @@ install_python_packages() {
     if ! command -v pip >/dev/null 2>&1; then
         echo "Installing pip for python 2..."
 
-        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-        python get-pip.py
-        rm get-pip.py
+        GET_PIP_PATH="/tmp/get-pip.py"
+        curl https://bootstrap.pypa.io/get-pip.py -o "${GET_PIP_PATH}"
+        python "${GET_PIP_PATH}"
+        rm "${GET_PIP_PATH}"
     else
         echo "pip for python 2 is already installed."
     fi
