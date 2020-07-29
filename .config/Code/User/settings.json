@@ -39,5 +39,13 @@
     "go.toolsEnvVars": {
         "GO111MODULE": "on"
     },
-    "go.useLanguageServer": true
+    "go.useLanguageServer": true,
+    "terraform.languageServer": {
+        "external": true,
+        "args": [
+            "serve"
+        ]
+    },
+    "python.languageServer": "Microsoft",
+    "window.zoomLevel": 0
 }
