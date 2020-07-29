@@ -90,6 +90,24 @@ clone_git_repository_if_not_cloned_already() {
     unset git_repository_url
 }
 
+create_python_venv() {
+    destination_dir="$1"
+
+    if [ -z "$destination_dir" ]; then
+        echo "ERROR while creating the Python virtual environment in $destination_dir: The destination_dir variable is not set, or set to an empty string"
+        return 1
+    fi
+
+    if [ -d "$destination_dir" ]; then
+        echo "$destination_dir already exists. Skipping..."
+    else
+        echo "Creating a Python virtual environment in $destination_dir"
+        python3 -m venv "$destination_dir"
+    fi
+
+    echo "You can activate the new environment by running: . $destination_dir/bin/activate"
+}
+
 is_wsl() {
     VERSION_FILE_PATH=/proc/version
     if [ -f "$VERSION_FILE_PATH" ] && grep -q "Microsoft" "$VERSION_FILE_PATH"; then
