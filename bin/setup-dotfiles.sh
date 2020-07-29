@@ -130,7 +130,9 @@ install_brew_formulae() {
 
     echo "Installing brew casks..."
     for f in \
+        android-platform-tools \
         docker \
+        gimp \
         google-cloud-sdk \
         iterm2 \
         obs \
