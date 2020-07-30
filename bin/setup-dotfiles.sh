@@ -21,7 +21,9 @@ ask_for_sudo() {
 
 fix_permissions() {
     echo "Setting home directory ($HOME) permissions..."
-    sudo chmod -R o-rwx "$HOME"
+    # Cannot use chmod recursive mode because system integrity protection prevents
+    # changing some attributes of $HOME/Library directories on macOS
+    find "$HOME" -type d -path "$HOME"/Library -prune -o -exec chmod o-rwx {} \;
 }
 
 # Choose a user account to use for this installation
