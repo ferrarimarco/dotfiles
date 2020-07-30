@@ -21,7 +21,7 @@ ask_for_sudo() {
 
 fix_permissions() {
     echo "Setting home directory ($HOME) permissions..."
-    chmod -R o-rwx "$HOME"
+    sudo chmod -R o-rwx "$HOME"
 }
 
 # Choose a user account to use for this installation
