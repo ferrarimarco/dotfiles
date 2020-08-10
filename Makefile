@@ -32,7 +32,7 @@ dotfiles: ## Installs dotfiles
 		mkdir -p $$(dirname $$file_path); \
 		ln -sfn $$file $$file_path; \
 	done; \
-	ln -sfn $(HOME)/gitignore $(HOME)/.gitignore;
+	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	sudo cp $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf;
 
 .PHONY: test
