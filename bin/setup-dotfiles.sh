@@ -352,7 +352,7 @@ setup_debian() {
 
     if ! command -v node >/dev/null 2>&1; then
         echo "Configuring Node.js repository"
-        curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
     fi
 
     if ! command -v docker >/dev/null 2>&1; then
