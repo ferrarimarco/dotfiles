@@ -65,16 +65,33 @@ function Install-VSCode-Extensions {
 }
 
 function Install-WSL {
-    $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu18.04onWindows
-
-    if (!$WslPackage) {
-        Write-Output "Enabling WSL"
+    if ((Get-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online).State -eq "Enabled") {
+        Write-Output "The WSL feature is already enabled."
+    }
+    else {
+        Write-Output "Enabling WSL..."
         Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
+    }
+
+    if ((Get-WindowsOptionalFeature -FeatureName VirtualMachinePlatform -Online).State -eq "Enabled") {
+        Write-Output "The Virtual Machine Platform feature is already enabled."
+    }
+    else {
+        Write-Output "Enabling the Virtual Machine Platform feature..."
+        Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName VirtualMachinePlatform
+        Write-Output "A restart is required. Run this script again after restarting the system."
+        exit
+    }
+
+    Write-Output "Setting WSL 2 as the default version..."
+    wsl --set-default-version 2
+
+    $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
+    if (!$WslPackage) {
         Write-Output "Installing Ubuntu (WSL)"
-        Invoke-WebRequest -Uri https://aka.ms/wsl-ubuntu-1804 -OutFile Ubuntu.appx -UseBasicParsing
+        Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
         Add-AppxPackage .\Ubuntu.appx
         Remove-Item .\Ubuntu.appx
-        Write-Output "A restart is required."
     }
     else {
         Write-Output "WSL package is already installed"
