@@ -534,7 +534,7 @@ setup_debian() {
     fi
 
     if ! command -v terraform >/dev/null 2>&1; then
-        VERSION="0.12.24"
+        VERSION="0.12.29"
         echo "Installing terraform $VERSION..."
         DESTINATION_DIRECTORY_PATH=/usr/local/bin
         EXECUTABLE_PATH="$DESTINATION_DIRECTORY_PATH"/terraform
