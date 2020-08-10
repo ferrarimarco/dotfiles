@@ -26,6 +26,7 @@ function Install-Packages {
     'conemu',
     'git',
     'keepass',
+    'nmap',
     'ruby',
     'terraform',
     'vagrant',
