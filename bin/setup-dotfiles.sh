@@ -426,6 +426,7 @@ setup_debian() {
         nodejs \
         pinentry-curses \
         python3-pip \
+        python3-venv \
         rxvt-unicode \
         scdaemon \
         ssh \
