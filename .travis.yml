@@ -8,23 +8,17 @@ jobs:
     - name: "super-linter"
       language: shell
       script: |
-        docker run -t -e \
-          ACTIONS_RUNNER_DEBUG=true \
-          DEFAULT_WORKSPACE=/workspace \
-          DISABLE_ERRORS=false \
-          LINTER_RULES_PATH=/workspace \
-          MULTI_STATUS=false \
-          RUN_LOCAL=true \
-          VALIDATE_ALL_CODEBASE=true \
-          VALIDATE_BASH=true \
-          VALIDATE_DOCKER=true \
-          VALIDATE_DOCKER_HADOLINT=true \
-          VALIDATE_EDITORCONFIG=true \
-          VALIDATE_MD=true \
-          VALIDATE_YAML=true \
+        docker run -t \
           -v "$(pwd)":/workspace \
           -w="/workspace" \
-          github/super-linter:v3.8.0
+          -e ACTIONS_RUNNER_DEBUG=true \
+          -e DEFAULT_WORKSPACE=/workspace \
+          -e DISABLE_ERRORS=false \
+          -e LINTER_RULES_PATH=/workspace \
+          -e MULTI_STATUS=false \
+          -e RUN_LOCAL=true \
+          -e VALIDATE_ALL_CODEBASE=true \
+          github/super-linter:V3.8.0
       stage: linting
     - name: "shfmt"
       language: go

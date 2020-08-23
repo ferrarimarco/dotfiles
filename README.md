@@ -22,7 +22,7 @@ To install these dotfiles:
     1. `bin/setup-dotfiles.sh` on Linux-based system, Windows Subsystem for
         Linux, or macOS.
 1. Run `make` (all the dotfiles and binaries will be symlinked to their
-   destinations so you can update them just by `git pull`ing the latest changes)
+    destinations so you can update them just by `git pull`ing the latest changes)
 
 Run `make help` for a list of the available run targets, including the ones
 useful for development.

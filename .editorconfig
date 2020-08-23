@@ -24,6 +24,10 @@ spaces_around_brackets = false
 [{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules}]
 indent_style = tab
 
-[*.{yml,yaml}]
+[*.{cson,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[**/yamllint/config]
 indent_style = space
 indent_size = 2

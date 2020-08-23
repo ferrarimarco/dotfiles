@@ -16,3 +16,7 @@ Session.vim
 .uuid
 
 default.profraw
+
+# Ignore linting stuff
+.lintr
+super-linter.log
