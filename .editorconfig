@@ -28,6 +28,5 @@ indent_style = tab
 indent_style = space
 indent_size = 2
 
-[**/yamllint/config]
-indent_style = space
-indent_size = 2
+# Max line length (not supported by all editors)
+max_line_length = 120
