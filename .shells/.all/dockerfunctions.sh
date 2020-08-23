@@ -2,6 +2,12 @@
 
 # Wrappers for docker run commands
 
+DOCKER_FLAGS="-i"
+DOCKER_FLAGS="$DOCKER_FLAGS --rm"
+if [ -t 0 ]; then
+    DOCKER_FLAGS="$DOCKER_FLAGS -t"
+fi
+
 #
 # Helper Functions
 #
@@ -35,22 +41,22 @@ relies_on() {
 
 ansible() {
     del_stopped ansible
-
+    # shellcheck disable=SC2086
     docker run \
-        --rm \
-        -it \
+        $DOCKER_FLAGS \
         --net=host \
         -v /etc/localtime:/etc/localtime:ro \
         -v "$(pwd)":/etc/ansible \
         -v "${HOME}"/.ssh:/root/.ssh:ro \
         --name ansible \
-        ferrarimarco/docker-ansible "$@"
+        ferrarimarco/open-development-environment-ansible "$@"
 }
 
 changelog_generator() {
     del_stopped changelog-generator
-
-    docker run -it --rm \
+    # shellcheck disable=SC2086
+    docker run \
+        $DOCKER_FLAGS \
         -v /etc/localtime:/etc/localtime:ro \
         -v "$(pwd)":/usr/local/src/your-app \
         --name changelog-generator \
@@ -59,42 +65,29 @@ changelog_generator() {
 
 docker_clean() {
     del_stopped docker-clean
-
-    docker run --rm \
+    # shellcheck disable=SC2086
+    docker run \
+        $DOCKER_FLAGS \
         -v /etc/localtime:/etc/localtime:ro \
         -v /var/run/docker.sock:/var/run/docker.sock \
         --name docker-clean \
         zzrot/docker-clean "$@"
 }
 
-dockerfile_lint() {
-    del_stopped hadolint
-    del_stopped dockerlint
-
-    echo "Linting Dockerfiles from $(pwd)"
-    find . -type f -iname "Dockerfile" | while read -r line; do
-        echo "Linting $line"
-        docker run -v "$(pwd)":/mnt --rm -w="/mnt" --name hadolint hadolint/hadolint hadolint "$line"
-        docker run -v "$(pwd)":/mnt --rm -w="/mnt" --name dockerlint redcoolbeans/dockerlint "$line"
-    done
-}
-
 jq() {
     del_stopped jq
-
+    # shellcheck disable=SC2086
     docker run \
-        --rm \
-        -i \
+        $DOCKER_FLAGS \
         --name jq \
         stedolan/jq "$@"
 }
 
 inspec() {
     del_stopped inspec
-
+    # shellcheck disable=SC2086
     docker run \
-        --rm \
-        -it \
+        $DOCKER_FLAGS \
         --net=host \
         -v /etc/localtime:/etc/localtime:ro \
         -v "$(pwd)":/share \
@@ -105,7 +98,9 @@ inspec() {
 
 liquibase() {
     del_stopped liquibase
-    docker run --rm \
+    # shellcheck disable=SC2086
+    docker run \
+        $DOCKER_FLAGS \
         -v /etc/localtime:/etc/localtime:ro \
         --name liquibase \
         ferrarimarco/liquibase "$@"
@@ -113,40 +108,23 @@ liquibase() {
 
 maven() {
     del_stopped maven
-    docker run --rm \
+    # shellcheck disable=SC2086
+    docker run \
+        $DOCKER_FLAGS \
         -v /etc/localtime:/etc/localtime:ro \
         -v "${HOME}/.m2:/var/maven/.m2" \
         --name changelog-generator \
-        -ti --rm -u "$(id -u)":"$(id -g)" \
+        -u "$(id -u)":"$(id -g)" \
         -e MAVEN_CONFIG=/var/maven/.m2 \
         maven \
         mvn -Duser.home=/var/maven "$@"
 }
 
-psscriptanalyzer() {
-    del_stopped psscriptanalyzer
-
-    docker run -it --rm \
-        --name psscriptanalyzer \
-        -v "$(pwd)":/usr/src:ro \
-        mcr.microsoft.com/powershell \
-        pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse"
-
-}
-
-shellcheck() {
-    del_stopped shellcheck
-
-    docker run --rm -it \
-        --name shellcheck \
-        -v "$(pwd)":/usr/src:ro \
-        ferrarimarco/shellcheck
-}
-
 super_linter() {
     del_stopped super-linter
-
-    docker run --rm -it \
+    # shellcheck disable=SC2086
+    docker run \
+        $DOCKER_FLAGS \
         --name super-linter \
         -v "$(pwd)":/workspace \
         -w="/workspace" \
