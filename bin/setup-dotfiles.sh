@@ -783,7 +783,7 @@ set_repository_path() {
     CURRENT_WORKING_DIRECTORY="$(pwd)"
     echo "The current working directory is $CURRENT_WORKING_DIRECTORY"
 
-    os_name="$(uname -s)"
+    # Cannot use the is_XXXX functions here because they might not be available at this point
     if test "${os_name#*"Darwin"}" != "$os_name"; then
         DIR="$(dirname "$SCRIPT_PATH")"
         echo "Changing directory to $DIR..."

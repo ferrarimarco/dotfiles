@@ -108,6 +108,28 @@ create_python_venv() {
     echo "You can activate the new environment by running: . $destination_dir/bin/activate"
 }
 
+is_linux() {
+    os_name="$(uname -s)"
+    if test "${os_name#*"Linux"}" != "$os_name"; then
+        unset os_name
+        return 0
+    else
+        unset os_name
+        return 1
+    fi
+}
+
+is_macos() {
+    os_name="$(uname -s)"
+    if test "${os_name#*"Darwin"}" != "$os_name"; then
+        unset os_name
+        return 0
+    else
+        unset os_name
+        return 1
+    fi
+}
+
 is_wsl() {
     VERSION_FILE_PATH=/proc/version
     if [ -f "$VERSION_FILE_PATH" ] && grep -q "Microsoft" "$VERSION_FILE_PATH"; then
