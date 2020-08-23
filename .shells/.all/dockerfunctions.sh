@@ -142,3 +142,20 @@ shellcheck() {
         -v "$(pwd)":/usr/src:ro \
         ferrarimarco/shellcheck
 }
+
+super_linter() {
+    del_stopped super-linter
+
+    docker run --rm -it \
+        --name super-linter \
+        -v "$(pwd)":/workspace \
+        -w="/workspace" \
+        -e ACTIONS_RUNNER_DEBUG=true \
+        -e DEFAULT_WORKSPACE=/workspace \
+        -e DISABLE_ERRORS=false \
+        -e LINTER_RULES_PATH=/workspace \
+        -e MULTI_STATUS=false \
+        -e RUN_LOCAL=true \
+        -e VALIDATE_ALL_CODEBASE=true \
+        github/super-linter:V3.8.0
+}
