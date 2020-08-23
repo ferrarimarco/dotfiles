@@ -1,5 +1,26 @@
 #!/usr/bin/env sh
 
+# Define this first, so sourcing other files becomes easier
+source_file_if_available() {
+    FILE="${1}"
+    VARIABLE_NAME="${2}"
+    if [ -f "$FILE" ]; then
+        # shellcheck source=/dev/null
+        . "$FILE"
+    else
+        echo "WARNING: Cannot source $VARIABLE_NAME (set to: $FILE) because the destination doesn't exist or the variable is set to an empty value."
+        return 1
+    fi
+    return 0
+}
+
+# Source Docker functions if docker is installed
+if command -v docker >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
+    DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
+    source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
+    unset DOCKERFUNCTIONS_PATH
+fi
+
 # Create a new directory and enter it
 mkd() {
     mkdir -p "$@"
@@ -179,19 +200,6 @@ shellcheck_dir() {
         fi
     done
     unset dir
-}
-
-source_file_if_available() {
-    FILE="${1}"
-    VARIABLE_NAME="${2}"
-    if [ -f "$FILE" ]; then
-        # shellcheck source=/dev/null
-        . "$FILE"
-    else
-        echo "WARNING: Cannot source $VARIABLE_NAME (set to: $FILE) because the destination doesn't exist or the variable is set to an empty value."
-        return 1
-    fi
-    return 0
 }
 
 update_brew() {

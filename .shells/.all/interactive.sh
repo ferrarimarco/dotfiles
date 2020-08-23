@@ -22,13 +22,6 @@ fi
 # Aliases                                                                     #
 ###############################################################################
 
-# source docker aliases if docker is installed
-if command -v docker >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
-    DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
-    source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
-    unset DOCKERFUNCTIONS_PATH
-fi
-
 # Check for various OS openers. Quit as soon as we find one that works.
 for opener in browser-exec xdg-open cmd.exe cygstart "start" open; do
     if command -v $opener >/dev/null 2>&1; then
