@@ -5,55 +5,32 @@ script:
 jobs:
   fast_finish: true
   include:
-    - name: "Whitespace error check"
+    - name: "super-linter"
       language: shell
-      script: git diff-tree --check $(git hash-object -t tree /dev/null) HEAD
+      script: |
+        docker run -t -e \
+          ACTIONS_RUNNER_DEBUG=true \
+          DEFAULT_WORKSPACE=/workspace \
+          DISABLE_ERRORS=false \
+          LINTER_RULES_PATH=/workspace \
+          MULTI_STATUS=false \
+          RUN_LOCAL=true \
+          VALIDATE_ALL_CODEBASE=true \
+          VALIDATE_BASH=true \
+          VALIDATE_DOCKER=true \
+          VALIDATE_DOCKER_HADOLINT=true \
+          VALIDATE_EDITORCONFIG=true \
+          VALIDATE_MD=true \
+          VALIDATE_YAML=true \
+          -v "$(pwd)":/workspace \
+          -w="/workspace" \
+          github/super-linter:v3.8.0
       stage: linting
-    - name: "Missing EOF newlines check"
-      language: shell
-      script: |
-        find "$(pwd)" -type f -not -path "*/\.git/*" >tmp; \
-        while IFS= read -r file; do \
-          case "$(git diff --no-index --numstat /dev/null "$file")" in \
-            "$(printf '%s\t-\t' -)"*) \
-            echo "skipping newline check for $file because it's a binary"; \
-            continue ;; \
-            *) echo "Checking $file"; \
-            [ -z "$(tail -c1 "$file")" ] || exit 1 ;; \
-          esac; \
-        done <tmp; \
-        rm tmp;
-    - before_install: gem install travis --no-document
-      install: |
-        echo "Overriding the default install, to avoid installing gems from \
-        the Gemfile"
-      language: shell
-      name: "Travis lint"
-      script: travis lint --skip-completion-check -x
-    - name: "YAMLlint"
-      language: shell
-      install: sudo pip install -r requirements.txt
-      script: yamllint --strict $(git ls-files '*.yaml' '*.yml') || exit 1
-    - name: "Markdownlint"
-      install: npm install
-      language: node_js
-      node_js: node
-      script: |
-        find -name "*.md" -not -path "*/node_modules/*" \
-        | xargs markdownlint || exit 1
     - name: "shfmt"
       language: go
       before_install: GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt
       go: "1.14.1"
       script: make shfmt || exit 1;
-    - name: "Shellcheck"
-      language: shell
-      script: |
-        make shellcheck
-    - name: "PSScriptAnalyzer"
-      language: shell
-      script: |
-        make psscriptanalyzer
     - name: "Setup Debian"
       language: shell
       stage: setup
