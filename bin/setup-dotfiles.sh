@@ -142,7 +142,7 @@ install_brew_formulae() {
         obs \
         vagrant \
         visual-studio-code; do
-        if ! brew cask ls --versions "$f" >/dev/null; then
+        if ! brew cask ls --versions "$f" >/dev/null 2>&1; then
             echo "Installing $f cask"
             if ! brew cask install "$f"; then
                 # If the installation failed, retry with verbose output enabled.
