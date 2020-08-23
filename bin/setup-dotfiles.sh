@@ -178,9 +178,6 @@ install_brew_formulae() {
         echo "zsh installed via brew is already in the list of allowed shells."
     fi
 
-    echo "Running brew cleanup..."
-    brew cleanup
-
     echo "Setting up Visual Studio Code settings..."
     _vs_code_settings_path="$HOME"/Library/Application\ Support/Code/User/settings.json
     echo "Ensuring that the Visual Studio Code settings directory ($_vs_code_settings_path) is available..."
