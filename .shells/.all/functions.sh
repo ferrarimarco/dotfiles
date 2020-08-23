@@ -220,14 +220,13 @@ pull_from_git_repository() {
 }
 
 update_system() {
-    os_name="$(uname -s)"
-    if test "${os_name#*"Darwin"}" != "$os_name"; then
+    if is_macos; then
         echo "Updating macOS..."
         sudo softwareupdate -ia
         if command -v brew >/dev/null 2>&1; then
             update_brew
         fi
-    elif test "${os_name#*"Linux"}" != "$os_name"; then
+    elif is_linux; then
         echo "Updating linux..."
         sudo apt-get -q update
         sudo apt-get -qy upgrade
@@ -237,7 +236,6 @@ update_system() {
         pull_from_git_repository "$RUBY_BUILD_DIRECTORY_PATH" "ruby-build"
         pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
     fi
-    unset os_name
 
     if command -v npm >/dev/null 2>&1; then
         echo "Updating npm packages"

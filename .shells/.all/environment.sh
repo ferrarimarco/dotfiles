@@ -47,8 +47,7 @@ export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
 export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
 export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
 
-os_name="$(uname -s)"
-if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
+if is_macos; then
 
     # Might be needed to install Homebrew, so exporting in any case
     export HOMEBREW_REPOSITORY=/usr/local/Homebrew
@@ -100,7 +99,7 @@ if [ "${os_name#*"Darwin"}" != "$os_name" ]; then
     USER_FONTS_DIRECTORY="$HOME/Library/Fonts"
 
     PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
-elif test "${os_name#*"Linux"}" != "$os_name"; then
+elif is_linux; then
     if command -v zsh >/dev/null 2>&1; then
         DEFAULT_SHELL="$(command -v zsh)"
         DEFAULT_SHELL_SHORT="zsh"
@@ -126,7 +125,6 @@ elif test "${os_name#*"Linux"}" != "$os_name"; then
 
     PYTHON_2_BIN_PATH=
 fi
-unset os_name
 
 if is_wsl; then
     VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"

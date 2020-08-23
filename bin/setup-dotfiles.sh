@@ -740,15 +740,12 @@ setup_shell() {
 
     clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_THEME_PATH")" "https://github.com/romkatv/powerlevel10k.git"
 
-    local os_name
-    os_name="$(uname -s)"
     user_default_shell=
-    if test "${os_name#*"Darwin"}" != "$os_name"; then
+    if is_macos; then
         user_default_shell="$(dscl . -read ~/ UserShell | sed 's/UserShell: //')"
-    elif test "${os_name#*"Linux"}" != "$os_name"; then
+    elif is_linux; then
         user_default_shell="$(awk -F: -v user="$USER" '$1 == user {print $NF}' /etc/passwd)"
     fi
-    unset os_name
 
     if [ -z "$USER_FONTS_DIRECTORY" ]; then
         echo "ERROR: The USER_FONTS_DIRECTORY variable is not set, or set to an empty string"
@@ -784,6 +781,7 @@ set_repository_path() {
     echo "The current working directory is $CURRENT_WORKING_DIRECTORY"
 
     # Cannot use the is_XXXX functions here because they might not be available at this point
+    os_name="$(uname -s)"
     if test "${os_name#*"Darwin"}" != "$os_name"; then
         DIR="$(dirname "$SCRIPT_PATH")"
         echo "Changing directory to $DIR..."
