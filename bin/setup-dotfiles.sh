@@ -5,7 +5,9 @@ set -o pipefail
 
 ask_for_sudo() {
     echo "Prompting for sudo password..."
-    if sudo -v; then
+    # sudo -v doesn't work on macOS when passwordless sudo is enabled. It still
+    # asks for a password. sudo true should work for both Linux and macOS
+    if sudo true; then
         # Keep-alive
         while true; do
             sudo -n true
