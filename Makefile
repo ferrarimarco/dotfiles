@@ -36,7 +36,7 @@ dotfiles: ## Installs dotfiles
 	sudo cp $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf;
 
 .PHONY: test
-test: shfmt shellcheck psscriptanalyzer ## Run tests
+test: shfmt super-linter ## Run tests
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -46,14 +46,19 @@ ifeq ($(INTERACTIVE), 1)
 	DOCKER_FLAGS += -t
 endif
 
-.PHONY: psscriptanalyzer
-psscriptanalyzer: ## Run PSScriptAnalyzer tests
-	@echo Running PSScriptAnalyzer
-	docker run --rm -i $(DOCKER_FLAGS) \
-		--name df-psscriptanalyzer \
-		-v $(CURDIR):/usr/src:ro \
-		mcr.microsoft.com/powershell \
-		pwsh -command "Save-Module -Name PSScriptAnalyzer -Path .; Import-Module .\PSScriptAnalyzer; Invoke-ScriptAnalyzer -EnableExit -Path /usr/src -Recurse || exit 1 ;"
+.PHONY: super-linter
+super-linter: ## Run super-linter
+	docker run --rm -t $(DOCKER_FLAGS) \
+		-v "$(CURDIR)":/workspace \
+		-w="/workspace" \
+		-e ACTIONS_RUNNER_DEBUG=true \
+		-e DEFAULT_WORKSPACE=/workspace \
+		-e DISABLE_ERRORS=false \
+		-e LINTER_RULES_PATH=/workspace \
+		-e MULTI_STATUS=false \
+		-e RUN_LOCAL=true \
+		-e VALIDATE_ALL_CODEBASE=true \
+		github/super-linter:V3.8.0
 
 .PHONY: shfmt
 shfmt: ## Run shfmt tests
@@ -62,17 +67,6 @@ shfmt: ## Run shfmt tests
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
 		echo "Linting $$f"; \
 		shfmt -d "$$f" || exit 1 ; \
-	done;
-
-.PHONY: shellcheck
-shellcheck: ## Run Shellcheck tests
-	@echo Running shellcheck
-	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -not -name "*.md"  -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
-		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
-		echo "Linting $$f"; \
-		docker run --rm -i $(DOCKER_FLAGS) \
-			-v $(CURDIR):/mnt:ro \
-			koalaman/shellcheck:v0.7.0 "$$f" || exit 1 ; \
 	done;
 
 .PHONY: help
