@@ -48,5 +48,5 @@
     },
     "python.languageServer": "Microsoft",
     "window.zoomLevel": 0,
-    "C_Cpp.updateChannel": "Insiders",
+    "C_Cpp.updateChannel": "Insiders"
 }
