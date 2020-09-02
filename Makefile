@@ -58,7 +58,7 @@ super-linter: ## Run super-linter
 		-e MULTI_STATUS=false \
 		-e RUN_LOCAL=true \
 		-e VALIDATE_ALL_CODEBASE=true \
-		github/super-linter:v3.9.2
+		ghcr.io/github/super-linter:v3.9.2
 
 .PHONY: shfmt
 shfmt: ## Run shfmt tests
