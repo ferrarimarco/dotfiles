@@ -141,5 +141,5 @@ super_linter() {
         -e MULTI_STATUS=false \
         -e RUN_LOCAL=true \
         -e VALIDATE_ALL_CODEBASE=true \
-        github/super-linter:v3.10.0 "$@"
+        ghcr.io/github/super-linter:v3.10.0 "$@"
 }
