@@ -28,6 +28,7 @@ function Install-Packages {
     'git',
     'keepass',
     'nmap',
+    'qbittorrent',
     'ruby',
     'terraform',
     'vagrant',
