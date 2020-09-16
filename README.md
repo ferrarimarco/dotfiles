@@ -53,23 +53,6 @@ way I like. Run it with no args to see what it does.
 [`install-windows.ps1`](bin/install-windows.ps1) sets up Windows systems the way
 I like.
 
-### Dotfiles
-
-There are also dotfiles for:
-
-- [Atom](.atom)
-- [cURL](.curlrc)
-- [EditorConfig](.editorconfig)
-- Git: [.gitconfig](.gitconfig), [global gitignore](gitignore),
-    [hooks](git-hooks)
-- [readline](.inputrc)
-- [Nano](.nanorc)
-- [tmux](.tmux.conf)
-- [Visual Studio Code](.config/Code)
-- [wget](.wgetrc)
-- X: [.Xresources](.Xresources), [.xsessionrc](.xsessionrc)
-- [xfce](.config/xfce4)
-
 ## Thanks
 
 - [Jessie Frazelle](https://github.com/jessfraz/dotfiles)
