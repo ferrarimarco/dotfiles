@@ -256,8 +256,7 @@ install_rubygems() {
         echo "Installing Ruby gems"
         gem update
         gem install \
-            bundler \
-            travis
+            bundler
     else
         echo "WARNING: gem is not installed. Skipping ruby gems installation."
     fi

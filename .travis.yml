@@ -9,11 +9,6 @@ jobs:
       language: shell
       script: make super-linter || exit 1;
       stage: linting
-    - name: "shfmt"
-      language: go
-      before_install: GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt
-      go: "1.14.1"
-      script: make shfmt || exit 1;
     - name: "Setup Debian"
       language: shell
       stage: setup
