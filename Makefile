@@ -36,7 +36,7 @@ dotfiles: ## Installs dotfiles
 	sudo cp $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf;
 
 .PHONY: test
-test: shfmt super-linter ## Run tests
+test: super-linter ## Run tests
 
 # if this session isn't interactive, then we don't want to allocate a
 # TTY, which would fail, but if it is interactive, we do want to attach
@@ -59,15 +59,6 @@ super-linter: ## Run super-linter
 		-e RUN_LOCAL=true \
 		-e VALIDATE_ALL_CODEBASE=true \
 		ghcr.io/github/super-linter:v3.10.1
-
-.PHONY: shfmt
-shfmt: ## Run shfmt tests
-	@echo Running shfmt
-	for file in $(shell find $(CURDIR) -type f -not -path "*/\.git/*" -not -name "*.md"  -exec grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh)' {} \; -print); do \
-		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
-		echo "Linting $$f"; \
-		shfmt -d "$$f" || exit 1 ; \
-	done;
 
 .PHONY: help
 help: ## Show help
