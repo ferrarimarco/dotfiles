@@ -54,11 +54,12 @@ super-linter: ## Run super-linter
 		-e ACTIONS_RUNNER_DEBUG=true \
 		-e DEFAULT_WORKSPACE=/workspace \
 		-e DISABLE_ERRORS=false \
+		-e ERROR_ON_MISSING_EXEC_BIT=true \
 		-e LINTER_RULES_PATH=. \
 		-e MULTI_STATUS=false \
 		-e RUN_LOCAL=true \
 		-e VALIDATE_ALL_CODEBASE=true \
-		ghcr.io/github/super-linter:v3.10.1
+		ghcr.io/github/super-linter:v3.10.2
 
 .PHONY: help
 help: ## Show help
