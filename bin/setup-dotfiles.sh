@@ -108,6 +108,7 @@ install_brew_formulae() {
         grep \
         make \
         nano \
+        node \
         ninja \
         p7zip \
         rbenv \
