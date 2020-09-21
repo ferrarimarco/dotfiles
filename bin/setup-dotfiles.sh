@@ -348,11 +348,6 @@ setup_debian() {
         echo "Google Chrome is already installed"
     fi
 
-    if ! command -v node >/dev/null 2>&1; then
-        echo "Configuring Node.js repository"
-        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-    fi
-
     if ! command -v docker >/dev/null 2>&1; then
         echo "Installing Docker"
         curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
@@ -407,9 +402,7 @@ setup_debian() {
         grep \
         gzip \
         hostname \
-        imagemagick \
         iptables \
-        jmeter \
         less \
         libc6-dev \
         libgdbm-dev \
@@ -422,7 +415,6 @@ setup_debian() {
         mount \
         nano \
         net-tools \
-        nodejs \
         pinentry-curses \
         python3-pip \
         python3-venv \
@@ -448,121 +440,10 @@ setup_debian() {
     sudo apt-get -qqy autoclean
     sudo apt-get -qqy clean
 
-    if ! command -v shellcheck >/dev/null 2>&1; then
-        SHELLCHECK_VERSION="0.7.1"
-        echo "Installing shellcheck $SHELLCHECK_VERSION..."
-        SHELLCHECK_DIRECTORY_PATH=/usr/local/bin
-        SHELLCHECK_PATH="$SHELLCHECK_DIRECTORY_PATH"/shellcheck
-        SHELLCHECK_ARCHIVE_NAME=shellcheck-v"$SHELLCHECK_VERSION".linux.x86_64.tar.xz
-
-        TEMP_DIRECTORY="$(mktemp -d)"
-        SHELLCHECK_ARCHIVE_PATH="$TEMP_DIRECTORY/$SHELLCHECK_ARCHIVE_NAME"
-        echo "Downloading $SHELLCHECK_ARCHIVE_NAME to $SHELLCHECK_ARCHIVE_PATH..."
-
-        curl -fsLo "$SHELLCHECK_ARCHIVE_PATH" https://github.com/koalaman/shellcheck/releases/download/v"$SHELLCHECK_VERSION"/"$SHELLCHECK_ARCHIVE_NAME"
-        echo "Extracting shellcheck archive in $SHELLCHECK_DIRECTORY_PATH..."
-        sudo tar -C "$SHELLCHECK_DIRECTORY_PATH" --strip-components=1 -xJf "$SHELLCHECK_ARCHIVE_PATH" shellcheck-v"$SHELLCHECK_VERSION"/shellcheck
-        sudo chmod a+x "$SHELLCHECK_PATH"
-
-        echo "Deleting $SHELLCHECK_ARCHIVE_PATH"
-        rm -f "$SHELLCHECK_ARCHIVE_PATH"
-
-        echo "Deleting $TEMP_DIRECTORY"
-        rm -rf "$TEMP_DIRECTORY"
-
-        echo "Installed shellcheck $SHELLCHECK_VERSION. Verifying with go version: $(shellcheck --version)"
-
-        unset SHELLCHECK_VERSION
-        unset SHELLCHECK_DIRECTORY_PATH
-        unset SHELLCHECK_PATH
-        unset SHELLCHECK_ARCHIVE_NAME
-        unset TEMP_DIRECTORY
-        unset SHELLCHECK_ARCHIVE_PATH
-    fi
-
     DOCKER_GROUP_NAME="docker"
     echo "Creating the $DOCKER_GROUP_NAME group for Docker"
     getent group "$DOCKER_GROUP_NAME" >/dev/null 2>&1 || sudo groupadd "$DOCKER_GROUP_NAME"
     unset DOCKER_GROUP_NAME
-
-    if ! command -v docker-compose >/dev/null 2>&1; then
-        echo "Getting Docker Compose version to install"
-        docker_compose_release="$(curl --silent "https://api.github.com/repos/docker/compose/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')"
-        echo "Installing Docker Compose $docker_compose_release"
-        sudo curl -fsLo /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/"$docker_compose_release"/docker-compose-"$(uname -s)"-"$(uname -m)"
-        sudo chmod a+x /usr/local/bin/docker-compose
-    fi
-
-    clone_git_repository_if_not_cloned_already "$RBENV_DIRECTORY_PATH" "https://github.com/rbenv/rbenv.git"
-    clone_git_repository_if_not_cloned_already "$RUBY_BUILD_DIRECTORY_PATH" "https://github.com/rbenv/ruby-build.git"
-
-    if ! command -v go >/dev/null 2>&1; then
-        GO_VERSION=1.14.1
-        echo "Installing go $GO_VERSION..."
-        GO_ARCHIVE_NAME=go"$GO_VERSION".linux-amd64.tar.gz
-        TEMP_DIRECTORY="$(mktemp -d)"
-        GO_ARCHIVE_PATH="$TEMP_DIRECTORY/$GO_ARCHIVE_NAME"
-
-        echo "Installing $GO_ARCHIVE_NAME..."
-        curl -fsLo "$GO_ARCHIVE_PATH" https://dl.google.com/go/"$GO_ARCHIVE_NAME"
-
-        if [ -z "$GOROOT" ]; then
-            echo "ERROR: The GOROOT variable is not set, or set to an empty string"
-            exit 1
-        fi
-
-        echo "Extracting go archive in $GOROOT..."
-        mkdir -p "$GOROOT"
-        tar -C "$GOROOT" --strip-components=1 -xzf "$GO_ARCHIVE_PATH"
-
-        echo "Deleting $GO_ARCHIVE_PATH"
-        rm -f "$GO_ARCHIVE_PATH"
-
-        echo "Deleting $TEMP_DIRECTORY"
-        rm -rf "$TEMP_DIRECTORY"
-
-        echo "Creating sub-directories in $GOPATH"
-        mkdir -p "$GOPATH"/{src,pkg,bin}
-
-        echo "Installed go $GO_VERSION. Verifying with go version: $(go version)"
-
-        unset GO_VERSION
-        unset GO_ARCHIVE_PATH
-        unset GO_ARCHIVE_NAME
-        unset TEMP_DIRECTORY
-    fi
-
-    if ! command -v terraform >/dev/null 2>&1; then
-        VERSION="0.12.29"
-        echo "Installing terraform $VERSION..."
-        DESTINATION_DIRECTORY_PATH=/usr/local/bin
-        EXECUTABLE_PATH="$DESTINATION_DIRECTORY_PATH"/terraform
-        ARCHIVE_NAME=terraform_"$VERSION"_linux_amd64.zip
-
-        TEMP_DIRECTORY="$(mktemp -d)"
-        ARCHIVE_PATH="$TEMP_DIRECTORY/$ARCHIVE_NAME"
-        echo "Downloading $ARCHIVE_NAME to $ARCHIVE_PATH..."
-
-        curl -fsLo "$ARCHIVE_PATH" https://releases.hashicorp.com/terraform/"$VERSION"/"$ARCHIVE_NAME"
-        echo "Extracting terraform archive in $DESTINATION_DIRECTORY_PATH..."
-        sudo unzip "$ARCHIVE_PATH" terraform -d "$DESTINATION_DIRECTORY_PATH"
-        sudo chmod a+x "$EXECUTABLE_PATH"
-
-        echo "Deleting $ARCHIVE_PATH"
-        rm -f "$ARCHIVE_PATH"
-
-        echo "Deleting $TEMP_DIRECTORY"
-        rm -rf "$TEMP_DIRECTORY"
-
-        echo "Installed terraform $VERSION. Verifying with go version: $(terraform version)"
-
-        unset VERSION
-        unset DESTINATION_DIRECTORY_PATH
-        unset EXECUTABLE_PATH
-        unset ARCHIVE_NAME
-        unset TEMP_DIRECTORY
-        unset ARCHIVE_PATH
-    fi
 
     if [ -z "$TARGET_USER" ]; then
         echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
@@ -888,12 +769,7 @@ main() {
 
         setup_shell
         setup_user
-        install_ruby
         update_system
-        install_go_packages
-        install_npm_packages
-        install_python_packages
-        install_rubygems
         fix_permissions
     elif [[ $cmd == "macos" ]]; then
         setup_macos
