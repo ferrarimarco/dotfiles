@@ -22,7 +22,8 @@ spaces_around_operators = true
 spaces_around_brackets = false
 
 # Max line length (not supported by all editors)
-max_line_length = 120
+# Enable this option by un-commenting the following line
+# max_line_length = 150
 
 [{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules,.gitconfig}]
 indent_style = tab
