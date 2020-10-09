@@ -21,12 +21,14 @@ trim_trailing_whitespace = true
 spaces_around_operators = true
 spaces_around_brackets = false
 
+# Max line length (not supported by all editors)
+max_line_length = 120
+
 [{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules,.gitconfig}]
 indent_style = tab
 
 [*.{cson,yml,yaml}]
-indent_style = space
 indent_size = 2
 
-# Max line length (not supported by all editors)
-max_line_length = 120
+[{Dockerfile}]
+indent_size = 2
