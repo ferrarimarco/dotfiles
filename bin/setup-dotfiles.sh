@@ -256,8 +256,6 @@ install_rubygems() {
     if command -v gem >/dev/null 2>&1; then
         echo "Installing Ruby gems"
         gem update
-        gem install \
-            bundler
     else
         echo "WARNING: gem is not installed. Skipping ruby gems installation."
     fi
