@@ -25,12 +25,8 @@ function Install-Packages {
     $Packages =
     'conemu',
     'docker-desktop',
-    'git',
     'keepass',
-    'nmap',
     'qbittorrent',
-    'ruby',
-    'terraform',
     'vagrant',
     'virtualbox --params "/NoDesktopShortcut /ExtensionPack"',
     'vlc',
