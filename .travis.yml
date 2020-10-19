@@ -32,6 +32,12 @@ jobs:
       script: |
         bin/setup-dotfiles.sh macos \
         && make
+    - name: "Setup Windows"
+      os: windows
+      language: shell
+      services:
+      script: |
+        bin/install-windows.ps1
 os: linux
 services:
   - docker
