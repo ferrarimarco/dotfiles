@@ -13,7 +13,7 @@ fi
 
 del_stopped() {
   name=$1
-  state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
+  state="$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null || echo "")"
 
   if [ "$state" = "false" ]; then
     docker rm "$name"
@@ -24,7 +24,7 @@ del_stopped() {
 
 relies_on() {
   for container in "$@"; do
-    state=$(docker inspect --format "{{.State.Running}}" "$container" 2>/dev/null)
+    state="$(docker inspect --format "{{.State.Running}}" "$container" 2>/dev/null || echo "")"
 
     if [ "$state" = "false" ] || [ "$state" = "" ]; then
       echo "$container is not running, starting it for you."
@@ -41,7 +41,7 @@ relies_on() {
 ansible() {
   del_stopped ansible
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     --net=host \
     -v /etc/localtime:/etc/localtime:ro \
@@ -55,7 +55,7 @@ ansible() {
 changelog_generator() {
   del_stopped changelog-generator
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/usr/local/src/your-app \
@@ -67,7 +67,7 @@ changelog_generator() {
 docker_clean() {
   del_stopped docker-clean
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v /var/run/docker.sock:/var/run/docker.sock \
@@ -79,7 +79,7 @@ docker_clean() {
 jq() {
   del_stopped jq
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     --name jq \
     --rm \
@@ -89,7 +89,7 @@ jq() {
 inspec() {
   del_stopped inspec
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     --net=host \
     -v /etc/localtime:/etc/localtime:ro \
@@ -103,7 +103,7 @@ inspec() {
 liquibase() {
   del_stopped liquibase
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     --name liquibase \
@@ -114,7 +114,7 @@ liquibase() {
 maven() {
   del_stopped maven
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "${HOME}/.m2:/var/maven/.m2" \
@@ -127,11 +127,12 @@ maven() {
 }
 
 super_linter() {
-  del_stopped super-linter
+  CONTAINER_NAME="super_linter"
+  del_stopped "${CONTAINER_NAME}"
   # shellcheck disable=SC2086
-  docker run "$DOCKER_TTY_OPTION" \
+  docker run $DOCKER_TTY_OPTION \
     -i \
-    --name super-linter \
+    --name "${CONTAINER_NAME}" \
     --rm \
     -v "$(pwd)":/workspace \
     -w="/workspace" \
@@ -141,5 +142,5 @@ super_linter() {
     -e MULTI_STATUS=false \
     -e RUN_LOCAL=true \
     -e VALIDATE_ALL_CODEBASE=true \
-    ghcr.io/github/super-linter:v3.10.0 "$@"
+    ghcr.io/github/super-linter:v3.13.1 "$@"
 }
