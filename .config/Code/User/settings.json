@@ -11,9 +11,9 @@
         80,
         120
     ],
+    "files.eol": "\n",
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
-    "python.jediEnabled": false,
     "html.format.indentInnerHtml": true,
     "html.format.indentHandlebars": true,
     "files.associations": {
@@ -22,16 +22,9 @@
     },
     "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.cursorBlinking": true,
-    "terminal.integrated.enableBold": true,
     "terminal.integrated.fontFamily": "MesloLGS NF",
     "terminal.integrated.fontSize": 12,
-    "terminal.integrated.rightClickCopyPaste": true,
-    "terraform.indexing.enabled": false,
-    "terraform.languageServer.enabled": true,
     "explorer.confirmDragAndDrop": false,
-    "[dockerfile]": {
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-    },
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#cfbcc391"
     },
@@ -40,13 +33,19 @@
         "GO111MODULE": "on"
     },
     "go.useLanguageServer": true,
+    "python.languageServer": "Microsoft",
     "terraform.languageServer": {
         "external": true,
         "args": [
             "serve"
         ]
     },
-    "python.languageServer": "Microsoft",
     "window.zoomLevel": 0,
-    "C_Cpp.updateChannel": "Insiders"
+    "C_Cpp.updateChannel": "Insiders",
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    },
+    "[shellscript]": {
+        "editor.tabSize": 2
+    }
 }
