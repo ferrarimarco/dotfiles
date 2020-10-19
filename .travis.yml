@@ -30,7 +30,7 @@ jobs:
       osx_image: xcode12u
       services:
       script: |
-        travis_wait bin/setup-dotfiles.sh macos \
+        bin/setup-dotfiles.sh macos \
         && make
 os: linux
 services:

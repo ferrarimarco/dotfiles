@@ -14,5 +14,5 @@
 # * If `histappend` is set, Bash appends to the Bash history file, rather than overwriting it
 # * If `nocaseglob` is set, Bash uses case-insensitive globbing in pathname expansion
 for option in globstar histappend nocaseglob; do
-    shopt -s "$option" 2>/dev/null
+  shopt -s "$option" 2>/dev/null
 done

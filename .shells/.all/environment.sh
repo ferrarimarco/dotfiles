@@ -49,86 +49,86 @@ export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
 
 if is_macos; then
 
-    # Might be needed to install Homebrew, so exporting in any case
-    export HOMEBREW_REPOSITORY=/usr/local/Homebrew
+  # Might be needed to install Homebrew, so exporting in any case
+  export HOMEBREW_REPOSITORY=/usr/local/Homebrew
 
-    # setup homebrew environment
-    if ! command -v brew >/dev/null 2>&1; then
-        # brew is not yet in the path because it was (likely) installed manually by setup-dotfiles.sh
-        # So falling back to a known location.
-        HOMEBREW_PATH=/usr/local/brew
-    else
-        HOMEBREW_PATH="$(brew --prefix)"
-    fi
+  # setup homebrew environment
+  if ! command -v brew >/dev/null 2>&1; then
+    # brew is not yet in the path because it was (likely) installed manually by setup-dotfiles.sh
+    # So falling back to a known location.
+    HOMEBREW_PATH=/usr/local/brew
+  else
+    HOMEBREW_PATH="$(brew --prefix)"
+  fi
 
-    if [ -d "${HOMEBREW_PATH}" ]; then
-        DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
-        DEFAULT_SHELL_SHORT="zsh"
+  if [ -d "${HOMEBREW_PATH}" ]; then
+    DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
+    DEFAULT_SHELL_SHORT="zsh"
 
-        export HOMEBREW_PATH
-        export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
-        export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
-        export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
-        export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
-        export HOMEBREW_NO_ANALYTICS=1
+    export HOMEBREW_PATH
+    export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
+    export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
+    export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH}"
+    export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
+    export HOMEBREW_NO_ANALYTICS=1
 
-        ZSH_SITE_FUNCTIONS_PATH="${HOMEBREW_PATH}"/share/zsh/site-functions
-        ZSH_SYNTAX_HIGHLIGHTING_PATH="${HOMEBREW_PATH}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-        ZSH_COMPLETIONS_PATH="${HOMEBREW_PATH}"/share/zsh-completions
+    ZSH_SITE_FUNCTIONS_PATH="${HOMEBREW_PATH}"/share/zsh/site-functions
+    ZSH_SYNTAX_HIGHLIGHTING_PATH="${HOMEBREW_PATH}"/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    ZSH_COMPLETIONS_PATH="${HOMEBREW_PATH}"/share/zsh-completions
 
-        # On macOS, we install zsh-autosuggestions from brew
-        ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${HOMEBREW_PATH}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    # On macOS, we install zsh-autosuggestions from brew
+    ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${HOMEBREW_PATH}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-        GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
+    GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
 
-        # Uncomment the lines below if you want to use executables installed with Homebrew
-        # instead of the macOS ones
-        #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
-        #export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
-        #export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
-        #export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
-        #export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
-        #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
-    else
-        unset HOMEBREW_PATH
-    fi
+    # Uncomment the lines below if you want to use executables installed with Homebrew
+    # instead of the macOS ones
+    #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
+    #export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
+    #export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
+    #export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
+    #export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
+    #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
+  else
+    unset HOMEBREW_PATH
+  fi
 
-    # add vs code bins to path
-    VS_CODE_BIN_DIRECTORY_PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
+  # add vs code bins to path
+  VS_CODE_BIN_DIRECTORY_PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/"
 
-    USER_FONTS_DIRECTORY="$HOME/Library/Fonts"
+  USER_FONTS_DIRECTORY="$HOME/Library/Fonts"
 
-    PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
+  PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
 elif is_linux; then
-    if command -v zsh >/dev/null 2>&1; then
-        DEFAULT_SHELL="$(command -v zsh)"
-        DEFAULT_SHELL_SHORT="zsh"
-    elif command -v bash >/dev/null 2>&1; then
-        DEFAULT_SHELL="$(command -v bash)"
-        DEFAULT_SHELL_SHORT="bash"
-    fi
+  if command -v zsh >/dev/null 2>&1; then
+    DEFAULT_SHELL="$(command -v zsh)"
+    DEFAULT_SHELL_SHORT="zsh"
+  elif command -v bash >/dev/null 2>&1; then
+    DEFAULT_SHELL="$(command -v bash)"
+    DEFAULT_SHELL_SHORT="bash"
+  fi
 
-    GOROOT="${HOME}/bin/go"
+  GOROOT="${HOME}/bin/go"
 
-    RBENV_DIRECTORY_PATH="${HOME}/.rbenv"
-    export RBENV_DIRECTORY_PATH
-    export PATH="${RBENV_DIRECTORY_PATH}/bin:${PATH}"
-    RUBY_BUILD_DIRECTORY_PATH="$RBENV_DIRECTORY_PATH"/plugins/ruby-build
-    export RUBY_BUILD_DIRECTORY_PATH
+  RBENV_DIRECTORY_PATH="${HOME}/.rbenv"
+  export RBENV_DIRECTORY_PATH
+  export PATH="${RBENV_DIRECTORY_PATH}/bin:${PATH}"
+  RUBY_BUILD_DIRECTORY_PATH="$RBENV_DIRECTORY_PATH"/plugins/ruby-build
+  export RUBY_BUILD_DIRECTORY_PATH
 
-    ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
-    ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
-    ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
-    ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
+  ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
+  ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
+  ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-    USER_FONTS_DIRECTORY="$HOME/.local/share/fonts"
+  USER_FONTS_DIRECTORY="$HOME/.local/share/fonts"
 
-    PYTHON_2_BIN_PATH=
+  PYTHON_2_BIN_PATH=
 fi
 
 if is_wsl; then
-    VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
-    export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS
+  VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+  export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS
 fi
 
 [ -d "${VS_CODE_BIN_DIRECTORY_PATH}" ] && export PATH="${VS_CODE_BIN_DIRECTORY_PATH}:${PATH}"

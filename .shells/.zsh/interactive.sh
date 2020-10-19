@@ -39,14 +39,14 @@ unsetopt COMPLETE_ALIASES # Complete aliases on the command line
 unsetopt MENU_COMPLETE    # If MENU_COMPLETE is enabled, on an ambiguous completion, instead of listing possibilities or beeping, insert the first match immediately.
 
 add_to_fpath() {
-    PATH_TO_ADD="${1}"
-    VARIABLE_NAME="${2}"
-    typeset -U FPATH fpath
-    if [ -d "$PATH_TO_ADD" ]; then
-        fpath=("$PATH_TO_ADD" $fpath)
-    else
-        echo "WARNING: Cannot add $VARIABLE_NAME (set to: $PATH_TO_ADD) to fpath because the destination doesn't exist or the variable is set to an empty value."
-    fi
+  PATH_TO_ADD="${1}"
+  VARIABLE_NAME="${2}"
+  typeset -U FPATH fpath
+  if [ -d "$PATH_TO_ADD" ]; then
+    fpath=("$PATH_TO_ADD" $fpath)
+  else
+    echo "WARNING: Cannot add $VARIABLE_NAME (set to: $PATH_TO_ADD) to fpath because the destination doesn't exist or the variable is set to an empty value."
+  fi
 }
 
 add_to_fpath "$ZSH_SITE_FUNCTIONS_PATH" "ZSH_SITE_FUNCTIONS_PATH"
@@ -66,7 +66,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|
 zstyle ':completion:*' special-dirs true
 
 # If the zsh/complist module is loaded, this style can be used to set color specifications
-zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+#zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 
 # Complete kill and ps
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
@@ -81,26 +81,26 @@ zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
 
 # Don't complete uninteresting users
 zstyle ':completion:*:*:*:users' ignored-patterns \
-        adm amanda apache at avahi avahi-autoipd beaglidx bin cacti canna \
-        clamav daemon dbus distcache dnsmasq dovecot fax ftp games gdm \
-        gkrellmd gopher hacluster haldaemon halt hsqldb ident junkbust kdm \
-        ldap lp mail mailman mailnull man messagebus  mldonkey mysql nagios \
-        named netdump news nfsnobody nobody nscd ntp nut nx obsrun openvpn \
-        operator pcap polkitd postfix postgres privoxy pulse pvm quagga radvd \
-        rpc rpcuser rpm rtkit scard shutdown squid sshd statd svn sync tftp \
-        usbmux uucp vcsa wwwrun xfs '_*'
+  adm amanda apache at avahi avahi-autoipd beaglidx bin cacti canna \
+  clamav daemon dbus distcache dnsmasq dovecot fax ftp games gdm \
+  gkrellmd gopher hacluster haldaemon halt hsqldb ident junkbust kdm \
+  ldap lp mail mailman mailnull man messagebus  mldonkey mysql nagios \
+  named netdump news nfsnobody nobody nscd ntp nut nx obsrun openvpn \
+  operator pcap polkitd postfix postgres privoxy pulse pvm quagga radvd \
+  rpc rpcuser rpm rtkit scard shutdown squid sshd statd svn sync tftp \
+  usbmux uucp vcsa wwwrun xfs '_*'
 
 # ... unless we really want to.
 zstyle '*' single-ignored show
 
 expand-or-complete-with-dots() {
-    # toggle line-wrapping off and back on again
-    [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti rmam
-    print -Pn "%{%F{red}......%f%}"
-    [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti smam
+  # toggle line-wrapping off and back on again
+  [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti rmam
+  print -Pn "%{%F{red}......%f%}"
+  [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti smam
 
-    zle expand-or-complete
-    zle redisplay
+  zle expand-or-complete
+  zle redisplay
 }
 zle -N expand-or-complete-with-dots
 bindkey "^I" expand-or-complete-with-dots
@@ -115,14 +115,14 @@ compinit
 # Make sure that the terminal is in application mode when zle is active, since
 # only then values from $terminfo are valid
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-    function zle-line-init() {
-    echoti smkx
-    }
-    function zle-line-finish() {
-        echoti rmkx
-    }
-    zle -N zle-line-init
-    zle -N zle-line-finish
+  function zle-line-init() {
+  echoti smkx
+  }
+  function zle-line-finish() {
+    echoti rmkx
+  }
+  zle -N zle-line-init
+  zle -N zle-line-finish
 fi
 
 bindkey -e                                            # Use emacs key bindings
@@ -130,30 +130,30 @@ bindkey -e                                            # Use emacs key bindings
 bindkey '\ew' kill-region                             # [Esc-w] - Kill from the cursor to the mark
 bindkey '^r' history-incremental-search-backward      # [Ctrl-r] - Search backward incrementally for a specified string. The string may begin with ^ to anchor the search to the beginning of the line.
 if [[ "${terminfo[kpp]}" != "" ]]; then
-    bindkey "${terminfo[kpp]}" up-line-or-history       # [PageUp] - Up a line of history
+  bindkey "${terminfo[kpp]}" up-line-or-history       # [PageUp] - Up a line of history
 fi
 if [[ "${terminfo[knp]}" != "" ]]; then
-    bindkey "${terminfo[knp]}" down-line-or-history     # [PageDown] - Down a line of history
+  bindkey "${terminfo[knp]}" down-line-or-history     # [PageDown] - Down a line of history
 fi
 
 # start typing + [Up-Arrow] - fuzzy find history forward
 if [[ "${terminfo[kcuu1]}" != "" ]]; then
-    autoload -U up-line-or-beginning-search
-    zle -N up-line-or-beginning-search
-    bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
+  autoload -U up-line-or-beginning-search
+  zle -N up-line-or-beginning-search
+  bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
 fi
 # start typing + [Down-Arrow] - fuzzy find history backward
 if [[ "${terminfo[kcud1]}" != "" ]]; then
-    autoload -U down-line-or-beginning-search
-    zle -N down-line-or-beginning-search
-    bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
+  autoload -U down-line-or-beginning-search
+  zle -N down-line-or-beginning-search
+  bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
 fi
 
 if [[ "${terminfo[khome]}" != "" ]]; then
-    bindkey "${terminfo[khome]}" beginning-of-line      # [Home] - Go to beginning of line
+  bindkey "${terminfo[khome]}" beginning-of-line      # [Home] - Go to beginning of line
 fi
 if [[ "${terminfo[kend]}" != "" ]]; then
-    bindkey "${terminfo[kend]}"  end-of-line            # [End] - Go to end of line
+  bindkey "${terminfo[kend]}"  end-of-line            # [End] - Go to end of line
 fi
 
 bindkey ' ' magic-space                               # [Space] - do history expansion
@@ -162,16 +162,16 @@ bindkey '^[[1;5C' forward-word                        # [Ctrl-RightArrow] - move
 bindkey '^[[1;5D' backward-word                       # [Ctrl-LeftArrow] - move backward one word
 
 if [[ "${terminfo[kcbt]}" != "" ]]; then
-    bindkey "${terminfo[kcbt]}" reverse-menu-complete   # [Shift-Tab] - move through the completion menu backwards
+  bindkey "${terminfo[kcbt]}" reverse-menu-complete   # [Shift-Tab] - move through the completion menu backwards
 fi
 
 bindkey '^?' backward-delete-char                     # [Backspace] - delete backward
 if [[ "${terminfo[kdch1]}" != "" ]]; then
-    bindkey "${terminfo[kdch1]}" delete-char            # [Delete] - delete forward
+  bindkey "${terminfo[kdch1]}" delete-char            # [Delete] - delete forward
 else
-    bindkey "^[[3~" delete-char
-    bindkey "^[3;5~" delete-char
-    bindkey "\e[3~" delete-char
+  bindkey "^[[3~" delete-char
+  bindkey "^[3;5~" delete-char
+  bindkey "\e[3~" delete-char
 fi
 
 # Edit the current command line in $EDITOR
