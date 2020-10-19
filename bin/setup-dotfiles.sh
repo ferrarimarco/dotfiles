@@ -89,9 +89,6 @@ install_brew_formulae() {
   brew analytics off
 
   for f in \
-    ansible \
-    bash \
-    bash-completion \
     ccache \
     cmake \
     coreutils \
@@ -99,7 +96,6 @@ install_brew_formulae() {
     findutils \
     gawk \
     git \
-    go \
     gnupg \
     gnu-getopt \
     gnu-indent \
@@ -108,13 +104,9 @@ install_brew_formulae() {
     grep \
     make \
     nano \
-    node \
     ninja \
     p7zip \
-    rbenv \
-    shellcheck \
     terraform \
-    tflint \
     tree \
     wget \
     zsh \
@@ -135,13 +127,10 @@ install_brew_formulae() {
 
   echo "Installing brew casks..."
   for f in \
-    android-platform-tools \
     docker \
     gimp \
     google-cloud-sdk \
     iterm2 \
-    obs \
-    vagrant \
     visual-studio-code; do
     if ! brew cask ls --versions "$f" >/dev/null 2>&1; then
       echo "Installing $f cask"
@@ -194,71 +183,6 @@ install_brew_formulae() {
     echo "Installing or updating $line extension..."
     code --force --install-extension "$line"
   done <"$REPOSITORY_PATH"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
-}
-
-install_go_packages() {
-  if command -v go >/dev/null 2>&1; then
-    echo "Installing go packages"
-    for f in \
-      github.com/mdempsky/gocode \
-      github.com/ramya-rao-a/go-outline \
-      github.com/rogpeppe/godef \
-      github.com/sqs/goreturns \
-      github.com/stamblerre/gocode \
-      github.com/uudashr/gopkgs/v2/cmd/gopkgs \
-      golang.org/x/lint/golint \
-      golang.org/x/tools/cmd/goimports \
-      mvdan.cc/sh/v3/cmd/shfmt; do
-      go list "$f" >/dev/null 2>&1 || echo "Installing $f" && go get "$f"
-    done
-  else
-    echo "WARNING: go is not installed. Skipping go package installation."
-  fi
-}
-
-install_npm_packages() {
-  if command -v npm >/dev/null 2>&1; then
-    echo "Installing NPM packages"
-    for f in \
-      @google/clasp \
-      markdownlint-cli; do
-      npm list -g "$f" || sudo npm install -g "$f"
-    done
-  else
-    echo "WARNING: npm is not installed. Skipping npm package installation."
-  fi
-}
-
-install_python_packages() {
-  if command -v pip3 >/dev/null 2>&1; then
-    echo "Installing pip3 packages..."
-
-    echo "Installing setuptools and wheel..."
-    pip3 install \
-      setuptools \
-      wheel
-  else
-    echo "WARNING: pip3 is not installed. Skipping Python 3 package installation."
-  fi
-}
-
-install_ruby() {
-  if command -v rbenv >/dev/null 2>&1; then
-    read -r RUBY_VERSION <"${REPOSITORY_PATH}"/.rbenv/version
-    echo "Installing Ruby $RUBY_VERSION"
-    rbenv install --skip-existing "$RUBY_VERSION"
-  else
-    echo "WARNING: rbenv is not installed. Skipping ruby installation."
-  fi
-}
-
-install_rubygems() {
-  if command -v gem >/dev/null 2>&1; then
-    echo "Installing Ruby gems"
-    gem update
-  else
-    echo "WARNING: gem is not installed. Skipping ruby gems installation."
-  fi
 }
 
 setup_user() {
@@ -784,12 +708,7 @@ main() {
 
     setup_shell
     setup_user
-    install_ruby
     update_system
-    install_go_packages
-    install_npm_packages
-    install_python_packages
-    install_rubygems
     fix_permissions
   else
     usage
