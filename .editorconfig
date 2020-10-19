@@ -28,7 +28,7 @@ spaces_around_brackets = false
 [{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules,.gitconfig}]
 indent_style = tab
 
-[*.{cson,sh,yml,yaml}]
+[*.{cson,scss,sh,yml,yaml}]
 indent_size = 2
 
 [{Dockerfile}]
