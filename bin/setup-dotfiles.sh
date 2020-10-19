@@ -106,7 +106,6 @@ install_brew_formulae() {
     nano \
     ninja \
     p7zip \
-    terraform \
     tree \
     wget \
     zsh \
@@ -129,7 +128,6 @@ install_brew_formulae() {
   for f in \
     docker \
     gimp \
-    google-cloud-sdk \
     iterm2 \
     visual-studio-code; do
     if ! brew cask ls --versions "$f" >/dev/null 2>&1; then
