@@ -709,7 +709,6 @@ main() {
     setup_shell
     setup_user
     update_system
-    fix_permissions
   else
     usage
   fi
