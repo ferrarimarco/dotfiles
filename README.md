@@ -4,23 +4,18 @@
 
 These are the dotfiles I use on my systems.
 
-## Dependencies
-
-### Linux and macOS
-
-- git
-- sudo >= 1.8.29
-
 ## Installation
 
 To install these dotfiles:
 
-1. Clone this repository.
-1. `cd` to the root directory of the cloned repository.
-1. Run:
-    1. `bin/install-windows.ps1` from a Powershell shell on Windows.
-    1. `bin/setup-dotfiles.sh` on Linux-based system, Windows Subsystem for
-        Linux, or macOS.
+1. Clone this repository with Git.
+1. Setup the dotfiles:
+    - If you're on a Unix-based system (Linux, macOS):
+        1. `bin/setup-dotfiles.sh` on Linux-based system, Windows Subsystem for
+            Linux, or macOS.
+    - If you're on Windows:
+        1. `bin/install-windows.ps1` from a Powershell shell on Windows.
+        1. Start the Windows Subsystem for Linux.
 1. Run `make` (all the dotfiles and binaries will be symlinked to their
     destinations so you can update them just by `git pull`ing the latest changes)
 
@@ -28,6 +23,16 @@ Run `make help` for a list of the available run targets, including the ones
 useful for development.
 
 ## Contents
+
+### Software configuration
+
+- Visual Studio Code
+- Windows Subsystem for Linux
+- XFCE
+- cURL
+- Git
+- Tmux
+- Wget
 
 ### Shell customizations
 
@@ -41,17 +46,10 @@ shell they are applicable to. All the customizations are in the
 - The scripts in the [`.all`](.shells/.all/) directory are executed by all the
     shells.
 
-### Binaries
+### Git hooks
 
-#### setup.sh
-
-[`setup-dotfiles.sh`](bin/setup-dotfiles.sh) sets up linux and macOS systems the
-way I like. Run it with no args to see what it does.
-
-#### install-windows.ps1
-
-[`install-windows.ps1`](bin/install-windows.ps1) sets up Windows systems the way
-I like.
+- `pre-commit` that runs linting and checks before committing.
+- `commit-msg` that adds a `Change-Id` to the commit message, if necessary.
 
 ## Thanks
 
