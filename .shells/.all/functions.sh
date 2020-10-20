@@ -53,17 +53,19 @@ dump_defaults() {
   fi
   echo "Reading defaults..."
   defaults read NSGlobalDomain >"$dir"/NSGlobalDomain-before.out
-  defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-before.out
   defaults read >"$dir"/read-before.out
+
+  defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-before.out
   defaults -currentHost read >"$dir"/read-currentHost-before.out
 
-  echo "Change the settings and press any key to continue..."
+  echo "Change the settings, close the settings app, and press any key to continue..."
   read -r _
   unset _
 
   defaults read NSGlobalDomain >"$dir"/NSGlobalDomain-after.out
-  defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-after.out
   defaults read >"$dir"/read-after.out
+
+  defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-after.out
   defaults -currentHost read >"$dir"/read-currentHost-after.out
 
   echo "Diffing..."
