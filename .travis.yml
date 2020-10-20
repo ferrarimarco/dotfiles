@@ -38,7 +38,6 @@ jobs:
       services:
       script: |
         powershell -executionpolicy bypass ".\bin\install-windows.ps1"
-        wsl.exe
 os: linux
 services:
   - docker
