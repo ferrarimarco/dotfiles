@@ -37,7 +37,7 @@ jobs:
       language: shell
       services:
       script: |
-        powershell -noexit "& "bin/install-windows.ps1"
+        powershell ".\bin\install-windows.ps1"
 os: linux
 services:
   - docker

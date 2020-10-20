@@ -4,7 +4,10 @@ function Install-Chocolatey {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "", Justification = "Trusting Chocolatey installer")]
     param()
 
+    Write-Output "Checking if Chocolatey is installed..."
+
     if (!$Env:ChocolateyInstall) {
+        Write-Output "Installing Chocolatey..."
         Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
         # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
