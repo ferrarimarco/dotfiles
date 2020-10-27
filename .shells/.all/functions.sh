@@ -242,8 +242,6 @@ update_system() {
     sudo apt-get -qy upgrade
     pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
     pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
-    pull_from_git_repository "$RBENV_DIRECTORY_PATH" "rbenv"
-    pull_from_git_repository "$RUBY_BUILD_DIRECTORY_PATH" "ruby-build"
     pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
   fi
 

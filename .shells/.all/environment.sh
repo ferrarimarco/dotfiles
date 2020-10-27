@@ -110,12 +110,6 @@ elif is_linux; then
 
   GOROOT="${HOME}/bin/go"
 
-  RBENV_DIRECTORY_PATH="${HOME}/.rbenv"
-  export RBENV_DIRECTORY_PATH
-  export PATH="${RBENV_DIRECTORY_PATH}/bin:${PATH}"
-  RUBY_BUILD_DIRECTORY_PATH="$RBENV_DIRECTORY_PATH"/plugins/ruby-build
-  export RUBY_BUILD_DIRECTORY_PATH
-
   ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
   ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
