@@ -92,7 +92,7 @@ install_brew_formulae() {
   brew remove --force --ignore-dependencies "$(brew list)"
 
   echo "Removing installed brew casks..."
-  brew cask remove --force $(brew cask list)
+  brew cask remove --force "$(brew cask list)"
 
   echo "Running brew cleanup..."
   brew cleanup
