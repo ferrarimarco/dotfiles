@@ -89,10 +89,12 @@ install_brew_formulae() {
   brew analytics off
 
   echo "Removing installed brew formulae..."
-  brew remove --force --ignore-dependencies "$(brew list)"
+  # shellcheck disable=SC2046
+  brew remove --force --ignore-dependencies $(brew list)
 
   echo "Removing installed brew casks..."
-  brew cask remove --force "$(brew cask list)"
+  # shellcheck disable=SC2046
+  brew cask remove --force $(brew list --cask)
 
   echo "Running brew cleanup..."
   brew cleanup
