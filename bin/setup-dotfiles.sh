@@ -88,6 +88,35 @@ install_brew_formulae() {
   echo "Disabling homebrew usage analytics..."
   brew analytics off
 
+  echo "Removing installed brew formulae..."
+  for f in \
+    boost \
+    freetype \
+    gdal \
+    geos \
+    glib \
+    libassuan \
+    libgcrypt \
+    libmpc \
+    libxml2 \
+    mercurial \
+    node \
+    numpy \
+    openblas \
+    protobuf \
+    ; do
+    if brew ls --versions "$f" >/dev/null; then
+      echo "Removing $f"
+      if brew uninstall "$f"; then
+        # If the uninstallation failed, retry with verbose output enabled.
+        # Useful for CI builds.
+        brew uninstall --verbose "$f"
+      fi
+    else
+      echo "$f is already installed"
+    fi
+  done
+
   for f in \
     ccache \
     cmake \
