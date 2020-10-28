@@ -103,8 +103,7 @@ install_brew_formulae() {
     node \
     numpy \
     openblas \
-    protobuf \
-    ; do
+    protobuf; do
     if brew ls --versions "$f" >/dev/null; then
       echo "Removing $f"
       if brew uninstall "$f"; then
