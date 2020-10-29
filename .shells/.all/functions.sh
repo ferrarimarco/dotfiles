@@ -17,7 +17,7 @@ source_file_if_available() {
 # Source Docker functions if docker is installed
 if command -v docker >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
   DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
-  source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
+  source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH" || true
   unset DOCKERFUNCTIONS_PATH
 fi
 
