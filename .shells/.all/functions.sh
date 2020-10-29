@@ -27,23 +27,6 @@ mkd() {
   cd "$@" || exit
 }
 
-add_ssh_known_hosts() {
-  SSH_KNOWN_HOSTS_PATH="$HOME"/.ssh/known_hosts
-  echo "Adding ${1} to known SSH hosts ($SSH_KNOWN_HOSTS_PATH)."
-  ssh-keyscan "${1}" >>"$SSH_KNOWN_HOSTS_PATH"
-  unset SSH_KNOWN_HOSTS_PATH
-}
-
-# If you install brew formulae from source, you may want to install its
-# deps from source as well
-brew_install_recursive_build_from_source() {
-  echo "Installing $* and it's deps from source"
-  brew deps --include-build --include-optional -n "$@" | while read -r line; do
-    brew install --build-from-source "$line"
-  done
-  brew install --build-from-source "$@"
-}
-
 dump_defaults() {
   dir=
   if [ $# -eq 0 ]; then
@@ -72,25 +55,6 @@ dump_defaults() {
   diff "$dir"/NSGlobalDomain-before.out "$dir"/NSGlobalDomain-after.out
   diff "$dir"/NSGlobalDomain-currentHost-before.out "$dir"/NSGlobalDomain-currentHost-after.out
   diff "$dir"/read-currentHost-before.out "$dir"/read-currentHost-after.out
-}
-
-check_eof_newline() {
-  dir=
-  if [ $# -eq 0 ]; then
-    dir="$(pwd)"
-  else
-    dir="${1}"
-  fi
-
-  find "$dir" -type f -not -path "*/\.git/*" >tmp
-  while IFS= read -r file; do
-    if [ -z "$(tail -c1 "$file")" ]; then
-      echo "[OK]: $file ends with a newline"
-    else
-      echo "[FAIL]: missing newline at the end of $file"
-    fi
-  done <tmp
-  rm tmp
 }
 
 clone_git_repository_if_not_cloned_already() {
@@ -164,46 +128,6 @@ is_wsl() {
   fi
 }
 
-# find all scripts and run `shfmt`
-shfmt_dir() {
-  dir=
-  if [ $# -eq 0 ]; then
-    dir="$(pwd)"
-  else
-    dir="${1}"
-  fi
-  find "$dir" -type f -not -path "*/\\.git/*" | sort -u | while read -r f; do
-    if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$f"; then
-      if shfmt -d "$f"; then
-        echo "shfmt on $f PASSED"
-      else
-        echo "shfmt on $f FAILED"
-      fi
-    fi
-  done
-  unset dir
-}
-
-# find all scripts and run `shellcheck`
-shellcheck_dir() {
-  dir=
-  if [ $# -eq 0 ]; then
-    dir="$(pwd)"
-  else
-    dir="${1}"
-  fi
-  find "$dir" -type f -not -path "*/\\.git/*" | sort -u | while read -r f; do
-    if grep -Eq '^#!(.*/|.*env +)(sh|bash|ksh|mksh)' "$f"; then
-      if shellcheck "$f"; then
-        echo "[OK]: sucessfully linted $f"
-      else
-        echo "[FAIL]: found errors/warnings while linting $f"
-      fi
-    fi
-  done
-  unset dir
-}
-
 update_brew() {
   echo "Upgrading brew and formulae"
   brew update
@@ -244,16 +168,6 @@ update_system() {
     pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
     pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
   fi
-
-  if command -v npm >/dev/null 2>&1; then
-    echo "Updating npm packages"
-    npm update -g
-  fi
-
-  if command -v gem >/dev/null 2>&1; then
-    echo "Updating gems"
-    gem update
-  fi
 }
 
 # Make a temporary directory and enter it
@@ -265,23 +179,6 @@ tmpd() {
     dir=$(mktemp -d -t "${1}.XXXXXXXXXX")
   fi
   cd "$dir" || exit
-  unset dir
-}
-
-yamllint_dir() {
-  dir=
-  if [ $# -eq 0 ]; then
-    dir="$(pwd)"
-  else
-    dir="${1}"
-  fi
-  find "$dir" -type f \( -iname \*.yml -o -iname \*.yaml \) -not -path "*/\\.git/*" | sort -u | while read -r f; do
-    if yamllint --strict "$f"; then
-      echo "[OK]: sucessfully linted $f"
-    else
-      echo "[FAIL]: found errors/warnings while linting $f"
-    fi
-  done
   unset dir
 }
 
