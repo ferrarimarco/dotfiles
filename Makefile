@@ -59,7 +59,7 @@ super-linter: ## Run super-linter
 		-e MULTI_STATUS=false \
 		-e RUN_LOCAL=true \
 		-e VALIDATE_ALL_CODEBASE=true \
-		ghcr.io/github/super-linter:v3.13.1
+		ghcr.io/github/super-linter:v3.13.5
 
 .PHONY: help
 help: ## Show help
