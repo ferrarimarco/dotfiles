@@ -57,9 +57,16 @@
     "[dockerfile]": {
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     },
+    "[jsonc]": {
+        "editor.quickSuggestions": {
+            "strings": true
+        },
+        "editor.suggest.insertMode": "replace",
+        "editor.tabSize": 2
+    },
     "[scss]": {
-        "editor.tabSize": 2,
-        "editor.suggest.insertMode": "replace"
+        "editor.suggest.insertMode": "replace",
+        "editor.tabSize": 2
     },
     "[shellscript]": {
         "editor.tabSize": 2
