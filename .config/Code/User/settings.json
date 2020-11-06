@@ -1,8 +1,5 @@
 {
-    "telemetry.enableTelemetry": false,
-    "telemetry.enableCrashReporter": false,
-    "explorer.confirmDelete": false,
-    "workbench.startupEditor": "newUntitledFile",
+    "C_Cpp.updateChannel": "Insiders",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.renderControlCharacters": true,
@@ -12,29 +9,33 @@
         120,
         200
     ],
-    "files.eol": "\n",
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "html.format.indentInnerHtml": true,
-    "html.format.indentHandlebars": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
     "files.associations": {
         "Vagrantfile": "ruby",
         "hosts": "yaml"
     },
-    "terminal.external.osxExec": "iTerm.app",
-    "terminal.integrated.cursorBlinking": true,
-    "terminal.integrated.fontFamily": "MesloLGS NF",
-    "terminal.integrated.fontSize": 12,
-    "explorer.confirmDragAndDrop": false,
-    "workbench.colorCustomizations": {
-        "editorRuler.foreground": "#cfbcc391"
-    },
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
     "go.formatTool": "goimports",
     "go.toolsEnvVars": {
         "GO111MODULE": "on"
     },
     "go.useLanguageServer": true,
+    "html.format.indentInnerHtml": true,
+    "html.format.indentHandlebars": true,
     "python.languageServer": "Microsoft",
+    "remote.SSH.defaultExtensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-python.python"
+    ],
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.fontFamily": "MesloLGS NF",
+    "terminal.integrated.fontSize": 12,
     "terraform.languageServer": {
         "external": true,
         "args": [
@@ -42,7 +43,10 @@
         ]
     },
     "window.zoomLevel": 0,
-    "C_Cpp.updateChannel": "Insiders",
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#cfbcc391"
+    },
+    "workbench.startupEditor": "newUntitledFile",
     "[dockerfile]": {
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     },
