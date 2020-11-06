@@ -1,74 +1,77 @@
 {
-    "C_Cpp.updateChannel": "Insiders",
-    "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
-    "editor.renderControlCharacters": true,
-    "editor.renderWhitespace": "all",
-    "editor.rulers": [
-        80,
-        120,
-        200
-    ],
-    "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false,
-    "files.associations": {
-        "Vagrantfile": "ruby",
-        "hosts": "yaml"
+  "C_Cpp.updateChannel": "Insiders",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.renderControlCharacters": true,
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [
+    80,
+    120,
+    200
+  ],
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.associations": {
+    "Vagrantfile": "ruby",
+    "hosts": "yaml"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "go.formatTool": "goimports",
+  "go.toolsEnvVars": {
+    "GO111MODULE": "on"
+  },
+  "go.useLanguageServer": true,
+  "html.format.indentInnerHtml": true,
+  "html.format.indentHandlebars": true,
+  "python.languageServer": "Microsoft",
+  "remote.SSH.defaultExtensions": [
+    "davidanson.vscode-markdownlint",
+    "HashiCorp.terraform",
+    "ms-azuretools.vscode-docker",
+    "ms-python.python",
+    "ms-vscode.cmake-tools",
+    "ms-vscode.cpptools",
+    "ms-vscode.powershell",
+    "ms-vscode-remote.vscode-remote-extensionpack",
+    "timonwong.shellcheck"
+  ],
+  "telemetry.enableTelemetry": false,
+  "telemetry.enableCrashReporter": false,
+  "terminal.external.osxExec": "iTerm.app",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.fontFamily": "MesloLGS NF",
+  "terminal.integrated.fontSize": 12,
+  "terraform.languageServer": {
+    "external": true,
+    "args": [
+      "serve"
+    ]
+  },
+  "window.zoomLevel": 0,
+  "workbench.colorCustomizations": {
+    "editorRuler.foreground": "#cfbcc391"
+  },
+  "workbench.startupEditor": "newUntitledFile",
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[jsonc]": {
+    "editor.detectIndentation": false,
+    "editor.quickSuggestions": {
+      "strings": true
     },
-    "files.eol": "\n",
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "go.formatTool": "goimports",
-    "go.toolsEnvVars": {
-        "GO111MODULE": "on"
-    },
-    "go.useLanguageServer": true,
-    "html.format.indentInnerHtml": true,
-    "html.format.indentHandlebars": true,
-    "python.languageServer": "Microsoft",
-    "remote.SSH.defaultExtensions": [
-        "davidanson.vscode-markdownlint",
-        "HashiCorp.terraform",
-        "ms-azuretools.vscode-docker",
-        "ms-python.python",
-        "ms-vscode.cmake-tools",
-        "ms-vscode.cpptools",
-        "ms-vscode.powershell",
-        "ms-vscode-remote.vscode-remote-extensionpack",
-        "timonwong.shellcheck"
-    ],
-    "telemetry.enableTelemetry": false,
-    "telemetry.enableCrashReporter": false,
-    "terminal.external.osxExec": "iTerm.app",
-    "terminal.integrated.cursorBlinking": true,
-    "terminal.integrated.fontFamily": "MesloLGS NF",
-    "terminal.integrated.fontSize": 12,
-    "terraform.languageServer": {
-        "external": true,
-        "args": [
-            "serve"
-        ]
-    },
-    "window.zoomLevel": 0,
-    "workbench.colorCustomizations": {
-        "editorRuler.foreground": "#cfbcc391"
-    },
-    "workbench.startupEditor": "newUntitledFile",
-    "[dockerfile]": {
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-    },
-    "[jsonc]": {
-        "editor.quickSuggestions": {
-            "strings": true
-        },
-        "editor.suggest.insertMode": "replace",
-        "editor.tabSize": 2
-    },
-    "[scss]": {
-        "editor.suggest.insertMode": "replace",
-        "editor.tabSize": 2
-    },
-    "[shellscript]": {
-        "editor.tabSize": 2
-    }
+    "editor.suggest.insertMode": "replace",
+    "editor.tabSize": 2
+  },
+  "[scss]": {
+    "editor.detectIndentation": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.tabSize": 2
+  },
+  "[shellscript]": {
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2
+  }
 }
