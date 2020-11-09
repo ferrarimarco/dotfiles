@@ -26,6 +26,7 @@
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
   "python.languageServer": "Microsoft",
+  "python.testing.pytestEnabled": true,
   "remote.SSH.defaultExtensions": [
     "davidanson.vscode-markdownlint",
     "HashiCorp.terraform",
