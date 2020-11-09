@@ -57,6 +57,13 @@
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.tabSize": 2
+  },
   "[jsonc]": {
     "editor.detectIndentation": false,
     "editor.quickSuggestions": {
