@@ -9,7 +9,7 @@ charset = utf-8
 
 # Tab indentation
 indent_style = space
-indent_size = 4
+indent_size = 2
 
 # Make sure every file has a blank line at the end
 insert_final_newline = true
@@ -26,10 +26,5 @@ spaces_around_brackets = false
 # max_line_length = 150
 
 [{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules,.gitconfig}]
+indent_size = 4
 indent_style = tab
-
-[*.{cson,scss,sh,yml,yaml}]
-indent_size = 2
-
-[{Dockerfile}]
-indent_size = 2
