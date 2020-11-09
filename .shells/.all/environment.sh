@@ -131,6 +131,10 @@ unset VS_CODE_BIN_DIRECTORY_PATH
 [ -d "${PYTHON_2_BIN_PATH}" ] && export PATH="${PYTHON_2_BIN_PATH}:${PATH}"
 unset PYTHON_2_BIN_PATH
 
+PYTHON_3_USER_BIN_PATH="$HOME/.local/bin"
+[ -d "${PYTHON_3_USER_BIN_PATH}" ] && export PATH="${PYTHON_3_USER_BIN_PATH}:${PATH}"
+unset PYTHON_3_USER_BIN_PATH
+
 # ZSH related stuff that we might need during setup
 export ZSH_SITE_FUNCTIONS_PATH
 export ZSH_SYNTAX_HIGHLIGHTING_PATH
