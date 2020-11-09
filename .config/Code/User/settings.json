@@ -25,7 +25,7 @@
   "go.useLanguageServer": true,
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
-  "python.formatting.provider": "yapf",
+  "python.formatting.provider": "black",
   "python.languageServer": "Microsoft",
   "python.testing.pytestEnabled": true,
   "remote.SSH.defaultExtensions": [
