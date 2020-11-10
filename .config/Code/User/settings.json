@@ -82,5 +82,13 @@
   "[shellscript]": {
     "editor.detectIndentation": false,
     "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.tabSize": 2,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
   }
 }
