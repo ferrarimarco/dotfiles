@@ -499,7 +499,7 @@ setup_macos() {
   ###############################################################################
   # Touch bar                                                                    #
   ###############################################################################
-  defaults write com.apple.controlstrip MiniCustomized "(com.apple.system.brightness, com.apple.system.volume, com.apple.system.mute, com.apple.system.media-play-pause, com.apple.system.screen-lock)"
+  defaults write com.apple.controlstrip MiniCustomized "(com.apple.system.screen-lock, com.apple.system.brightness, com.apple.system.volume, com.apple.system.mute, com.apple.system.media-play-pause)"
 
   ###############################################################################
   # Adobe stuff                                                                 #
