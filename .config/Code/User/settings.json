@@ -18,6 +18,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
+  "git.allowNoVerifyCommit": true,
   "go.formatTool": "goimports",
   "go.toolsEnvVars": {
     "GO111MODULE": "on"
