@@ -303,6 +303,12 @@ setup_debian() {
     unset docker_distribution
   fi
 
+  if ! command -v terraform >/dev/null 2>&1; then
+    echo "Adding Terraform APT repository"
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  fi
+
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "https://github.com/zsh-users/zsh-completions.git"
 
@@ -356,6 +362,7 @@ setup_debian() {
     strace \
     systemd \
     tar \
+    terraform \
     tree \
     tzdata \
     unzip \
