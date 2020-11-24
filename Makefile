@@ -51,7 +51,6 @@ super-linter: ## Run super-linter
 	docker run --rm -t $(DOCKER_FLAGS) \
 		-v "$(CURDIR)":/workspace \
 		-w="/workspace" \
-		-e ACTIONS_RUNNER_DEBUG=true \
 		-e DEFAULT_WORKSPACE=/workspace \
 		-e DISABLE_ERRORS=false \
 		-e ERROR_ON_MISSING_EXEC_BIT=true \

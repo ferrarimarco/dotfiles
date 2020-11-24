@@ -17,6 +17,6 @@ BASH_ENV=
 
 # Run this if is an interactive shell.
 if [ "$PS1" ]; then
-    # shellcheck source=/dev/null
-    . "$HOME"/.shells/.bash/interactive.sh
+  # shellcheck source=/dev/null
+  . "$HOME"/.shells/.bash/interactive.sh
 fi
