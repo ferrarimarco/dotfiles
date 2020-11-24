@@ -135,10 +135,11 @@ install_brew_formulae() {
     fi
   done
 
+  # Other useful casks that I might need in the future:
+  # docker, gimp
+
   echo "Installing brew casks..."
   for f in \
-    docker \
-    gimp \
     iterm2 \
     visual-studio-code; do
     if ! brew cask ls --versions "$f" >/dev/null 2>&1; then
