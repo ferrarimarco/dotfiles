@@ -1,6 +1,6 @@
 # dotfiles
 
-[![Build Status Master Branch](https://travis-ci.com/ferrarimarco/dotfiles.svg?branch=master)](https://travis-ci.com/ferrarimarco/dotfiles)
+![CI](https://github.com/ferrarimarco/dotfiles/workflows/CI/badge.svg)
 
 These are the dotfiles I use on my systems.
 
