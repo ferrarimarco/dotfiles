@@ -19,12 +19,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.3.4
-      - env:
-          DEBIAN_FRONTEND: noninteractive
+      - name: Setup dotfiles
         run: |
-          echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
-          && apt-get -q update \
-          && apt-get -qy install git sudo \
-          && ./bin/setup-dotfiles.sh debian \
-          && make
-        uses: actions/ubuntu-20.04
+          ./bin/setup-dotfiles.sh debian
+      - name: Symlink dotfiles
+        run: |
+          make
