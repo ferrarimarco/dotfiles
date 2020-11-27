@@ -1,4 +1,4 @@
-name: Lint
+name: CI
 
 on: [push, pull_request]
 
@@ -27,3 +27,4 @@ jobs:
           && apt-get -qy install git sudo \
           && ./bin/setup-dotfiles.sh debian \
           && make
+        uses: actions/ubuntu-20.04
