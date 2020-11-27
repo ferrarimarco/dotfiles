@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/ferrarimarco/dotfiles/workflows/CI/badge.svg)
 
-These are the dotfiles I use on my systems.
+These are the dotfiles I use on my systems and development environments.
 
 ## Installation
 
@@ -10,12 +10,13 @@ To install these dotfiles:
 
 1. Clone this repository with Git.
 1. Setup the dotfiles:
-    - If you're on a Unix-based system (Linux, macOS):
-        1. `bin/setup-dotfiles.sh` on Linux-based system, Windows Subsystem for
-            Linux, or macOS.
+    - If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
+        Linux):
+        1. `bin/setup-dotfiles.sh`
     - If you're on Windows:
         1. `bin/install-windows.ps1` from a Powershell shell on Windows.
-        1. Start the Windows Subsystem for Linux.
+        1. Start the Windows Subsystem for Linux, and run
+            `bin/setup-dotfiles.sh`
 1. Run `make` (all the dotfiles and binaries will be symlinked to their
     destinations so you can update them just by `git pull`ing the latest changes)
 
@@ -24,17 +25,26 @@ useful for development.
 
 ## Contents
 
+This section describes the customizations and configurations included in these
+dotfiles.
+
 ### Software configuration
 
-- Visual Studio Code
-- Windows Subsystem for Linux
-- XFCE
+The dotfiiles include configuration files for the following softwares:
+
 - cURL
 - Git
+- Nano
+- SSH client
 - Tmux
+- Visual Studio Code
 - Wget
+- Windows Subsystem for Linux
 
 ### Shell customizations
+
+The dotfiiles include customization and configuration files for different
+shells.
 
 To avoid repetitions, the customizations are categorized considering the type of
 shell they are applicable to. All the customizations are in the
@@ -48,10 +58,14 @@ shell they are applicable to. All the customizations are in the
 
 ### Git hooks
 
+The dofiles include the following Git hooks:
+
 - `pre-commit` that runs linting and checks before committing.
 - `commit-msg` that adds a `Change-Id` to the commit message, if necessary.
 
 ## Thanks
+
+I used these dotfiles as inspiration and guidance:
 
 - [Jessie Frazelle](https://github.com/jessfraz/dotfiles)
 - [Kevin Suttle](https://github.com/kevinSuttle/dotfiles)

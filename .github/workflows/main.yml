@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.3.4
+      # Workarounds for https://github.com/actions/virtual-environments/issues/1605
+      - run: sudo apt-get purge grub\*
+      - run: sudo bash scripts/environment/bootstrap-ubuntu-20.04.sh
       - name: Setup dotfiles (Ubuntu)
         run: |
           ./bin/setup-dotfiles.sh debian
