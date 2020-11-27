@@ -281,34 +281,37 @@ setup_debian() {
     echo "Google Chrome is already installed"
   fi
 
-  if ! command -v docker >/dev/null 2>&1; then
+  docker_distribution=
+  case "$distribution" in
+  Ubuntu*)
+    docker_distribution="ubuntu"
+    ;;
+  Debian*)
+    docker_distribution="debian"
+    ;;
+  *) exit 1 ;;
+  esac
+
+  docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
+  if ! find /etc/apt/ -name '*.list' -exec grep -Fq "${docker_apt_repository_url}" {} +; then
     echo "Installing Docker"
     curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 
-    docker_distribution=
-    case "$distribution" in
-    Ubuntu*)
-      docker_distribution="ubuntu"
-      ;;
-    Debian*)
-      docker_distribution="debian"
-      ;;
-    *) exit 1 ;;
-    esac
-
     sudo add-apt-repository \
-      "deb [arch=amd64] https://download.docker.com/linux/${docker_distribution} \
+      "deb [arch=amd64] ${docker_apt_repository_url} \
             $(lsb_release -cs) \
             stable"
-
-    unset docker_distribution
   fi
+  unset docker_apt_repository_url
+  unset docker_distribution
 
-  if ! command -v terraform >/dev/null 2>&1; then
+  terraform_apt_repository_url="https://apt.releases.hashicorp.com"
+  if ! find /etc/apt/ -name '*.list' -exec grep -Fq "${terraform_apt_repository_url}" {} +; then
     echo "Adding Terraform APT repository"
     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-    sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} $(lsb_release -cs) main"
   fi
+  unset terraform_apt_repository_url
 
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "https://github.com/zsh-users/zsh-completions.git"
