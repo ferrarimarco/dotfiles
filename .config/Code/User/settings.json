@@ -1,5 +1,6 @@
 {
   "C_Cpp.updateChannel": "Insiders",
+  "cmake.configureOnOpen": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.renderControlCharacters": true,
