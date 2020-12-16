@@ -309,7 +309,7 @@ setup_debian() {
 
   terraform_apt_repository_url="https://apt.releases.hashicorp.com"
   if ! find /etc/apt/ -name '*.list' -exec grep -Fq "${terraform_apt_repository_url}" {} +; then
-    echo "Adding Terraform APT repository"
+    echo "Adding Hashicorp APT repository"
     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
     sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} $(lsb_release -cs) main"
   fi
@@ -372,6 +372,7 @@ setup_debian() {
     tree \
     tzdata \
     unzip \
+    vagrant \
     xclip \
     xcompmgr \
     xz-utils \
