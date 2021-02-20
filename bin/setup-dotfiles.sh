@@ -102,8 +102,6 @@ install_brew_formulae() {
   brew cleanup
 
   for f in \
-    ccache \
-    cmake \
     coreutils \
     dfu-util \
     findutils \
@@ -117,9 +115,7 @@ install_brew_formulae() {
     grep \
     make \
     nano \
-    ninja \
     p7zip \
-    tree \
     wget \
     zsh \
     zsh-autosuggestions \
