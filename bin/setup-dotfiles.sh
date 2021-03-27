@@ -116,6 +116,7 @@ install_brew_formulae() {
     make \
     nano \
     p7zip \
+    socat \
     wget \
     zsh \
     zsh-autosuggestions \
@@ -361,6 +362,7 @@ setup_debian() {
     python3-venv \
     rxvt-unicode \
     scdaemon \
+    socat \
     ssh \
     strace \
     systemd \
