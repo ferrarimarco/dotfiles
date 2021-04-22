@@ -102,23 +102,7 @@ install_brew_formulae() {
   brew cleanup
 
   for f in \
-    coreutils \
-    dfu-util \
-    findutils \
-    gawk \
-    git \
-    gnupg \
-    gnu-getopt \
-    gnu-indent \
-    gnu-sed \
-    gnu-tar \
-    grep \
     make \
-    nano \
-    p7zip \
-    socat \
-    wget \
-    zsh \
     zsh-autosuggestions \
     zsh-completions \
     zsh-syntax-highlighting; do
@@ -162,20 +146,6 @@ install_brew_formulae() {
   if [ -z "$BREW_PREFIX" ]; then
     echo "ERROR: The BREW_PREFIX variable is not set, or set to an empty string"
     exit 1
-  fi
-
-  if ! grep -Fq "${BREW_PREFIX}/bin/bash" /etc/shells; then
-    echo "Add bash installed via brew to the list of allowed shells..."
-    echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells
-  else
-    echo "Bash installed via brew is already in the list of allowed shells."
-  fi
-
-  if ! grep -Fq "${BREW_PREFIX}/bin/zsh" /etc/shells; then
-    echo "Add zsh installed via brew to the list of allowed shells..."
-    echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells
-  else
-    echo "zsh installed via brew is already in the list of allowed shells."
   fi
 
   echo "Setting up Visual Studio Code settings..."
