@@ -30,7 +30,7 @@ jobs:
   setup_macos:
     needs:
       - lint
-    runs-on: macos-11.0
+    runs-on: macos-10.5
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Setup dotfiles (macOS)
