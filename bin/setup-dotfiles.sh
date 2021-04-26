@@ -138,8 +138,6 @@ install_brew_formulae() {
     fi
   done
 
-  echo "Adding shells installed via brew to the list of allowed shells..."
-
   # Save Homebrew’s installed location.
   BREW_PREFIX="$(brew --prefix)"
 
