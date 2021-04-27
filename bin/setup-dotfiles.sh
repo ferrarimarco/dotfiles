@@ -291,10 +291,7 @@ setup_debian() {
     bridge-utils \
     build-essential \
     bzip2 \
-    containerd.io \
     coreutils \
-    docker-ce \
-    docker-ce-cli \
     dnsutils \
     file \
     findutils \
@@ -330,7 +327,6 @@ setup_debian() {
     strace \
     systemd \
     tar \
-    terraform \
     tree \
     tzdata \
     unzip \
@@ -343,6 +339,25 @@ setup_debian() {
     zsh \
     zsh-syntax-highlighting \
     --no-install-recommends
+
+  echo "Installing packages from the additional APT repositories..."
+  if is_apt_repo_available "${docker_apt_repository_url}"; then
+    echo "Installing Docker..."
+    sudo apt-get -qqy install \
+      containerd.io \
+      docker-ce \
+      docker-ce-cli
+  else
+    echo "WARNING: Skipping Docker installation because its APT repository is not available"
+  fi
+
+  if is_apt_repo_available "${terraform_apt_repository_url}"; then
+    echo "Installing Terraform..."
+    sudo apt-get -qqy install \
+      terraform
+  else
+    echo "WARNING: Skipping Terraform installation because its APT repository is not available"
+  fi
 
   sudo apt-get -qqy autoremove
   sudo apt-get -qqy autoclean
