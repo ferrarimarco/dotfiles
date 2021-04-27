@@ -632,8 +632,10 @@ set_repository_path() {
   unset CURRENT_WORKING_DIRECTORY
 }
 
+SCRIPT_BASENAME="$(basename "${0}")"
+
 usage() {
-  echo -e "setup-dotfiles.sh\\n\\tThis script installs my basic setup for a workstation\\n"
+  echo -e "${SCRIPT_BASENAME}\\n\\tThis script installs my basic setup for a workstation\\n"
   echo "Usage:"
   echo "  debian                              - install base packages on a Debian system"
   echo "  macos                               - setup macOS"
