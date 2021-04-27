@@ -93,8 +93,6 @@ install_brew_formulae() {
   brew remove --force --ignore-dependencies $(brew list)
 
   echo "Removing installed brew casks..."
-  # Workaround for https://github.com/AdoptOpenJDK/homebrew-openjdk/issues/106
-  brew untap adoptopenjdk/openjdk
   # shellcheck disable=SC2046
   brew cask remove --force $(brew list --cask)
 
