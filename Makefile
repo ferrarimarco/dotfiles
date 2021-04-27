@@ -35,31 +35,6 @@ dotfiles: ## Installs dotfiles
 	ln -sfn $(CURDIR)/gitignore $(HOME)/.gitignore;
 	sudo cp $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf;
 
-.PHONY: test
-test: super-linter ## Run tests
-
-# if this session isn't interactive, then we don't want to allocate a
-# TTY, which would fail, but if it is interactive, we do want to attach
-# so that the user can send e.g. ^C through.
-INTERACTIVE := $(shell [ -t 0 ] && echo 1 || echo 0)
-ifeq ($(INTERACTIVE), 1)
-	DOCKER_FLAGS += -t
-endif
-
-.PHONY: super-linter
-super-linter: ## Run super-linter
-	docker run --rm -t $(DOCKER_FLAGS) \
-		-v "$(CURDIR)":/workspace \
-		-w="/workspace" \
-		-e DEFAULT_WORKSPACE=/workspace \
-		-e DISABLE_ERRORS=false \
-		-e ERROR_ON_MISSING_EXEC_BIT=true \
-		-e LINTER_RULES_PATH=. \
-		-e MULTI_STATUS=false \
-		-e RUN_LOCAL=true \
-		-e VALIDATE_ALL_CODEBASE=true \
-		ghcr.io/github/super-linter:v3.14.5
-
 .PHONY: help
 help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
