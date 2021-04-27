@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-set -e
-set -o pipefail
+set -o errexit
+set -o nounset
 
 ask_for_sudo() {
   echo "Prompting for sudo password..."
