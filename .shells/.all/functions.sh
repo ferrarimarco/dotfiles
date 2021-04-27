@@ -95,6 +95,22 @@ create_python_venv() {
   echo "You can activate the new environment by running: . $destination_dir/bin/activate"
 }
 
+is_apt_repo_available() {
+  APT_REPOSITORY_URL="${1}"
+  RET_CODE=
+
+  if [ -z "$APT_REPOSITORY_URL" ]; then
+    echo "ERROR: the APT_REPOSITORY_URL variable is not set, or set to an empty string"
+    return 2
+  fi
+  if find /etc/apt/ -name '*.list' -exec grep -Fq "${APT_REPOSITORY_URL}" {} +; then
+    RET_CODE=0
+  else
+    RET_CODE=1
+  fi
+  return $RET_CODE
+}
+
 is_linux() {
   os_name="$(uname -s)"
   if test "${os_name#*"Linux"}" != "$os_name"; then

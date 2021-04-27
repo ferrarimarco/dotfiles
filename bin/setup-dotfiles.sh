@@ -3,6 +3,8 @@
 set -o errexit
 set -o nounset
 
+ERR_DISTRIBUTION_NOT_SUPPORTED=1
+
 ask_for_sudo() {
   echo "Prompting for sudo password..."
   # sudo -v doesn't work on macOS when passwordless sudo is enabled. It still
@@ -194,25 +196,6 @@ setup_debian() {
   sudo dpkg-reconfigure --frontend=noninteractive locales
   sudo update-locale LANG="$LANG" LANGUAGE="$LANGUAGE" LC_ALL="$LC_ALL"
 
-  distribution="$(lsb_release -d | awk -F"\t" '{print $2}')"
-  reqsubstr="rodete"
-
-  # If we're not in rodete
-  if [ -n "${distribution##*$reqsubstr*}" ]; then
-    echo "Adding the main APT repository"
-    sudo add-apt-repository "main"
-
-    case "$distribution" in
-    Ubuntu*)
-      echo "Adding other Ubuntu-specific APT repositories"
-      sudo add-apt-repository universe
-      sudo add-apt-repository multiverse
-      sudo add-apt-repository restricted
-      ;;
-    *) false ;;
-    esac
-  fi
-
   # Add the Google Chrome distribution URI as a package source if needed
   # Don't install it if we're in crostini (Chrome OS linux environment) or if it's already installed
   if ! [ -d "/opt/google/cros-containers" ] && ! dpkg -s google-chrome-stable >/dev/null 2>&1; then
@@ -242,42 +225,56 @@ setup_debian() {
     unset TEMP_DIRECTORY
     unset CHROME_ARCHIVE_NAME
     unset CHROME_ARCHIVE_PATH
-
   else
     echo "Google Chrome is already installed"
   fi
 
-  docker_distribution=
-  case "$distribution" in
-  Ubuntu*)
-    docker_distribution="ubuntu"
-    ;;
-  Debian*)
-    docker_distribution="debian"
-    ;;
-  *) exit 1 ;;
-  esac
+  distribution="$(lsb_release -ds)"
+  echo "Customizing the distribution (${distribution})..."
 
-  docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
-  if ! find /etc/apt/ -name '*.list' -exec grep -Fq "${docker_apt_repository_url}" {} +; then
-    echo "Installing Docker"
-    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+  docker_apt_repository_url=
+  terraform_apt_repository_url=
 
-    sudo add-apt-repository \
-      "deb [arch=amd64] ${docker_apt_repository_url} \
-            $(lsb_release -cs) \
-            stable"
+  echo "Adding APT repositories..."
+  if command -v add-apt-repository >/dev/null 2>&1; then
+    sudo add-apt-repository main
+
+    docker_distribution=
+
+    case "$distribution" in
+      Debian*)
+        docker_distribution="debian"
+        ;;
+      Ubuntu*)
+        sudo add-apt-repository main
+        sudo add-apt-repository universe
+        sudo add-apt-repository multiverse
+        sudo add-apt-repository restricted
+
+        docker_distribution="ubuntu"
+        ;;
+      *)
+        echo "Error: distribution ${distribution} is not supported. Terminating..."
+        exit $ERR_DISTRIBUTION_NOT_SUPPORTED ;;
+      esac
+
+      docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
+      if ! is_apt_repo_available "${docker_apt_repository_url}"; then
+        echo "Adding Docker APT repository"
+        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+        sudo add-apt-repository "deb [arch=amd64] ${docker_apt_repository_url} $(lsb_release -cs) stable"
+      fi
+
+      terraform_apt_repository_url="https://apt.releases.hashicorp.com"
+      if ! is_apt_repo_available "${terraform_apt_repository_url}"; then
+        echo "Adding Hashicorp APT repository"
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} $(lsb_release -cs) main"
+      fi
+  else
+    echo "WARNING: add-apt-repository command is not available."
   fi
-  unset docker_apt_repository_url
-  unset docker_distribution
-
-  terraform_apt_repository_url="https://apt.releases.hashicorp.com"
-  if ! find /etc/apt/ -name '*.list' -exec grep -Fq "${terraform_apt_repository_url}" {} +; then
-    echo "Adding Hashicorp APT repository"
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-    sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} $(lsb_release -cs) main"
-  fi
-  unset terraform_apt_repository_url
 
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "https://github.com/zsh-users/zsh-completions.git"
