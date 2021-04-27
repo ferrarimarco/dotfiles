@@ -32,8 +32,8 @@ fix_permissions() {
 
 # Choose a user account to use for this installation
 get_user() {
-  echo "Setting TARGET_USER. The order of preference is: USER ($USER), USERNAME ($USERNAME), LOGNAME ($LOGNAME), whoami ($(whoami))"
-  TARGET_USER=${USER:-${USERNAME:-${LOGNAME:-$(whoami)}}}
+  echo "Setting TARGET_USER. The order of preference is: USER (${USER-}), USERNAME (${USERNAME-}), LOGNAME (${LOGNAME-}), whoami ($(whoami))"
+  TARGET_USER="${USER:-${USERNAME:-${LOGNAME:-$(whoami)}}}"
   echo "TARGET_USER set to: $TARGET_USER"
 
   if [ -z "$TARGET_USER" ]; then
@@ -654,7 +654,7 @@ usage() {
 }
 
 main() {
-  local cmd=$1
+  local cmd="${1-}"
 
   if [[ -z "$cmd" ]]; then
     usage
