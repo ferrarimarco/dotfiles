@@ -2,6 +2,7 @@
 
 set -o errexit
 set -o nounset
+set -o pipefail
 
 ERR_DISTRIBUTION_NOT_SUPPORTED=1
 
