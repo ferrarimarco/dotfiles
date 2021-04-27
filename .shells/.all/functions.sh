@@ -122,6 +122,28 @@ is_linux() {
   fi
 }
 
+is_debian() {
+  DISTRIBUTION="$(lsb_release -ds)"
+  DISTRIBUTION_CODENAME="$(lsb_release -cs)"
+
+  if [ "${DISTRIBUTION#*"Debian"}" != "$DISTRIBUTION" ] \
+  && { [ "${DISTRIBUTION_CODENAME}" = "buster" ] || [ "${DISTRIBUTION_CODENAME}" = "bullseye" ] || [ "${DISTRIBUTION_CODENAME}" = "stretch" ]; }; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_ubuntu() {
+  DISTRIBUTION="$(lsb_release -ds)"
+
+  if test "${DISTRIBUTION#*"Ubuntu"}" != "$DISTRIBUTION"; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 is_macos() {
   os_name="$(uname -s)"
   if test "${os_name#*"Darwin"}" != "$os_name"; then

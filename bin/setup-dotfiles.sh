@@ -230,51 +230,42 @@ setup_debian() {
     echo "Google Chrome is already installed"
   fi
 
-  distribution="$(lsb_release -ds)"
-  echo "Customizing the distribution (${distribution})..."
+  DISTRIBUTION="$(lsb_release -ds)"
+  DISTRIBUTION_CODENAME="$(lsb_release -cs)"
+  echo "Customizing the distribution (${DISTRIBUTION}), codename: ${DISTRIBUTION_CODENAME}..."
 
   docker_apt_repository_url=
   terraform_apt_repository_url=
 
-  echo "Adding APT repositories..."
-  if command -v add-apt-repository >/dev/null 2>&1; then
+  docker_distribution=
+
+  if is_debian || is_ubuntu; then
     sudo add-apt-repository main
+    if is_debian; then
+      docker_distribution="debian"
+    elif is_ubuntu; then
+      sudo add-apt-repository universe
+      sudo add-apt-repository multiverse
+      sudo add-apt-repository restricted
+      docker_distribution="ubuntu"
+    fi
 
-    docker_distribution=
+    docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
+    if ! is_apt_repo_available "${docker_apt_repository_url}"; then
+      echo "Adding Docker APT repository"
+      curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
+    fi
 
-    case "$distribution" in
-      Debian*)
-        docker_distribution="debian"
-        ;;
-      Ubuntu*)
-        sudo add-apt-repository main
-        sudo add-apt-repository universe
-        sudo add-apt-repository multiverse
-        sudo add-apt-repository restricted
-
-        docker_distribution="ubuntu"
-        ;;
-      *)
-        echo "Error: distribution ${distribution} is not supported. Terminating..."
-        exit $ERR_DISTRIBUTION_NOT_SUPPORTED ;;
-      esac
-
-      docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
-      if ! is_apt_repo_available "${docker_apt_repository_url}"; then
-        echo "Adding Docker APT repository"
-        curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-
-        sudo add-apt-repository "deb [arch=amd64] ${docker_apt_repository_url} $(lsb_release -cs) stable"
-      fi
-
-      terraform_apt_repository_url="https://apt.releases.hashicorp.com"
-      if ! is_apt_repo_available "${terraform_apt_repository_url}"; then
-        echo "Adding Hashicorp APT repository"
-        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-        sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} $(lsb_release -cs) main"
-      fi
+    terraform_apt_repository_url="https://apt.releases.hashicorp.com"
+    if ! is_apt_repo_available "${terraform_apt_repository_url}"; then
+      echo "Adding Hashicorp APT repository"
+      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+      sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} ${DISTRIBUTION_CODENAME} main"
+    fi
   else
-    echo "WARNING: add-apt-repository command is not available."
+    echo "Error: distribution ${DISTRIBUTION} is not supported. Terminating..."
+    exit $ERR_DISTRIBUTION_NOT_SUPPORTED
   fi
 
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
