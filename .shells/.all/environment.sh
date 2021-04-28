@@ -152,3 +152,9 @@ export GO111MODULE
 GOPATH="${HOME}/.go"
 export GOPATH
 export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
+
+###############################################################################
+# Load user customizations if available                                       #
+###############################################################################
+
+source_file_if_available "${HOME}/.shells/.all/custom.sh"
