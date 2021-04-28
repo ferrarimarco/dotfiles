@@ -13,6 +13,15 @@ export ENV="$HOME"/.shells/.all/interactive.sh
 # Shell                                                                       #
 ###############################################################################
 
+# Set the default shell, in order of preference
+if command -v zsh >/dev/null 2>&1; then
+  DEFAULT_SHELL="$(command -v zsh)"
+  DEFAULT_SHELL_SHORT="zsh"
+elif command -v bash >/dev/null 2>&1; then
+  DEFAULT_SHELL="$(command -v bash)"
+  DEFAULT_SHELL_SHORT="bash"
+fi
+
 # Set the default editor
 export EDITOR=/usr/bin/nano
 export TERMINAL="urxvt"
@@ -62,9 +71,6 @@ if is_macos; then
   fi
 
   if [ -d "${HOMEBREW_PATH}" ]; then
-    DEFAULT_SHELL="$HOMEBREW_PATH/bin/zsh"
-    DEFAULT_SHELL_SHORT="zsh"
-
     export HOMEBREW_PATH
     export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
     export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
@@ -100,14 +106,6 @@ if is_macos; then
 
   PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
 elif is_linux; then
-  if command -v zsh >/dev/null 2>&1; then
-    DEFAULT_SHELL="$(command -v zsh)"
-    DEFAULT_SHELL_SHORT="zsh"
-  elif command -v bash >/dev/null 2>&1; then
-    DEFAULT_SHELL="$(command -v bash)"
-    DEFAULT_SHELL_SHORT="bash"
-  fi
-
   GOROOT="${HOME}/bin/go"
 
   ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
