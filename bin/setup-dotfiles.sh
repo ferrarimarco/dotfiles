@@ -4,8 +4,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-ERR_DISTRIBUTION_NOT_SUPPORTED=1
-
 ask_for_sudo() {
   echo "Prompting for sudo password..."
   # sudo -v doesn't work on macOS when passwordless sudo is enabled. It still
@@ -232,7 +230,7 @@ setup_debian() {
 
   DISTRIBUTION="$(lsb_release -ds)"
   DISTRIBUTION_CODENAME="$(lsb_release -cs)"
-  echo "Customizing the distribution (${DISTRIBUTION}), codename: ${DISTRIBUTION_CODENAME}..."
+  echo "Configuring the distribution: ${DISTRIBUTION}, codename: ${DISTRIBUTION_CODENAME}..."
 
   docker_apt_repository_url=
   terraform_apt_repository_url=
@@ -264,8 +262,7 @@ setup_debian() {
       sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} ${DISTRIBUTION_CODENAME} main"
     fi
   else
-    echo "Error: distribution ${DISTRIBUTION} is not supported. Terminating..."
-    exit $ERR_DISTRIBUTION_NOT_SUPPORTED
+    echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
   fi
 
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
