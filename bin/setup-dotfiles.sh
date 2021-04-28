@@ -542,8 +542,29 @@ setup_shell() {
   if is_macos; then
     user_default_shell="$(dscl . -read ~/ UserShell | sed 's/UserShell: //')"
   elif is_linux; then
-    user_default_shell="$(awk -F: -v user="$USER" '$1 == user {print $NF}' /etc/passwd)"
+    user_default_shell="$(awk -F: -v user="${TARGET_USER}" '$1 == user {print $NF}' /etc/passwd)"
+    if [ -z "${user_default_shell}" ]; then
+      user_default_shell="$(getent passwd "${TARGET_USER}" | awk -F: -v user="${TARGET_USER}" '$1 == user {print $NF}')"
+    fi
   fi
+
+  if [ -z "$DEFAULT_SHELL" ]; then
+    echo "ERROR: The DEFAULT_SHELL variable is not set, or set to an empty string"
+    exit 1
+  fi
+
+  if [ -z "${user_default_shell}" ]; then
+    echo "ERROR: The user_default_shell variable is not set, or set to an empty string"
+    exit 1
+  fi
+
+  if [ "${user_default_shell}" != "$DEFAULT_SHELL" ]; then
+    echo "Changing default shell from ${user_default_shell} to $DEFAULT_SHELL"
+    sudo chsh -s "$DEFAULT_SHELL" "$TARGET_USER"
+  fi
+
+  unset user_default_shell
+  echo "The default shell for $TARGET_USER is set to $DEFAULT_SHELL"
 
   if [ -z "$USER_FONTS_DIRECTORY" ]; then
     echo "ERROR: The USER_FONTS_DIRECTORY variable is not set, or set to an empty string"
@@ -557,18 +578,6 @@ setup_shell() {
   ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Italic.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
   ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
 
-  if [ -z "$DEFAULT_SHELL" ]; then
-    echo "ERROR: The DEFAULT_SHELL variable is not set, or set to an empty string"
-    exit 1
-  fi
-
-  if [ "$user_default_shell" != "$DEFAULT_SHELL" ]; then
-    echo "Changing default shell to $DEFAULT_SHELL"
-    sudo chsh -s "$DEFAULT_SHELL" "$TARGET_USER"
-  fi
-
-  unset user_default_shell
-  echo "The default shell for $TARGET_USER is set to $DEFAULT_SHELL"
 }
 
 set_repository_path() {
