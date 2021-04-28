@@ -49,7 +49,7 @@ ansible() {
     -v "${HOME}"/.ssh:/root/.ssh:ro \
     --name ansible \
     --rm \
-    ferrarimarco/open-development-environment-ansible "$@"
+    ansible/ansible "$@"
 }
 
 changelog_generator() {
@@ -61,7 +61,7 @@ changelog_generator() {
     -v "$(pwd)":/usr/local/src/your-app \
     --name changelog-generator \
     --rm \
-    ferrarimarco/github-changelog-generator:1.15.0 "$@"
+    githubchangeloggenerator/github-changelog-generator "$@"
 }
 
 docker_clean() {
@@ -100,17 +100,6 @@ inspec() {
     chef/inspec "$@"
 }
 
-liquibase() {
-  del_stopped liquibase
-  # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
-    -i \
-    -v /etc/localtime:/etc/localtime:ro \
-    --name liquibase \
-    --rm \
-    ferrarimarco/liquibase "$@"
-}
-
 maven() {
   del_stopped maven
   # shellcheck disable=SC2086
@@ -118,7 +107,7 @@ maven() {
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "${HOME}/.m2:/var/maven/.m2" \
-    --name changelog-generator \
+    --name maven \
     --rm \
     -u "$(id -u)":"$(id -g)" \
     -e MAVEN_CONFIG=/var/maven/.m2 \
@@ -135,7 +124,7 @@ super_linter() {
     --name "${CONTAINER_NAME}" \
     --rm \
     -v "$(pwd)":/workspace \
-    -w="/workspace" \
+    -w "/workspace" \
     -e DEFAULT_WORKSPACE=/workspace \
     -e DISABLE_ERRORS=false \
     -e ERROR_ON_MISSING_EXEC_BIT=true \
@@ -144,4 +133,18 @@ super_linter() {
     -e RUN_LOCAL=true \
     -e VALIDATE_ALL_CODEBASE=true \
     ghcr.io/github/super-linter "$@"
+}
+
+terraform() {
+  del_stopped terraform
+  # shellcheck disable=SC2086
+  docker run $DOCKER_TTY_OPTION \
+    -i \
+    --name terraform \
+    --rm \
+    -u "$(id -u)":"$(id -g)" \
+    -v "$(pwd)":/workspace \
+    -v /etc/localtime:/etc/localtime:ro \
+    -w "/workspace" \
+    hashicorp/terraform "$@"
 }
