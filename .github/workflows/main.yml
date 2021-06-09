@@ -27,18 +27,19 @@ jobs:
       - name: Symlink dotfiles
         run: |
           make
-  setup_macos:
-    needs:
-      - lint
-    runs-on: macos-10.5
-    steps:
-      - uses: actions/checkout@v2.3.4
-      - name: Setup dotfiles (macOS)
-        run: |
-          ./bin/setup-dotfiles.sh macos
-      - name: Symlink dotfiles
-        run: |
-          make
+  # Disabling this for now because macos is in private beta
+  # setup_macos:
+  #   needs:
+  #     - lint
+  #   runs-on: macos-10.5
+  #   steps:
+  #     - uses: actions/checkout@v2.3.4
+  #     - name: Setup dotfiles (macOS)
+  #       run: |
+  #         ./bin/setup-dotfiles.sh macos
+  #     - name: Symlink dotfiles
+  #       run: |
+  #         make
   setup_windows:
     needs:
       - lint

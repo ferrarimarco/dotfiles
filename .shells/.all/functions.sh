@@ -2,8 +2,8 @@
 
 # Define this first, so sourcing other files becomes easier
 source_file_if_available() {
-  FILE="${1}"
-  VARIABLE_NAME="${2}"
+  FILE="${1-}"
+  VARIABLE_NAME="${2-}"
   if [ -f "$FILE" ]; then
     # shellcheck source=/dev/null
     . "$FILE"
@@ -20,7 +20,6 @@ source_file_if_available() {
 if command -v docker >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
   DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
   source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH" || true
-  unset DOCKERFUNCTIONS_PATH
 fi
 
 # Create a new directory and enter it
@@ -128,8 +127,7 @@ is_debian() {
   DISTRIBUTION="$(lsb_release -ds)"
   DISTRIBUTION_CODENAME="$(lsb_release -cs)"
 
-  if [ "${DISTRIBUTION#*"Debian"}" != "$DISTRIBUTION" ] \
-  && { [ "${DISTRIBUTION_CODENAME}" = "buster" ] || [ "${DISTRIBUTION_CODENAME}" = "bullseye" ] || [ "${DISTRIBUTION_CODENAME}" = "stretch" ]; }; then
+  if [ "${DISTRIBUTION#*"Debian"}" != "$DISTRIBUTION" ] && { [ "${DISTRIBUTION_CODENAME}" = "buster" ] || [ "${DISTRIBUTION_CODENAME}" = "bullseye" ] || [ "${DISTRIBUTION_CODENAME}" = "stretch" ]; }; then
     return 0
   else
     return 1
