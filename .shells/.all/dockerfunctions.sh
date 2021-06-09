@@ -43,7 +43,6 @@ ansible() {
   # shellcheck disable=SC2086
   docker run $DOCKER_TTY_OPTION \
     -i \
-    --net=host \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/etc/ansible \
     -v "${HOME}"/.ssh:/root/.ssh:ro \
@@ -91,7 +90,6 @@ inspec() {
   # shellcheck disable=SC2086
   docker run $DOCKER_TTY_OPTION \
     -i \
-    --net=host \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/share \
     -v "${HOME}"/.ssh:/root/.ssh:ro \
