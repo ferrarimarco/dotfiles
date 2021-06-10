@@ -4,22 +4,26 @@
 source_file_if_available() {
   FILE="${1-}"
   VARIABLE_NAME="${2-}"
-  if [ -f "$FILE" ]; then
-    # shellcheck source=/dev/null
-    . "$FILE"
-  else
-    if [ -n "${VARIABLE_NAME}" ]; then
-      echo "WARNING: Cannot source $VARIABLE_NAME (set to: $FILE) because the destination doesn't exist or the variable is set to an empty value."
-    fi
+
+  if [ -z "${FILE}" ]; then
+    echo "ERROR: Set a variable value when sourcing files. FILE: ${FILE}, VARIABLE_NAME: ${VARIABLE_NAME}"
     return 1
   fi
+
+  if [ -f "${FILE}" ]; then
+    # shellcheck source=/dev/null
+    . "${FILE}"
+  else
+    echo "ERROR: Cannot source ${FILE}: it doesn't exist or it's not a file."
+    return 2
+  fi
+
   return 0
 }
 
 # Source Docker functions if docker is installed
 if command -v docker >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
-  DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
-  source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH" || true
+  source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
 fi
 
 # Create a new directory and enter it

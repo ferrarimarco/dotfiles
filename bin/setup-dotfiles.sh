@@ -674,12 +674,17 @@ main() {
   echo "Path to the repository: $REPOSITORY_PATH"
 
   # The source_file_if_available function might not be available, so
-  # sourcing the functions file it explicitly
-  FUNCTIONS_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.all/functions.sh"
+  # sourcing the functions files it explicitly
+  FUNCTIONS_FILE_ABSOLUTE_PATH="${REPOSITORY_PATH}/.shells/.all/functions.sh"
+
+  # Set the DOCKERFUNCTIONS_PATH because it's not yet available in the default location set in environment.sh
+  DOCKERFUNCTIONS_PATH="${REPOSITORY_PATH}"/.shells/.all/dockerfunctions.sh
+  export DOCKERFUNCTIONS_PATH
+
   echo "Sourcing $FUNCTIONS_FILE_ABSOLUTE_PATH..."
-  if [ -f "$FUNCTIONS_FILE_ABSOLUTE_PATH" ]; then
+  if [ -f "${FUNCTIONS_FILE_ABSOLUTE_PATH}" ]; then
     # shellcheck source=/dev/null
-    . "$FUNCTIONS_FILE_ABSOLUTE_PATH"
+    . "${FUNCTIONS_FILE_ABSOLUTE_PATH}"
   else
     echo "ERROR: Cannot find the $FUNCTIONS_FILE_ABSOLUTE_PATH file. Exiting..."
     exit 1
@@ -687,8 +692,8 @@ main() {
   # From now on, the source_file_if_available function is available
 
   ENVIRONMENT_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.all/environment.sh"
-  echo "Sourcing environment variables configuration file..."
-  source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
+  echo "Sourcing environment variables configuration file from ${ENVIRONMENT_FILE_ABSOLUTE_PATH}..."
+  source_file_if_available "${ENVIRONMENT_FILE_ABSOLUTE_PATH}" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
   if [[ $cmd == "debian" ]]; then
     setup_debian
