@@ -1,8 +1,12 @@
 #!/usr/bin/env sh
 
+DOCKERFUNCTIONS_PATH="${HOME}"/.shells/.all/dockerfunctions.sh
+export DOCKERFUNCTIONS_PATH
+
 # We don't have the source_file_if_available function yet
 # shellcheck source=/dev/null
 FILE="${HOME}"/.shells/.all/functions.sh && test -f "$FILE" && . "$FILE"
+# From now on, the source_file_if_available function is available
 
 # Set ENV so that if you use a shell as your login shell,
 # and then start "sh" as a non-login interactive shell the startup scripts will
@@ -152,9 +156,3 @@ export GO111MODULE
 GOPATH="${HOME}/.go"
 export GOPATH
 export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
-
-###############################################################################
-# Load user customizations if available                                       #
-###############################################################################
-
-source_file_if_available "${HOME}/.shells/.all/custom.sh"
