@@ -53,7 +53,6 @@
       "serve"
     ]
   },
-  "window.zoomLevel": 0,
   "workbench.colorCustomizations": {
     "editorRuler.foreground": "#cfbcc391"
   },
@@ -92,5 +91,11 @@
       "comments": false,
       "strings": true
     }
-  }
+  },
+  "workbench.editorAssociations": [
+    {
+      "viewType": "jupyter.notebook.ipynb",
+      "filenamePattern": "*.ipynb"
+    }
+  ]
 }
