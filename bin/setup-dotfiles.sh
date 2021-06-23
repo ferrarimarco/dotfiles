@@ -429,6 +429,9 @@ setup_macos() {
   # Minimize windows into their application’s icon
   defaults write com.apple.dock minimize-to-application -bool true
 
+  # Don't move the dock to secondary screens
+  defaults write com.apple.Dock position-immutable -bool yes
+
   ###############################################################################
   # Terminal & iTerm 2                                                          #
   ###############################################################################
