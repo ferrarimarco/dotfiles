@@ -79,7 +79,7 @@ if is_macos; then
     export PATH="${HOMEBREW_PATH}"/bin:"${PATH}"
     export PATH="${HOMEBREW_PATH}"/sbin:"${PATH}"
     export LD_LIBRARY_PATH="${HOMEBREW_PATH}"/lib:"${LD_LIBRARY_PATH-}"
-    export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH}"
+    export MANPATH="${HOMEBREW_PATH}"/share/man:"${MANPATH-}"
     export HOMEBREW_NO_ANALYTICS=1
 
     ZSH_SITE_FUNCTIONS_PATH="${HOMEBREW_PATH}"/share/zsh/site-functions
