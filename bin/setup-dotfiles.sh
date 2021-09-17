@@ -100,12 +100,13 @@ install_brew_formulae() {
   echo "Running brew cleanup..."
   brew cleanup
 
+  echo "Installing brew formulae"
   for f in \
     make \
     zsh-autosuggestions \
     zsh-completions \
     zsh-syntax-highlighting; do
-    if ! brew ls --versions "$f" >/dev/null; then
+    if ! brew list --versions "$f" >/dev/null; then
       echo "Installing $f"
       if ! brew install "$f"; then
         # If the installation failed, retry with verbose output enabled.
@@ -125,12 +126,12 @@ install_brew_formulae() {
     iterm2 \
     visual-studio-code \
     wireshark; do
-    if ! brew cask ls --versions "$f" >/dev/null 2>&1; then
+    if ! brew list "$f" >/dev/null 2>&1; then
       echo "Installing $f cask"
-      if ! brew cask install "$f"; then
+      if ! brew install "$f"; then
         # If the installation failed, retry with verbose output enabled.
         # Useful for CI builds.
-        brew cask install --verbose "$f"
+        brew install --verbose "$f"
       fi
     else
       echo "$f cask is already installed"
