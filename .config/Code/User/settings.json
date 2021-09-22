@@ -28,7 +28,7 @@
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
   "python.formatting.provider": "black",
-  "python.languageServer": "Microsoft",
+  "python.languageServer": "Default",
   "python.testing.pytestEnabled": true,
   "remote.SSH.defaultExtensions": [
     "davidanson.vscode-markdownlint",
