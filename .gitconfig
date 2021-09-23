@@ -69,7 +69,7 @@ fc = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  
 # Find commits by commit message
 fm = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
 
-# Remove branches that have already been merged with master
+# Remove branches that have already been merged with the default branch
 # a.k.a. ‘delete merged’
 dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d; git remote -v update -p"
 
@@ -77,7 +77,7 @@ dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d; git remot
 contributors = shortlog --summary --numbered
 
 unreleased = "!f() { git fetch --tags && git diff $(git tag | tail -n 1); }; f"
-up = !git pull origin master && git remote prune origin && git submodule update --init --recursive
+up = "!f() { git pull origin $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') && git remote prune origin && git submodule update --init --recursive; }; f"
 undo = !git reset HEAD~1 --mixed
 undo-amended = !git reset --soft HEAD@{1}
 top = !git log --format=format:%an | sort | uniq -c | sort -r | head -n 20
