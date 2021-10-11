@@ -3,6 +3,7 @@
   "cmake.configureOnOpen": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "editor.guides.bracketPairs": true,
   "editor.renderControlCharacters": true,
   "editor.renderWhitespace": "all",
   "editor.rulers": [
@@ -41,8 +42,7 @@
     "ms-vscode-remote.vscode-remote-extensionpack",
     "timonwong.shellcheck"
   ],
-  "telemetry.enableTelemetry": false,
-  "telemetry.enableCrashReporter": false,
+  "telemetry.telemetryLevel": "off",
   "terminal.external.osxExec": "iTerm.app",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.fontFamily": "MesloLGS NF",
