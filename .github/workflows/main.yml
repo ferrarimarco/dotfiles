@@ -10,9 +10,11 @@ jobs:
       - name: Super-Linter
         uses: github/super-linter@v4.8.1
         env:
+          DISABLE_ERRORS: false
           ERROR_ON_MISSING_EXEC_BIT: true
-          VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: .
+          VALIDATE_ALL_CODEBASE: true
   setup_ubuntu:
     needs:
       - lint
