@@ -24,7 +24,7 @@ function Install-Chocolatey {
     }
 }
 
-function Install-Packages {
+function Install-Package {
     $Packages =
     'conemu',
     'docker-desktop',
@@ -59,7 +59,7 @@ function Initialize-VSCode {
     New-Item -Force -ItemType SymbolicLink -Path $VsCodeConfigDestinationPath -Value $VsCodeConfigSourcePath
 }
 
-function Install-VSCode-Extensions {
+function Install-VSCode-Extension {
     Get-Content "..\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
         & "code" --force --install-extension $_
     }
@@ -101,7 +101,7 @@ function Install-WSL {
 
 Install-Chocolatey
 & "choco" upgrade -y all
-Install-Packages
+Install-Package
 Initialize-VSCode
-Install-VSCode-Extensions
+Install-VSCode-Extension
 Install-WSL
