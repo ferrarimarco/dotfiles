@@ -24,7 +24,7 @@ function Install-Chocolatey {
     }
 }
 
-function Install-Package {
+function Install-Chocolatey-Package {
     $Packages =
     'conemu',
     'docker-desktop',
@@ -101,7 +101,7 @@ function Install-WSL {
 
 Install-Chocolatey
 & "choco" upgrade -y all
-Install-Package
+Install-Chocolatey-Package
 Initialize-VSCode
 Install-VSCode-Extension
 Install-WSL
