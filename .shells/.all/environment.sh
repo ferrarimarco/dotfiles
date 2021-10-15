@@ -156,3 +156,9 @@ export GO111MODULE
 GOPATH="${HOME}/.go"
 export GOPATH
 export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
+
+###############################################################################
+# Others                                                                      #
+###############################################################################
+GCLOUD_CONFIG_DIRECTORY="${HOME}"/.config/gcloud
+export GCLOUD_CONFIG_DIRECTORY

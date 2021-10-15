@@ -169,6 +169,8 @@ setup_user() {
   mkdir -p "$HOME/Pictures/Screenshots"
   mkdir -p "$HOME/Pictures/Wallpapers"
   mkdir -p "$HOME/workspaces"
+
+  mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
 }
 
 setup_debian() {

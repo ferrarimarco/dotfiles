@@ -51,18 +51,21 @@ ansible() {
 }
 
 gcloud() {
+  CONTAINER_NAME="gcloud"
+  del_stopped "${CONTAINER_NAME}"
   docker run ${DOCKER_TTY_OPTION} \
+    -e CLOUDSDK_CONFIG=/config/gcloud \
     -i \
-    --name gcloud-config \
-    -u "$(id -u)":"$(id -g)" \
+    --name "${CONTAINER_NAME}" \
+    -v "${GCLOUD_CONFIG_DIRECTORY}":/config/gcloud \
     -v /etc/localtime:/etc/localtime:ro \
     gcr.io/google.com/cloudsdktool/cloud-sdk \
-    gcloud
+    gcloud "$@"
+  unset GCLOUD_CONFIG_DIRECTORY
 }
 
 jq() {
   del_stopped jq
-  # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} \
     -i \
     --name jq \
@@ -72,7 +75,6 @@ jq() {
 
 inspec() {
   del_stopped inspec
-  # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
@@ -86,7 +88,6 @@ inspec() {
 super_linter() {
   CONTAINER_NAME="super_linter"
   del_stopped "${CONTAINER_NAME}"
-  # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} \
     -i \
     --name "${CONTAINER_NAME}" \
@@ -105,13 +106,14 @@ super_linter() {
 
 terraform() {
   del_stopped terraform
-  # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} \
     -i \
     --name terraform \
     --rm \
+    -v "${GCLOUD_CONFIG_DIRECTORY}":/root/.config/gcloud \
     -v "$(pwd)":/workspace \
     -v /etc/localtime:/etc/localtime:ro \
+    --volumes-from gcloud-config \
     -w "/workspace" \
     hashicorp/terraform "$@"
 }
