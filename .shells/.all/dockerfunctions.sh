@@ -50,6 +50,16 @@ ansible() {
     ansible/ansible "$@"
 }
 
+gcloud() {
+  docker run ${DOCKER_TTY_OPTION} \
+    -i \
+    --name gcloud-config \
+    -u "$(id -u)":"$(id -g)" \
+    -v /etc/localtime:/etc/localtime:ro \
+    gcr.io/google.com/cloudsdktool/cloud-sdk \
+    gcloud
+}
+
 jq() {
   del_stopped jq
   # shellcheck disable=SC2086
