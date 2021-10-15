@@ -41,44 +41,19 @@ relies_on() {
 ansible() {
   del_stopped ansible
   # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
+  docker run ${DOCKER_TTY_OPTION} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/etc/ansible \
-    -v "${HOME}"/.ssh:/root/.ssh:ro \
     --name ansible \
     --rm \
     ansible/ansible "$@"
 }
 
-changelog_generator() {
-  del_stopped changelog-generator
-  # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
-    -i \
-    -v /etc/localtime:/etc/localtime:ro \
-    -v "$(pwd)":/usr/local/src/your-app \
-    --name changelog-generator \
-    --rm \
-    githubchangeloggenerator/github-changelog-generator "$@"
-}
-
-docker_clean() {
-  del_stopped docker-clean
-  # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
-    -i \
-    -v /etc/localtime:/etc/localtime:ro \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    --name docker-clean \
-    --rm \
-    zzrot/docker-clean "$@"
-}
-
 jq() {
   del_stopped jq
   # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
+  docker run ${DOCKER_TTY_OPTION} \
     -i \
     --name jq \
     --rm \
@@ -88,7 +63,7 @@ jq() {
 inspec() {
   del_stopped inspec
   # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
+  docker run ${DOCKER_TTY_OPTION} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/share \
@@ -98,26 +73,11 @@ inspec() {
     chef/inspec "$@"
 }
 
-maven() {
-  del_stopped maven
-  # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
-    -i \
-    -v /etc/localtime:/etc/localtime:ro \
-    -v "${HOME}/.m2:/var/maven/.m2" \
-    --name maven \
-    --rm \
-    -u "$(id -u)":"$(id -g)" \
-    -e MAVEN_CONFIG=/var/maven/.m2 \
-    maven \
-    mvn -Duser.home=/var/maven "$@"
-}
-
 super_linter() {
   CONTAINER_NAME="super_linter"
   del_stopped "${CONTAINER_NAME}"
   # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
+  docker run ${DOCKER_TTY_OPTION} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
@@ -136,11 +96,10 @@ super_linter() {
 terraform() {
   del_stopped terraform
   # shellcheck disable=SC2086
-  docker run $DOCKER_TTY_OPTION \
+  docker run ${DOCKER_TTY_OPTION} \
     -i \
     --name terraform \
     --rm \
-    -u "$(id -u)":"$(id -g)" \
     -v "$(pwd)":/workspace \
     -v /etc/localtime:/etc/localtime:ro \
     -w "/workspace" \
