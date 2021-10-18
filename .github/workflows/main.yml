@@ -6,7 +6,7 @@ jobs:
   lint:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - name: Super-Linter
         uses: github/super-linter@v4.8.1
         env:
@@ -20,7 +20,7 @@ jobs:
       - lint
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - name: Setup dotfiles (Ubuntu)
         run: |
           ./bin/setup-dotfiles.sh debian
@@ -32,7 +32,7 @@ jobs:
       - lint
     runs-on: macos-11
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - name: Setup dotfiles (macOS)
         run: |
           ./bin/setup-dotfiles.sh macos
@@ -44,7 +44,7 @@ jobs:
       - lint
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
       - name: Setup dotfiles (Windows)
         run: |
           powershell -executionpolicy bypass ".\bin\install-windows.ps1"
