@@ -343,14 +343,6 @@ setup_debian() {
     echo "WARNING: Skipping Docker installation because its APT repository is not available"
   fi
 
-  if is_apt_repo_available "${terraform_apt_repository_url}"; then
-    echo "Installing Terraform..."
-    sudo apt-get -qqy install \
-      terraform
-  else
-    echo "WARNING: Skipping Terraform installation because its APT repository is not available"
-  fi
-
   sudo apt-get -qqy autoremove
   sudo apt-get -qqy autoclean
   sudo apt-get -qqy clean
