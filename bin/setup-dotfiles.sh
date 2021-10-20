@@ -315,6 +315,7 @@ setup_debian() {
     rxvt-unicode \
     scdaemon \
     socat \
+    snapd \
     ssh \
     strace \
     systemd \
@@ -331,6 +332,9 @@ setup_debian() {
     zsh \
     zsh-syntax-highlighting \
     --no-install-recommends
+
+  echo "Upgrading snapd..."
+  sudo snap install core
 
   echo "Installing packages from the additional APT repositories..."
   if is_apt_repo_available "${docker_apt_repository_url}"; then
