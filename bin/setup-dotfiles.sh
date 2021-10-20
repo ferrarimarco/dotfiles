@@ -333,6 +333,9 @@ setup_debian() {
     zsh-syntax-highlighting \
     --no-install-recommends
 
+  echo "Ensure snapd is running..."
+  sudo systemctl start snapd.service
+
   echo "Upgrading snapd..."
   sudo snap install core
 
