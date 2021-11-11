@@ -15,7 +15,7 @@
   "explorer.confirmDragAndDrop": false,
   "files.associations": {
     "Vagrantfile": "ruby",
-    "hosts": "yaml"
+    "*.yaml.jinja": "yaml"
   },
   "files.eol": "\n",
   "files.insertFinalNewline": true,
