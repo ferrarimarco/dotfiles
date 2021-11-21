@@ -260,7 +260,6 @@ setup_debian() {
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
   fi
 
-  clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "https://github.com/zsh-users/zsh-autosuggestions.git"
   clone_git_repository_if_not_cloned_already "$(dirname "$ZSH_COMPLETIONS_PATH")" "https://github.com/zsh-users/zsh-completions.git"
 
   sudo apt-get -qq update || true
@@ -322,6 +321,7 @@ setup_debian() {
     zip \
     zlib1g-dev \
     zsh \
+    zsh-autosuggestions \
     zsh-syntax-highlighting \
     --no-install-recommends
 
