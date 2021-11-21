@@ -22,7 +22,7 @@ source_file_if_available() {
 }
 
 is_command_available() {
-  if command -v "${1}" >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
+  if command -v "${1}" >/dev/null 2>&1; then
     return 0
   else
     return 1
@@ -30,7 +30,11 @@ is_command_available() {
 }
 
 is_docker_available() {
-  return is_command_available "docker"
+  if is_command_available "docker" && [ -e /var/run/docker.sock ]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 if is_docker_available; then
@@ -38,7 +42,11 @@ if is_docker_available; then
 fi
 
 is_snap_available() {
-  return is_command_available "snap"
+  if is_command_available "snap"; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 # Create a new directory and enter it
