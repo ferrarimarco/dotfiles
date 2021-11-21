@@ -166,8 +166,6 @@ install_brew_formulae() {
 setup_user() {
   echo "Creating directories for the $TARGET_USER in $HOME"
   mkdir -p "$HOME/Downloads"
-  mkdir -p "$HOME/Pictures/Screenshots"
-  mkdir -p "$HOME/Pictures/Wallpapers"
   mkdir -p "$HOME/workspaces"
 
   mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
@@ -314,7 +312,7 @@ setup_debian() {
     tree \
     tzdata \
     unzip \
-    vagrant \
+    vlc \
     xclip \
     xcompmgr \
     xz-utils \
@@ -326,6 +324,7 @@ setup_debian() {
     --no-install-recommends
 
   echo "Ensure snapd is running..."
+  sudo systemctl enable snapd.service
   sudo systemctl start snapd.service
 
   echo "Upgrading snapd..."

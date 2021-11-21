@@ -27,11 +27,8 @@ function Install-Chocolatey {
 function Install-Chocolatey-Package {
     $Packages =
     'conemu',
-    'docker-desktop',
     'keepass',
     'qbittorrent',
-    'vagrant',
-    'virtualbox --params "/NoDesktopShortcut /ExtensionPack"',
     'vlc',
     'vscode'
 
