@@ -276,6 +276,7 @@ setup_debian() {
     dnsutils \
     file \
     findutils \
+    fuse \
     fwupd \
     fwupdate \
     gcc \
@@ -291,6 +292,7 @@ setup_debian() {
     libgdbm-dev \
     libgdbm-compat-dev \
     libpam-systemd \
+    libsquashfuse0 \
     libssl-dev \
     locales \
     lsof \
@@ -305,6 +307,7 @@ setup_debian() {
     scdaemon \
     socat \
     snapd \
+    squashfuse \
     ssh \
     strace \
     systemd \
@@ -326,9 +329,6 @@ setup_debian() {
   echo "Ensure snapd is running..."
   sudo systemctl enable snapd.service
   sudo systemctl start snapd.service
-
-  echo "Upgrading snapd..."
-  sudo snap install core
 
   echo "Installing packages from the additional APT repositories..."
   if is_apt_repo_available "${docker_apt_repository_url}"; then

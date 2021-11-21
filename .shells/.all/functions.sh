@@ -21,17 +21,25 @@ source_file_if_available() {
   return 0
 }
 
-is_docker_available() {
-  if command -v docker >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
+is_command_available() {
+  if command -v "${1}" >/dev/null 2>&1 && [ -e /var/run/docker.sock ]; then
     return 0
   else
     return 1
   fi
 }
 
+is_docker_available() {
+  return is_command_available "docker"
+}
+
 if is_docker_available; then
   source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
 fi
+
+is_snap_available() {
+  return is_command_available "snap"
+}
 
 # Create a new directory and enter it
 mkd() {
@@ -223,6 +231,10 @@ update_system() {
     sudo apt-get -qy upgrade
     pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
     pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
+
+    if is_snap_available; then
+      sudo snap refresh
+    fi
   fi
 }
 
