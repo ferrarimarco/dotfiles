@@ -145,6 +145,14 @@ is_debian() {
   fi
 }
 
+is_crostini() {
+  if [ -d "/opt/google/cros-containers" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 is_ubuntu() {
   DISTRIBUTION="$(lsb_release -ds)"
 

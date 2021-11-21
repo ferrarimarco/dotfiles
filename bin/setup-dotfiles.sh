@@ -200,7 +200,7 @@ setup_debian() {
 
   # Add the Google Chrome distribution URI as a package source if needed
   # Don't install it if we're in crostini (Chrome OS linux environment) or if it's already installed
-  if ! [ -d "/opt/google/cros-containers" ] && ! dpkg -s google-chrome-stable >/dev/null 2>&1; then
+  if ! is_crostini && ! dpkg -s google-chrome-stable >/dev/null 2>&1; then
     echo "Installing Chrome browser..."
 
     echo "Downloading Chrome package..."
