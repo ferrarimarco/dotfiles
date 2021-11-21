@@ -236,7 +236,6 @@ setup_debian() {
   echo "Configuring the distribution: ${DISTRIBUTION}, codename: ${DISTRIBUTION_CODENAME}..."
 
   docker_apt_repository_url=
-  terraform_apt_repository_url=
 
   docker_distribution=
 
@@ -256,13 +255,6 @@ setup_debian() {
       echo "Adding Docker APT repository"
       curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
       sudo add-apt-repository "deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
-    fi
-
-    terraform_apt_repository_url="https://apt.releases.hashicorp.com"
-    if ! is_apt_repo_available "${terraform_apt_repository_url}"; then
-      echo "Adding Hashicorp APT repository"
-      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-      sudo apt-add-repository "deb [arch=amd64] ${terraform_apt_repository_url} ${DISTRIBUTION_CODENAME} main"
     fi
   else
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
