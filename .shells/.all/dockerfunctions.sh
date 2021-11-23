@@ -97,6 +97,7 @@ super_linter() {
     -e DEFAULT_WORKSPACE=/workspace \
     -e DISABLE_ERRORS=false \
     -e ERROR_ON_MISSING_EXEC_BIT=true \
+    -e KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
     -e LINTER_RULES_PATH=. \
     -e MULTI_STATUS=false \
     -e RUN_LOCAL=true \
