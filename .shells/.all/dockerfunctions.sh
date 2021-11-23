@@ -22,6 +22,13 @@ del_stopped() {
   unset name
 }
 
+prune_container_runtime_environment() {
+  docker system prune \
+    --all \
+    --force \
+    --volumes
+}
+
 relies_on() {
   for container in "$@"; do
     state="$(docker inspect --format "{{.State.Running}}" "$container" 2>/dev/null || echo "")"
