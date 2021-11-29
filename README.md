@@ -17,11 +17,9 @@ To install these dotfiles:
         1. `bin/install-windows.ps1` from a Powershell shell on Windows.
         1. Start the Windows Subsystem for Linux, and run
             `bin/setup-dotfiles.sh`
-1. Run `make` (all the dotfiles and binaries will be symlinked to their
-    destinations so you can update them just by `git pull`ing the latest changes)
 
-Run `make help` for a list of the available run targets, including the ones
-useful for development.
+All the dotfiles and binaries will be symlinked to their destinations so you can
+update them just by pulling the latest changes.
 
 ## Contents
 

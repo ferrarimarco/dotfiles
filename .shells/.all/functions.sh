@@ -283,3 +283,41 @@ man() {
     LESS_TERMCAP_us="$(printf '\e[1;32m')" \
     man "$@"
 }
+
+clean_dotfiles() {
+  echo "Uninstalling dotfiles..."
+  # for file in $(shell find $(HOME) -type l -ilname "*dotfiles*"); do \
+  #   rm $$file; \
+  # done;
+
+  if is_wsl; then
+    sudo rm -fv /etc/wsl.conf
+  fi
+}
+
+setup_dotfiles() {
+  echo "Setting up dotfiles..."
+
+  # @echo Installing binaries
+  # mkdir -p $(HOME)/bin;
+
+  # # add aliases for things in bin
+  # for file in $(shell find $(CURDIR)/bin -type f -not -name ".*.swp"); do \
+  # f=$$(basename $$file); \
+  # ln -sf $$file $(HOME)/bin/$$f; \
+  # done;
+
+  echo "Adding aliases for dotfiles..."
+  for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp"); do
+    f=$(echo $$file | sed "s|^\$(CURDIR)/||")
+    file_path=$(HOME)/$f
+    mkdir -p $(dirname $file_path)
+    ln -sfn $file $file_path
+  done
+
+  ln -sfn ${CURDIR}/gitignore ${HOME}/.gitignore;
+
+  if is_wsl; then
+    sudo cp -fv $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf
+  fi
+}
