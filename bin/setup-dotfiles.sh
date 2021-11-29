@@ -661,17 +661,6 @@ main() {
   DOCKERFUNCTIONS_PATH="${REPOSITORY_PATH}"/.shells/.all/dockerfunctions.sh
   export DOCKERFUNCTIONS_PATH
 
-  if is_command_available "uname"; then
-    echo "Kernel name: $(uname -s)"
-  else
-    echo "uname command not available"
-  fi
-  if is_command_available "lsb_relase"; then
-    echo "Distribution description $(lsb_relase -ds)"
-  else
-    echo "lsb_relase command not available"
-  fi
-
   echo "Sourcing ${FUNCTIONS_FILE_ABSOLUTE_PATH}..."
   if [ -f "${FUNCTIONS_FILE_ABSOLUTE_PATH}" ]; then
     # shellcheck source=/dev/null
@@ -685,6 +674,17 @@ main() {
   ENVIRONMENT_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.all/environment.sh"
   echo "Sourcing environment variables configuration file from ${ENVIRONMENT_FILE_ABSOLUTE_PATH}..."
   source_file_if_available "${ENVIRONMENT_FILE_ABSOLUTE_PATH}" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
+
+  if is_command_available "uname"; then
+    echo "Kernel name: $(uname -s)"
+  else
+    echo "uname command not available"
+  fi
+  if is_command_available "lsb_relase"; then
+    echo "Distribution description $(lsb_relase -ds)"
+  else
+    echo "lsb_relase command not available"
+  fi
 
   if is_debian; then
     setup_debian
