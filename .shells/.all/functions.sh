@@ -140,21 +140,29 @@ is_apt_repo_available() {
 }
 
 is_linux() {
-  os_name="$(uname -s)"
-  if test "${os_name#*"Linux"}" != "$os_name"; then
-    unset os_name
+  # Set a default so that we don't have to rely on any environment variable being set
+  OS_RELEASE_INFORMATION_FILE_PATH="/etc/os-release"
+  if [ -e "${OS_RELEASE_INFORMATION_FILE_PATH}" ]; then
+    # shellcheck source=/dev/null
+    . "${OS_RELEASE_INFORMATION_FILE_PATH}"
     return 0
+  elif is_command_available "uname"; then
+    os_name="$(uname -s)"
+    if [ "${os_name#*"Linux"}" != "$os_name" ]; then
+      unset os_name
+      return 0
+    else
+      unset os_name
+      return 1
+    fi
   else
-    unset os_name
-    return 1
+    echo "Unable to determine if the OS is Linux."
+    return 2
   fi
 }
 
 is_debian() {
-  DISTRIBUTION="$(lsb_release -ds)"
-  DISTRIBUTION_CODENAME="$(lsb_release -cs)"
-
-  if is_linux && { is_ubuntu || [ "${DISTRIBUTION#*"Debian"}" != "$DISTRIBUTION" ] && { [ "${DISTRIBUTION_CODENAME}" = "buster" ] || [ "${DISTRIBUTION_CODENAME}" = "bullseye" ] || [ "${DISTRIBUTION_CODENAME}" = "stretch" ]; }; }; then
+  if is_linux && { [ "${ID}" = "debian" ] || [ "${ID_LIKE}" = "debian" ] ; }; then
     return 0
   else
     return 1
@@ -170,9 +178,7 @@ is_crostini() {
 }
 
 is_ubuntu() {
-  DISTRIBUTION="$(lsb_release -ds)"
-
-  if is_linux && [ "${DISTRIBUTION#*"Ubuntu"}" != "$DISTRIBUTION" ]; then
+  if is_debian && [ "${ID}" = "ubuntu" ]; then
     return 0
   else
     return 1
@@ -233,7 +239,7 @@ update_system() {
     if command -v brew >/dev/null 2>&1; then
       update_brew
     fi
-  elif is_linux; then
+  elif is_debian; then
     echo "Updating linux..."
     sudo apt-get -q update
     sudo apt-get -qy upgrade
@@ -259,7 +265,7 @@ tmpd() {
 }
 
 # Use Git’s colored diff when available
-if command -v git >/dev/null 2>&1; then
+if is_command_available "git"; then
   diff() {
     git diff --no-index --color-words "$@"
   }
