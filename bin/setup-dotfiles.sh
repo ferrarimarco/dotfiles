@@ -250,9 +250,10 @@ setup_debian() {
 
     docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
     if ! is_apt_repo_available "${docker_apt_repository_url}"; then
-      echo "Adding Docker APT repository"
+      docker_apt_repository_string="deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
+      echo "Adding Docker APT repository (${docker_apt_repository_string})"
       curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-      sudo add-apt-repository "deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
+      sudo add-apt-repository "${docker_apt_repository_string}"
     fi
   else
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
