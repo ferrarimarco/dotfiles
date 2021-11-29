@@ -26,7 +26,7 @@ clean: ## Uninstalls dotfiles and binaries
 dotfiles: ## Installs dotfiles
 	@echo Installing dotfiles
 	# add aliases for dotfiles
-	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -name ".travis.yml" -not -path "*/\.git/*" -not -name ".*.swp"); do \
+	for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp"); do \
 		f=$$(echo $$file | sed "s|^\$(CURDIR)/||"); \
 		file_path=$(HOME)/$$f; \
 		mkdir -p $$(dirname $$file_path); \
