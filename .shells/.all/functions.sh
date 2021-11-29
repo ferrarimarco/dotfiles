@@ -162,7 +162,7 @@ is_linux() {
 }
 
 is_debian() {
-  if is_linux && { [ "${ID}" = "debian" ] || [ "${ID_LIKE}" = "debian" ] ; }; then
+  if is_linux && { [ "${ID}" = "debian" ] || [ "${ID_LIKE}" = "debian" ]; }; then
     return 0
   else
     return 1
