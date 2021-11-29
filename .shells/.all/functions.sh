@@ -172,7 +172,7 @@ is_crostini() {
 is_ubuntu() {
   DISTRIBUTION="$(lsb_release -ds)"
 
-  if [ "${DISTRIBUTION#*"Ubuntu"}" != "$DISTRIBUTION" ]; then
+  if is_linux && [ "${DISTRIBUTION#*"Ubuntu"}" != "$DISTRIBUTION" ]; then
     return 0
   else
     return 1

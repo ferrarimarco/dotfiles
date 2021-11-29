@@ -661,6 +661,17 @@ main() {
   DOCKERFUNCTIONS_PATH="${REPOSITORY_PATH}"/.shells/.all/dockerfunctions.sh
   export DOCKERFUNCTIONS_PATH
 
+  if is_command_available "uname"; then
+    echo "Kernel name: $(uname -s)"
+  else
+    echo "uname command not available"
+  fi
+  if is_command_available "lsb_relase"; then
+    echo "Distribution description $(lsb_relase -ds)"
+  else
+    echo "lsb_relase command not available"
+  fi
+
   echo "Sourcing ${FUNCTIONS_FILE_ABSOLUTE_PATH}..."
   if [ -f "${FUNCTIONS_FILE_ABSOLUTE_PATH}" ]; then
     # shellcheck source=/dev/null
