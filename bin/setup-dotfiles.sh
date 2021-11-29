@@ -649,8 +649,6 @@ usage() {
 }
 
 main() {
-  local cmd="${1-}"
-
   if [[ -z "$cmd" ]]; then
     usage
     exit 1
@@ -677,12 +675,12 @@ main() {
   DOCKERFUNCTIONS_PATH="${REPOSITORY_PATH}"/.shells/.all/dockerfunctions.sh
   export DOCKERFUNCTIONS_PATH
 
-  echo "Sourcing $FUNCTIONS_FILE_ABSOLUTE_PATH..."
+  echo "Sourcing ${FUNCTIONS_FILE_ABSOLUTE_PATH}..."
   if [ -f "${FUNCTIONS_FILE_ABSOLUTE_PATH}" ]; then
     # shellcheck source=/dev/null
     . "${FUNCTIONS_FILE_ABSOLUTE_PATH}"
   else
-    echo "ERROR: Cannot find the $FUNCTIONS_FILE_ABSOLUTE_PATH file. Exiting..."
+    echo "ERROR: Cannot find the ${FUNCTIONS_FILE_ABSOLUTE_PATH} file. Exiting..."
     exit 1
   fi
   # From now on, the source_file_if_available function is available
@@ -691,7 +689,7 @@ main() {
   echo "Sourcing environment variables configuration file from ${ENVIRONMENT_FILE_ABSOLUTE_PATH}..."
   source_file_if_available "${ENVIRONMENT_FILE_ABSOLUTE_PATH}" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
-  if [[ $cmd == "debian" ]]; then
+  if is_debian; then
     setup_debian
 
     echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
@@ -701,7 +699,7 @@ main() {
     setup_user
     update_system
     fix_permissions
-  elif [[ $cmd == "macos" ]]; then
+  elif is_macos; then
     setup_macos
     install_brew
 
@@ -717,8 +715,9 @@ main() {
     setup_user
     update_system
   else
-    usage
+    echo "[ERROR]: The current OS or distribution is not supported. Terminating..."
+    exit 1
   fi
 }
 
-main "$@"
+main
