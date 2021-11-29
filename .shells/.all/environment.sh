@@ -52,8 +52,8 @@ export PYTHONIOENCODING='UTF-8'
 ###############################################################################
 
 # update path
-export PATH=/usr/local/bin:${PATH}:/sbin
-export PATH=$HOME/bin:$PATH
+export PATH="/usr/local/bin:${PATH}:/sbin"
+export PATH="${HOME}/bin:${PATH}"
 
 # ZSH related stuff that we might need during setup
 export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
