@@ -22,13 +22,6 @@ ask_for_sudo() {
   fi
 }
 
-fix_permissions() {
-  echo "Setting home directory ($HOME) permissions..."
-  # Cannot use chmod recursive mode because system integrity protection prevents
-  # changing some attributes of $HOME/Library directories on macOS
-  find "$HOME" -type d -path "$HOME"/Library -prune -o -exec chmod o-rwx {} \;
-}
-
 # Choose a user account to use for this installation
 get_user() {
   echo "Setting TARGET_USER. The order of preference is: USER (${USER-}), USERNAME (${USERNAME-}), LOGNAME (${LOGNAME-}), whoami ($(whoami))"
@@ -169,6 +162,13 @@ setup_user() {
   mkdir -p "$HOME/workspaces"
 
   mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
+
+  if is_macos; then
+    echo "Setting home directory ($HOME) permissions..."
+    # Cannot use chmod recursive mode because system integrity protection prevents
+    # changing some attributes of $HOME/Library directories on macOS
+    find "$HOME" -type d -path "$HOME"/Library -prune -o -exec chmod o-rwx {} \;
+  fi
 }
 
 setup_debian() {
@@ -239,20 +239,21 @@ setup_debian() {
 
   if is_debian || is_ubuntu; then
     sudo add-apt-repository main
-    if is_debian; then
-      docker_distribution="debian"
-    elif is_ubuntu; then
+    if is_ubuntu; then
       sudo add-apt-repository universe
       sudo add-apt-repository multiverse
       sudo add-apt-repository restricted
       docker_distribution="ubuntu"
+    elif is_debian; then
+      docker_distribution="debian"
     fi
 
     docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
     if ! is_apt_repo_available "${docker_apt_repository_url}"; then
-      echo "Adding Docker APT repository"
+      docker_apt_repository_string="deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
+      echo "Adding Docker APT repository (${docker_apt_repository_string})"
       curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-      sudo add-apt-repository "deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
+      sudo add-apt-repository "${docker_apt_repository_string}"
     fi
   else
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
@@ -639,23 +640,7 @@ set_repository_path() {
   unset CURRENT_WORKING_DIRECTORY
 }
 
-SCRIPT_BASENAME="$(basename "${0}")"
-
-usage() {
-  echo -e "${SCRIPT_BASENAME}\\n\\tThis script installs my basic setup for a workstation\\n"
-  echo "Usage:"
-  echo "  debian                              - install base packages on a Debian system"
-  echo "  macos                               - setup macOS"
-}
-
 main() {
-  local cmd="${1-}"
-
-  if [[ -z "$cmd" ]]; then
-    usage
-    exit 1
-  fi
-
   get_user
   ask_for_sudo
 
@@ -677,12 +662,12 @@ main() {
   DOCKERFUNCTIONS_PATH="${REPOSITORY_PATH}"/.shells/.all/dockerfunctions.sh
   export DOCKERFUNCTIONS_PATH
 
-  echo "Sourcing $FUNCTIONS_FILE_ABSOLUTE_PATH..."
+  echo "Sourcing ${FUNCTIONS_FILE_ABSOLUTE_PATH}..."
   if [ -f "${FUNCTIONS_FILE_ABSOLUTE_PATH}" ]; then
     # shellcheck source=/dev/null
     . "${FUNCTIONS_FILE_ABSOLUTE_PATH}"
   else
-    echo "ERROR: Cannot find the $FUNCTIONS_FILE_ABSOLUTE_PATH file. Exiting..."
+    echo "ERROR: Cannot find the ${FUNCTIONS_FILE_ABSOLUTE_PATH} file. Exiting..."
     exit 1
   fi
   # From now on, the source_file_if_available function is available
@@ -691,34 +676,31 @@ main() {
   echo "Sourcing environment variables configuration file from ${ENVIRONMENT_FILE_ABSOLUTE_PATH}..."
   source_file_if_available "${ENVIRONMENT_FILE_ABSOLUTE_PATH}" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
-  if [[ $cmd == "debian" ]]; then
-    setup_debian
+  if is_linux || is_macos; then
+    if is_debian; then
+      setup_debian
+    elif is_macos; then
+      setup_macos
+      install_brew
+    fi
 
-    echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
+    echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values."
     source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
 
-    setup_shell
-    setup_user
-    update_system
-    fix_permissions
-  elif [[ $cmd == "macos" ]]; then
-    setup_macos
-    install_brew
+    if is_macos; then
+      install_brew_formulae
 
-    echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
-    source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
-
-    install_brew_formulae
-
-    echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values, after we installed packages, such as new shells."
-    source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
+      echo "Refresh the environment variables from $ENVIRONMENT_FILE_ABSOLUTE_PATH because there could be stale values."
+      source_file_if_available "$ENVIRONMENT_FILE_ABSOLUTE_PATH" "ENVIRONMENT_FILE_ABSOLUTE_PATH"
+    fi
 
     setup_shell
     setup_user
     update_system
   else
-    usage
+    echo "The current OS or distribution is not supported. Terminating..."
+    exit 1
   fi
 }
 
-main "$@"
+main
