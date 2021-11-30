@@ -304,7 +304,8 @@ install_dotfiles() {
 
   find "${SOURCE_PATH}" -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp" >tmp
   while IFS= read -r file; do
-    file_base_path=$(echo "${file}" | sed "s|^\${SOURCE_PATH}/||")
+    # Strip the ${SOURCE_PATH} prefix from the file path
+    file_base_path="${file##"${SOURCE_PATH}"}"
     file_path="${HOME}/${file_base_path}"
     echo "File to link: ${file}. File base path: ${file_base_path}. File target path: ${file_path}"
     mkdir -pv "$(dirname "$file_path")"

@@ -37,4 +37,4 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - name: Setup dotfiles (Windows)
         run: |
-          powershell -executionpolicy bypass ".\install-windows.ps1"
+          powershell -executionpolicy bypass ".\setup-windows.ps1"
