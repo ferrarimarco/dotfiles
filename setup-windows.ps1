@@ -1,5 +1,15 @@
 #Requires -RunAsAdministrator
 
+$ErrorActionPreference = "Stop"
+$PSDefaultParameterValues['*:ErrorAction']='Stop'
+
+function Check-Return-Code {
+    if (-not $?)
+    {
+        throw 'Native Failure'
+    }
+}
+
 function Install-Chocolatey {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "", Justification = "Trusting Chocolatey installer")]
     param()
@@ -21,6 +31,7 @@ function Install-Chocolatey {
     else {
         Write-Output "Chocolatey is already installed. Upgrading..."
         choco upgrade -y chocolatey
+        Check-Return-Code
     }
 }
 
@@ -36,6 +47,7 @@ function Install-Chocolatey-Package {
         if (-not (& "choco" list $Package --local-only)) {
             Write-Output "Installing $Package chocolatey package..."
             choco install -y $Package
+            Check-Return-Code
         }
         else {
             Write-Output "$Package chocolatey package is already installed"
@@ -45,20 +57,22 @@ function Install-Chocolatey-Package {
     # Refresh the environment variables because we might have installed new
     # binaries with chocolatey.
     refreshenv
+    Check-Return-Code
 }
 
 function Initialize-VSCode {
     Write-Output "Initializing Visual Studio Code"
 
-    $VsCodeConfigSourcePath = "..\.config\Code\User\settings.json"
+    $VsCodeConfigSourcePath = ".\.config\Code\User\settings.json"
     $VsCodeConfigDestinationPath = "$Env:APPDATA\Code\User\settings.json"
     Write-Output "Creating a symbolic link to the VS Code configuration files. Source: $VsCodeConfigSourcePath, destination: $VsCodeConfigDestinationPath..."
     New-Item -Force -ItemType SymbolicLink -Path $VsCodeConfigDestinationPath -Value $VsCodeConfigSourcePath
 }
 
 function Install-VSCode-Extension {
-    Get-Content "..\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
+    Get-Content ".\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
         & "code" --force --install-extension $_
+        Check-Return-Code
     }
 }
 
@@ -83,6 +97,7 @@ function Install-WSL {
 
     Write-Output "Setting WSL 2 as the default version..."
     wsl --set-default-version 2
+    Check-Return-Code
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
     if (!$WslPackage) {
@@ -98,6 +113,7 @@ function Install-WSL {
 
 Install-Chocolatey
 & "choco" upgrade -y all
+Check-Return-Code
 Install-Chocolatey-Package
 Initialize-VSCode
 Install-VSCode-Extension
