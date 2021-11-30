@@ -284,40 +284,44 @@ man() {
     man "$@"
 }
 
-clean_dotfiles() {
+uninstall_dotfiles() {
   echo "Uninstalling dotfiles..."
-  # for file in $(shell find $(HOME) -type l -ilname "*dotfiles*"); do \
-  #   rm $$file; \
-  # done;
+  find "${HOME}" -type l -ilname "*dotfiles*" -exec rm -fv {} \;
 
   if is_wsl; then
     sudo rm -fv /etc/wsl.conf
   fi
 }
 
-setup_dotfiles() {
+install_dotfiles() {
+  SOURCE_PATH="${1}"
+  if [ ! -d "${SOURCE_PATH}" ]; then
+    echo "${SOURCE_PATH} doesn't exists."
+    return 1
+  fi
+
   echo "Setting up dotfiles..."
 
-  # @echo Installing binaries
-  # mkdir -p $(HOME)/bin;
-
-  # # add aliases for things in bin
-  # for file in $(shell find $(CURDIR)/bin -type f -not -name ".*.swp"); do \
-  # f=$$(basename $$file); \
-  # ln -sf $$file $(HOME)/bin/$$f; \
-  # done;
+  echo "Adding aliases for binaries..."
+  find "${SOURCE_PATH}/bin" -type f -not -name ".*.swp" -exec ln -sf {} "${HOME}/bin/$(basename {})" \;
 
   echo "Adding aliases for dotfiles..."
-  for file in $(shell find $(CURDIR) -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp"); do
-    f=$(echo $$file | sed "s|^\$(CURDIR)/||")
-    file_path=$(HOME)/$f
-    mkdir -p $(dirname $file_path)
-    ln -sfn $file $file_path
-  done
+  find "${SOURCE_PATH}" -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp" > tmp
+  while IFS= read -r file
+  do
+    file_base_path=$(echo "${file}" | sed "s|^\${SOURCE_PATH}/||")
+    file_path="${HOME}/${file_base_path}"
+    mkdir -pv "$(dirname "$file_path")"
+    ln -sfnv "${file}" "${file_path}"
+  done < tmp
+  rm tmp
 
-  ln -sfn ${CURDIR}/gitignore ${HOME}/.gitignore;
+  ln -sfn "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
 
-  if is_wsl; then
-    sudo cp -fv $(HOME)/.config/wsl/wsl.conf /etc/wsl.conf
+  WSL_CONFIGURATION_FILE_PATH="/etc/wsl.conf"
+  if is_wsl && [ -e "${WSL_CONFIGURATION_FILE_PATH}" ]; then
+    sudo cp -fv "${HOME}/.config/wsl/wsl.conf" "${WSL_CONFIGURATION_FILE_PATH}"
   fi
+  unset WSL_CONFIGURATION_FILE_PATH
+  unset SOURCE_PATH
 }

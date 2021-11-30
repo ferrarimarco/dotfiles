@@ -23,10 +23,7 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - name: Setup dotfiles (Ubuntu)
         run: |
-          ./bin/setup-dotfiles.sh debian
-      - name: Symlink dotfiles
-        run: |
-          make
+          ./bin/setup-dotfiles.sh
   setup_macos:
     needs:
       - lint
@@ -35,10 +32,7 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - name: Setup dotfiles (macOS)
         run: |
-          ./bin/setup-dotfiles.sh macos
-      - name: Symlink dotfiles
-        run: |
-          make
+          ./bin/setup-dotfiles.sh
   setup_windows:
     needs:
       - lint

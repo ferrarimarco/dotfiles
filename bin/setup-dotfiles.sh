@@ -158,6 +158,7 @@ install_brew_formulae() {
 
 setup_user() {
   echo "Creating directories for the $TARGET_USER in $HOME"
+  mkdir -p "$HOME/bin"
   mkdir -p "$HOME/Downloads"
   mkdir -p "$HOME/workspaces"
 
@@ -697,6 +698,7 @@ main() {
     setup_shell
     setup_user
     update_system
+    install_dotfiles "${REPOSITORY_PATH}"
   else
     echo "The current OS or distribution is not supported. Terminating..."
     exit 1
