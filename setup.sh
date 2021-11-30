@@ -646,6 +646,7 @@ main() {
   ask_for_sudo
 
   echo "Current working directory: $(pwd)"
+  echo "Current home directory: ${HOME}"
 
   echo "Setting the REPOSITORY_PATH variable..."
   set_repository_path

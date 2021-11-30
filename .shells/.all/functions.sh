@@ -300,16 +300,13 @@ install_dotfiles() {
     return 1
   fi
 
-  echo "Setting up dotfiles..."
+  echo "Setting up dotfiles from source directory: ${SOURCE_PATH}..."
 
-  echo "Adding aliases for binaries..."
-  find "${SOURCE_PATH}/bin" -type f -not -name ".*.swp" -exec ln -sf {} "${HOME}/bin/$(basename {})" \;
-
-  echo "Adding aliases for dotfiles..."
   find "${SOURCE_PATH}" -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp" >tmp
   while IFS= read -r file; do
     file_base_path=$(echo "${file}" | sed "s|^\${SOURCE_PATH}/||")
     file_path="${HOME}/${file_base_path}"
+    echo "File to link: ${file}. File base path: ${file_base_path}. File target path: ${file_path}"
     mkdir -pv "$(dirname "$file_path")"
     ln -sfnv "${file}" "${file_path}"
   done <tmp

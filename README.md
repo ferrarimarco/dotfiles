@@ -12,11 +12,9 @@ To install these dotfiles:
 1. Setup the dotfiles:
     - If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
         Linux):
-        1. `bin/setup-dotfiles.sh`
+        1. `setup-dotfiles.sh`
     - If you're on Windows:
-        1. `bin/install-windows.ps1` from a Powershell shell on Windows.
-        1. Start the Windows Subsystem for Linux, and run
-            `bin/setup-dotfiles.sh`
+        1. `install-windows.ps1` from a Powershell shell on Windows.
 
 All the dotfiles and binaries will be symlinked to their destinations so you can
 update them just by pulling the latest changes.
