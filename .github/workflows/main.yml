@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2.4.0
-      - name: Setup dotfiles (${{ matrix.node }})
+      - name: Setup dotfiles (${{ matrix.os }})
         run: |
           ./setup.sh
     strategy:
