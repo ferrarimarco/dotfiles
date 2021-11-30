@@ -3,7 +3,7 @@
 $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['*:ErrorAction']='Stop'
 
-function Check-Return-Code {
+function Check-Ret-Code {
     if (-not $?)
     {
         throw 'Native Failure'
@@ -31,7 +31,7 @@ function Install-Chocolatey {
     else {
         Write-Output "Chocolatey is already installed. Upgrading..."
         choco upgrade -y chocolatey
-        Check-Return-Code
+        Check-Ret-Code
     }
 }
 
@@ -47,7 +47,7 @@ function Install-Chocolatey-Package {
         if (-not (& "choco" list $Package --local-only)) {
             Write-Output "Installing $Package chocolatey package..."
             choco install -y $Package
-            Check-Return-Code
+            Check-Ret-Code
         }
         else {
             Write-Output "$Package chocolatey package is already installed"
@@ -57,7 +57,7 @@ function Install-Chocolatey-Package {
     # Refresh the environment variables because we might have installed new
     # binaries with chocolatey.
     refreshenv
-    Check-Return-Code
+    Check-Ret-Code
 }
 
 function Initialize-VSCode {
@@ -72,7 +72,7 @@ function Initialize-VSCode {
 function Install-VSCode-Extension {
     Get-Content ".\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
         & "code" --force --install-extension $_
-        Check-Return-Code
+        Check-Ret-Code
     }
 }
 
@@ -97,7 +97,7 @@ function Install-WSL {
 
     Write-Output "Setting WSL 2 as the default version..."
     wsl --set-default-version 2
-    Check-Return-Code
+    Check-Ret-Code
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
     if (!$WslPackage) {
@@ -113,7 +113,7 @@ function Install-WSL {
 
 Install-Chocolatey
 & "choco" upgrade -y all
-Check-Return-Code
+Check-Ret-Code
 Install-Chocolatey-Package
 Initialize-VSCode
 Install-VSCode-Extension
