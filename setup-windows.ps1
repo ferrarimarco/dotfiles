@@ -106,6 +106,9 @@ function Install-WSL {
         exit
     }
 
+    $OsVersion = [Environment]::OSVersion
+    Write-Host ($OsVersion | Format-Table | Out-String)
+
     Write-Output "Setting WSL 2 as the default version..."
     & "wsl" --set-default-version 2
     Confirm-Return-Code
@@ -120,6 +123,9 @@ function Install-WSL {
     else {
         Write-Output "The WSL package is already installed."
     }
+
+    Write-Output "Installed distributions:"
+    & "wsl" --list --verbose
 }
 
 Install-Chocolatey
