@@ -10,6 +10,14 @@ function Confirm-Return-Code {
     }
 }
 
+function Debug-System {
+    echo $env:PATH
+
+    echo "Currently installed Chocolatey packages:"
+    & "choco" list --local-only
+
+}
+
 function Install-Chocolatey {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "", Justification = "Trusting Chocolatey installer")]
     param()
@@ -30,7 +38,7 @@ function Install-Chocolatey {
     }
     else {
         Write-Output "Chocolatey is already installed. Upgrading..."
-        choco upgrade chocolatey --yes --no-progress
+        & "choco" upgrade chocolatey --yes --no-progress
         Confirm-Return-Code
     }
 }
@@ -111,6 +119,7 @@ function Install-WSL {
     }
 }
 
+Debug-System
 Install-Chocolatey
 & "choco" upgrade all --yes --no-progress
 Confirm-Return-Code
