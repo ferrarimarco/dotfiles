@@ -107,7 +107,7 @@ function Install-WSL {
     }
 
     $OsVersion = [Environment]::OSVersion
-    Write-Host ($OsVersion | Format-Table | Out-String)
+    Write-Output ($OsVersion | Format-Table | Out-String)
 
     Write-Output "Setting WSL 2 as the default version..."
     & "wsl" --set-default-version 2
