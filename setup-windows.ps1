@@ -106,12 +106,9 @@ function Install-WSL {
         exit
     }
 
-    $OsVersion = [Environment]::OSVersion
-    Write-Output ($OsVersion | Format-Table | Out-String)
-
-    Write-Output "Setting WSL 2 as the default version..."
+    Write-Output "Setting WSL 2 as the default version (this may fail if WSL2 is not supported)..."
+    # Skipping the return code check because this command may fail if WSL2 is not available.
     & "wsl" --set-default-version 2
-    Confirm-Return-Code
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
     if (!$WslPackage) {
