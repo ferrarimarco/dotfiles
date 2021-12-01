@@ -4,9 +4,10 @@ $ErrorActionPreference = "Stop"
 $PSDefaultParameterValues['*:ErrorAction']='Stop'
 
 function Confirm-Return-Code {
-    if (-not $?)
+    $ReturnCode = $?
+    if (-not $ReturnCode)
     {
-        throw 'Native Failure'
+        throw "Native Failure. Got return code: $ReturnCode"
     }
 }
 
