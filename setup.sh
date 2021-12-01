@@ -95,7 +95,6 @@ install_brew_formulae() {
 
   echo "Installing brew formulae"
   for f in \
-    make \
     zsh-autosuggestions \
     zsh-completions \
     zsh-syntax-highlighting; do
