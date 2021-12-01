@@ -72,6 +72,7 @@ function Initialize-VSCode {
 function Install-VSCode-Extension {
     Get-Content ".\.config\ferrarimarco-dotfiles\vs-code\extensions.txt" | ForEach-Object {
         & "code" --force --install-extension $_
+        Confirm-Return-Code
     }
 }
 
