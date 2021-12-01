@@ -10,14 +10,6 @@ function Confirm-Return-Code {
     }
 }
 
-function Debug-System {
-    echo $env:PATH
-
-    echo "Currently installed Chocolatey packages:"
-    & "choco" list --local-only
-
-}
-
 function Install-Chocolatey {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingInvokeExpression", "", Justification = "Trusting Chocolatey installer")]
     param()
@@ -37,8 +29,9 @@ function Install-Chocolatey {
         # (rather than invoking refreshenv.cmd, the *batch file* for use with cmd.exe)
     }
     else {
-        Write-Output "Chocolatey is already installed. Upgrading..."
-        & "choco" upgrade chocolatey --yes --no-progress
+        Write-Output "Chocolatey is already installed."
+        Write-Output "Currently installed Chocolatey packages:"
+        & "choco" list --local-only
         Confirm-Return-Code
     }
 }
@@ -109,19 +102,26 @@ function Install-WSL {
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
     if (!$WslPackage) {
-        Write-Output "Installing Ubuntu (WSL)"
+        Write-Output "Installing Ubuntu (WSL)..."
         Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
         Add-AppxPackage .\Ubuntu.appx
         Remove-Item .\Ubuntu.appx
     }
     else {
-        Write-Output "WSL package is already installed"
+        Write-Output "The WSL package is already installed."
     }
 }
 
-Debug-System
+function Update-System {
+    & "choco" upgrade chocolatey --yes --no-progress
+    Confirm-Return-Code
+
+    & "choco" upgrade all --yes --no-progress
+    Confirm-Return-Code
+}
+
 Install-Chocolatey
-& "choco" upgrade all --yes --no-progress
+Update-System
 Confirm-Return-Code
 Install-Chocolatey-Package
 Initialize-VSCode
