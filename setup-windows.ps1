@@ -19,30 +19,33 @@ function Install-Chocolatey {
     if (!$Env:ChocolateyInstall) {
         Write-Output "Installing Chocolatey..."
         Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-
-        # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
-        # variable and importing the Chocolatey profile module.
-        $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
-        Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-
-        # refreshenv is now an alias for Update-SessionEnvironment
-        # (rather than invoking refreshenv.cmd, the *batch file* for use with cmd.exe)
     }
     else {
         Write-Output "Chocolatey is already installed."
-        Write-Output "Currently installed Chocolatey packages:"
-        & "choco" list --local-only
-        Confirm-Return-Code
-
-        & "choco" upgrade chocolatey --yes --no-progress
-        Confirm-Return-Code
-
-        & "choco" upgrade all --yes --no-progress
-        Confirm-Return-Code
     }
+
+    # Make `refreshenv` available right away, by defining the $env:ChocolateyInstall
+    # variable and importing the Chocolatey profile module.
+    $env:ChocolateyInstall = Convert-Path "$((Get-Command choco).Path)\..\.."
+    Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+
+    # refreshenv is now an alias for Update-SessionEnvironment
+    # (rather than invoking refreshenv.cmd, the *batch file* for use with cmd.exe)
+    Write-Output "Refreshing the environment because we might have installed chocolatey..."
+    refreshenv
 }
 
 function Install-Chocolatey-Package {
+    Write-Output "Currently installed Chocolatey packages:"
+    & "choco" list --local-only
+    Confirm-Return-Code
+
+    & "choco" upgrade chocolatey --yes --no-progress
+    Confirm-Return-Code
+
+    & "choco" upgrade all --yes --no-progress
+    Confirm-Return-Code
+
     $Packages =
     'conemu',
     'keepass',
@@ -57,9 +60,13 @@ function Install-Chocolatey-Package {
         Confirm-Return-Code
     }
 
-    # Refresh the environment variables because we might have installed new
-    # binaries with chocolatey.
+    Write-Output "Refreshing the environment because we might have installed new packages..."
     refreshenv
+
+    Write-Output "Current path: $env:PATH"
+
+    Write-Output "Currently installed Chocolatey packages:"
+    & "choco" list --local-only
     Confirm-Return-Code
 }
 
