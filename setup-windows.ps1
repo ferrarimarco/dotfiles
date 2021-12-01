@@ -51,14 +51,10 @@ function Install-Chocolatey-Package {
     'vscode'
 
     ForEach ($Package in $Packages) {
-        if (-not (& "choco" list $Package --local-only)) {
-            Write-Output "Installing $Package chocolatey package..."
-            & "choco" install $Package --yes --no-progress
-            Confirm-Return-Code
-        }
-        else {
-            Write-Output "$Package chocolatey package is already installed"
-        }
+        # choco upgrade installs the package if missing not installed.
+        # See https://docs.chocolatey.org/en-us/choco/commands/upgrade
+        & "choco" upgrade $Package --yes --no-progress
+        Confirm-Return-Code
     }
 
     # Refresh the environment variables because we might have installed new
