@@ -33,6 +33,12 @@ function Install-Chocolatey {
         Write-Output "Currently installed Chocolatey packages:"
         & "choco" list --local-only
         Confirm-Return-Code
+
+        & "choco" upgrade chocolatey --yes --no-progress
+        Confirm-Return-Code
+
+        & "choco" upgrade all --yes --no-progress
+        Confirm-Return-Code
     }
 }
 
@@ -112,17 +118,7 @@ function Install-WSL {
     }
 }
 
-function Update-System {
-    & "choco" upgrade chocolatey --yes --no-progress
-    Confirm-Return-Code
-
-    & "choco" upgrade all --yes --no-progress
-    Confirm-Return-Code
-}
-
 Install-Chocolatey
-Update-System
-Confirm-Return-Code
 Install-Chocolatey-Package
 Initialize-VSCode
 Install-VSCode-Extension
