@@ -30,7 +30,7 @@ function Install-Chocolatey {
     }
     else {
         Write-Output "Chocolatey is already installed. Upgrading..."
-        choco upgrade -y chocolatey
+        choco upgrade chocolatey --yes --no-progress
         Confirm-Return-Code
     }
 }
@@ -46,7 +46,7 @@ function Install-Chocolatey-Package {
     ForEach ($Package in $Packages) {
         if (-not (& "choco" list $Package --local-only)) {
             Write-Output "Installing $Package chocolatey package..."
-            choco install -y $Package
+            & "choco" install $Package --yes --no-progress
             Confirm-Return-Code
         }
         else {
@@ -96,7 +96,7 @@ function Install-WSL {
     }
 
     Write-Output "Setting WSL 2 as the default version..."
-    wsl --set-default-version 2
+    & "wsl" --set-default-version 2
     Confirm-Return-Code
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
@@ -112,7 +112,7 @@ function Install-WSL {
 }
 
 Install-Chocolatey
-& "choco" upgrade -y all
+& "choco" upgrade all --yes --no-progress
 Confirm-Return-Code
 Install-Chocolatey-Package
 Initialize-VSCode
