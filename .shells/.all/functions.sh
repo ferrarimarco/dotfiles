@@ -283,3 +283,42 @@ man() {
     LESS_TERMCAP_us="$(printf '\e[1;32m')" \
     man "$@"
 }
+
+uninstall_dotfiles() {
+  echo "Uninstalling dotfiles..."
+  find "${HOME}" -type l -ilname "*dotfiles*" -exec rm -fv {} \;
+
+  if is_wsl; then
+    sudo rm -fv /etc/wsl.conf
+  fi
+}
+
+install_dotfiles() {
+  SOURCE_PATH="${1}"
+  if [ ! -d "${SOURCE_PATH}" ]; then
+    echo "${SOURCE_PATH} doesn't exists."
+    return 1
+  fi
+
+  echo "Setting up dotfiles from source directory: ${SOURCE_PATH}..."
+
+  find "${SOURCE_PATH}" -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp" >tmp
+  while IFS= read -r file; do
+    # Strip the ${SOURCE_PATH} prefix from the file path
+    file_base_path="${file##"${SOURCE_PATH}/"}"
+    file_path="${HOME}/${file_base_path}"
+    echo "File to link: ${file}. File base path: ${file_base_path}. File target path: ${file_path}"
+    mkdir -pv "$(dirname "$file_path")"
+    ln -sfnv "${file}" "${file_path}"
+  done <tmp
+  rm tmp
+
+  ln -sfn "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
+
+  WSL_CONFIGURATION_FILE_PATH="/etc/wsl.conf"
+  if is_wsl && [ -e "${WSL_CONFIGURATION_FILE_PATH}" ]; then
+    sudo cp -fv "${HOME}/.config/wsl/wsl.conf" "${WSL_CONFIGURATION_FILE_PATH}"
+  fi
+  unset WSL_CONFIGURATION_FILE_PATH
+  unset SOURCE_PATH
+}

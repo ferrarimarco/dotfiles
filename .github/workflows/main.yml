@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.4.0
       - name: Super-Linter
@@ -15,30 +15,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
-  setup_ubuntu:
+  setup_unix_like:
     needs:
       - lint
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2.4.0
-      - name: Setup dotfiles (Ubuntu)
+      - name: Setup dotfiles (${{ matrix.os }})
         run: |
-          ./bin/setup-dotfiles.sh debian
-      - name: Symlink dotfiles
-        run: |
-          make
-  setup_macos:
-    needs:
-      - lint
-    runs-on: macos-11
-    steps:
-      - uses: actions/checkout@v2.4.0
-      - name: Setup dotfiles (macOS)
-        run: |
-          ./bin/setup-dotfiles.sh macos
-      - name: Symlink dotfiles
-        run: |
-          make
+          ./setup.sh
+    strategy:
+      matrix:
+        os:
+          - macos-11
+          - ubuntu-20.04
   setup_windows:
     needs:
       - lint
@@ -47,4 +37,4 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - name: Setup dotfiles (Windows)
         run: |
-          powershell -executionpolicy bypass ".\bin\install-windows.ps1"
+          powershell -executionpolicy bypass ".\setup-windows.ps1"

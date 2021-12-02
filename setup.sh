@@ -95,7 +95,6 @@ install_brew_formulae() {
 
   echo "Installing brew formulae"
   for f in \
-    make \
     zsh-autosuggestions \
     zsh-completions \
     zsh-syntax-highlighting; do
@@ -158,6 +157,7 @@ install_brew_formulae() {
 
 setup_user() {
   echo "Creating directories for the $TARGET_USER in $HOME"
+  mkdir -p "$HOME/bin"
   mkdir -p "$HOME/Downloads"
   mkdir -p "$HOME/workspaces"
 
@@ -645,6 +645,7 @@ main() {
   ask_for_sudo
 
   echo "Current working directory: $(pwd)"
+  echo "Current home directory: ${HOME}"
 
   echo "Setting the REPOSITORY_PATH variable..."
   set_repository_path
@@ -697,6 +698,7 @@ main() {
     setup_shell
     setup_user
     update_system
+    install_dotfiles "${REPOSITORY_PATH}"
   else
     echo "The current OS or distribution is not supported. Terminating..."
     exit 1

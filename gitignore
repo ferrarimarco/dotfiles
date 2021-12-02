@@ -1,3 +1,6 @@
+# This is the user-wide gitignore file
+# Symlink it where core.excludesfile (in ${HOME}/.gitconfig) expects it
+
 ##
 # OS X
 ##
