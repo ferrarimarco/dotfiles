@@ -1,5 +1,6 @@
 davidanson.vscode-markdownlint
 HashiCorp.terraform
+github.codespaces
 ms-azuretools.vscode-docker
 ms-python.python
 ms-vscode.cmake-tools
