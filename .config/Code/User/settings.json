@@ -42,6 +42,7 @@
     "ms-vscode-remote.vscode-remote-extensionpack",
     "timonwong.shellcheck"
   ],
+  "remote.SSH.connectTimeout": 30,
   "telemetry.telemetryLevel": "off",
   "terminal.external.osxExec": "iTerm.app",
   "terminal.integrated.cursorBlinking": true,
