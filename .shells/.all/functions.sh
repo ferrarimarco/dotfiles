@@ -42,7 +42,7 @@ if is_docker_available; then
 fi
 
 is_snap_available() {
-  if is_command_available "snap"; then
+  if is_command_available "snap" && [ -e "/run/snapd.socket" ]; then
     return 0
   else
     return 1
