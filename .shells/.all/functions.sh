@@ -244,12 +244,13 @@ update_system() {
     sudo apt-get -q update
     sudo apt-get -qy upgrade
     pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
-    pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
 
     if is_snap_available; then
       sudo snap refresh
     fi
   fi
+
+  pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
 }
 
 # Make a temporary directory and enter it
