@@ -335,6 +335,10 @@ setup_debian() {
     echo "Ensure snapd is running..."
     sudo systemctl enable snapd.service
     sudo systemctl start snapd.service
+  else
+    # Workaround for https://github.com/microsoft/WSL/issues/2775
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy remove \
+      azure-cli
   fi
 
   echo "Installing packages from the additional APT repositories..."
@@ -703,8 +707,8 @@ main() {
 
     setup_shell
     setup_user
-    update_system
     install_dotfiles "${REPOSITORY_PATH}"
+    update_system
   else
     echo "The current OS or distribution is not supported. Terminating..."
     exit 1
