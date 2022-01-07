@@ -174,6 +174,7 @@ is_codespaces() {
     return 0
   else
     return 1
+  fi
 }
 
 is_crostini() {

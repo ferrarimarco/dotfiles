@@ -266,7 +266,7 @@ setup_debian() {
 
   sudo apt-get -qq update || true
 
-  sudo apt-get -qqy install \
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
     adduser \
     alsa-utils \
     apparmor \
@@ -310,11 +310,9 @@ setup_debian() {
     rxvt-unicode \
     scdaemon \
     socat \
-    snapd \
     squashfuse \
     ssh \
     strace \
-    systemd \
     tar \
     tree \
     tzdata \
@@ -330,11 +328,11 @@ setup_debian() {
     zsh-syntax-highlighting \
     --no-install-recommends
 
-  echo "Ensure snapd is running..."
-  if is_codespaces; then
-    sudo service enable snapd.service
-    sudo service start snapd.service
-  else
+  if ! is_codespaces; then
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
+      snapd
+
+    echo "Ensure snapd is running..."
     sudo systemctl enable snapd.service
     sudo systemctl start snapd.service
   fi
