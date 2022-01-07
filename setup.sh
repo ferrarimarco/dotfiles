@@ -174,6 +174,9 @@ setup_user() {
 setup_debian() {
   echo "Setting up a Debian system"
 
+  DEBIAN_FRONTEND=noninteractive
+  export DEBIAN_FRONTEND
+
   echo "Installing the minimal set of packages"
   sudo apt-get -qq update || true
   sudo apt-get -qqy install \
@@ -328,8 +331,13 @@ setup_debian() {
     --no-install-recommends
 
   echo "Ensure snapd is running..."
-  sudo systemctl enable snapd.service
-  sudo systemctl start snapd.service
+  if is_codespaces; then
+    sudo service enable snapd.service
+    sudo service start snapd.service
+  else
+    sudo systemctl enable snapd.service
+    sudo systemctl start snapd.service
+  fi
 
   echo "Installing packages from the additional APT repositories..."
   if is_apt_repo_available "${docker_apt_repository_url}"; then

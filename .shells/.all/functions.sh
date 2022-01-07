@@ -169,6 +169,13 @@ is_debian() {
   fi
 }
 
+is_codespaces() {
+  if [ "${CODESPACES}" = "true" ]; then
+    return 0
+  else
+    return 1
+}
+
 is_crostini() {
   if [ -d "/opt/google/cros-containers" ]; then
     return 0
