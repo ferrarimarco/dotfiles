@@ -170,7 +170,7 @@ is_debian() {
 }
 
 is_codespaces() {
-  if [ "${CODESPACES}" = "true" ]; then
+  if [ "${CODESPACES-}" = "true" ]; then
     return 0
   else
     return 1
