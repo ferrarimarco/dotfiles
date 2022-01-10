@@ -317,13 +317,23 @@ install_dotfiles() {
     # Strip the ${SOURCE_PATH} prefix from the file path
     file_base_path="${file##"${SOURCE_PATH}/"}"
     file_path="${HOME}/${file_base_path}"
-    echo "File to link: ${file}. File base path: ${file_base_path}. File target path: ${file_path}"
+    echo "File to link: ${file}. File base path: ${file_base_path}. Target file path: ${file_path}"
     mkdir -pv "$(dirname "$file_path")"
+
+    if [ -f "${file_path}" ]; then
+      echo "${file_path} already exists and it's a regular file, not a symbolic link. Details:"
+      ls -alh "${file_path}"
+
+      BACKUP_FILE_PATH="${file_path}.backup"
+      echo "Moving ${file_path} to ${BACKUP_FILE_PATH}..."
+      mv "${file_path}" "${BACKUP_FILE_PATH}"
+    fi
+
     ln -sfnv "${file}" "${file_path}"
   done <tmp
   rm tmp
 
-  ln -sfn "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
+  ln -sfnv "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
 
   WSL_CONFIGURATION_FILE_PATH="/etc/wsl.conf"
   if is_wsl && [ -e "${WSL_CONFIGURATION_FILE_PATH}" ]; then
