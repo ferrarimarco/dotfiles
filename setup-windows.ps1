@@ -44,9 +44,6 @@ function Install-Chocolatey-Package {
     & "choco" upgrade chocolatey --yes --no-progress
     Confirm-Return-Code
 
-    & "choco" upgrade all --yes --no-progress
-    Confirm-Return-Code
-
     $Packages =
     'conemu',
     'keepass',
