@@ -37,8 +37,6 @@ function Install-Chocolatey {
 }
 
 function Install-Chocolatey-Package {
-    Get-Process -Id (Get-NetTCPConnection -LocalPort 80).OwningProcess
-
     Write-Output "Currently installed Chocolatey packages:"
     & "choco" list --local-only
     Confirm-Return-Code
