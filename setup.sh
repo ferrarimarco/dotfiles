@@ -36,15 +36,6 @@ get_user() {
 
 install_brew() {
   if ! command -v brew >/dev/null 2>&1; then
-    # Set xcode directory
-    XCODE_DIRECTORY=/Applications/Xcode.app/Contents/Developer
-    echo "Setting Xcode directory to $XCODE_DIRECTORY..."
-    sudo xcode-select -s "$XCODE_DIRECTORY"
-    unset XCODE_DIRECTORY
-
-    echo "Accepting Xcode license..."
-    sudo xcodebuild -license accept
-
     if ! xcode-select -p >/dev/null 2>&1; then
       echo "Installing Xcode CLI..."
       xcode-select --install

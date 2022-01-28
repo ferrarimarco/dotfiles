@@ -243,7 +243,9 @@ pull_from_git_repository() {
 update_system() {
   if is_macos; then
     echo "Updating macOS..."
-    sudo softwareupdate -ia
+    sudo softwareupdate \
+      --all \
+      --install
     if command -v brew >/dev/null 2>&1; then
       update_brew
     fi
