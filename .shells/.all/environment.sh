@@ -89,8 +89,6 @@ if is_macos; then
     # On macOS, we install zsh-autosuggestions from brew
     ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${HOMEBREW_PATH}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-    GOROOT="${HOMEBREW_PATH}/opt/go/libexec"
-
     # Uncomment the lines below if you want to use executables installed with Homebrew
     # instead of the macOS ones
     #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
@@ -110,8 +108,6 @@ if is_macos; then
 
   PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
 elif is_linux; then
-  GOROOT="${HOME}/bin/go"
-
   ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
   ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
