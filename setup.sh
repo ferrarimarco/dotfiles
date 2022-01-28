@@ -58,7 +58,7 @@ install_brew() {
 
     # Download and install Homebrew
     echo "Installing Homebrew..."
-    cd "${HOMEBREW_REPOSITORY}" || exit
+    cd "${HOMEBREW_REPOSITORY}" || exit 1
     git init -q
     git config remote.origin.url "https://github.com/Homebrew/brew"
     git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*

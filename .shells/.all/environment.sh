@@ -67,7 +67,7 @@ if is_macos; then
 
   # setup homebrew environment
   if ! command -v brew >/dev/null 2>&1; then
-    # brew is not yet in the path because it was (likely) installed manually by setup-dotfiles.sh
+    # brew is not yet in the path because it was (likely) installed manually by setup.sh
     # So falling back to a known location.
     HOMEBREW_PATH=/usr/local/brew
   else
@@ -148,14 +148,6 @@ export DEFAULT_SHELL
 export DEFAULT_SHELL_SHORT
 
 export USER_FONTS_DIRECTORY
-
-# Set up Go paths
-export GOROOT
-GO111MODULE=on
-export GO111MODULE
-GOPATH="${HOME}/.go"
-export GOPATH
-export PATH="${GOPATH}/bin:${GOROOT}/bin:${PATH}"
 
 ###############################################################################
 # Others                                                                      #
