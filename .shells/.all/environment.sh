@@ -107,6 +107,7 @@ if is_macos; then
   USER_FONTS_DIRECTORY="$HOME/Library/Fonts"
 
   PYTHON_2_BIN_PATH="$HOME/Library/Python/2.7/bin"
+  PYTHON_3_BIN_PATH="$HOME/Library/Python/3.8/bin"
 elif is_linux; then
   ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
   ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -128,6 +129,9 @@ unset VS_CODE_BIN_DIRECTORY_PATH
 
 [ -d "${PYTHON_2_BIN_PATH}" ] && export PATH="${PYTHON_2_BIN_PATH}:${PATH}"
 unset PYTHON_2_BIN_PATH
+
+[ -d "${PYTHON_3_BIN_PATH}" ] && export PATH="${PYTHON_3_BIN_PATH}:${PATH}"
+unset PYTHON_3_BIN_PATH
 
 PYTHON_3_USER_BIN_PATH="$HOME/.local/bin"
 [ -d "${PYTHON_3_USER_BIN_PATH}" ] && export PATH="${PYTHON_3_USER_BIN_PATH}:${PATH}"
