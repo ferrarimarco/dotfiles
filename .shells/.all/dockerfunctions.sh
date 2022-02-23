@@ -99,9 +99,9 @@ super_linter() {
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
-    -v "$(pwd)":/workspace \
-    -w "/workspace" \
-    -e DEFAULT_WORKSPACE=/workspace \
+    -v "$(pwd)":/tmp/lint \
+    -e ANSIBLE_DIRECTORY="${ANSIBLE_DIRECTORY:-"/ansible"}" \
+    -e DEFAULT_WORKSPACE=/tmp/lint \
     -e DISABLE_ERRORS=false \
     -e ERROR_ON_MISSING_EXEC_BIT=true \
     -e KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
