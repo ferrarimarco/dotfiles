@@ -100,6 +100,7 @@ super_linter() {
     --name "${CONTAINER_NAME}" \
     --rm \
     -v "$(pwd)":/tmp/lint \
+    -e ACTIONS_RUNNER_DEBUG="${ACTIONS_RUNNER_DEBUG:-"false"}" \
     -e ANSIBLE_DIRECTORY="${ANSIBLE_DIRECTORY:-"/ansible"}" \
     -e DEFAULT_WORKSPACE=/tmp/lint \
     -e DISABLE_ERRORS=false \
