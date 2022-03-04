@@ -109,6 +109,7 @@ super_linter() {
     -e LINTER_RULES_PATH=. \
     -e MULTI_STATUS=false \
     -e RUN_LOCAL=true \
+    -e TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
     -e VALIDATE_ALL_CODEBASE=true \
     ghcr.io/github/super-linter "$@"
 }
