@@ -1,5 +1,4 @@
 {
-  "C_Cpp.updateChannel": "Insiders",
   "cmake.configureOnOpen": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
@@ -21,11 +20,6 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.allowNoVerifyCommit": true,
-  "go.formatTool": "goimports",
-  "go.toolsEnvVars": {
-    "GO111MODULE": "on"
-  },
-  "go.useLanguageServer": true,
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
   "python.formatting.provider": "black",
