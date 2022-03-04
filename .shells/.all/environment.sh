@@ -115,8 +115,6 @@ elif is_linux; then
   ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
   USER_FONTS_DIRECTORY="$HOME/.local/share/fonts"
-
-  PYTHON_2_BIN_PATH=
 fi
 
 if is_wsl; then
@@ -127,10 +125,10 @@ fi
 [ -d "${VS_CODE_BIN_DIRECTORY_PATH-}" ] && export PATH="${VS_CODE_BIN_DIRECTORY_PATH-}:${PATH}"
 unset VS_CODE_BIN_DIRECTORY_PATH
 
-[ -d "${PYTHON_2_BIN_PATH}" ] && export PATH="${PYTHON_2_BIN_PATH}:${PATH}"
+[ -d "${PYTHON_2_BIN_PATH:-}" ] && export PATH="${PYTHON_2_BIN_PATH}:${PATH}"
 unset PYTHON_2_BIN_PATH
 
-[ -d "${PYTHON_3_BIN_PATH}" ] && export PATH="${PYTHON_3_BIN_PATH}:${PATH}"
+[ -d "${PYTHON_3_BIN_PATH:-}" ] && export PATH="${PYTHON_3_BIN_PATH}:${PATH}"
 unset PYTHON_3_BIN_PATH
 
 PYTHON_3_USER_BIN_PATH="$HOME/.local/bin"
