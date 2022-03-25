@@ -111,7 +111,7 @@ super_linter() {
     -e RUN_LOCAL=true \
     -e TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
     -e VALIDATE_ALL_CODEBASE=true \
-    -e VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE-:"true"}" \
+    -e VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
     ghcr.io/github/super-linter "$@"
 }
 
