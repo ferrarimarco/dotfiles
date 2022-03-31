@@ -443,6 +443,9 @@ setup_macos() {
 
   echo "Configuring macOS Trackpad"
 
+  # Disable lookup and data detectors
+  defaults write NSGlobalDomain com.apple.trackpad.forceClick -bool false
+
   # Trackpad: enable tap to click for this user
   defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
