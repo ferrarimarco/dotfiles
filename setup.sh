@@ -372,10 +372,10 @@ setup_macos() {
   echo "Configuring macOS UI/UX"
 
   # Disable the sound effects on boot
-  sudo nvram SystemAudioVolume=" "
+  sudo nvram SystemAudioVolume=%00
 
   # Enable the sound effects on boot
-  #sudo nvram SystemAudioVolume="7"
+  # sudo nvram SystemAudioVolume=%01
 
   ###############################################################################
   # Mac App Store                                                               #
