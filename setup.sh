@@ -99,8 +99,7 @@ install_brew_formulae() {
   echo "Installing brew casks..."
   for f in \
     iterm2 \
-    visual-studio-code \
-    wireshark; do
+    visual-studio-code; do
     if ! brew list "$f" >/dev/null 2>&1; then
       echo "Installing $f cask"
       if ! brew install "$f"; then
