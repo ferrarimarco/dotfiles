@@ -4,6 +4,20 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+symlink_settings_file() {
+  SOURCE_FILE_PATH="${1}"
+  DESTINATION_FILE_PATH="${2}"
+  DESTINATION_DIRECTORY_PATH="$(dirname "${DESTINATION_FILE_PATH}")"
+  echo "Ensuring that the ${DESTINATION_DIRECTORY_PATH} directory exists"
+  mkdir -p "$(dirname "${DESTINATION_DIRECTORY_PATH}")"
+  DESTINATION_FILE_PATH="$HOME"/.config/Code/User/settings.json
+  echo "Creating a symbolic link from ${SOURCE_FILE_PATH} to ${DESTINATION_FILE_PATH}"
+  ln -sfn "${SOURCE_FILE_PATH}" "${DESTINATION_FILE_PATH}"
+  unset SOURCE_FILE_PATH
+  unset DESTINATION_FILE_PATH
+  unset DESTINATION_DIRECTORY_PATH
+}
+
 ask_for_sudo() {
   echo "Prompting for sudo password..."
   # sudo -v doesn't work on macOS when passwordless sudo is enabled. It still
@@ -120,15 +134,8 @@ install_brew_formulae() {
     exit 1
   fi
 
-  echo "Setting up Visual Studio Code settings..."
-  _vs_code_settings_path="$HOME"/Library/Application\ Support/Code/User/settings.json
-  echo "Ensuring that the Visual Studio Code settings directory ($_vs_code_settings_path) is available..."
-  mkdir -p "$(dirname "$_vs_code_settings_path")"
-  VS_CODE_SETTINGS_FILE_PATH="$HOME"/.config/Code/User/settings.json
-  echo "Creating a symbolic link from $VS_CODE_SETTINGS_FILE_PATH to $_vs_code_settings_path"
-  ln -sfn "$VS_CODE_SETTINGS_FILE_PATH" "$_vs_code_settings_path"
-  unset _vs_code_settings_path
-  unset VS_CODE_SETTINGS_FILE_PATH
+  echo "Setting up Visual Studio Code settings"
+  symlink_settings_file "$HOME"/.config/Code/User/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
 
   echo "Installing or updating Visual Studio Code extensions..."
   while IFS= read -r line; do
