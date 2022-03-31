@@ -97,8 +97,6 @@ if is_macos; then
     #export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
     #export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
     #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
-  else
-    unset HOMEBREW_PATH
   fi
 
   # add vs code bins to path
