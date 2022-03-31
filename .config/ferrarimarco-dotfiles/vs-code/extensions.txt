@@ -1,11 +1,7 @@
-davidanson.vscode-markdownlint
 HashiCorp.terraform
 github.codespaces
 ms-azuretools.vscode-docker
 ms-python.python
-ms-vscode.cmake-tools
-ms-vscode.cpptools
 ms-vscode.powershell
 ms-vscode-remote.vscode-remote-extensionpack
-timonwong.shellcheck
 wholroyd.jinja
