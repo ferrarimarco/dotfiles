@@ -69,6 +69,8 @@ dump_defaults() {
   defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-before.out
   defaults -currentHost read >"$dir"/read-currentHost-before.out
 
+  nvram -p > "$dir"/nvram-before.out
+
   echo "Change the settings, close the settings app, and press any key to continue..."
   read -r _
   unset _
@@ -79,10 +81,31 @@ dump_defaults() {
   defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-after.out
   defaults -currentHost read >"$dir"/read-currentHost-after.out
 
+  nvram -p > "$dir"/nvram-after.out
+
   echo "Diffing..."
   diff "$dir"/NSGlobalDomain-before.out "$dir"/NSGlobalDomain-after.out
   diff "$dir"/NSGlobalDomain-currentHost-before.out "$dir"/NSGlobalDomain-currentHost-after.out
   diff "$dir"/read-currentHost-before.out "$dir"/read-currentHost-after.out
+  diff "$dir"/read-before.out "$dir"/read-after.out
+  diff "$dir"/nvram-before.out "$dir"/nvram-after.out
+
+  echo "Inspect the output files if necessary, and press any key to continue..."
+  read -r _
+  unset _
+
+  echo "Removing output files"
+  rm \
+    "$dir"/NSGlobalDomain-after.out \
+    "$dir"/NSGlobalDomain-before.out \
+    "$dir"/NSGlobalDomain-currentHost-after.out \
+    "$dir"/NSGlobalDomain-currentHost-before.out \
+    "$dir"/nvram-after.out \
+    "$dir"/nvram-before.out \
+    "$dir"/read-after.out \
+    "$dir"/read-before.out \
+    "$dir"/read-currentHost-after.out \
+    "$dir"/read-currentHost-before.out
 }
 
 clone_git_repository_if_not_cloned_already() {
