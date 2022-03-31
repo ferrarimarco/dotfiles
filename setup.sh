@@ -145,13 +145,6 @@ setup_user() {
   mkdir -p "$HOME/workspaces"
 
   mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
-
-  if is_macos; then
-    echo "Setting home directory ($HOME) permissions..."
-    # Cannot use chmod recursive mode because system integrity protection prevents
-    # changing some attributes of $HOME/Library directories on macOS
-    find "$HOME" -type d -path "$HOME"/Library -prune -o -exec chmod o-rwx {} \;
-  fi
 }
 
 setup_debian() {
