@@ -73,14 +73,6 @@ install_brew_formulae() {
   echo "Disabling homebrew usage analytics..."
   brew analytics off
 
-  echo "Removing installed brew formulae..."
-  # shellcheck disable=SC2046
-  brew uninstall --force --ignore-dependencies $(brew list --formula)
-
-  echo "Removing installed brew casks..."
-  # shellcheck disable=SC2046
-  brew uninstall --force --zap $(brew list --cask)
-
   echo "Running brew cleanup..."
   brew cleanup
 
