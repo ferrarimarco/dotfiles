@@ -352,7 +352,7 @@ install_dotfiles() {
     echo "File to link: ${file}. File base path: ${file_base_path}. Target file path: ${file_path}"
     mkdir -pv "$(dirname "$file_path")"
 
-    if [ -f "${file_path}" ]; then
+    if [ ! -L "${file_path}" ]; then
       echo "${file_path} already exists and it's a regular file, not a symbolic link. Details:"
       ls -alh "${file_path}"
 
