@@ -525,8 +525,7 @@ setup_macos() {
     "cfprefsd" \
     "Dock" \
     "Finder" \
-    "SystemUIServer" \
-    "Terminal"; do
+    "SystemUIServer"; do
     killall "${app}" >/dev/null 2>&1 || true
   done
   echo "Done. Note that some of these changes require a logout/restart to take effect."
