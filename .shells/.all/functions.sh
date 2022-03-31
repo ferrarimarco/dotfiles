@@ -66,12 +66,12 @@ dump_defaults() {
   defaults read NSGlobalDomain >"$dir"/NSGlobalDomain-before.out
   defaults read >"$dir"/read-before.out
 
-  defaults read com.googlecode.iterm2 > "$dir"/iterm2-before.out
+  defaults read com.googlecode.iterm2 >"$dir"/iterm2-before.out
 
   defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-before.out
   defaults -currentHost read >"$dir"/read-currentHost-before.out
 
-  nvram -p > "$dir"/nvram-before.out
+  nvram -p >"$dir"/nvram-before.out
 
   echo "Change the settings, close the settings app, and press any key to continue..."
   read -r _
@@ -80,7 +80,7 @@ dump_defaults() {
   defaults read NSGlobalDomain >"$dir"/NSGlobalDomain-after.out
   defaults read >"$dir"/read-after.out
 
-  defaults read com.googlecode.iterm2 > "$dir"/iterm2-after.out
+  defaults read com.googlecode.iterm2 >"$dir"/iterm2-after.out
 
   defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-after.out
   defaults -currentHost read >"$dir"/read-currentHost-after.out
