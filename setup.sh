@@ -4,20 +4,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-symlink_settings_file() {
-  SOURCE_FILE_PATH="${1}"
-  DESTINATION_FILE_PATH="${2}"
-  DESTINATION_DIRECTORY_PATH="$(dirname "${DESTINATION_FILE_PATH}")"
-  echo "Ensuring that the ${DESTINATION_DIRECTORY_PATH} directory exists"
-  mkdir -p "$(dirname "${DESTINATION_DIRECTORY_PATH}")"
-  DESTINATION_FILE_PATH="$HOME"/.config/Code/User/settings.json
-  echo "Creating a symbolic link from ${SOURCE_FILE_PATH} to ${DESTINATION_FILE_PATH}"
-  ln -sfn "${SOURCE_FILE_PATH}" "${DESTINATION_FILE_PATH}"
-  unset SOURCE_FILE_PATH
-  unset DESTINATION_FILE_PATH
-  unset DESTINATION_DIRECTORY_PATH
-}
-
 ask_for_sudo() {
   echo "Prompting for sudo password..."
   # sudo -v doesn't work on macOS when passwordless sudo is enabled. It still
@@ -133,9 +119,6 @@ install_brew_formulae() {
     echo "ERROR: The BREW_PREFIX variable is not set, or set to an empty string"
     exit 1
   fi
-
-  echo "Setting up Visual Studio Code settings"
-  symlink_settings_file "$HOME"/.config/Code/User/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
 
   echo "Installing or updating Visual Studio Code extensions..."
   while IFS= read -r line; do

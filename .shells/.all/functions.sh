@@ -245,6 +245,19 @@ is_wsl() {
   fi
 }
 
+symlink_file() {
+  SOURCE_FILE_PATH="${1}"
+  DESTINATION_FILE_PATH="${2}"
+  DESTINATION_DIRECTORY_PATH="$(dirname "${DESTINATION_FILE_PATH}")"
+  echo "Ensuring that the ${DESTINATION_DIRECTORY_PATH} directory exists"
+  mkdir -p "$(dirname "${DESTINATION_DIRECTORY_PATH}")"
+  echo "Creating a symbolic link from ${SOURCE_FILE_PATH} to ${DESTINATION_FILE_PATH}"
+  ln -sfnv "${SOURCE_FILE_PATH}" "${DESTINATION_FILE_PATH}"
+  unset SOURCE_FILE_PATH
+  unset DESTINATION_FILE_PATH
+  unset DESTINATION_DIRECTORY_PATH
+}
+
 update_brew() {
   echo "Upgrading brew and formulae"
   brew update
@@ -350,7 +363,6 @@ install_dotfiles() {
     file_base_path="${file##"${SOURCE_PATH}/"}"
     file_path="${HOME}/${file_base_path}"
     echo "File to link: ${file}. File base path: ${file_base_path}. Target file path: ${file_path}"
-    mkdir -pv "$(dirname "$file_path")"
 
     if [ ! -L "${file_path}" ]; then
       echo "${file_path} already exists and it's a regular file, not a symbolic link. Details:"
@@ -361,16 +373,23 @@ install_dotfiles() {
       mv "${file_path}" "${BACKUP_FILE_PATH}"
     fi
 
-    ln -sfnv "${file}" "${file_path}"
+    symlink_file "${file}" "${file_path}"
   done <tmp
   rm tmp
 
-  ln -sfnv "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
+  symlink_file "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
 
   WSL_CONFIGURATION_FILE_PATH="/etc/wsl.conf"
   if is_wsl && [ -e "${WSL_CONFIGURATION_FILE_PATH}" ]; then
     sudo cp -fv "${HOME}/.config/wsl/wsl.conf" "${WSL_CONFIGURATION_FILE_PATH}"
   fi
   unset WSL_CONFIGURATION_FILE_PATH
+
+  # We don't need to do this on Linux because the VS Code settings path on Linux is already ${HOME}/.config/Code/User/settings.json
+  if is_macos; then
+    echo "Setting up Visual Studio Code settings"
+    symlink_file "${HOME}/.config/Code/User/settings.json" "${HOME}/Library/Application Support/Code/User/settings.json"
+  fi
+
   unset SOURCE_PATH
 }
