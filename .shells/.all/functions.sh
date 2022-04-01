@@ -250,7 +250,7 @@ symlink_file() {
   DESTINATION_FILE_PATH="${2}"
   DESTINATION_DIRECTORY_PATH="$(dirname "${DESTINATION_FILE_PATH}")"
   echo "Ensuring that the ${DESTINATION_DIRECTORY_PATH} directory exists"
-  mkdir -p "$(dirname "${DESTINATION_DIRECTORY_PATH}")"
+  mkdir -pv "${DESTINATION_DIRECTORY_PATH}"
   echo "Creating a symbolic link from ${SOURCE_FILE_PATH} to ${DESTINATION_FILE_PATH}"
   ln -sfnv "${SOURCE_FILE_PATH}" "${DESTINATION_FILE_PATH}"
   unset SOURCE_FILE_PATH
