@@ -85,7 +85,7 @@ dump_defaults() {
   defaults -currentHost read NSGlobalDomain >"$dir"/NSGlobalDomain-currentHost-after.out
   defaults -currentHost read >"$dir"/read-currentHost-after.out
 
-  nvram -p > "$dir"/nvram-after.out
+  nvram -p >"$dir"/nvram-after.out
 
   echo "Diffing..."
   diff "$dir"/NSGlobalDomain-before.out "$dir"/NSGlobalDomain-after.out
