@@ -116,15 +116,15 @@ super_linter() {
 }
 
 terraform() {
-  del_stopped terraform
+  CONTAINER_NAME="terraform"
+  del_stopped "${CONTAINER_NAME}"
   docker run ${DOCKER_TTY_OPTION} \
     -i \
-    --name terraform \
+    --name "${CONTAINER_NAME}" \
     --rm \
     -v "${GCLOUD_CONFIG_DIRECTORY}":/root/.config/gcloud \
     -v "$(pwd)":/workspace \
     -v /etc/localtime:/etc/localtime:ro \
-    --volumes-from gcloud-config \
     -w "/workspace" \
     hashicorp/terraform "$@"
 }
