@@ -55,13 +55,15 @@ set_entrypoint() {
 #
 
 ansible() {
-  del_stopped ansible
+  CONTAINER_NAME="ansible"
+  del_stopped "${CONTAINER_NAME}"
+  set_entrypoint
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} \
+  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/etc/ansible \
-    --name ansible \
+    --name "${CONTAINER_NAME}" \
     --rm \
     ansible/ansible "$@"
 }
@@ -69,7 +71,9 @@ ansible() {
 gcloud() {
   CONTAINER_NAME="gcloud"
   del_stopped "${CONTAINER_NAME}"
-  docker run ${DOCKER_TTY_OPTION} \
+  set_entrypoint
+  # shellcheck disable=SC2086
+  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -e CLOUDSDK_CONFIG=/config/gcloud \
     -i \
     --name "${CONTAINER_NAME}" \
@@ -80,22 +84,28 @@ gcloud() {
 }
 
 jq() {
-  del_stopped jq
-  docker run ${DOCKER_TTY_OPTION} \
+  CONTAINER_NAME="jq"
+  del_stopped "${CONTAINER_NAME}"
+  set_entrypoint
+  # shellcheck disable=SC2086
+  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
-    --name jq \
+    --name "${CONTAINER_NAME}" \
     --rm \
     stedolan/jq "$@"
 }
 
 inspec() {
-  del_stopped inspec
-  docker run ${DOCKER_TTY_OPTION} \
+  CONTAINER_NAME="inspec"
+  del_stopped "${CONTAINER_NAME}"
+  set_entrypoint
+  # shellcheck disable=SC2086
+  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/share \
     -v "${HOME}"/.ssh:/root/.ssh:ro \
-    --name inspec \
+    --name "${CONTAINER_NAME}" \
     --rm \
     chef/inspec "$@"
 }
@@ -128,7 +138,9 @@ super_linter() {
 terraform() {
   CONTAINER_NAME="terraform"
   del_stopped "${CONTAINER_NAME}"
-  docker run ${DOCKER_TTY_OPTION} \
+  set_entrypoint
+  # shellcheck disable=SC2086
+  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
