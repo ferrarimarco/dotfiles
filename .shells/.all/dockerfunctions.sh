@@ -77,7 +77,6 @@ gcloud() {
     -v /etc/localtime:/etc/localtime:ro \
     gcr.io/google.com/cloudsdktool/cloud-sdk \
     gcloud "$@"
-  unset GCLOUD_CONFIG_DIRECTORY
 }
 
 jq() {
