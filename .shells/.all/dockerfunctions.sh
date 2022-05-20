@@ -41,6 +41,15 @@ relies_on() {
   done
 }
 
+set_entrypoint() {
+  if [ -n "${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}" ]; then
+    DOCKER_ENTRYPOINT_OPTION="--entrypoint=${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}"
+    echo "Overriding entrypoint with ${DOCKER_ENTRYPOINT_OPTION}"
+  else
+    DOCKER_ENTRYPOINT_OPTION=""
+  fi
+}
+
 #
 # Container Aliases
 #
@@ -95,7 +104,9 @@ inspec() {
 super_linter() {
   CONTAINER_NAME="super_linter"
   del_stopped "${CONTAINER_NAME}"
-  docker run ${DOCKER_TTY_OPTION} \
+  set_entrypoint
+  # shellcheck disable=SC2086
+  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
