@@ -61,10 +61,6 @@ export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
 export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
 
 if is_macos; then
-
-  # Might be needed to install Homebrew, so exporting in any case
-  export HOMEBREW_REPOSITORY=/usr/local/Homebrew
-
   # setup homebrew environment
   if ! command -v brew >/dev/null 2>&1; then
     # brew is not yet in the path because it was (likely) installed manually by setup.sh

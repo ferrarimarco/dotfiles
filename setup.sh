@@ -43,20 +43,9 @@ install_brew() {
       echo "Xcode is already installed"
     fi
 
-    echo "Initializing Homebrew repository path (${HOMEBREW_REPOSITORY}) and Homebrew path (${HOMEBREW_PATH})..."
-    HOMEBREW_BIN_PATH="${HOMEBREW_PATH}"/bin
-    sudo install -d -o "$TARGET_USER" "${HOMEBREW_PATH}" "${HOMEBREW_BIN_PATH}" "${HOMEBREW_PATH}"/sbin "${HOMEBREW_REPOSITORY}"
-
-    # Download and install Homebrew
-    echo "Installing Homebrew..."
-    cd "${HOMEBREW_REPOSITORY}" || exit 1
-    git init -q
-    git config remote.origin.url "https://github.com/Homebrew/brew"
-    git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
-    git config core.autocrlf false
-    git fetch origin master:refs/remotes/origin/master --tags --force
-    git reset --hard origin/master
-    ln -s "${HOMEBREW_REPOSITORY}"/bin/brew "${HOMEBREW_BIN_PATH}"/brew
+    echo "Installing Homebrew to: ${HOMEBREW_PATH}"
+    # Homebrew installation script asks for confirmation before running any action
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   else
     echo "Homebrew is already installed"
   fi
