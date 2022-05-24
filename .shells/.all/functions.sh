@@ -234,6 +234,14 @@ is_macos() {
   fi
 }
 
+is_macos_arm() {
+  if is_macos && [ "$(arch)" = "arm64" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 is_wsl() {
   VERSION_FILE_PATH=/proc/version
   if [ -f "$VERSION_FILE_PATH" ] && grep -q "Microsoft" "$VERSION_FILE_PATH"; then

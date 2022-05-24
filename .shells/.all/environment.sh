@@ -69,7 +69,11 @@ if is_macos; then
   if ! command -v brew >/dev/null 2>&1; then
     # brew is not yet in the path because it was (likely) installed manually by setup.sh
     # So falling back to a known location.
-    HOMEBREW_PATH=/usr/local/brew
+    if is_macos_arm; then
+      HOMEBREW_PATH=/opt/homebrew
+    else
+      HOMEBREW_PATH=/usr/local/brew
+    fi
   else
     HOMEBREW_PATH="$(brew --prefix)"
   fi
@@ -88,15 +92,6 @@ if is_macos; then
 
     # On macOS, we install zsh-autosuggestions from brew
     ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${HOMEBREW_PATH}"/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-    # Uncomment the lines below if you want to use executables installed with Homebrew
-    # instead of the macOS ones
-    #export PATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnubin:${PATH}
-    #export MANPATH="${HOMEBREW_PATH}"/opt/coreutils/libexec/gnuman:${MANPATH}
-    #export PATH="${HOMEBREW_PATH}"/opt/make/libexec/gnubin:${PATH}
-    #export MANPATH="${HOMEBREW_PATH}"/opt/make/libexec/gnuman:${MANPATH}
-    #export PATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnubin:${PATH}
-    #export MANPATH="${HOMEBREW_PATH}"/opt/findutils/libexec/gnuman:${MANPATH}
   fi
 
   # add vs code bins to path
