@@ -46,6 +46,7 @@ function Install-Chocolatey-Package {
 
     $Packages =
     'conemu',
+    'googlechrome',
     'keepass',
     'qbittorrent',
     'vlc',
