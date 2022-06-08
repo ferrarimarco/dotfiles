@@ -45,6 +45,7 @@ function Install-Chocolatey-Package {
     Confirm-Return-Code
 
     $Packages =
+    '7zip',
     'conemu',
     'googlechrome',
     'keepass',
