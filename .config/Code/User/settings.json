@@ -22,6 +22,7 @@
   "git.allowNoVerifyCommit": true,
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
   "python.formatting.provider": "black",
   "python.languageServer": "Default",
   "python.testing.pytestEnabled": true,
