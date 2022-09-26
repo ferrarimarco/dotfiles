@@ -126,7 +126,7 @@ super_linter() {
     -e DISABLE_ERRORS=false \
     -e ERROR_ON_MISSING_EXEC_BIT=true \
     -e KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
-    -e LINTER_RULES_PATH="${LINTER_RULES_PATH:-"$(pwd)"}" \
+    -e LINTER_RULES_PATH="${LINTER_RULES_PATH:-"."}" \
     -e MULTI_STATUS=false \
     -e RUN_LOCAL=true \
     -e TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
