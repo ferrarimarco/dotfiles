@@ -299,7 +299,8 @@ setup_debian() {
     sudo apt-get -qqy install \
       containerd.io \
       docker-ce \
-      docker-ce-cli
+      docker-ce-cli \
+      docker-compose-plugin
   else
     echo "WARNING: Skipping Docker installation because its APT repository is not available"
   fi
@@ -323,6 +324,9 @@ setup_debian() {
 
   # Add user docker group
   sudo gpasswd -a "$TARGET_USER" docker
+
+  echo "Setting Docker Buildx as the default builder..."
+  sudo docker buildx install
 }
 
 setup_macos() {
