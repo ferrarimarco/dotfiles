@@ -161,6 +161,7 @@ super_linter() {
     -e TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
     -e VALIDATE_ALL_CODEBASE=true \
     -e VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
+    -w /tmp/lint \
     "${CONTAINER_IMAGE_ID}" "$@"
 }
 
