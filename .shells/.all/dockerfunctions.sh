@@ -50,6 +50,20 @@ set_entrypoint() {
   fi
 }
 
+set_container_image_version() {
+  if [ -n "${CONTAINER_IMAGE_VERSION-}" ]; then
+    CONTAINER_IMAGE_ID="${CONTAINER_IMAGE_ID}:${CONTAINER_IMAGE_VERSION}"
+    echo "Set container image version to ${CONTAINER_IMAGE_ID}"
+  fi
+}
+
+update_container_image() {
+  if [ "${UPDATE_CONTAINER_IMAGE-}" = "true" ]; then
+    echo "Updating container image: ${CONTAINER_IMAGE_ID}"
+    docker pull "${CONTAINER_IMAGE_ID}"
+  fi
+}
+
 #
 # Container Aliases
 #
@@ -58,6 +72,9 @@ ansible() {
   CONTAINER_NAME="ansible"
   del_stopped "${CONTAINER_NAME}"
   set_entrypoint
+  CONTAINER_IMAGE_ID="ansible/ansible"
+  set_container_image_version
+  update_container_image "${CONTAINER_IMAGE_ID}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
@@ -65,13 +82,16 @@ ansible() {
     -v "$(pwd)":/etc/ansible \
     --name "${CONTAINER_NAME}" \
     --rm \
-    ansible/ansible "$@"
+    "${CONTAINER_IMAGE_ID}" "$@"
 }
 
 gcloud() {
   CONTAINER_NAME="gcloud"
   del_stopped "${CONTAINER_NAME}"
   set_entrypoint
+  CONTAINER_IMAGE_ID="gcr.io/google.com/cloudsdktool/cloud-sdk"
+  set_container_image_version
+  update_container_image "${CONTAINER_IMAGE_ID}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -e CLOUDSDK_CONFIG=/config/gcloud \
@@ -79,7 +99,7 @@ gcloud() {
     --name "${CONTAINER_NAME}" \
     -v "${GCLOUD_CONFIG_DIRECTORY}":/config/gcloud \
     -v /etc/localtime:/etc/localtime:ro \
-    gcr.io/google.com/cloudsdktool/cloud-sdk \
+    "${CONTAINER_IMAGE_ID}" \
     gcloud "$@"
 }
 
@@ -87,18 +107,24 @@ jq() {
   CONTAINER_NAME="jq"
   del_stopped "${CONTAINER_NAME}"
   set_entrypoint
+  CONTAINER_IMAGE_ID="stedolan/jq"
+  set_container_image_version
+  update_container_image "${CONTAINER_IMAGE_ID}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
-    stedolan/jq "$@"
+    "${CONTAINER_IMAGE_ID}" "$@"
 }
 
 inspec() {
   CONTAINER_NAME="inspec"
   del_stopped "${CONTAINER_NAME}"
   set_entrypoint
+  CONTAINER_IMAGE_ID="chef/inspec"
+  set_container_image_version
+  update_container_image "${CONTAINER_IMAGE_ID}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
@@ -107,13 +133,16 @@ inspec() {
     -v "${HOME}"/.ssh:/root/.ssh:ro \
     --name "${CONTAINER_NAME}" \
     --rm \
-    chef/inspec "$@"
+    "${CONTAINER_IMAGE_ID}" "$@"
 }
 
 super_linter() {
   CONTAINER_NAME="super_linter"
   del_stopped "${CONTAINER_NAME}"
   set_entrypoint
+  CONTAINER_IMAGE_ID="ghcr.io/github/super-linter"
+  set_container_image_version
+  update_container_image "${CONTAINER_IMAGE_ID}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
@@ -132,13 +161,16 @@ super_linter() {
     -e TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
     -e VALIDATE_ALL_CODEBASE=true \
     -e VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
-    ghcr.io/github/super-linter "$@"
+    "${CONTAINER_IMAGE_ID}" "$@"
 }
 
 terraform() {
   CONTAINER_NAME="terraform"
   del_stopped "${CONTAINER_NAME}"
   set_entrypoint
+  CONTAINER_IMAGE_ID="hashicorp/terraform"
+  set_container_image_version
+  update_container_image "${CONTAINER_IMAGE_ID}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
     -i \
@@ -148,5 +180,5 @@ terraform() {
     -v "$(pwd)":/workspace \
     -v /etc/localtime:/etc/localtime:ro \
     -w "/workspace" \
-    hashicorp/terraform "$@"
+    "${CONTAINER_IMAGE_ID}" "$@"
 }
