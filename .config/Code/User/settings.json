@@ -23,6 +23,7 @@
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
   "java.configuration.updateBuildConfiguration": "automatic",
+  "markdown.validate.enabled": true,
   "python.formatting.provider": "black",
   "python.languageServer": "Default",
   "python.testing.pytestEnabled": true,
@@ -39,16 +40,11 @@
   ],
   "remote.SSH.connectTimeout": 30,
   "telemetry.telemetryLevel": "off",
+  "terraform.languageServer.enable": true,
   "terminal.external.osxExec": "iTerm.app",
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.fontFamily": "MesloLGS NF",
   "terminal.integrated.fontSize": 12,
-  "terraform.languageServer": {
-    "external": true,
-    "args": [
-      "serve"
-    ]
-  },
   "workbench.colorCustomizations": {
     "editorRuler.foreground": "#cfbcc391"
   },
