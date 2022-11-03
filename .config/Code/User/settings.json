@@ -27,6 +27,7 @@
   "python.formatting.provider": "black",
   "python.languageServer": "Default",
   "python.testing.pytestEnabled": true,
+  "redhat.telemetry.enabled": false,
   "remote.SSH.defaultExtensions": [
     "davidanson.vscode-markdownlint",
     "HashiCorp.terraform",
