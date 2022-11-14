@@ -8,7 +8,8 @@
   "editor.rulers": [
     80,
     120,
-    200
+    200,
+    250
   ],
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
