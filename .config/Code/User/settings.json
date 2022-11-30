@@ -25,6 +25,8 @@
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
   "java.configuration.updateBuildConfiguration": "automatic",
+  "java.format.settings.profile": "GoogleStyle",
+  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
   "markdown.validate.enabled": true,
   "python.formatting.provider": "black",
   "python.languageServer": "Default",
