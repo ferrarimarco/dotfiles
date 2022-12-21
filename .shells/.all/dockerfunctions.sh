@@ -2,9 +2,9 @@
 
 # Wrappers for docker run commands
 
-DOCKER_TTY_OPTION=
+DOCKER_FLAGS=
 if [ -t 0 ]; then
-  DOCKER_TTY_OPTION="-t"
+  DOCKER_FLAGS="  --interactive --tty"
 fi
 
 #
@@ -41,12 +41,16 @@ relies_on() {
   done
 }
 
+trim_string() {
+  _INPUT="${1}"
+  echo "${_INPUT}" | xargs
+  unset _INPUT
+}
+
 set_entrypoint() {
   if [ -n "${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}" ]; then
-    DOCKER_ENTRYPOINT_OPTION="--entrypoint=${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}"
-    echo "Overriding entrypoint with ${DOCKER_ENTRYPOINT_OPTION}"
-  else
-    DOCKER_ENTRYPOINT_OPTION=""
+    echo "Overriding entrypoint with: ${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}"
+    DOCKER_FLAGS="${DOCKER_FLAGS} --entrypoint=${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}"
   fi
 }
 
@@ -75,8 +79,10 @@ ansible() {
   CONTAINER_IMAGE_ID="ansible/ansible"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
+  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
+  echo "${DOCKER_FLAGS}"
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
+  docker run ${DOCKER_FLAGS} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/etc/ansible \
@@ -92,8 +98,9 @@ gcloud() {
   CONTAINER_IMAGE_ID="gcr.io/google.com/cloudsdktool/cloud-sdk"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
+  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
+  docker run ${DOCKER_FLAGS} \
     -e CLOUDSDK_CONFIG=/config/gcloud \
     -i \
     --name "${CONTAINER_NAME}" \
@@ -110,8 +117,9 @@ jq() {
   CONTAINER_IMAGE_ID="stedolan/jq"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
+  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
+  docker run ${DOCKER_FLAGS} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
@@ -125,8 +133,9 @@ inspec() {
   CONTAINER_IMAGE_ID="chef/inspec"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
+  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
+  docker run ${DOCKER_FLAGS} \
     -i \
     -v /etc/localtime:/etc/localtime:ro \
     -v "$(pwd)":/share \
@@ -143,8 +152,9 @@ super_linter() {
   CONTAINER_IMAGE_ID="ghcr.io/github/super-linter"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
+  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
+  docker run ${DOCKER_FLAGS} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
@@ -172,8 +182,9 @@ terraform() {
   CONTAINER_IMAGE_ID="hashicorp/terraform"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
+  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
-  docker run ${DOCKER_TTY_OPTION} ${DOCKER_ENTRYPOINT_OPTION} \
+  docker run ${DOCKER_FLAGS} \
     -i \
     --name "${CONTAINER_NAME}" \
     --rm \
