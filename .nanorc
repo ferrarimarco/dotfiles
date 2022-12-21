@@ -7,11 +7,8 @@ set constantshow
 # Enable ~/.nano_history for saving and reading search/replace strings
 set historylog
 
-# Disable mouse support, if available for your system.
-# When enabled, mouse clicks can be used to place the cursor, set the mark (with a double click), and execute shortcuts.
-# The mouse will work in the X Window System, and on the console when gpm is running.
-# When disabled, mouse can be used to scroll and select
-unset mouse
+# Display line numbers to the left of the text area
+set linenumbers
 
 # Allow inserting files into their own buffers
 set multibuffer
@@ -19,11 +16,14 @@ set multibuffer
 # Make the Home key smarter. When Home is pressed anywhere but at the very beginning of non-whitespace characters on a line, the cursor will jump to that beginning (either forwards or backwards). If the cursor is already at that position, it will jump to the true beginning of the line
 set smarthome
 
-# Use smooth scrolling by default
-set smooth
-
 # Enable soft line wrapping for easier viewing of very long lones
 set softwrap
 
 # Use a tab size of n columns. The value of n must be greater than 0. The default value is 8
 set tabsize 4
+
+# Disable mouse support, if available for your system.
+# When enabled, mouse clicks can be used to place the cursor, set the mark (with a double click), and execute shortcuts.
+# The mouse will work in the X Window System, and on the console when gpm is running.
+# When disabled, mouse can be used to scroll and select
+unset mouse
