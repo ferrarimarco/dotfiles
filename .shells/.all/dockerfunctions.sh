@@ -4,7 +4,7 @@
 
 DOCKER_FLAGS=
 if [ -t 0 ]; then
-  DOCKER_FLAGS="  --interactive --tty"
+  DOCKER_FLAGS="--interactive --tty"
 fi
 
 #
@@ -83,9 +83,8 @@ ansible() {
   echo "${DOCKER_FLAGS}"
   # shellcheck disable=SC2086
   docker run ${DOCKER_FLAGS} \
-    -i \
-    -v /etc/localtime:/etc/localtime:ro \
-    -v "$(pwd)":/etc/ansible \
+    --volume /etc/localtime:/etc/localtime:ro \
+    --volume "$(pwd)":/etc/ansible \
     --name "${CONTAINER_NAME}" \
     --rm \
     "${CONTAINER_IMAGE_ID}" "$@"
@@ -101,29 +100,12 @@ gcloud() {
   DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
   docker run ${DOCKER_FLAGS} \
-    -e CLOUDSDK_CONFIG=/config/gcloud \
-    -i \
+    --env CLOUDSDK_CONFIG=/config/gcloud \
     --name "${CONTAINER_NAME}" \
-    -v "${GCLOUD_CONFIG_DIRECTORY}":/config/gcloud \
-    -v /etc/localtime:/etc/localtime:ro \
+    --volume "${GCLOUD_CONFIG_DIRECTORY}":/config/gcloud \
+    --volume /etc/localtime:/etc/localtime:ro \
     "${CONTAINER_IMAGE_ID}" \
     gcloud "$@"
-}
-
-jq() {
-  CONTAINER_NAME="jq"
-  del_stopped "${CONTAINER_NAME}"
-  set_entrypoint
-  CONTAINER_IMAGE_ID="stedolan/jq"
-  set_container_image_version
-  update_container_image "${CONTAINER_IMAGE_ID}"
-  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
-  # shellcheck disable=SC2086
-  docker run ${DOCKER_FLAGS} \
-    -i \
-    --name "${CONTAINER_NAME}" \
-    --rm \
-    "${CONTAINER_IMAGE_ID}" "$@"
 }
 
 inspec() {
@@ -136,10 +118,9 @@ inspec() {
   DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
   docker run ${DOCKER_FLAGS} \
-    -i \
-    -v /etc/localtime:/etc/localtime:ro \
-    -v "$(pwd)":/share \
-    -v "${HOME}"/.ssh:/root/.ssh:ro \
+    --volume /etc/localtime:/etc/localtime:ro \
+    --volume "$(pwd)":/share \
+    --volume "${HOME}"/.ssh:/root/.ssh:ro \
     --name "${CONTAINER_NAME}" \
     --rm \
     "${CONTAINER_IMAGE_ID}" "$@"
@@ -155,23 +136,22 @@ super_linter() {
   DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
   docker run ${DOCKER_FLAGS} \
-    -i \
     --name "${CONTAINER_NAME}" \
     --rm \
-    -v "$(pwd)":/tmp/lint \
-    -e ACTIONS_RUNNER_DEBUG="${ACTIONS_RUNNER_DEBUG:-"false"}" \
-    -e ANSIBLE_DIRECTORY="${ANSIBLE_DIRECTORY:-"/ansible"}" \
-    -e DEFAULT_WORKSPACE=/tmp/lint \
-    -e DISABLE_ERRORS=false \
-    -e ERROR_ON_MISSING_EXEC_BIT=true \
-    -e KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
-    -e LINTER_RULES_PATH="${LINTER_RULES_PATH:-"."}" \
-    -e MULTI_STATUS=false \
-    -e RUN_LOCAL=true \
-    -e TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
-    -e VALIDATE_ALL_CODEBASE=true \
-    -e VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
-    -w /tmp/lint \
+    --volume "$(pwd)":/tmp/lint \
+    --env ACTIONS_RUNNER_DEBUG="${ACTIONS_RUNNER_DEBUG:-"false"}" \
+    --env ANSIBLE_DIRECTORY="${ANSIBLE_DIRECTORY:-"/ansible"}" \
+    --env DEFAULT_WORKSPACE=/tmp/lint \
+    --env DISABLE_ERRORS=false \
+    --env ERROR_ON_MISSING_EXEC_BIT=true \
+    --env KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
+    --env LINTER_RULES_PATH="${LINTER_RULES_PATH:-"."}" \
+    --env MULTI_STATUS=false \
+    --env RUN_LOCAL=true \
+    --env TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
+    --env VALIDATE_ALL_CODEBASE=true \
+    --env VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
+    --workdir /tmp/lint \
     "${CONTAINER_IMAGE_ID}" "$@"
 }
 
@@ -185,12 +165,11 @@ terraform() {
   DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
   # shellcheck disable=SC2086
   docker run ${DOCKER_FLAGS} \
-    -i \
     --name "${CONTAINER_NAME}" \
     --rm \
-    -v "${GCLOUD_CONFIG_DIRECTORY}":/root/.config/gcloud \
-    -v "$(pwd)":/workspace \
-    -v /etc/localtime:/etc/localtime:ro \
-    -w "/workspace" \
+    --volume "${GCLOUD_CONFIG_DIRECTORY}":/root/.config/gcloud \
+    --volume "$(pwd)":/workspace \
+    --volume /etc/localtime:/etc/localtime:ro \
+    --workdir "/workspace" \
     "${CONTAINER_IMAGE_ID}" "$@"
 }
