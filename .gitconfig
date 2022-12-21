@@ -191,3 +191,6 @@ insteadOf = "gist:"
 
 [github]
 	user = ferrarimarco
+
+[gerrit]
+	createChangeId = false
