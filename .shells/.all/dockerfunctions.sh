@@ -2,11 +2,6 @@
 
 # Wrappers for docker run commands
 
-DOCKER_FLAGS=
-if [ -t 0 ]; then
-  DOCKER_FLAGS="--interactive --tty"
-fi
-
 #
 # Helper Functions
 #
@@ -41,24 +36,23 @@ relies_on() {
   done
 }
 
-trim_string() {
-  _INPUT="${1}"
-  echo "${_INPUT}" | xargs
-  unset _INPUT
-}
-
-set_entrypoint() {
-  if [ -n "${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}" ]; then
-    echo "Overriding entrypoint with: ${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}"
-    DOCKER_FLAGS="${DOCKER_FLAGS} --entrypoint=${DOCKER_ENTRYPOINT_OPTION_ARGUMENT}"
-  fi
-}
-
 set_container_image_version() {
   if [ -n "${CONTAINER_IMAGE_VERSION-}" ]; then
     CONTAINER_IMAGE_ID="${CONTAINER_IMAGE_ID}:${CONTAINER_IMAGE_VERSION}"
     echo "Set container image version to ${CONTAINER_IMAGE_ID}"
   fi
+}
+
+set_interactive_docker_flags() {
+  if [ -t 0 ]; then
+    echo "--interactive --tty"
+  fi
+}
+
+trim_string() {
+  _INPUT="${1}"
+  echo "${_INPUT}" | xargs
+  unset _INPUT
 }
 
 update_container_image() {
@@ -72,104 +66,60 @@ update_container_image() {
 # Container Aliases
 #
 
-ansible() {
-  CONTAINER_NAME="ansible"
+run_container() {
+  CONTAINER_NAME="${1}"
+  shift
+  CONTAINER_IMAGE_ID="${1}"
+  shift
+
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} $(set_interactive_docker_flags)"
+  if [ -n "${ADDITIONAL_DOCKER_RUN_FLAGS-}" ]; then
+    _DOCKER_FLAGS="${_DOCKER_FLAGS} ${ADDITIONAL_DOCKER_RUN_FLAGS}"
+  fi
+  _DOCKER_FLAGS="$(trim_string "${_DOCKER_FLAGS}")"
   del_stopped "${CONTAINER_NAME}"
-  set_entrypoint
-  CONTAINER_IMAGE_ID="ansible/ansible"
   set_container_image_version
   update_container_image "${CONTAINER_IMAGE_ID}"
-  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
-  echo "${DOCKER_FLAGS}"
+  echo ${_DOCKER_FLAGS}
   # shellcheck disable=SC2086
-  docker run ${DOCKER_FLAGS} \
-    --volume /etc/localtime:/etc/localtime:ro \
-    --volume "$(pwd)":/etc/ansible \
+  docker run ${_DOCKER_FLAGS} \
     --name "${CONTAINER_NAME}" \
     --rm \
+    --volume "$(pwd)":/workspace \
+    --volume /etc/localtime:/etc/localtime:ro \
     "${CONTAINER_IMAGE_ID}" "$@"
+  unset _DOCKER_FLAGS
+}
+
+ansible() {
+  _DOCKER_FLAGS=
+  run_container "ansible" "ansible/ansible" "$@"
 }
 
 gcloud() {
-  CONTAINER_NAME="gcloud"
-  del_stopped "${CONTAINER_NAME}"
-  set_entrypoint
-  CONTAINER_IMAGE_ID="gcr.io/google.com/cloudsdktool/cloud-sdk"
-  set_container_image_version
-  update_container_image "${CONTAINER_IMAGE_ID}"
-  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
-  # shellcheck disable=SC2086
-  docker run ${DOCKER_FLAGS} \
-    --env CLOUDSDK_CONFIG=/config/gcloud \
-    --name "${CONTAINER_NAME}" \
-    --volume "${GCLOUD_CONFIG_DIRECTORY}":/config/gcloud \
-    --volume /etc/localtime:/etc/localtime:ro \
-    "${CONTAINER_IMAGE_ID}" \
-    gcloud "$@"
-}
-
-inspec() {
-  CONTAINER_NAME="inspec"
-  del_stopped "${CONTAINER_NAME}"
-  set_entrypoint
-  CONTAINER_IMAGE_ID="chef/inspec"
-  set_container_image_version
-  update_container_image "${CONTAINER_IMAGE_ID}"
-  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
-  # shellcheck disable=SC2086
-  docker run ${DOCKER_FLAGS} \
-    --volume /etc/localtime:/etc/localtime:ro \
-    --volume "$(pwd)":/share \
-    --volume "${HOME}"/.ssh:/root/.ssh:ro \
-    --name "${CONTAINER_NAME}" \
-    --rm \
-    "${CONTAINER_IMAGE_ID}" "$@"
+  _DOCKER_FLAGS="--env CLOUDSDK_CONFIG=/config/gcloud --volume ${GCLOUD_CONFIG_DIRECTORY}:/config/gcloud"
+  run_container "gcloud" "gcr.io/google.com/cloudsdktool/cloud-sdk" "$@"
 }
 
 super_linter() {
-  CONTAINER_NAME="super_linter"
-  del_stopped "${CONTAINER_NAME}"
-  set_entrypoint
-  CONTAINER_IMAGE_ID="ghcr.io/github/super-linter"
-  set_container_image_version
-  update_container_image "${CONTAINER_IMAGE_ID}"
-  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
-  # shellcheck disable=SC2086
-  docker run ${DOCKER_FLAGS} \
-    --name "${CONTAINER_NAME}" \
-    --rm \
-    --volume "$(pwd)":/tmp/lint \
-    --env ACTIONS_RUNNER_DEBUG="${ACTIONS_RUNNER_DEBUG:-"false"}" \
-    --env ANSIBLE_DIRECTORY="${ANSIBLE_DIRECTORY:-"/ansible"}" \
-    --env DEFAULT_WORKSPACE=/tmp/lint \
-    --env DISABLE_ERRORS=false \
-    --env ERROR_ON_MISSING_EXEC_BIT=true \
-    --env KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
-    --env LINTER_RULES_PATH="${LINTER_RULES_PATH:-"."}" \
-    --env MULTI_STATUS=false \
-    --env RUN_LOCAL=true \
-    --env TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
-    --env VALIDATE_ALL_CODEBASE=true \
-    --env VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
-    --workdir /tmp/lint \
-    "${CONTAINER_IMAGE_ID}" "$@"
+  _DOCKER_FLAGS="--env ACTIONS_RUNNER_DEBUG=${ACTIONS_RUNNER_DEBUG:-"false"}"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env ANSIBLE_DIRECTORY=\"${ANSIBLE_DIRECTORY:-"/ansible"}\""
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env DEFAULT_WORKSPACE=/workspace"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env DISABLE_ERRORS=false"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env ERROR_ON_MISSING_EXEC_BIT=true"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env KUBERNETES_KUBEVAL_OPTIONS=\"--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/\""
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env LINTER_RULES_PATH=\"${LINTER_RULES_PATH:-"."}\""
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env MULTI_STATUS=false"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env RUN_LOCAL=true"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env TEST_CASE_RUN=\"${TEST_CASE_RUN:-"false"}\""
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env VALIDATE_ALL_CODEBASE=true"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --env VALIDATE_JSCPD_ALL_CODEBASE=\"${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}\""
+  run_container "super_linter" "ghcr.io/github/super-linter" "$@"
 }
 
 terraform() {
-  CONTAINER_NAME="terraform"
-  del_stopped "${CONTAINER_NAME}"
-  set_entrypoint
-  CONTAINER_IMAGE_ID="hashicorp/terraform"
-  set_container_image_version
-  update_container_image "${CONTAINER_IMAGE_ID}"
-  DOCKER_FLAGS="$(trim_string "${DOCKER_FLAGS}")"
-  # shellcheck disable=SC2086
-  docker run ${DOCKER_FLAGS} \
-    --name "${CONTAINER_NAME}" \
-    --rm \
-    --volume "${GCLOUD_CONFIG_DIRECTORY}":/root/.config/gcloud \
-    --volume "$(pwd)":/workspace \
-    --volume /etc/localtime:/etc/localtime:ro \
-    --workdir "/workspace" \
-    "${CONTAINER_IMAGE_ID}" "$@"
+  _DOCKER_FLAGS="--env ACTIONS_RUNNER_DEBUG=${ACTIONS_RUNNER_DEBUG:-"false"}"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --volume \"${GCLOUD_CONFIG_DIRECTORY}\":/root/.config/gcloud"
+  _DOCKER_FLAGS="${_DOCKER_FLAGS} --workdir /workspace"
+  run_container "terraform" "hashicorp/terraform" "$@"
 }
