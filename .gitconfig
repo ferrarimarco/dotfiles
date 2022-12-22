@@ -96,6 +96,7 @@ whitespace = fix
 excludesfile = ~/.gitignore
 attributesfile = ~/.gitattributes
 
+# Use these hooks by default
 hooksPath = ~/.git-hooks
 
 # Treat spaces before tabs and all kinds of trailing whitespace as an error
