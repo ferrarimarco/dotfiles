@@ -10,8 +10,8 @@ if test ! -f "$1"; then
   echo "file does not exist: $1"
   exit 1
 fi
-# Do not create a change id if requested
-if test "false" = "$(git config --bool --get gerrit.createChangeId)"; then
+# Create a change id only if requested
+if test ! "true" = "$(git config --bool --get gerrit.createChangeId)"; then
   exit 0
 fi
 # $RANDOM will be undefined if not using bash, so don't use set -u
