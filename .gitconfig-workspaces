@@ -1,0 +1,12 @@
+# Use the SSH protocol to push to GitHub
+[url "git@github.com:"]
+
+insteadof = git://github.com/
+insteadof = http://github.com/
+insteadof = https://github.com/
+
+# Use the SSH protocol to push to GitHub Gists
+[url "git@gist.github.com:"]
+
+insteadof = git://gist.github.com/
+insteadof = https://gist.github.com/
