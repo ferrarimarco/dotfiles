@@ -359,7 +359,7 @@ uninstall_dotfiles() {
 install_dotfiles() {
   SOURCE_PATH="${1}"
   if [ ! -d "${SOURCE_PATH}" ]; then
-    echo "${SOURCE_PATH} doesn't exists."
+    echo "Source path (${SOURCE_PATH}) doesn't exists."
     return 1
   fi
 

@@ -159,21 +159,17 @@ ff = only
 # change to maching for machines with older versions of git 1.x.x
 default = simple
 
-# Use the SSH protocol to access GitHub
-[url "git@github.com:"]
+# Don't use unsecure protocols to access GitHub
+[url "https://github.com/"]
 
-insteadOf = "git://github.com/"
-insteadOf = "github:"
 insteadof = git://github.com/
 insteadof = http://github.com/
-insteadOf = https://github.com/
 
-# Use the SSH protocol to access GitHub Gists
-[url "git@gist.github.com:"]
+# Don't use unsecure protocols to access GitHub Gists
+[url "https://gist.github.com/"]
 
-insteadOf = "gist:"
-insteadOf = "git://gist.github.com/"
-insteadOf = "gst:"
+insteadof = git://gist.github.com/
+insteadof = http://gist.github.com/
 
 # Uncomment if you want fetch to also get all github pull requests, this is rather
 # large on big repos.
@@ -197,6 +193,10 @@ user = ferrarimarco
 
 createChangeId = false
 
-[includeIf "gitdir:~/workspaces-work/"]
+[includeIf "gitdir/i:~/workspaces-work/"]
 
 path = ~/.gitconfig-work
+
+[includeIf "gitdir/i:~/workspaces*/"]
+
+path = ~/.gitconfig-workspaces
