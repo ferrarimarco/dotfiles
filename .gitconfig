@@ -197,4 +197,4 @@ insteadOf = "gist:"
 	createChangeId = false
 
 [includeIf "gitdir:~/workspaces-work/"]
-    path = ~/.gitconfig-work
+	path = ~/.gitconfig-work
