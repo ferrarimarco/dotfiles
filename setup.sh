@@ -124,6 +124,8 @@ setup_user() {
   mkdir -p "$HOME/workspaces-work"
 
   mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
+
+  touch "$HOME/.gitconfig-work"
 }
 
 setup_debian() {
