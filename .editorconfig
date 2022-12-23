@@ -25,6 +25,6 @@ spaces_around_brackets = false
 # Enable this option by un-commenting the following line
 # max_line_length = 150
 
-[{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules,.gitconfig}]
+[{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules}]
 indent_size = 4
 indent_style = tab
