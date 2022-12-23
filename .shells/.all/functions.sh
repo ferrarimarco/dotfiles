@@ -253,6 +253,14 @@ is_wsl() {
   fi
 }
 
+is_ci() {
+  if [ "${GITHUB_ACTIONS}" = "true" ] || [ "${CI}" = "true" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 symlink_file() {
   SOURCE_FILE_PATH="${1}"
   DESTINATION_FILE_PATH="${2}"

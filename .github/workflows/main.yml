@@ -27,8 +27,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-11
-          - ubuntu-20.04
+          - macos-12
+          - ubuntu-22.04
   setup_windows:
     needs:
       - lint

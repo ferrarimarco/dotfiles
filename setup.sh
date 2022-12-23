@@ -485,6 +485,12 @@ setup_macos() {
   # Remove the "Core Sync" finder extension
   sudo rm -rf "/Applications/Utilities/Adobe Sync/CoreSync/Core Sync.app"
 
+  if is_ci; then
+    # Workaround for https://github.com/actions/runner-images/issues/6817
+    # homebrew fails to update python due to unlinking failure
+    rm -fv /usr/local/bin/2to3
+  fi
+
   ###############################################################################
   # Kill affected applications                                                  #
   ###############################################################################
