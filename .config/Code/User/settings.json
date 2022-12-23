@@ -32,13 +32,14 @@
   "redhat.telemetry.enabled": false,
   "remote.SSH.defaultExtensions": [
     "davidanson.vscode-markdownlint",
+    "EditorConfig.EditorConfig",
     "HashiCorp.terraform",
     "ms-azuretools.vscode-docker",
     "ms-python.python",
+    "ms-vscode-remote.vscode-remote-extensionpack",
     "ms-vscode.cmake-tools",
     "ms-vscode.cpptools",
     "ms-vscode.powershell",
-    "ms-vscode-remote.vscode-remote-extensionpack",
     "timonwong.shellcheck"
   ],
   "remote.SSH.connectTimeout": 30,
