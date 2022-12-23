@@ -121,12 +121,13 @@ setup_user() {
   mkdir -p "$HOME/bin"
   mkdir -p "$HOME/Downloads"
   mkdir -p "$HOME/workspaces"
+  mkdir -p "$HOME/workspaces-work"
 
   mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
 }
 
 setup_debian() {
-  echo "Setting up a Debian system"
+  echo "Setting up a Debian or Debian-based system"
 
   DEBIAN_FRONTEND=noninteractive
   export DEBIAN_FRONTEND

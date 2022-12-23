@@ -195,3 +195,6 @@ insteadOf = "gist:"
 
 [gerrit]
 	createChangeId = false
+
+[includeIf "gitdir:~/workspaces-work/"]
+    path = ~/.gitconfig-work
