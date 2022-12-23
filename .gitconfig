@@ -150,33 +150,30 @@ autocorrect = 1
 log = true
 
 [pull]
+
 # Allow fast-forward pulls only
 ff = only
 
-
 [push]
+
 # change to maching for machines with older versions of git 1.x.x
 default = simple
 
+# Use the SSH protocol to access GitHub
 [url "git@github.com:"]
 
-pushInsteadOf = https://github.com/
-pushInsteadOf = "github:"
-pushInsteadOf = "git://github.com/"
-
-[url "git://github.com/"]
-
+insteadOf = "git://github.com/"
 insteadOf = "github:"
+insteadof = git://github.com/
+insteadof = http://github.com/
+insteadOf = https://github.com/
 
+# Use the SSH protocol to access GitHub Gists
 [url "git@gist.github.com:"]
 
-insteadOf = "gst:"
-pushInsteadOf = "gist:"
-pushInsteadOf = "git://gist.github.com/"
-
-[url "git://gist.github.com/"]
-
 insteadOf = "gist:"
+insteadOf = "git://gist.github.com/"
+insteadOf = "gst:"
 
 # Uncomment if you want fetch to also get all github pull requests, this is rather
 # large on big repos.
@@ -184,17 +181,22 @@ insteadOf = "gist:"
 #fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
 
 [commit]
-	gpgsign = false
+
+gpgsign = false
 
 [user]
-	name = Marco Ferrari
-	email = ferrari.marco@gmail.com
+
+email = ferrari.marco@gmail.com
+name = Marco Ferrari
 
 [github]
-	user = ferrarimarco
+
+user = ferrarimarco
 
 [gerrit]
-	createChangeId = false
+
+createChangeId = false
 
 [includeIf "gitdir:~/workspaces-work/"]
-	path = ~/.gitconfig-work
+
+path = ~/.gitconfig-work
