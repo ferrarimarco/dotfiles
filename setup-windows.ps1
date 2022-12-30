@@ -96,7 +96,7 @@ function Install-WSL {
     Confirm-Return-Code
 
     Write-Output "Installing the WSL distribution..."
-    & "wsl" --install -d Ubuntu-22.04
+    & "wsl" --install -d Ubuntu-20.04
     Confirm-Return-Code
 
     Write-Output "Installed WSL distributions:"
