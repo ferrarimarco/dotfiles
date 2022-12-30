@@ -562,7 +562,7 @@ set_repository_path() {
   CURRENT_WORKING_DIRECTORY="$(pwd)"
   echo "The current working directory is $CURRENT_WORKING_DIRECTORY"
 
-  # Cannot use the is_XXXX functions here because they might not be available at this point
+  # Cannot use the is_XXXX or other functions defined in functions.sh because they might not be available at this point
   os_name="$(uname -s)"
   if test "${os_name#*"Darwin"}" != "$os_name"; then
     DIR="$(dirname "$SCRIPT_PATH")"
@@ -675,7 +675,7 @@ main() {
     setup_shell
     setup_user
     install_dotfiles "${REPOSITORY_PATH}"
-    update_system
+    update_dotfiles
   else
     echo "The current OS or distribution is not supported. Terminating..."
     exit 1

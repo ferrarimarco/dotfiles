@@ -289,38 +289,68 @@ update_brew() {
 pull_from_git_repository() {
   destination_dir="$1"
   program_name="$2"
-  if [ -d "$destination_dir/.git" ]; then
+
+  _git_dir="${destination_dir}/.git"
+  if [ -d "${_git_dir}" ]; then
     echo "Updating $program_name in: $destination_dir"
     git -C "$destination_dir" pull
   else
-    echo "WARNING: $destination_dir doesn't exists"
+    echo "ERROR: ${_git_dir} doesn't exists"
+    return 1
   fi
+  unset _git_dir
   unset destination_dir
   unset program_name
 }
 
+update_dotfiles() {
+  echo "Updating dotfiles..."
+
+  _SHELL_CUSTOMIZATION_DIRECTORY_PATH="${HOME}/.shells/.sh/environment.sh"
+  if [ ! -e "${_SHELL_CUSTOMIZATION_DIRECTORY_PATH}" ]; then
+    echo "ERROR: ${_SHELL_CUSTOMIZATION_DIRECTORY_PATH} doesn't exist"
+    return 1
+  fi
+
+  _DOTFILES_REPOSITORY_PATH="$(read_symlink_destination_path "${_SHELL_CUSTOMIZATION_DIRECTORY_PATH}" | xargs dirname | xargs dirname | xargs dirname)"
+  echo "Dotfiles repository path: ${_DOTFILES_REPOSITORY_PATH}"
+
+  pull_from_git_repository "${_DOTFILES_REPOSITORY_PATH}" "dotfiles"
+  install_dotfiles "${_DOTFILES_REPOSITORY_PATH}"
+
+  unset _DOTFILES_REPOSITORY_PATH
+  unset _SHELL_CUSTOMIZATION_DIRECTORY_PATH
+
+  if is_debian; then
+    pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
+    pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
+  fi
+
+  pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
+}
+
 update_system() {
+  update_dotfiles
+
   if is_macos; then
     echo "Updating macOS..."
-    sudo softwareupdate \
-      --all \
-      --install
+
     if command -v brew >/dev/null 2>&1; then
       update_brew
     fi
+    sudo softwareupdate \
+      --all \
+      --install
   elif is_debian; then
-    echo "Updating linux..."
+    echo "Updating Debian-based system..."
+
     sudo apt-get -q update
     sudo apt-get -qy upgrade
-    pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
-    pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
 
     if is_snap_available; then
       sudo snap refresh
     fi
   fi
-
-  pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
 }
 
 # Make a temporary directory and enter it
@@ -408,4 +438,21 @@ install_dotfiles() {
   fi
 
   unset SOURCE_PATH
+}
+
+read_symlink_destination_path() {
+  _INPUT_PATH="${1}"
+  _TARGET_PATH=
+  if is_macos; then
+    # readlink on macOS doesn't support the -f (--canonicalize) option
+    _TARGET_PATH="$(python3 -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' "${_INPUT_PATH}")"
+  elif is_linux; then
+    # Use readlink directly
+    _TARGET_PATH="$(readlink -f "$0")"
+  fi
+
+  echo "${_TARGET_PATH}"
+
+  unset _INPUT_PATH
+  unset _TARGET_PATH
 }
