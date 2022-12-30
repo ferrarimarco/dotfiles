@@ -88,16 +88,20 @@ function Install-VSCode-Extension {
 
 function Install-WSL {
     Write-Output "Installing WSL..."
-    wsl --install
+    & "wsl" --install
+    Confirm-Return-Code
 
     Write-Output "WSL distribution list:"
-    wsl --list --online
+    & "wsl" --list --online
+    Confirm-Return-Code
 
     Write-Output "Installing the WSL distribution..."
-    wsl --install -d Ubuntu-22.04
+    & "wsl" --install -d Ubuntu-22.04
+    Confirm-Return-Code
 
     Write-Output "Installed WSL distributions:"
-    wsl --list --verbose
+    & "wsl" --list --verbose
+    Confirm-Return-Code
 }
 
 Install-WSL

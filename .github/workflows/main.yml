@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Super-Linter
@@ -15,9 +15,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
+          VALIDATE_JSCPD_ALL_CODEBASE: true
+
   setup_unix_like:
-    needs:
-      - lint
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -30,9 +30,8 @@ jobs:
           - macos-12
           - ubuntu-20.04
           - ubuntu-22.04
+
   setup_windows:
-    needs:
-      - lint
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
