@@ -1,3 +1,4 @@
+---
 name: CI
 
 on: [push, pull_request]
@@ -38,3 +39,4 @@ jobs:
       - name: Setup dotfiles (Windows)
         run: |
           powershell -executionpolicy bypass ".\setup-windows.ps1"
+...

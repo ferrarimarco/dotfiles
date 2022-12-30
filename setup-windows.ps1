@@ -95,9 +95,16 @@ function Install-WSL {
     & "wsl" --list --online
     Confirm-Return-Code
 
-    Write-Output "Installing the WSL distribution..."
-    & "wsl" --install -d Ubuntu-20.04
-    Confirm-Return-Code
+    $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu22.04onWindows
+    if (!$WslPackage) {
+        Write-Output "Installing Ubuntu (WSL)..."
+        Invoke-WebRequest -Uri https://aka.ms/wslubuntu2204 -OutFile Ubuntu.appx -UseBasicParsing
+        Add-AppxPackage .\Ubuntu.appx
+        Remove-Item .\Ubuntu.appx
+    }
+    else {
+        Write-Output "The WSL package is already installed."
+    }
 
     Write-Output "Installed WSL distributions:"
     & "wsl" --list --verbose
@@ -106,8 +113,11 @@ function Install-WSL {
 
 if ($env:GITHUB_ACTIONS -ne "true")
 {
-    echo "Not running in the CI environment, so we can install WSL2 that needs virtualization support."
+    Write-Output "Not running in the CI environment, so we can install WSL2 that needs virtualization support."
     Install-WSL
+}
+else{
+    Write-Output "Running in a CI environment, skipping WSL2 installation."
 }
 
 Install-Chocolatey
