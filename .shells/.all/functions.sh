@@ -306,20 +306,21 @@ pull_from_git_repository() {
 update_dotfiles() {
   echo "Updating dotfiles..."
 
-  _SHELL_CUSTOMIZATION_DIRECTORY_PATH="${HOME}/.shells/.sh/environment.sh"
-  if [ ! -e "${_SHELL_CUSTOMIZATION_DIRECTORY_PATH}" ]; then
-    echo "ERROR: ${_SHELL_CUSTOMIZATION_DIRECTORY_PATH} doesn't exist"
+  _SYMLINKED_FILE_PATH="${HOME}/.editorconfig"
+  echo "Path to a file that should be symlinked: ${_SYMLINKED_FILE_PATH}"
+  if [ ! -e "${_SYMLINKED_FILE_PATH}" ]; then
+    echo "ERROR: ${_SYMLINKED_FILE_PATH} doesn't exist"
     return 1
   fi
 
-  _DOTFILES_REPOSITORY_PATH="$(read_symlink_destination_path "${_SHELL_CUSTOMIZATION_DIRECTORY_PATH}" | xargs dirname | xargs dirname | xargs dirname)"
+  _DOTFILES_REPOSITORY_PATH="$(read_symlink_destination_path "${_SYMLINKED_FILE_PATH}" | xargs dirname)"
   echo "Dotfiles repository path: ${_DOTFILES_REPOSITORY_PATH}"
 
   pull_from_git_repository "${_DOTFILES_REPOSITORY_PATH}" "dotfiles"
   install_dotfiles "${_DOTFILES_REPOSITORY_PATH}"
 
   unset _DOTFILES_REPOSITORY_PATH
-  unset _SHELL_CUSTOMIZATION_DIRECTORY_PATH
+  unset _SYMLINKED_FILE_PATH
 
   if is_debian; then
     pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
