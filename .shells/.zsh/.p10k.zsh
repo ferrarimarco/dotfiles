@@ -91,6 +91,7 @@
         # example               # example user-defined segment (see prompt_example function below)
         proxy                   # system-wide http/https/ftp proxy
         wifi                    # WiFi speed
+        cpu_arch                # CPU architecture
     )
 
     # display left segments on one line, and print the command prompt below it
@@ -168,9 +169,9 @@
     typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX='%240F├─'
     typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%240F╰─'
     # Connect right prompt lines with these symbols.
-    typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX='%240F─╮'
-    typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX='%240F─┤'
-    typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX='%240F─╯'
+    # typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX='%240F─╮'
+    # typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX='%240F─┤'
+    # typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX='%240F─╯'
 
     # Filler between left and right prompt on the first prompt line. You can set it to ' ', '·' or
     # '─'. The last two make it easier to see the alignment between left and right prompt and to
