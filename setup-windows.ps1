@@ -93,14 +93,15 @@ function Install-WSL {
     Write-Output "WSL distribution list:"
     wsl --list --online
 
-    wsl --install -d Ubuntu-20.04
+    Write-Output "Installing the WSL distribution..."
+    wsl --install -d Ubuntu-22.04
 
-    Write-Output "Installed distributions:"
+    Write-Output "Installed WSL distributions:"
     wsl --list --verbose
 }
 
+Install-WSL
 Install-Chocolatey
 Install-Chocolatey-Package
 Initialize-VSCode
 Install-VSCode-Extension
-Install-WSL
