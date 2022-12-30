@@ -104,7 +104,12 @@ function Install-WSL {
     Confirm-Return-Code
 }
 
-Install-WSL
+if ($env:GITHUB_ACTIONS -ne "true")
+{
+    echo "Not running in the CI environment, so we can install WSL2 that needs virtualization support."
+    Install-WSL
+}
+
 Install-Chocolatey
 Install-Chocolatey-Package
 Initialize-VSCode
