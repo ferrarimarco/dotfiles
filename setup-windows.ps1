@@ -93,16 +93,7 @@ function Install-WSL {
     Write-Output "WSL distribution list:"
     wsl --list --online
 
-    $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
-    if (!$WslPackage) {
-        Write-Output "Installing Ubuntu (WSL)..."
-        Invoke-WebRequest -Uri https://aka.ms/wslubuntu2004 -OutFile Ubuntu.appx -UseBasicParsing
-        Add-AppxPackage .\Ubuntu.appx
-        Remove-Item .\Ubuntu.appx
-    }
-    else {
-        Write-Output "The WSL package is already installed."
-    }
+    wsl --install -d Ubuntu-20.04
 
     Write-Output "Installed distributions:"
     wsl --list --verbose
