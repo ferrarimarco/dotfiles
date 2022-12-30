@@ -87,27 +87,11 @@ function Install-VSCode-Extension {
 }
 
 function Install-WSL {
-    if ((Get-WindowsOptionalFeature -FeatureName Microsoft-Windows-Subsystem-Linux -Online).State -eq "Enabled") {
-        Write-Output "The WSL feature is already enabled."
-    }
-    else {
-        Write-Output "Enabling WSL..."
-        Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName Microsoft-Windows-Subsystem-Linux
-    }
+    Write-Output "Installing WSL..."
+    wsl --install
 
-    if ((Get-WindowsOptionalFeature -FeatureName VirtualMachinePlatform -Online).State -eq "Enabled") {
-        Write-Output "The Virtual Machine Platform feature is already enabled."
-    }
-    else {
-        Write-Output "Enabling the Virtual Machine Platform feature..."
-        Enable-WindowsOptionalFeature -Online -NoRestart -FeatureName VirtualMachinePlatform
-        Write-Output "A restart is required. Run this script again after restarting the system."
-        exit
-    }
-
-    Write-Output "Setting WSL 2 as the default version (this may fail if WSL2 is not supported)..."
-    # Skipping the return code check because this command may fail if WSL2 is not available.
-    & "wsl" --set-default-version 2
+    Write-Output "WSL distribution list:"
+    wsl --list --online
 
     $WslPackage = Get-AppxPackage -AllUsers -Name CanonicalGroupLimited.Ubuntu20.04onWindows
     if (!$WslPackage) {
@@ -121,7 +105,7 @@ function Install-WSL {
     }
 
     Write-Output "Installed distributions:"
-    & "wsl" --list --verbose
+    wsl --list --verbose
 }
 
 Install-Chocolatey
