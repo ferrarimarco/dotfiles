@@ -253,6 +253,14 @@ is_wsl() {
   fi
 }
 
+is_git_detached_head() {
+  if [ "$(git rev-parse --abbrev-ref --symbolic-full-name HEAD)" = "HEAD" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 is_ci() {
   if [ "${GITHUB_ACTIONS}" = "true" ] || [ "${CI}" = "true" ]; then
     return 0
@@ -286,14 +294,19 @@ update_brew() {
   brew missing
 }
 
-pull_from_git_repository() {
+update_git_repository() {
   destination_dir="$1"
   program_name="$2"
 
   _git_dir="${destination_dir}/.git"
   if [ -d "${_git_dir}" ]; then
     echo "Updating $program_name in: $destination_dir"
-    git -C "$destination_dir" pull
+    if ! is_git_detached_head; then
+      git -C "$destination_dir" pull
+    else
+      echo "$destination_dir is in detached head state. Fetching only."
+      git -C "$destination_dir" fetch --all
+    fi
   else
     echo "ERROR: ${_git_dir} doesn't exists"
     return 1
@@ -307,7 +320,7 @@ update_dotfiles() {
   echo "Updating dotfiles..."
 
   _SYMLINKED_FILE_PATH="${HOME}/.editorconfig"
-  echo "Path to a file that should be symlinked: ${_SYMLINKED_FILE_PATH}"
+  echo "Path to a file that should be symlinked to a file in the dotfiles repository directory: ${_SYMLINKED_FILE_PATH}"
   if [ ! -e "${_SYMLINKED_FILE_PATH}" ]; then
     echo "ERROR: ${_SYMLINKED_FILE_PATH} doesn't exist"
     return 1
@@ -316,18 +329,18 @@ update_dotfiles() {
   _DOTFILES_REPOSITORY_PATH="$(read_symlink_destination_path "${_SYMLINKED_FILE_PATH}" | xargs dirname)"
   echo "Dotfiles repository path: ${_DOTFILES_REPOSITORY_PATH}"
 
-  pull_from_git_repository "${_DOTFILES_REPOSITORY_PATH}" "dotfiles"
+  update_git_repository "${_DOTFILES_REPOSITORY_PATH}" "dotfiles"
   install_dotfiles "${_DOTFILES_REPOSITORY_PATH}"
 
   unset _DOTFILES_REPOSITORY_PATH
   unset _SYMLINKED_FILE_PATH
 
   if is_debian; then
-    pull_from_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
-    pull_from_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
+    update_git_repository "$(dirname "$ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH")" "zsh-autosuggestions"
+    update_git_repository "$(dirname "$ZSH_COMPLETIONS_PATH")" "zsh-completions"
   fi
 
-  pull_from_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
+  update_git_repository "$(dirname "$ZSH_THEME_PATH")" "powerlevel10k"
 }
 
 update_system() {

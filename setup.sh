@@ -487,8 +487,9 @@ setup_macos() {
 
   if is_ci; then
     # Workaround for https://github.com/actions/runner-images/issues/6817
-    # homebrew fails to update python due to unlinking failure
-    rm -fv /usr/local/bin/2to3
+    if is_command_available "2to3"; then
+      rm -fv "$(command -v 2to3)"
+    fi
   fi
 
   ###############################################################################
