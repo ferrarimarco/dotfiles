@@ -462,7 +462,7 @@ read_symlink_destination_path() {
     _TARGET_PATH="$(python3 -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' "${_INPUT_PATH}")"
   elif is_linux; then
     # Use readlink directly
-    _TARGET_PATH="$(readlink -f "$0")"
+    _TARGET_PATH="$(readlink -f "${_INPUT_PATH}")"
   fi
 
   echo "${_TARGET_PATH}"
