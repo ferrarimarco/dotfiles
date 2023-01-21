@@ -183,7 +183,7 @@ add_apt_repo() {
   curl -fsSL "${_APT_REPOSITORY_KEY_URL}" | sudo gpg --dearmor -o "${_APT_REPOSITORY_KEY_FILE_PATH}"
 
   echo "deb [arch=$(dpkg --print-architecture) signed-by=${_APT_REPOSITORY_KEY_FILE_PATH}] ${_APT_REPOSITORY_URL} ${_APT_REPOSITORY_CHANNEL}" |
-    sudo tee "/etc/apt/sources.list.d/${_APT_REPOSITORY_FILE_NAME}" > /dev/null
+    sudo tee "/etc/apt/sources.list.d/${_APT_REPOSITORY_FILE_NAME}" >/dev/null
 
   unset _APT_REPOSITORY_CHANNEL
   unset _APT_REPOSITORY_FILE_NAME
