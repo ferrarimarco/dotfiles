@@ -169,6 +169,30 @@ is_apt_repo_available() {
   return $RET_CODE
 }
 
+add_apt_repo() {
+  _APT_REPOSITORY_KEY_URL="${1}"
+  _APT_REPOSITORY_KEY_FILE_NAME="${2}"
+  _APT_REPOSITORY_URL="${3}"
+  _APT_REPOSITORY_FILE_NAME="${4}"
+  _APT_REPOSITORY_CHANNEL="${5:-"$(lsb_release -cs) stable"}"
+
+  _APT_REPOSITORY_KEY_FILE_PATH="/etc/apt/trusted.gpg.d/${_APT_REPOSITORY_KEY_FILE_NAME}"
+
+  echo "Adding APT repository: ${_APT_REPOSITORY_URL}"
+
+  curl -fsSL "${_APT_REPOSITORY_KEY_URL}" | sudo gpg --dearmor -o "${_APT_REPOSITORY_KEY_FILE_PATH}"
+
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=${_APT_REPOSITORY_KEY_FILE_PATH}] ${_APT_REPOSITORY_URL} ${_APT_REPOSITORY_CHANNEL}" |
+  sudo tee "/etc/apt/sources.list.d/${_APT_REPOSITORY_FILE_NAME}" > /dev/null
+
+  unset _APT_REPOSITORY_CHANNEL
+  unset _APT_REPOSITORY_FILE_NAME
+  unset _APT_REPOSITORY_KEY_FILE_NAME
+  unset _APT_REPOSITORY_KEY_FILE_PATH
+  unset _APT_REPOSITORY_KEY_URL
+  unset _APT_REPOSITORY_URL
+}
+
 is_linux() {
   # Set a default so that we don't have to rely on any environment variable being set
   OS_RELEASE_INFORMATION_FILE_PATH="/etc/os-release"

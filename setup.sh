@@ -208,11 +208,23 @@ setup_debian() {
 
     docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
     if ! is_apt_repo_available "${docker_apt_repository_url}"; then
-      docker_apt_repository_string="deb [arch=amd64] ${docker_apt_repository_url} ${DISTRIBUTION_CODENAME} stable"
-      echo "Adding Docker APT repository (${docker_apt_repository_string})"
-      curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-      sudo add-apt-repository "${docker_apt_repository_string}"
+      add_apt_repo \
+        "${docker_apt_repository_url}/gpg" \
+        "docker.gpg" \
+        "${docker_apt_repository_url}" \
+        "docker.list"
     fi
+
+    vs_code_apt_repository_url="https://packages.microsoft.com/repos/code"
+    if ! is_apt_repo_available "${vs_code_apt_repository_url}"; then
+      add_apt_repo \
+        "https://packages.microsoft.com/keys/microsoft.asc" \
+        "packages.microsoft.gpg" \
+        "${vs_code_apt_repository_url}" \
+        "vscode.list" \
+        "stable main"
+    fi
+    unset vs_code_apt_repository_url
   else
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
   fi
@@ -232,6 +244,7 @@ setup_debian() {
     bridge-utils \
     build-essential \
     bzip2 \
+    code \
     coreutils \
     dnsutils \
     file \
@@ -240,7 +253,6 @@ setup_debian() {
     fwupd \
     fwupdate \
     gcc \
-    glogg \
     gnupg \
     gnupg-agent \
     grep \
@@ -304,18 +316,22 @@ setup_debian() {
       docker-ce \
       docker-ce-cli \
       docker-compose-plugin
+
+    DOCKER_GROUP_NAME="docker"
+    echo "Creating the $DOCKER_GROUP_NAME group for Docker"
+    getent group "$DOCKER_GROUP_NAME" >/dev/null 2>&1 || sudo groupadd "$DOCKER_GROUP_NAME"
+    echo "Adding $TARGET_USER user to the $DOCKER_GROUP_NAME group"
+    sudo gpasswd -a "$TARGET_USER" "$DOCKER_GROUP_NAME"
+    unset DOCKER_GROUP_NAME
   else
     echo "WARNING: Skipping Docker installation because its APT repository is not available"
   fi
 
+  unset docker_apt_repository_url
+
   sudo apt-get -qqy autoremove
   sudo apt-get -qqy autoclean
   sudo apt-get -qqy clean
-
-  DOCKER_GROUP_NAME="docker"
-  echo "Creating the $DOCKER_GROUP_NAME group for Docker"
-  getent group "$DOCKER_GROUP_NAME" >/dev/null 2>&1 || sudo groupadd "$DOCKER_GROUP_NAME"
-  unset DOCKER_GROUP_NAME
 
   if [ -z "$TARGET_USER" ]; then
     echo "ERROR: The TARGET_USER variable is not set, or set to an empty string"
@@ -324,9 +340,6 @@ setup_debian() {
 
   echo "Adding $TARGET_USER user to the sudoers group"
   sudo gpasswd -a "$TARGET_USER" sudo
-
-  # Add user docker group
-  sudo gpasswd -a "$TARGET_USER" docker
 
   echo "Setting Docker Buildx as the default builder..."
   sudo docker buildx install
