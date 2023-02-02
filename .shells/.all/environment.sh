@@ -141,3 +141,9 @@ export USER_FONTS_DIRECTORY
 ###############################################################################
 GCLOUD_CONFIG_DIRECTORY="${HOME}"/.config/gcloud
 export GCLOUD_CONFIG_DIRECTORY
+
+DOTFILES_CONFIGURATION_PATH="${HOME}"/.config/ferrarimarco-dotfiles
+export DOTFILES_CONFIGURATION_PATH
+
+VS_CODE_EXTENSIONS_LIST_FILE_PATH="${DOTFILES_CONFIGURATION_PATH}"/vs-code/extensions.txt
+export VS_CODE_EXTENSIONS_LIST_FILE_PATH

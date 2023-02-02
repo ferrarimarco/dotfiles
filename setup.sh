@@ -108,12 +108,6 @@ install_brew_formulae() {
     echo "ERROR: The BREW_PREFIX variable is not set, or set to an empty string"
     exit 1
   fi
-
-  echo "Installing or updating Visual Studio Code extensions..."
-  while IFS= read -r line; do
-    echo "Installing or updating $line extension..."
-    code --force --install-extension "$line"
-  done <"$REPOSITORY_PATH"/.config/ferrarimarco-dotfiles/vs-code/extensions.txt
 }
 
 setup_user() {
@@ -689,6 +683,7 @@ main() {
     setup_shell
     setup_user
     install_dotfiles "${REPOSITORY_PATH}"
+    install_vs_code_extensions
     update_dotfiles
   else
     echo "The current OS or distribution is not supported. Terminating..."

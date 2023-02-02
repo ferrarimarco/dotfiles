@@ -369,6 +369,7 @@ update_dotfiles() {
 
 update_system() {
   update_dotfiles
+  install_vs_code_extensions
 
   if is_macos; then
     echo "Updating macOS..."
@@ -493,4 +494,12 @@ read_symlink_destination_path() {
 
   unset _INPUT_PATH
   unset _TARGET_PATH
+}
+
+install_vs_code_extensions() {
+  echo "Installing Visual Studio Code extensions from ${VS_CODE_EXTENSIONS_LIST_FILE_PATH}..."
+  while IFS= read -r line; do
+    echo "Installing or updating $line extension..."
+    code --force --install-extension "$line"
+  done <"${VS_CODE_EXTENSIONS_LIST_FILE_PATH}"
 }
