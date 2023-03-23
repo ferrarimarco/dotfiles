@@ -139,6 +139,19 @@ untracked = cyan
 # Detect copies as well as renames
 renames = copies
 
+[fetch]
+# https://git-scm.com/docs/git-config#Documentation/git-config.txt-fetchprune
+# Fetch will automatically behave as if the --prune option was given on the command line.
+# https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt--p
+# Before fetching, remove any remote-tracking references that no longer exist on the remote.
+prune = true
+
+# https://git-scm.com/docs/git-config#Documentation/git-config.txt-fetchprune
+# If true, fetch will automatically behave as if the refs/tags/*:refs/tags/* refspec was provided when pruning, if not set already.
+# https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---prune-tags
+# Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.
+pruneTags = true
+
 [help]
 
 # Automatically correct and execute mistyped commands
