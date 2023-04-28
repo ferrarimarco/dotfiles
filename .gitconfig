@@ -204,6 +204,10 @@ user = ferrarimarco
 
 [gerrit]
 
+# Set this to true to add a "Change-Id" to the commit message. Useful for Gerrit.
+# To set this to true for a given repository, run the following command while the
+# working directory is set to that repository:
+# git config --bool gerrit.createChangeId "true"
 createChangeId = false
 
 [includeIf "gitdir/i:~/workspaces-work/"]
