@@ -503,3 +503,8 @@ install_vs_code_extensions() {
     code --force --install-extension "$line"
   done <"${VS_CODE_EXTENSIONS_LIST_FILE_PATH}"
 }
+
+reload_udev_rules_and_trigger() {
+  udevadm control --reload-rules
+  udevadm trigger
+}
