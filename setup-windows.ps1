@@ -66,7 +66,7 @@ function Install-Chocolatey-Package {
     Write-Output "Current path: $env:PATH"
 
     Write-Output "Currently installed Chocolatey packages:"
-    & "choco" list --local-only
+    & "choco" list
     Confirm-Return-Code
 }
 
