@@ -24,6 +24,10 @@
   "git.allowNoVerifyCommit": true,
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
+  "isort.args": [
+    "--profile",
+    "black"
+  ],
   "java.configuration.updateBuildConfiguration": "automatic",
   "markdown.validate.enabled": true,
   "python.formatting.provider": "black",
@@ -75,6 +79,12 @@
     },
     "editor.suggest.insertMode": "replace",
     "editor.tabSize": 2
+  },
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
   },
   "[scss]": {
     "editor.detectIndentation": false,
