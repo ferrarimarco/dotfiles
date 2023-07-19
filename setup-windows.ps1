@@ -38,7 +38,7 @@ function Install-Chocolatey {
 
 function Install-Chocolatey-Package {
     Write-Output "Currently installed Chocolatey packages:"
-    & "choco" list --local-only
+    & "choco" list
     Confirm-Return-Code
 
     & "choco" upgrade chocolatey --yes --no-progress
