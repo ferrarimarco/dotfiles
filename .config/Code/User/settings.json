@@ -84,7 +84,7 @@
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
-    },
+    }
   },
   "[scss]": {
     "editor.detectIndentation": false,
