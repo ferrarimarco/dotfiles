@@ -7,7 +7,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Super-Linter
         uses: super-linter/super-linter@v5.2.0
         env:
@@ -21,7 +21,7 @@ jobs:
   setup_unix_like:
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup dotfiles (${{ matrix.os }})
         run: |
           ./setup.sh
@@ -35,7 +35,7 @@ jobs:
   setup_windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup dotfiles (Windows)
         run: |
           powershell -executionpolicy bypass ".\setup-windows.ps1"
