@@ -278,7 +278,8 @@ is_wsl() {
 }
 
 is_git_detached_head() {
-  if [ "$(git rev-parse --abbrev-ref --symbolic-full-name HEAD)" = "HEAD" ]; then
+  repository_dir="$1"
+  if [ "$(git -C ${repository_dir} rev-parse --abbrev-ref --symbolic-full-name HEAD)" = "HEAD" ]; then
     return 0
   else
     return 1
@@ -333,7 +334,7 @@ update_git_repository() {
   _git_dir="${destination_dir}/.git"
   if [ -d "${_git_dir}" ]; then
     echo "Updating $program_name in: $destination_dir"
-    if ! is_git_detached_head; then
+    if ! is_git_detached_head "${destination_dir}"; then
       git -C "$destination_dir" pull
     else
       echo "$destination_dir is in detached head state. Fetching only."
