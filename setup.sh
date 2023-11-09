@@ -112,12 +112,13 @@ install_brew_formulae() {
 
 setup_user() {
   echo "Creating directories for the $TARGET_USER in $HOME"
-  mkdir -p "$HOME/bin"
-  mkdir -p "$HOME/Downloads"
-  mkdir -p "$HOME/workspaces"
-  mkdir -p "$HOME/workspaces-work"
+  mkdir -pv "$HOME/bin"
+  mkdir -pv "$HOME/Downloads"
+  mkdir -pv "$HOME/workspaces"
+  mkdir -pv "$HOME/workspaces-work"
 
-  mkdir -p "${GCLOUD_CONFIG_DIRECTORY}"
+  mkdir -pv "${GCLOUD_CONFIG_DIRECTORY}"
+  mkdir -pv "${USER_CACHE_DIRECTORY}"
 
   touch "$HOME/.gitconfig-work"
 }
@@ -554,11 +555,17 @@ setup_shell() {
   fi
 
   echo "Downloading fonts in ${USER_FONTS_DIRECTORY}"
-  mkdir -p "${USER_FONTS_DIRECTORY}"
+  mkdir -pv "${USER_FONTS_DIRECTORY}"
   ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Regular.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Regular.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
   ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
   ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Italic.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
   ! [ -e "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold Italic.ttf" ] && curl -fsLo "${USER_FONTS_DIRECTORY}/MesloLGS NF Bold Italic.ttf" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+
+  if is_default_shell_zsh; then
+    echo "Configuring ZSH"
+
+    mkdir -pv "${ZSH_CACHE_DIR}"
+  fi
 
   echo "Shell configuration completed."
 }

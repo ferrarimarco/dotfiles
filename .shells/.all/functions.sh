@@ -127,7 +127,7 @@ clone_git_repository_if_not_cloned_already() {
   if [ -d "$destination_dir" ]; then
     echo "$destination_dir already exists. Skipping..."
   else
-    mkdir -p "$destination_dir"
+    mkdir -pv "$destination_dir"
     echo "Cloning $git_repository_url in $destination_dir"
     git clone "$git_repository_url" "$destination_dir"
   fi
@@ -287,6 +287,14 @@ is_git_detached_head() {
 
 is_ci() {
   if [ "${GITHUB_ACTIONS}" = "true" ] || [ "${CI}" = "true" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_default_shell_zsh() {
+  if [ "${DEFAULT_SHELL_SHORT}" = "zsh" ]; then
     return 0
   else
     return 1
