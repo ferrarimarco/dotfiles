@@ -15,7 +15,7 @@ unsetopt NOMATCH   # Disable: If a pattern for filename generation has no matche
 # History                                                                     #
 ###############################################################################
 
-[ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
+[ -z "${HISTFILE:-}" ] && HISTFILE="$HOME/.zsh_history"
 
 setopt APPEND_HISTORY         # zsh sessions append their history list to the history file, rather than replace it.
 setopt EXTENDED_HISTORY       # record timestamp of command in HISTFILE

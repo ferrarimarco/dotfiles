@@ -140,7 +140,7 @@ command -v lesspipe >/dev/null 2>&1 && export LESSOPEN="|lesspipe %s"
 # Prompt                                                                      #
 ###############################################################################
 
-if case "$COLORTERM" in "gnome-"*) true ;; *) false ;; esac && [ "$TERM" = "xterm" ] && infocmp gnome-256color >/dev/null 2>&1; then
+if case "${COLORTERM:-""}" in "gnome-"*) true ;; *) false ;; esac && [ "$TERM" = "xterm" ] && infocmp gnome-256color >/dev/null 2>&1; then
   export TERM='gnome-256color'
 elif infocmp xterm-256color >/dev/null 2>&1; then
   export TERM='xterm-256color'
@@ -151,13 +151,13 @@ fi
 ###############################################################################
 
 if command -v git >/dev/null 2>&1; then
-  [ -z "$GIT_AUTHOR_NAME" ] && GIT_AUTHOR_NAME="Marco Ferrari"
+  [ -z "${GIT_AUTHOR_NAME:-}" ] && GIT_AUTHOR_NAME="Marco Ferrari"
   [ "$(git config --global user.name)" != "$GIT_AUTHOR_NAME" ] && git config --global user.name "$GIT_AUTHOR_NAME"
-  [ -z "$GIT_AUTHOR_EMAIL" ] && GIT_AUTHOR_EMAIL="ferrari.marco@gmail.com"
+  [ -z "${GIT_AUTHOR_EMAIL:-}" ] && GIT_AUTHOR_EMAIL="ferrari.marco@gmail.com"
   [ "$(git config --global user.email)" != "$GIT_AUTHOR_EMAIL" ] && git config --global user.email "$GIT_AUTHOR_EMAIL"
-  [ -z "$GH_USER" ] && GH_USER="ferrarimarco"
+  [ -z "${GH_USER:-}" ] && GH_USER="ferrarimarco"
   [ "$(git config --global github.user)" != "$GH_USER" ] && git config --global github.user "$GH_USER"
-  [ -z "$GIT_COMMIT_SIGN" ] && GIT_COMMIT_SIGN=false
+  [ -z "${GIT_COMMIT_SIGN:-}" ] && GIT_COMMIT_SIGN=false
   [ "$(git config --global commit.gpgsign)" != "$GIT_COMMIT_SIGN" ] && git config --global commit.gpgsign "$GIT_COMMIT_SIGN"
 fi
 
