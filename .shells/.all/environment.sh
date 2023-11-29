@@ -55,11 +55,6 @@ export PYTHONIOENCODING='UTF-8'
 export PATH="/usr/local/bin:${PATH}:/sbin"
 export PATH="${HOME}/bin:${PATH}"
 
-# ZSH related stuff that we might need during setup
-export ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
-export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
-export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
-
 if is_macos; then
   # setup homebrew environment
   if ! command -v brew >/dev/null 2>&1; then
@@ -99,6 +94,8 @@ if is_macos; then
   PYTHON_3_BIN_PATH="$HOME/Library/Python/3.8/bin"
 elif is_linux; then
   ZSH_SITE_FUNCTIONS_PATH=/usr/local/share/zsh/site-functions
+  ZSH_PLUGINS_DIR="$HOME"/.shells/.zsh/plugins
+  export ZSH_PLUGINS_DIR
   ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH="${ZSH_PLUGINS_DIR}"/zsh-autosuggestions/zsh-autosuggestions.zsh
   ZSH_COMPLETIONS_PATH="${ZSH_PLUGINS_DIR}"/zsh-completions/src
   ZSH_SYNTAX_HIGHLIGHTING_PATH=/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -124,12 +121,6 @@ PYTHON_3_USER_BIN_PATH="$HOME/.local/bin"
 [ -d "${PYTHON_3_USER_BIN_PATH}" ] && export PATH="${PYTHON_3_USER_BIN_PATH}:${PATH}"
 unset PYTHON_3_USER_BIN_PATH
 
-# ZSH related stuff that we might need during setup
-export ZSH_SITE_FUNCTIONS_PATH
-export ZSH_SYNTAX_HIGHLIGHTING_PATH
-export ZSH_COMPLETIONS_PATH
-export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
-
 # Export default shell
 export DEFAULT_SHELL
 export DEFAULT_SHELL_SHORT
@@ -150,3 +141,14 @@ export VS_CODE_EXTENSIONS_LIST_FILE_PATH
 
 USER_CACHE_DIRECTORY="${HOME}/.cache"
 export USER_CACHE_DIRECTORY
+
+###############################################################################
+# ZSH variables we might need during setup                                    #
+###############################################################################
+export ZSH_SITE_FUNCTIONS_PATH
+export ZSH_SYNTAX_HIGHLIGHTING_PATH
+export ZSH_COMPLETIONS_PATH
+export ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH
+export ZSH_CACHE_DIR="${USER_CACHE_DIRECTORY}/zsh"
+export ZSH_THEMES_DIR="$HOME"/.shells/.zsh/themes
+export ZSH_THEME_PATH="$ZSH_THEMES_DIR"/powerlevel10k/powerlevel10k.zsh-theme
