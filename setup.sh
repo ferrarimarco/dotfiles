@@ -564,6 +564,10 @@ setup_shell() {
   if is_default_shell_zsh; then
     echo "Configuring ZSH"
 
+    ZSH_ENVIRONMENT_FILE_ABSOLUTE_PATH="$REPOSITORY_PATH/.shells/.zsh/environment.sh"
+    echo "Loading ZSH environment variables from ${ZSH_ENVIRONMENT_FILE_ABSOLUTE_PATH} in case we're setting up ZSH but not yet running ZSH"
+    source_file_if_available "$ZSH_ENVIRONMENT_FILE_ABSOLUTE_PATH" "ZSH_ENVIRONMENT_FILE_ABSOLUTE_PATH"
+
     mkdir -pv "${ZSH_CACHE_DIR}"
   fi
 
