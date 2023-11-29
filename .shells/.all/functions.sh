@@ -279,7 +279,7 @@ is_wsl() {
 
 is_git_detached_head() {
   repository_dir="$1"
-  if [ "$(git -C ${repository_dir} rev-parse --abbrev-ref --symbolic-full-name HEAD)" = "HEAD" ]; then
+  if [ "$(git -C "${repository_dir}" rev-parse --abbrev-ref --symbolic-full-name HEAD)" = "HEAD" ]; then
     return 0
   else
     return 1
