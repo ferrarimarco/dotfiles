@@ -64,10 +64,13 @@ fb = "!f() { git branch -a --contains $1; }; f"
 ft = "!f() { git describe --always --contains $1; }; f"
 
 # Find commits by source code
-fc = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+fc = "!f() { git log --full-history --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
 
 # Find commits by commit message
-fm = "!f() { git log --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+fm = "!f() { git log --full-history --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+
+# Find commits by file
+ff = "!f() { git log --full-history --pretty=format:'%C(yellow)%h	%Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -- $1; }; f"
 
 # Remove branches that have already been merged with the default branch
 # a.k.a. ‘delete merged’
