@@ -175,6 +175,13 @@ ff = only
 # change to maching for machines with older versions of git 1.x.x
 default = simple
 
+[safe]
+
+# Work with bare repositories specified via the top-level --git-dir command-line
+# option, or the GIT_DIR environment variable
+# Ref: https://git-scm.com/docs/git-config#Documentation/git-config.txt-safebareRepository
+bareRepository = explicit
+
 # Don't use unsecure protocols to access GitHub
 [url "https://github.com/"]
 
