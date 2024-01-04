@@ -1,8 +1,14 @@
 {
   "cmake.configureOnOpen": false,
+  "editor.detectIndentation": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.guides.bracketPairs": true,
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
   "editor.renderControlCharacters": true,
   "editor.renderWhitespace": "all",
   "editor.rulers": [
@@ -12,6 +18,8 @@
     200,
     250
   ],
+  "editor.suggest.insertMode": "replace",
+  "editor.tabSize": 2,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.associations": {
@@ -58,53 +66,15 @@
   "workbench.colorCustomizations": {
     "editorRuler.foreground": "#cfbcc391"
   },
-  "workbench.enableExperiments": false, // Fetches experiments to run from a Microsoft online service.
-  "workbench.settings.enableNaturalLanguageSearch": false, // natural language search provided by a Microsoft online service.
+  "workbench.enableExperiments": false,
+  "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.startupEditor": "newUntitledFile",
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
   },
-  "[java]": {
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": false,
-    "editor.tabSize": 2
-  },
-  "[json]": {
-    "editor.quickSuggestions": {
-      "strings": true
-    },
-    "editor.suggest.insertMode": "replace",
-    "editor.tabSize": 2
-  },
-  "[jsonc]": {
-    "editor.detectIndentation": false,
-    "editor.quickSuggestions": {
-      "strings": true
-    },
-    "editor.suggest.insertMode": "replace",
-    "editor.tabSize": 2
-  },
   "[python]": {
-    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
-  },
-  "[scss]": {
-    "editor.detectIndentation": false,
-    "editor.suggest.insertMode": "replace",
-    "editor.tabSize": 2
-  },
-  "[shellscript]": {
-    "editor.detectIndentation": false,
-    "editor.tabSize": 2
-  },
-  "[yaml]": {
-    "editor.tabSize": 2,
-    "editor.quickSuggestions": {
-      "other": true,
-      "comments": false,
-      "strings": true
+      "source.organizeImports": "explicit"
     }
   },
   "window.zoomLevel": 1

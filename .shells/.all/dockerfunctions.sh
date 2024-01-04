@@ -119,14 +119,12 @@ super_linter() {
     --env DEFAULT_WORKSPACE=/tmp/lint \
     --env DISABLE_ERRORS=false \
     --env ERROR_ON_MISSING_EXEC_BIT=true \
-    --env IGNORE_GITIGNORED_FILES="true" \
+    --env IGNORE_GITIGNORED_FILES=true \
     --env KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
     --env LINTER_RULES_PATH="${LINTER_RULES_PATH:-"."}" \
     --env MULTI_STATUS=false \
     --env RUN_LOCAL=true \
-    --env TEST_CASE_RUN="${TEST_CASE_RUN:-"false"}" \
     --env VALIDATE_ALL_CODEBASE=true \
-    --env VALIDATE_JSCPD_ALL_CODEBASE="${VALIDATE_JSCPD_ALL_CODEBASE:-"true"}" \
     --name "${_CONTAINER_NAME}" \
     --rm \
     --volume "$(pwd)":/tmp/lint \
