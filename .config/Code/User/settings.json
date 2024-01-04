@@ -22,8 +22,10 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.allowNoVerifyCommit": true,
+  "html.format.enable": true,
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
+  "html.format.wrapAttributes": "force-aligned",
   "isort.args": [
     "--profile",
     "black"
@@ -56,6 +58,8 @@
   "workbench.colorCustomizations": {
     "editorRuler.foreground": "#cfbcc391"
   },
+  "workbench.enableExperiments": false, // Fetches experiments to run from a Microsoft online service.
+  "workbench.settings.enableNaturalLanguageSearch": false, // natural language search provided by a Microsoft online service.
   "workbench.startupEditor": "newUntitledFile",
   "[dockerfile]": {
     "editor.defaultFormatter": "ms-azuretools.vscode-docker"
