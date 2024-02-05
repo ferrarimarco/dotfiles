@@ -191,11 +191,11 @@ setup_debian() {
   docker_distribution=
 
   if is_debian || is_ubuntu; then
-    sudo add-apt-repository main
+    sudo add-apt-repository --yes main
     if is_ubuntu; then
-      sudo add-apt-repository universe
-      sudo add-apt-repository multiverse
-      sudo add-apt-repository restricted
+      sudo add-apt-repository --yes universe
+      sudo add-apt-repository --yes multiverse
+      sudo add-apt-repository --yes restricted
       docker_distribution="ubuntu"
     elif is_debian; then
       docker_distribution="debian"
