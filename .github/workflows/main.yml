@@ -8,15 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Super-Linter
         uses: super-linter/super-linter@v6.0.0
         env:
-          DISABLE_ERRORS: false
-          ERROR_ON_MISSING_EXEC_BIT: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_JSCPD_ALL_CODEBASE: true
 
   setup_unix_like:
     runs-on: ${{ matrix.os }}
