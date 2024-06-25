@@ -162,8 +162,10 @@ is_apt_repo_available() {
     return 2
   fi
   if find /etc/apt/ -name '*.list' -exec grep -Fq "${APT_REPOSITORY_URL}" {} +; then
+    echo "APT repository available: ${APT_REPOSITORY_URL}"
     RET_CODE=0
   else
+    echo "APT repository not available: ${APT_REPOSITORY_URL}"
     RET_CODE=1
   fi
   return $RET_CODE
@@ -217,6 +219,14 @@ is_linux() {
 
 is_debian() {
   if is_linux && { [ "${ID}" = "debian" ] || [ "${ID_LIKE}" = "debian" ]; }; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+is_official_debian(){
+  if is_debian && [ "${HOME_URL}" = "https://www.debian.org/" ]; then
     return 0
   else
     return 1
@@ -506,11 +516,15 @@ read_symlink_destination_path() {
 }
 
 install_vs_code_extensions() {
-  echo "Installing Visual Studio Code extensions from ${VS_CODE_EXTENSIONS_LIST_FILE_PATH}..."
-  while IFS= read -r line; do
-    echo "Installing or updating $line extension..."
-    code --force --install-extension "$line"
-  done <"${VS_CODE_EXTENSIONS_LIST_FILE_PATH}"
+  if is_command_available "code"; then
+    echo "Installing Visual Studio Code extensions from ${VS_CODE_EXTENSIONS_LIST_FILE_PATH}..."
+    while IFS= read -r line; do
+      echo "Installing or updating $line extension..."
+      code --force --install-extension "$line"
+    done <"${VS_CODE_EXTENSIONS_LIST_FILE_PATH}"
+  else
+    echo "Code seems not be installed, or the code command is not available in PATH"
+  fi
 }
 
 reload_udev_rules_and_trigger() {

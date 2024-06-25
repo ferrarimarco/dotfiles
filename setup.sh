@@ -190,35 +190,43 @@ setup_debian() {
   docker_distribution=
 
   if is_debian || is_ubuntu; then
-    sudo add-apt-repository --yes main
+
+    docker_distribution="debian"
+
+    if is_official_debian; then
+      echo "Enabling main repository"
+      sudo add-apt-repository --yes main
+    fi
+
     if is_ubuntu; then
+      echo "Enabling universe, multiverse, and restricted repositories"
       sudo add-apt-repository --yes universe
       sudo add-apt-repository --yes multiverse
       sudo add-apt-repository --yes restricted
       docker_distribution="ubuntu"
-    elif is_debian; then
-      docker_distribution="debian"
     fi
 
-    docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
-    if ! is_apt_repo_available "${docker_apt_repository_url}"; then
-      add_apt_repo \
-        "${docker_apt_repository_url}/gpg" \
-        "docker.gpg" \
-        "${docker_apt_repository_url}" \
-        "docker.list"
-    fi
+    if is_official_debian; then
+      docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
+      if ! is_apt_repo_available "${docker_apt_repository_url}"; then
+        add_apt_repo \
+          "${docker_apt_repository_url}/gpg" \
+          "docker.gpg" \
+          "${docker_apt_repository_url}" \
+          "docker.list"
+      fi
 
-    vs_code_apt_repository_url="https://packages.microsoft.com/repos/code"
-    if ! is_apt_repo_available "${vs_code_apt_repository_url}"; then
-      add_apt_repo \
-        "https://packages.microsoft.com/keys/microsoft.asc" \
-        "packages.microsoft.gpg" \
-        "${vs_code_apt_repository_url}" \
-        "vscode.list" \
-        "stable main"
+      vs_code_apt_repository_url="https://packages.microsoft.com/repos/code"
+      if ! is_apt_repo_available "${vs_code_apt_repository_url}"; then
+        add_apt_repo \
+          "https://packages.microsoft.com/keys/microsoft.asc" \
+          "packages.microsoft.gpg" \
+          "${vs_code_apt_repository_url}" \
+          "vscode.list" \
+          "stable main"
+      fi
+      unset vs_code_apt_repository_url
     fi
-    unset vs_code_apt_repository_url
   else
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
   fi
@@ -226,89 +234,65 @@ setup_debian() {
   clone_git_repository_if_not_cloned_already "$(dirname "${ZSH_AUTOSUGGESTIONS_CONFIGURATION_PATH}")" "https://github.com/zsh-users/zsh-autosuggestions.git"
   clone_git_repository_if_not_cloned_already "$(dirname "${ZSH_COMPLETIONS_PATH}")" "https://github.com/zsh-users/zsh-completions.git"
 
-  sudo apt-get -qq update || true
+  sudo apt-get -qq update
 
   sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
-    adduser \
-    alsa-utils \
-    apparmor \
-    automake \
     bash-completion \
-    bc \
     bridge-utils \
-    build-essential \
     bzip2 \
-    code \
     coreutils \
     dnsutils \
     file \
     findutils \
-    fuse \
-    fwupd \
-    fwupdate \
-    gcc \
-    gnupg \
-    gnupg-agent \
     grep \
     gzip \
     hostname \
-    iptables \
     less \
-    libc6-dev \
-    libgdbm-dev \
-    libgdbm-compat-dev \
-    libpam-systemd \
-    libsquashfuse0 \
-    libssl-dev \
     locales \
     lsof \
-    make \
     mount \
     nano \
     net-tools \
-    pinentry-curses \
     python3-pip \
     python3-venv \
-    rxvt-unicode \
-    scdaemon \
-    squashfuse \
-    ssh \
-    strace \
-    tar \
     tree \
-    tzdata \
     unzip \
-    vlc \
     xclip \
-    xcompmgr \
     xz-utils \
     zip \
-    zlib1g-dev \
     zsh \
     zsh-syntax-highlighting \
     --no-install-recommends
 
-  if ! is_codespaces; then
+  if is_official_debian || is_ubuntu; then
     sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
-      snapd
+      code
+  fi
 
-    echo "Ensure snapd is running..."
-    sudo systemctl enable snapd.service
-    sudo systemctl start snapd.service
-  else
+  if is_codespaces; then
     # Workaround for https://github.com/microsoft/WSL/issues/2775
     sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy remove \
       azure-cli
   fi
 
   echo "Installing packages from the additional APT repositories..."
-  if is_apt_repo_available "${docker_apt_repository_url}"; then
+  # Don't use docker_apt_repository_url so this check works on distributions that
+  # don't use the standard Docker APT repository
+  if is_apt_repo_available "docker"; then
     echo "Installing Docker..."
-    sudo apt-get -qqy install \
+    sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
       containerd.io \
       docker-ce \
-      docker-ce-cli \
-      docker-compose-plugin
+      docker-ce-cli
+
+    if is_official_debian || is_ubuntu; then
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install
+        docker-buildx-plugin \
+        docker-compose-plugin
+    else
+      echo "Setting Docker Buildx as the default builder using the legacy installation method..."
+      sudo docker buildx install
+    fi
 
     DOCKER_GROUP_NAME="docker"
     echo "Creating the $DOCKER_GROUP_NAME group for Docker"
@@ -333,9 +317,6 @@ setup_debian() {
 
   echo "Adding $TARGET_USER user to the sudoers group"
   sudo gpasswd -a "$TARGET_USER" sudo
-
-  echo "Setting Docker Buildx as the default builder..."
-  sudo docker buildx install
 }
 
 setup_macos() {
