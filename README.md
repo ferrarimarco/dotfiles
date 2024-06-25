@@ -13,7 +13,7 @@ To install these dotfiles:
     - If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
         Linux):
 
-        1. `setup.sh`
+        1. `SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-}" setup.sh`
 
     - If you're on Windows:
 

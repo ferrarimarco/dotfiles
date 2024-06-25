@@ -193,7 +193,7 @@ setup_debian() {
 
     docker_distribution="debian"
 
-    if is_official_debian; then
+    if is_official_debian || is_ubuntu; then
       echo "Enabling main repository"
       sudo add-apt-repository --yes main
     fi
@@ -206,7 +206,7 @@ setup_debian() {
       docker_distribution="ubuntu"
     fi
 
-    if is_official_debian; then
+    if is_official_debian || is_ubuntu; then
       docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
       if ! is_apt_repo_available "${docker_apt_repository_url}"; then
         add_apt_repo \
