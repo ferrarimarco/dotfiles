@@ -1,6 +1,6 @@
 # dotfiles
 
-![CI](https://github.com/ferrarimarco/dotfiles/workflows/CI/badge.svg)
+[![CI](https://github.com/ferrarimarco/dotfiles/actions/workflows/main.yml/badge.svg)](https://github.com/ferrarimarco/dotfiles/actions/workflows/main.yml)
 
 These are the dotfiles I use on my systems and development environments.
 
