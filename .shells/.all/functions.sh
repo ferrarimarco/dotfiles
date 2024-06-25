@@ -225,7 +225,7 @@ is_debian() {
   fi
 }
 
-is_official_debian(){
+is_official_debian() {
   if is_debian && [ "${HOME_URL}" = "https://www.debian.org/" ]; then
     return 0
   else

@@ -286,7 +286,7 @@ setup_debian() {
       docker-ce-cli
 
     if is_official_debian || is_ubuntu; then
-      sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
         docker-buildx-plugin \
         docker-compose-plugin
     else
