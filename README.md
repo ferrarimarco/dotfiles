@@ -12,8 +12,11 @@ To install these dotfiles:
 1. Setup the dotfiles:
     - If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
         Linux):
+
         1. `setup.sh`
+
     - If you're on Windows:
+
         1. `setup-windows.ps1` from a Powershell shell on Windows.
 
 All the dotfiles and binaries will be symlinked to their destinations so you can
@@ -39,7 +42,7 @@ The dotfiiles include configuration files for the following softwares:
 
 ### Shell customizations
 
-The dotfiiles include customization and configuration files for different
+The dotfiles include customization and configuration files for different
 shells.
 
 To avoid repetitions, the customizations are categorized considering the type of
@@ -54,10 +57,10 @@ shell they are applicable to. All the customizations are in the
 
 ### Git hooks
 
-The dofiles include the following Git hooks:
+The dotfiles include the following Git hooks:
 
-- `pre-commit` that runs linting and checks before committing.
 - `commit-msg` that adds a `Change-Id` to the commit message, if necessary.
+  Useful when working with Gerrit.
 
 ## Thanks
 
