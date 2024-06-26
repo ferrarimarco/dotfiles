@@ -48,8 +48,6 @@ function Install-Chocolatey-Package {
     '7zip',
     'conemu',
     'googlechrome',
-    'keepass',
-    'qbittorrent',
     'vlc',
     'vscode'
 

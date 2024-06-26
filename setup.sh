@@ -189,14 +189,12 @@ setup_debian() {
 
   docker_distribution=
 
-  if is_debian || is_ubuntu; then
+  if is_official_debian || is_ubuntu; then
 
     docker_distribution="debian"
 
-    if is_official_debian || is_ubuntu; then
-      echo "Enabling main repository"
-      sudo add-apt-repository --yes main
-    fi
+    echo "Enabling main repository"
+    sudo add-apt-repository --yes main
 
     if is_ubuntu; then
       echo "Enabling universe, multiverse, and restricted repositories"
@@ -206,27 +204,27 @@ setup_debian() {
       docker_distribution="ubuntu"
     fi
 
-    if is_official_debian || is_ubuntu; then
-      docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
-      if ! is_apt_repo_available "${docker_apt_repository_url}"; then
-        add_apt_repo \
-          "${docker_apt_repository_url}/gpg" \
-          "docker.gpg" \
-          "${docker_apt_repository_url}" \
-          "docker.list"
-      fi
-
-      vs_code_apt_repository_url="https://packages.microsoft.com/repos/code"
-      if ! is_apt_repo_available "${vs_code_apt_repository_url}"; then
-        add_apt_repo \
-          "https://packages.microsoft.com/keys/microsoft.asc" \
-          "packages.microsoft.gpg" \
-          "${vs_code_apt_repository_url}" \
-          "vscode.list" \
-          "stable main"
-      fi
-      unset vs_code_apt_repository_url
+    docker_apt_repository_url="https://download.docker.com/linux/${docker_distribution}"
+    if ! is_apt_repo_available "${docker_apt_repository_url}"; then
+      add_apt_repo \
+        "${docker_apt_repository_url}/gpg" \
+        "docker.gpg" \
+        "${docker_apt_repository_url}" \
+        "docker.list"
     fi
+
+    vs_code_apt_repository_url="https://packages.microsoft.com/repos/code"
+    if ! is_apt_repo_available "${vs_code_apt_repository_url}"; then
+      add_apt_repo \
+        "https://packages.microsoft.com/keys/microsoft.asc" \
+        "packages.microsoft.gpg" \
+        "${vs_code_apt_repository_url}" \
+        "vscode.list" \
+        "stable main"
+    fi
+    unset vs_code_apt_repository_url
+  elif is_debian && ! is_official_debian; then
+    echo "This is a non-official Debian distribution."
   else
     echo "WARNING: distribution ${DISTRIBUTION} is not supported. Skipping distribution-specific configuration..."
   fi
@@ -292,6 +290,10 @@ setup_debian() {
     else
       echo "Setting Docker Buildx as the default builder using the legacy installation method..."
       sudo docker buildx install
+
+      echo "Install Docker Compose using the legacy installation method"
+      sudo DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
+        docker-compose
     fi
 
     DOCKER_GROUP_NAME="docker"
