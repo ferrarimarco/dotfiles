@@ -61,6 +61,9 @@ alias g="git"
 alias h="history"
 alias gc="git commit -v "
 
+# Get the list of the most frequently typed commands in the history
+alias frequentcommands="history | cut -c 8- | grep git | sort | uniq -c  | sort -n -r | head -n 10"
+
 # Detect which `ls` flavor is in use
 if ls --color >/dev/null 2>&1; then # GNU `ls`
   colorflag="--color"
