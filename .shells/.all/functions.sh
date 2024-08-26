@@ -531,3 +531,18 @@ reload_udev_rules_and_trigger() {
   udevadm control --reload-rules
   udevadm trigger
 }
+
+check_git_working_directory_changes() {
+  GIT_REPOSITORY_PATH="${1:-$(pwd)}"
+  # Check if there are unexpected changes in the working directory:
+  # - Unstaged changes
+  # - Changes that are staged but not committed
+  # - Untracked files and directories
+  if ! git -C "${GIT_REPOSITORY_PATH}" diff --exit-code --quiet ||
+    ! git -C "${GIT_REPOSITORY_PATH}" diff --cached --exit-code --quiet ||
+    ! git -C "${GIT_REPOSITORY_PATH}" ls-files --others --exclude-standard --directory; then
+    echo "There are unexpected changes in the working directory of the ${GIT_REPOSITORY_PATH} Git repository."
+    git -C "${GIT_REPOSITORY_PATH}" status
+    return 1
+  fi
+}
