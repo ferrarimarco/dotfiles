@@ -11,36 +11,47 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      issues: write
       packages: read
+      pull-requests: write
       statuses: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
+        # Use grep inverse matching to exclude eventual comments in the .env file
+        # because the GitHub Actions command to set environment variables doesn't
+        # support comments.
+        # Ref: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#setting-an-environment-variable
+        run: grep -v '^#' config/lint/super-linter.env >> "$GITHUB_ENV"
       - name: Super-Linter
-        uses: super-linter/super-linter@v6.9.0
+        uses: super-linter/super-linter@v8.5.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: .
           VALIDATE_ALL_CODEBASE: true
 
   setup_unix_like:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup dotfiles (${{ matrix.os }})
         run: |
           ./setup.sh
     strategy:
       matrix:
         os:
-          - macos-12
+          - macos-latest
           - ubuntu-24.04
 
   setup_windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup dotfiles (Windows)
         run: |
           powershell -executionpolicy bypass ".\setup-windows.ps1"
