@@ -24,8 +24,7 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.associations": {
-    "Vagrantfile": "ruby",
-    "*.yaml.jinja": "yaml"
+    "Vagrantfile": "ruby"
   },
   "files.eol": "\n",
   "files.insertFinalNewline": true,
@@ -61,6 +60,9 @@
   "workbench.enableExperiments": false,
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.startupEditor": "newUntitledFile",
+  "[markdown]": {
+    "editor.wordWrap": "off"
+  },
   "[python]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
