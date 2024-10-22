@@ -413,6 +413,13 @@ setup_macos() {
   defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
   ###############################################################################
+  # Keyboard                                                                    #
+  ###############################################################################
+
+  # Keyboard: enable press-and-hold popup to write accented characters
+  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool true
+
+  ###############################################################################
   # Menu bar                                                                    #
   ###############################################################################
 
@@ -433,11 +440,6 @@ setup_macos() {
 
   # Don't flash time and date separators
   defaults write com.apple.menuextra.clock FlashDateSeparators -bool false
-
-  ###############################################################################
-  # Touch bar                                                                    #
-  ###############################################################################
-  defaults write com.apple.controlstrip MiniCustomized "(com.apple.system.brightness, com.apple.system.volume, com.apple.system.mute)"
 
   ###############################################################################
   # Adobe stuff                                                                 #
