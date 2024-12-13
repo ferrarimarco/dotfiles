@@ -3,6 +3,7 @@
   "editor.detectIndentation": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
+  "editor.formatOnType": true,
   "editor.guides.bracketPairs": true,
   "editor.quickSuggestions": {
     "other": true,
@@ -67,9 +68,5 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
-  },
-  "yaml.format.enable": false,
-  "css.format.spaceAroundSelectorSeparator": true,
-  "scss.format.spaceAroundSelectorSeparator": true,
-  "scss.format.newlineBetweenRules": false
+  }
 }
