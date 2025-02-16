@@ -546,3 +546,8 @@ check_git_working_directory_changes() {
     return 1
   fi
 }
+
+delete_empty_directories() {
+  echo "Deleting empty directories in ${1}"
+  find "${1}" -type d -empty -delete
+}
