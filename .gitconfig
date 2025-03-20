@@ -52,7 +52,7 @@ remotes = remote -v
 amend = commit --amend --reuse-message=HEAD
 
 # Count commits on a given branch since branching off another branche (defaults to main)
-count-since-branch = "!c() { git rev-list ${1:-\"main\"}.. --count; } c"
+count-since-branch = "!c() { git rev-list ${1:-\"main\"}.. --count; }; c"
 
 # Credit an author on the latest commit
 credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
