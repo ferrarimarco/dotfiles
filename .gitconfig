@@ -193,6 +193,12 @@ default = simple
 # Ref: https://git-scm.com/docs/git-config#Documentation/git-config.txt-safebareRepository
 bareRepository = explicit
 
+[status]
+
+# Enable submodule summary in git status
+# Ref: https://git-scm.com/docs/git-config#Documentation/git-config.txt-statussubmoduleSummary
+submoduleSummary = true
+
 # Don't use unsecure protocols to access GitHub
 [url "https://github.com/"]
 
