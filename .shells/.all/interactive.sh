@@ -99,6 +99,9 @@ alias grep='grep --color=auto '
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
+# Get data about the TLS certificate that a server presents, and exit
+alias openssl_get_server_tls_cert='echo "Q" | openssl s_client -prexit -connect'
+
 # IP addresses
 alias pubip="dig +short myip.opendns.com @resolver1.opendns.com"
 
