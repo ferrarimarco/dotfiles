@@ -35,6 +35,7 @@ The dotfiiles include configuration files for the following softwares:
 - Git
 - Nano
 - SSH client
+- Terraform
 - Tmux
 - Visual Studio Code
 - Wget

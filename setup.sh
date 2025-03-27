@@ -112,10 +112,11 @@ install_brew_formulae() {
 
 setup_user() {
   echo "Creating directories for the $TARGET_USER in $HOME"
+  mkdir -pv "$HOME/.terraform.d"
   mkdir -pv "$HOME/bin"
   mkdir -pv "$HOME/Downloads"
-  mkdir -pv "$HOME/workspaces"
   mkdir -pv "$HOME/workspaces-work"
+  mkdir -pv "$HOME/workspaces"
 
   mkdir -pv "${GCLOUD_CONFIG_DIRECTORY}"
   mkdir -pv "${USER_CACHE_DIRECTORY}"
