@@ -453,7 +453,7 @@ uninstall_dotfiles() {
 }
 
 install_dotfiles() {
-  SOURCE_PATH="${1}"
+  SOURCE_PATH="$(readlink -f "${1}")"
   if [ ! -d "${SOURCE_PATH}" ]; then
     echo "Source path (${SOURCE_PATH}) doesn't exists."
     return 1
