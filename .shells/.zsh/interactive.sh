@@ -116,7 +116,7 @@ compinit
 # only then values from $terminfo are valid
 if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
   function zle-line-init() {
-  echoti smkx
+    echoti smkx
   }
   function zle-line-finish() {
     echoti rmkx
