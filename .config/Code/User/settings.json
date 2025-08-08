@@ -22,9 +22,11 @@
   "editor.suggest.insertMode": "replace",
   "editor.tabSize": 2,
   "editor.wordWrap": "off",
+  "explorer.autoReveal": true,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "files.associations": {
+    ".pages": "yaml",
     ".terraformrc": "terraform",
     "Vagrantfile": "ruby"
   },
