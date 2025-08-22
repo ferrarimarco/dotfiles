@@ -48,7 +48,8 @@
   "python.testing.pytestEnabled": true,
   "redhat.telemetry.enabled": false,
   "remote.SSH.defaultExtensions": [
-    "ms-azuretools.vscode-docker",
+    "docker.docker",
+    "ms-azuretools.vscode-containers",
     "ms-vscode-remote.vscode-remote-extensionpack"
   ],
   "remote.SSH.connectTimeout": 30,
