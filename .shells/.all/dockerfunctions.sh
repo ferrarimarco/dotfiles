@@ -22,6 +22,16 @@ prune_container_runtime_environment() {
     --all \
     --force \
     --volumes
+
+  docker buildx prune \
+    --all \
+    --force \
+    --verbose
+
+  # Remove any volume, including named ones
+  docker volume prune \
+    --all \
+    --force
 }
 
 relies_on() {
