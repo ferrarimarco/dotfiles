@@ -37,8 +37,15 @@ c = clone --recursive
 # Add in patch mode
 ap = add --patch
 
+# Checkout in patch mode
+cp = checkout --patch
+
 # Commit all changes
 ca = !git add -A && git commit -av
+
+# Recover the last commit message. Useful when the commit-msg hook fails, or
+# when git commit crashes or exits with an error
+cr = commit --edit --file=.git/COMMIT_EDITMSG
 
 # Switch to a branch, creating it if necessary
 go = "!f() { git switch \"${1}\" 2> /dev/null || git switch --create \"${1}\"; }; f"
