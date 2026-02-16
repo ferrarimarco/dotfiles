@@ -58,10 +58,19 @@ shell they are applicable to. All the customizations are in the
 
 ### Git hooks
 
-The dotfiles include the following Git hooks:
+The dotfiles include a the following Git hooks. For each Git hook type,
+`.git-hooks/git-hook-runner.sh` will run the hooks listed in the
+`.git-hooks/<Git hook name>.d` directory in alphabetic order.
 
-- `commit-msg` that adds a `Change-Id` to the commit message, if necessary.
-  Useful when working with Gerrit.
+- `commit-msg` hooks:
+
+  - `100-gerrit-commit-msg`: adds a `Change-Id` trailer to the commit message.
+    Useful when working with Gerrit. This hook is disabled by default. Enable it
+    by running:
+
+      ```sh
+      git config core.hooksPath .git/hooks
+      ```
 
 ## Thanks
 
@@ -72,3 +81,4 @@ I used these dotfiles as inspiration and guidance:
 - [Mathias Bynens](https://github.com/mathiasbynens/dotfiles)
 - [Nicolas Gallagher](https://github.com/necolas/dotfiles)
 - [Peter Ward](https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html)
+- [rmandvikar](https://github.com/rmandvikar/dotfiles)
