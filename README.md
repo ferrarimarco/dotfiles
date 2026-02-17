@@ -9,15 +9,20 @@ These are the dotfiles I use on my systems and development environments.
 To install these dotfiles:
 
 1. Clone this repository with Git.
-1. Setup the dotfiles:
-    - If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
-        Linux):
+1. Setup the dotfiles.
 
-        1. `SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-}" ./setup.sh`
+   If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
+   Linux), run:
 
-    - If you're on Windows:
+   ```sh
+   SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-}" ./setup.sh
+   ```
 
-        1. `setup-windows.ps1` from a Powershell shell on Windows.
+   If you're on Windows, open a PowerShell session and run:
+
+   ```powershell
+   setup-windows.ps1
+   ```
 
 All the dotfiles and binaries will be symlinked to their destinations so you can
 update them just by pulling the latest changes.
@@ -29,7 +34,7 @@ dotfiles.
 
 ### Software configuration
 
-The dotfiiles include configuration files for the following softwares:
+The dotfiiles include configuration files for the following software:
 
 - cURL
 - Git
@@ -54,7 +59,7 @@ shell they are applicable to. All the customizations are in the
 - The [`.sh`](.shells/.sh/) directory contains scripts for the Bourne shell.
 - The [`.zsh`](.shells/.zsh/) directory contains scripts for the Z shell.
 - The scripts in the [`.all`](.shells/.all/) directory are executed by all the
-    shells.
+  shells.
 
 ### Git hooks
 
@@ -63,14 +68,13 @@ The dotfiles include a the following Git hooks. For each Git hook type,
 `.git-hooks/<Git hook name>.d` directory in alphabetic order.
 
 - `commit-msg` hooks:
-
   - `100-gerrit-commit-msg`: adds a `Change-Id` trailer to the commit message.
     Useful when working with Gerrit. This hook is disabled by default. Enable it
     by running:
 
-      ```sh
-      git config core.hooksPath .git/hooks
-      ```
+    ```sh
+    git config core.hooksPath .git/hooks
+    ```
 
 ## Thanks
 

@@ -58,7 +58,7 @@ remotes = remote -v
 # Amend the currently staged files to the latest commit
 amend = commit --amend --reuse-message=HEAD
 
-# Count commits on a given branch since branching off another branche (defaults to main)
+# Count commits on a given branch since branching off another branch (defaults to main)
 count-since-branch = "!c() { git rev-list ${1:-\"main\"}.. --count; }; c"
 
 # Credit an author on the latest commit
@@ -190,7 +190,7 @@ ff = only
 
 [push]
 
-# change to maching for machines with older versions of git 1.x.x
+# change to matching for machines with older versions of git 1.x.x
 default = simple
 
 [safe]
@@ -206,13 +206,13 @@ bareRepository = explicit
 # Ref: https://git-scm.com/docs/git-config#Documentation/git-config.txt-statussubmoduleSummary
 submoduleSummary = true
 
-# Don't use unsecure protocols to access GitHub
+# Don't use insecure protocols to access GitHub
 [url "https://github.com/"]
 
 insteadof = git://github.com/
 insteadof = http://github.com/
 
-# Don't use unsecure protocols to access GitHub Gists
+# Don't use insecure protocols to access GitHub Gists
 [url "https://gist.github.com/"]
 
 insteadof = git://gist.github.com/

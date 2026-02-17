@@ -72,7 +72,7 @@
         # aws                   # aws profile (https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
         # aws_eb_env            # aws elastic beanstalk environment (https://aws.amazon.com/elasticbeanstalk/)
         # azure                 # azure account name (https://docs.microsoft.com/en-us/cli/azure)
-        gcloud                  # google cloud cli acccount and project (https://cloud.google.com/)
+        gcloud                  # google cloud cli account and project (https://cloud.google.com/)
         google_app_cred         # google application credentials (https://cloud.google.com/docs/authentication/production)
         context                 # user@hostname
         # nordvpn                 # nordvpn connection status, linux only (https://nordvpn.com/)
@@ -455,7 +455,7 @@
     # isn't in an svn or hg reposotiry.
     typeset -g POWERLEVEL9K_VCS_BACKENDS=(git)
 
-    # These settings are used for respositories other than Git or when gitstatusd fails and
+    # These settings are used for repositories other than Git or when gitstatusd fails and
     # Powerlevel10k has to fall back to using vcs_info.
     typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=76
     typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=76
@@ -783,7 +783,7 @@
     # Custom icon.
     # typeset -g POWERLEVEL9K_AZURE_VISUAL_IDENTIFIER_EXPANSION='⭐'
 
-    ##########[ gcloud: google cloud acccount and project (https://cloud.google.com/) ]###########
+    ##########[ gcloud: google cloud account and project (https://cloud.google.com/) ]###########
     # Google cloud color.
     typeset -g POWERLEVEL9K_GCLOUD_FOREGROUND=32
 
@@ -792,7 +792,7 @@
     #
     #   P9K_GCLOUD_ACCOUNT: the output of `gcloud config get-value account`
     #   P9K_GCLOUD_PROJECT: the output of `gcloud config get-value project`
-    #   ${VARIABLE//\%/%%}: ${VARIABLE} with all occurences of '%' replaced with '%%'.
+    #   ${VARIABLE//\%/%%}: ${VARIABLE} with all occurrences of '%' replaced with '%%'.
     #
     # typeset -g POWERLEVEL9K_GCLOUD_CONTENT_EXPANSION='${P9K_GCLOUD_ACCOUNT//\%/%%}:${P9K_GCLOUD_PROJECT//\%/%%}'
 
@@ -817,7 +817,7 @@
     #   P9K_GOOGLE_APP_CRED_CLIENT_EMAIL | client_email
     #
     # Note: ${VARIABLE%%.*} expands to ${VARIABLE} up to but not including the first period ('.').
-    # Note: ${VARIABLE//\%/%%} expands to ${VARIABLE} with all occurences of '%' replaced with '%%'.
+    # Note: ${VARIABLE//\%/%%} expands to ${VARIABLE} with all occurrences of '%' replaced with '%%'.
     #
     # typeset -g POWERLEVEL9K_GOOGLE_APP_CRED_CONTENT_EXPANSION='${${P9K_GOOGLE_APP_CRED_CLIENT_EMAIL%%.*}//\%/%%}'
     #

@@ -166,6 +166,6 @@ fi
 ###############################################################################
 
 if is_debian; then
-  # Get the list of the avaliable verions of a package to install
+  # Get the list of the available versions of a package to install
   alias apt-get-available-package-versions="apt-cache madison"
 fi

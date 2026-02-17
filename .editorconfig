@@ -29,3 +29,8 @@ spaces_around_brackets = false
 [{Makefile,**.mk,go.mod,go.sum,*.go,.gitmodules}]
 indent_size = 4
 indent_style = tab
+
+# Defined by markdownlint and Prettier
+[*.md]
+indent_size = unset
+indent_style = unset
