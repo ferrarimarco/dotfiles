@@ -12,13 +12,7 @@
   },
   "editor.renderControlCharacters": true,
   "editor.renderWhitespace": "all",
-  "editor.rulers": [
-    80,
-    100,
-    120,
-    200,
-    250
-  ],
+  "editor.rulers": [80, 100, 120, 200, 250],
   "editor.suggest.insertMode": "replace",
   "editor.tabSize": 2,
   "editor.wordWrap": "off",
@@ -38,10 +32,7 @@
   "html.format.indentInnerHtml": true,
   "html.format.indentHandlebars": true,
   "html.format.wrapAttributes": "force-aligned",
-  "isort.args": [
-    "--profile",
-    "black"
-  ],
+  "isort.args": ["--profile", "black"],
   "java.configuration.updateBuildConfiguration": "automatic",
   "markdown.validate.enabled": true,
   "python.languageServer": "Default",

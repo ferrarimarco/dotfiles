@@ -75,7 +75,7 @@ zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w 
 # disable named-directories autocompletion
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 
-# Use caching so that commands like apt and dpkg complete are useable
+# Use caching so that commands like apt and dpkg complete are usable
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
 
