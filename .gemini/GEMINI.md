@@ -4,9 +4,11 @@
 
 ### General
 
+- Before executing any action, explain your plan in great detail, including
+  when you need to gather information to build your plan.
+- You MUST always provide detailed and complete plans to describe the changes
+  you are proposing.
 - You MUST ask for permission before applying any changes.
-- Always provide detailed and complete plans to describe the changes you are
-  proposing.
 
 ### File format
 
