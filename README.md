@@ -11,8 +11,8 @@ To install these dotfiles:
 1. Clone this repository with Git.
 1. Setup the dotfiles.
 
-   If you're on a Unix-based system (Linux, macOS, Windows Subsystem for
-   Linux), run:
+   If you're on a Unix-based system (Linux, macOS, Windows Subsystem for Linux),
+   run:
 
    ```sh
    SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-}" ./setup.sh
@@ -48,8 +48,7 @@ The dotfiiles include configuration files for the following software:
 
 ### Shell customizations
 
-The dotfiles include customization and configuration files for different
-shells.
+The dotfiles include customization and configuration files for different shells.
 
 To avoid repetitions, the customizations are categorized considering the type of
 shell they are applicable to. All the customizations are in the
