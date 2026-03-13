@@ -92,7 +92,8 @@ install_brew_formulae() {
   )
 
   echo "Installing brew casks..."
-  for f in "${HOMEBREW_CASKS[@]}"; do
+  for f in "${HOMEBREW_CASKS[@]:-}"; do
+    [ -z "$f" ] && continue
     if ! brew list "$f" >/dev/null 2>&1; then
       echo "Installing $f cask"
       if ! brew install "$f"; then
