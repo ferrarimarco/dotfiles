@@ -5,7 +5,7 @@ set -o nounset
 set -o pipefail
 
 DOWNLOADS_DIR_PATH="$HOME/Downloads"
-SCREENSHOTS_DIR_PATH="${DOWNLOADS_PATH}/screenshots"
+SCREENSHOTS_DIR_PATH="${DOWNLOADS_DIR_PATH}/screenshots"
 
 ask_for_sudo() {
   echo "Prompting for sudo password..."
