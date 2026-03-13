@@ -91,7 +91,7 @@ install_brew_formulae() {
     # visual-studio-code
   )
 
-  # echo "Installing brew casks..."
+  echo "Installing brew casks..."
   for f in "${HOMEBREW_CASKS[@]}"; do
     if ! brew list "$f" >/dev/null 2>&1; then
       echo "Installing $f cask"
@@ -402,6 +402,9 @@ setup_macos() {
   # Don’t display the annoying prompt when quitting iTerm
   defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
+  # Allow applications to access the clipboard
+  defaults write com.googlecode.iterm2 AllowClipboardAccess -bool true
+
   ###############################################################################
   # Trackpad                                                                    #
   ###############################################################################
@@ -446,6 +449,9 @@ setup_macos() {
 
   # Don't flash time and date separators
   defaults write com.apple.menuextra.clock FlashDateSeparators -bool false
+
+  # Show seconds
+  defaults write com.apple.menuextra.clock ShowSeconds -bool true
 
   ###############################################################################
   # Adobe stuff                                                                 #
@@ -495,6 +501,12 @@ setup_macos() {
 
   # Show hidden files in Finder
   defaults write com.apple.finder AppleShowAllFiles TRUE
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+  ##########################################################################
+  # Display                                                                #
+  ##########################################################################
+  defaults write com.apple.Displays-Settings.extension showListByDefault -bool true
 
   ###############################################################################
   # Kill affected applications                                                  #
