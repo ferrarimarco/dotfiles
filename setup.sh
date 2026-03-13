@@ -4,6 +4,9 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+DOWNLOADS_DIR_PATH="$HOME/Downloads"
+SCREENSHOTS_DIR_PATH="${DOWNLOADS_PATH}/screenshots"
+
 ask_for_sudo() {
   echo "Prompting for sudo password..."
   # sudo -v doesn't work on macOS when passwordless sudo is enabled. It still
@@ -120,7 +123,8 @@ setup_user() {
   mkdir -pv "$HOME/.terraform.d"
   mkdir -pv "$HOME/.terraform.d/plugin-cache"
   mkdir -pv "$HOME/bin"
-  mkdir -pv "$HOME/Downloads"
+  mkdir -pv "$DOWNLOADS_DIR_PATH"
+  mkdir -pv "$SCREENSHOTS_DIR_PATH"
   mkdir -pv "$HOME/workspaces-work"
   mkdir -pv "$HOME/workspaces"
 
@@ -512,6 +516,13 @@ setup_macos() {
   # Display                                                                #
   ##########################################################################
   defaults write com.apple.Displays-Settings.extension showListByDefault -bool true
+
+  ##########################################################################
+  # Screenshots                                                            #
+  ##########################################################################
+
+  # Save screenshots to a specific dif
+  defaults write com.apple.screencapture location "$SCREENSHOTS_DIR_PATH"
 
   ###############################################################################
   # Kill affected applications                                                  #
