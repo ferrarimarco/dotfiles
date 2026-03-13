@@ -297,7 +297,7 @@ is_git_detached_head() {
 }
 
 is_ci() {
-  if [ "${GITHUB_ACTIONS}" = "true" ] || [ "${CI}" = "true" ]; then
+  if [ "${GITHUB_ACTIONS:-}" = "true" ] || [ "${CI:-}" = "true" ]; then
     return 0
   else
     return 1

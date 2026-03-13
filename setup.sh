@@ -82,13 +82,17 @@ install_brew_formulae() {
     fi
   done
 
-  # Other useful casks that I might need in the future:
-  # docker, gimp
+  local -a HOMEBREW_CASKS
+  # Don't install any casks for now
+  HOMEBREW_CASKS=(
+    # docker
+    # gimp
+    # iterm2
+    # visual-studio-code
+  )
 
-  echo "Installing brew casks..."
-  for f in \
-    iterm2 \
-    visual-studio-code; do
+  # echo "Installing brew casks..."
+  for f in "${HOMEBREW_CASKS[@]}"; do
     if ! brew list "$f" >/dev/null 2>&1; then
       echo "Installing $f cask"
       if ! brew install "$f"; then
