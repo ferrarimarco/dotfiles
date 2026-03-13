@@ -489,10 +489,13 @@ install_dotfiles() {
   fi
   unset WSL_CONFIGURATION_FILE_PATH
 
-  # We don't need to do this on Linux because the VS Code settings path on Linux is already ${HOME}/.config/Code/User/settings.json
   if is_macos; then
+    # We don't need to do this on Linux because the VS Code settings path on Linux is already ${HOME}/.config/Code/User/settings.json
     echo "Setting up Visual Studio Code settings"
     symlink_file "${HOME}/.config/Code/User/settings.json" "${HOME}/Library/Application Support/Code/User/settings.json"
+
+    echo "Setting up iTerm2"
+    symlink_file "${HOME}/.config/iTerm2/DynamicProfiles/Default.json" "${HOME}/Library/Application Support/iTerm2/DynamicProfiles/Default.json"
   fi
 
   unset SOURCE_PATH

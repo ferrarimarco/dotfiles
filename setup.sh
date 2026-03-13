@@ -406,6 +406,10 @@ setup_macos() {
   # Allow applications to access the clipboard
   defaults write com.googlecode.iterm2 AllowClipboardAccess -bool true
 
+  # Set the default profile. The GUID is the Default profile's
+  # GUID: .config/iTerm2/DynamicProfiles/Default.json
+  defaults write com.googlecode.iterm2 "Default Bookmark Guid" -string "7B9125E3-7A08-4616-9D5C-520A8AD73030"
+
   ###############################################################################
   # Trackpad                                                                    #
   ###############################################################################

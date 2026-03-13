@@ -38,6 +38,7 @@ The dotfiiles include configuration files for the following software:
 
 - cURL
 - Git
+- iTerm2
 - Nano
 - SSH client
 - Terraform

@@ -1,0 +1,23 @@
+{
+  "Profiles": [
+    {
+      "Use Non-ASCII Font": false,
+      "Custom Directory": "No",
+      "Normal Font": "MesloLGS-NF-Regular 12",
+      "Non-ASCII Anti Aliased": true,
+      "Use Bright Bold": true,
+      "Prompt Before Closing 2": false,
+      "Description": "Marco",
+      "Mouse Reporting": true,
+      "Columns": 80,
+      "Custom Command": "No",
+      "ASCII Anti Aliased": true,
+      "Custom Locale": "en_US.UTF-8",
+      "Non Ascii Font": "Monaco 12",
+      "Scrollback Lines": 10000,
+      "Terminal Type": "xterm-256color",
+      "Name": "Marco",
+      "Guid": "7B9125E3-7A08-4616-9D5C-520A8AD73030"
+    }
+  ]
+}
