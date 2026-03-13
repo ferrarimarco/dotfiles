@@ -1,6 +1,12 @@
 ---
 name: git-commit
-description: "Execute git commit with conventional commit message analysis, intelligent staging, and message generation. Use when user asks to commit, commit changes, create a git commit, or mentions '/commit'. Supports: (1) Auto-detecting type and scope from changes, (2) Generating conventional commit messages from diff, (3) Interactive commit with optional type/scope/description overrides, (4) Intelligent file staging for logical grouping"
+description:
+  "Execute Git commit with conventional commit message analysis, intelligent
+  staging, and message generation. Use when user asks to commit, commit changes,
+  create a Git commit, or mentions /commit. Supports: (1) Auto-detecting type
+  and scope from changes, (2) Generating conventional commit messages from diff,
+  (3) Interactive commit with optional type/scope/description overrides, (4)
+  Intelligent file staging for logical grouping"
 license: MIT
 metadata:
   source: https://github.com/github/awesome-copilot/blob/main/skills/git-commit/SKILL.md
@@ -10,13 +16,13 @@ metadata:
 
 ## Overview
 
-Create standardized, semantic git commits using the Conventional Commits
+Create standardized, semantic Git commits using the Conventional Commits
 specification. Analyze the actual diff to determine appropriate type, scope, and
 message.
 
 ## Conventional Commit Format
 
-```
+```text
 <type>[optional scope]: <description>
 
 [optional body]
@@ -29,7 +35,7 @@ message.
 | Type       | Purpose                        |
 | ---------- | ------------------------------ |
 | `feat`     | New feature                    |
-| `fix`      | Bug fix                        |
+| `fix`      | Bugfix                         |
 | `docs`     | Documentation only             |
 | `style`    | Formatting/style (no logic)    |
 | `refactor` | Code refactor (no feature/fix) |
@@ -42,7 +48,7 @@ message.
 
 ## Breaking Changes
 
-```
+```text
 # Exclamation mark after type/scope
 feat!: remove deprecated endpoint
 
