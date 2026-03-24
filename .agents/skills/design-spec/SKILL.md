@@ -34,3 +34,7 @@ feature.
    ask more than 3-4 questions at a time to keep the discussion focused.
 4. Iterate with the user until all requirements are clear and robust. Once the
    user is satisfied, you will summarize the final design specification.
+5. After summarizing the final design spec, you will ask the user if they want
+   you to save the spec in a Markdown file. If they do, ask the user where to
+   save the file and what to name it. If there's a directory named `docs/specs`,
+   suggest that as the default location.
