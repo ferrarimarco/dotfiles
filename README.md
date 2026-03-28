@@ -40,6 +40,7 @@ The dotfiiles include configuration files for the following software:
 - Git
 - iTerm2
 - Nano
+- Nix
 - SSH client
 - Terraform
 - Tmux
