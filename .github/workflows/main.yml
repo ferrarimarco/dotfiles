@@ -27,7 +27,7 @@ jobs:
       - name: Load Super-linter configuration
         run: grep -v '^#' .github/linters/super-linter.env >> "$GITHUB_ENV"
       - name: Super-Linter
-        uses: super-linter/super-linter@v8.5.0
+        uses: super-linter/super-linter@v8.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
