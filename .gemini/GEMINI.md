@@ -4,6 +4,8 @@
 
 ### General & Communication
 
+- **Access to information:** When you cannot get access to data or information
+  you need, you MUST stop and tell me.
 - **Discovery Phase:** You may autonomously use read-only tools (e.g.,
   searching, reading files, running non-modifying shell commands) to gather
   information without asking for permission or explaining your plan beforehand.
