@@ -50,8 +50,8 @@ When configuring a NixOS machine:
 When configuring user-specific dotfiles or packages:
 
 - Utilize `home-manager` as a NixOS module or as a standalone flake output.
-- Structure configurations by grouping related programs (e.g., git, shell,
-  editor).
+- Structure configurations by grouping related programs (e.g., `git`, `shell`,
+  `editor`).
 
 ## Best Practices
 
