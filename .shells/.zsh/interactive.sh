@@ -52,8 +52,20 @@ add_to_fpath() {
 add_to_fpath "$ZSH_SITE_FUNCTIONS_PATH" "ZSH_SITE_FUNCTIONS_PATH"
 add_to_fpath "$ZSH_COMPLETIONS_PATH" "ZSH_COMPLETIONS_PATH"
 
-# shellcheck source=/dev/null
-command -v kubectl >/dev/null 2>&1 && . <(kubectl completion zsh)
+# Cache kubectl completion to speed up shell startup.
+# Generating completions dynamically takes ~5 seconds, so we cache it.
+KUBECTL_COMPLETION_CACHE="$ZSH_CACHE_DIR/kubectl_completion"
+if [ ! -d "$ZSH_CACHE_DIR" ]; then
+  mkdir -p "$ZSH_CACHE_DIR"
+fi
+if command -v kubectl >/dev/null 2>&1; then
+  # Update the cache if it doesn't exist or is older than 24 hours (1440 minutes)
+  if [ ! -f "$KUBECTL_COMPLETION_CACHE" ] ||
+    [ -z "$(find "$KUBECTL_COMPLETION_CACHE" -mmin -1440)" ]; then
+    kubectl completion zsh > "$KUBECTL_COMPLETION_CACHE"
+  fi
+  . "$KUBECTL_COMPLETION_CACHE"
+fi
 
 zmodload -i zsh/complist
 
@@ -105,8 +117,17 @@ expand-or-complete-with-dots() {
 zle -N expand-or-complete-with-dots
 bindkey "^I" expand-or-complete-with-dots
 
+# Optimize compinit to reduce startup time.
+# compinit is slow because it checks all completion files.
+# By using -C, it skips security checks and file modification checks if the dump
+# file is recent.
 autoload -Uz compinit
-compinit
+# Use cached completion dump if it is less than 24 hours old (1440 minutes)
+if [ -n "$(find "$HOME/.zcompdump" -mmin -1440 2>/dev/null)" ]; then
+  compinit -C
+else
+  compinit
+fi
 
 ###############################################################################
 # Key bindings                                                                #
