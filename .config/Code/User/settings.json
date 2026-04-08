@@ -27,6 +27,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
+  "geminicodeassist.displayInlineContextHint": false,
   "git.allowNoVerifyCommit": true,
   "html.format.enable": true,
   "html.format.indentInnerHtml": true,
