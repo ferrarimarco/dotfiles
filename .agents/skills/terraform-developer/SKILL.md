@@ -14,21 +14,32 @@ descriptors, modules, resources.
 
 ## Core Principles
 
-- **Prefer resources over modules**: keep designs simple by using plain
-  Terraform resources over modules. Implement `for` and `for_each` loops to
-  avoid repetitions.
+- **Prefer resources over modules:** Favor simple resources for one-off
+  configurations to keep designs flat. Introduce modules only when encapsulating
+  complex, highly cohesive infrastructure or when reusability across multiple
+  environments or projects is strictly required.
+- **Loops over resources and modules:** Prefer `for` and `for_each` loops over
+  repetitions.
 
 ## Best Practices
 
 - **Terraform dependencies lockfile:** Generate Terraform dependency lock files
   running `terraform init`, and remind the user to do so and commit the lock
-  file.
-- **Validation and formatting:** Run `terraform validate` and
-  `terraform fmt -check` to check for syntax errors and formatting issues. If
-  there are formatting issues, run `terraform fmt` to fix them.
+  file. If the infrastructure is shared across different operating systems or
+  architectures, use
+  `terraform providers lock -platform=linux_amd64 -platform=darwin_arm64 ...` to
+  ensure all necessary platforms are covered.
+- **Validation and formatting:** Run `terraform validate` to check for syntax
+  errors and issues. Run `terraform fmt` (or `terraform fmt -recursive`) to
+  automatically fix formatting issues.
+- **Planning:** Run `terraform plan` after making modifications to verify the
+  execution plan matches the intended structural changes.
 - **Resource naming convention:** follow these rules when naming resources.
   - Use lowercase letters and underscores (`_`) to separate words when naming
     resources. Example: `server_vm`, not `server-vm`.
+  - Avoid repeating the resource type in the resource name. For example, prefer
+    `resource "aws_route_table" "public"` over
+    `resource "aws_route_table" "public_route_table"`.
 - **Variable definition:** follow these rules when defining variables.
   - If necessary, add a suffix to the variable name that denotes the unit.
     Example: `_gb` for gigabytes.
@@ -38,15 +49,17 @@ descriptors, modules, resources.
 - **Outputs definition:**
   - Store outputs in a file named `outputs.tf` within the module or Terraform
     service.
-  - Don't pass variables as outputs directly to ensure that they are added to
-    the dependency graph.
+  - Don't pass input variables as outputs directly. To ensure that an output
+    isn't evaluated until a resource is fully created, the output must reference
+    an exported attribute of the created resource (e.g.,
+    `value = google_compute_instance.web.id`).
 
 ### Data sources that reference variables
 
 - When you define a variable, prefer initializing a datasource that exercises
   that variable and reference the datasource, instead of referencing the
   variable directly. This helps you validate the variable (in addition to the
-  `validation` block in the variable definition), and ensuring that a resource
+  `validation` block in the variable definition), and ensures that a resource
   referencing the variable actually exists. For example:
 
   ```terraform
@@ -68,7 +81,7 @@ descriptors, modules, resources.
 
     disable_dependent_services = false
     disable_on_destroy         = false
-    project                    = data.google_project.cluster.project_id
+    project                    = data.google_project.google_cloud_project.project_id
     service                    = each.key
   }
 

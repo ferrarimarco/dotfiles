@@ -17,7 +17,6 @@ Define `treefmt` configuration in a `treefmt.nix` file:
 
       nixfmt = {
         enable = true;
-        package = pkgs.nixfmt;
       };
     };
   }
@@ -43,23 +42,39 @@ outputs =
     nixpkgs,
     treefmt-nix,
     ...
-  }@inputs:
+  }:
   let
-    system = "x86_64-linux";
-
-    # Use legacyPackages instead of packages to avoid evaluating unneeded
-    # packages.
-    # Ref: https://github.com/NixOS/nixpkgs/blob/1073dad219cb244572b74da2b20c7fe39cb3fa9e/flake.nix#L206
-    pkgs = nixpkgs.legacyPackages.${system};
-
-    treefmtEval = treefmt-nix.lib.evalModule pkgs (import ./treefmt.nix { inherit pkgs; });
+    supportedSystems = [
+      "x86_64-linux"
+      "aarch64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ];
+    eachSystem = nixpkgs.lib.genAttrs supportedSystems;
   in
   {
-    formatter.${system} = treefmtEval.config.build.wrapper;
+    formatter = eachSystem (
+      system:
+      let
+        # Use legacyPackages instead of packages to avoid evaluating unneeded
+        # packages.
+        # Ref: https://github.com/NixOS/nixpkgs/blob/1073dad219cb244572b74da2b20c7fe39cb3fa9e/flake.nix#L206
+        pkgs = nixpkgs.legacyPackages.${system};
+        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+      in
+      treefmtEval.config.build.wrapper
+    );
 
-    checks.${system} = {
-      treefmt-nix = treefmtEval.config.build.check self;
-    };
+    checks = eachSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+      in
+      {
+        treefmt-nix = treefmtEval.config.build.check self;
+      }
+    );
   };
 }
 ```
