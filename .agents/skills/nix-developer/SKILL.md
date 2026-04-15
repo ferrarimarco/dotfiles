@@ -2,8 +2,9 @@
 name: nix-developer
 description:
   Develop declarative Nix and NixOS configurations. Use when the user asks to
-  create, update, or debug Nix development shells, Home Manager setups, NixOS
-  hosts, or reproducible environments.
+  create, update, or debug Nix code, Nix development shells, Home Manager
+  setups, NixOS hosts, or reproducible environments, or you need to develop Nix
+  code.
 license: MIT
 ---
 
