@@ -62,7 +62,7 @@ if command -v kubectl >/dev/null 2>&1; then
   # Update the cache if it doesn't exist or is older than 24 hours (1440 minutes)
   if [ ! -f "$KUBECTL_COMPLETION_CACHE" ] ||
     [ -z "$(find "$KUBECTL_COMPLETION_CACHE" -mmin -1440)" ]; then
-    kubectl completion zsh > "$KUBECTL_COMPLETION_CACHE"
+    kubectl completion zsh >"$KUBECTL_COMPLETION_CACHE"
   fi
   . "$KUBECTL_COMPLETION_CACHE"
 fi

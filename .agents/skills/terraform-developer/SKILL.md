@@ -23,7 +23,7 @@ descriptors, modules, resources.
 
 ## Best Practices
 
-- **Terraform dependencies lockfile:** Generate Terraform dependency lock files
+- **Terraform dependencies lockfile:** Generate Terraform dependency lockfiles
   running `terraform init`, and remind the user to do so and commit the lock
   file. If the infrastructure is shared across different operating systems or
   architectures, use
