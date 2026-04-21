@@ -50,6 +50,11 @@ scope:
 - **Access to information:** When you cannot get access to data or information
   you need, you MUST stop and tell the user.
 
+### Terminology
+
+- Don't use GCP as an acronym for Google Cloud when writing text in natural
+  language. Use the extended form: Google Cloud.
+
 ## Technical stack preferences
 
 - Operating system:

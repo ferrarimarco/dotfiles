@@ -26,55 +26,55 @@ Then, load this configuration in a flake (`flake.nix`):
 
 ```nix
 {
-description = "Example flake";
+  description = "Example flake";
 
-inputs = {
-  # Reference in case we want to switch to unstable
-  nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+  inputs = {
+    # Example: Pin to a specific release branch
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
-  treefmt-nix.url = "github:numtide/treefmt-nix";
-  treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-};
-
-outputs =
-  {
-    self,
-    nixpkgs,
-    treefmt-nix,
-    ...
-  }:
-  let
-    supportedSystems = [
-      "x86_64-linux"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ];
-    eachSystem = nixpkgs.lib.genAttrs supportedSystems;
-  in
-  {
-    formatter = eachSystem (
-      system:
-      let
-        # Use legacyPackages instead of packages to avoid evaluating unneeded
-        # packages.
-        # Ref: https://github.com/NixOS/nixpkgs/blob/1073dad219cb244572b74da2b20c7fe39cb3fa9e/flake.nix#L206
-        pkgs = nixpkgs.legacyPackages.${system};
-        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      in
-      treefmtEval.config.build.wrapper
-    );
-
-    checks = eachSystem (
-      system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      in
-      {
-        treefmt-nix = treefmtEval.config.build.check self;
-      }
-    );
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
+
+  outputs =
+    {
+      self,
+      nixpkgs,
+      treefmt-nix,
+      ...
+    }:
+    let
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+      eachSystem = nixpkgs.lib.genAttrs supportedSystems;
+    in
+    {
+      formatter = eachSystem (
+        system:
+        let
+          # Use legacyPackages instead of packages to avoid evaluating unneeded
+          # packages.
+          # Ref: https://github.com/NixOS/nixpkgs/blob/1073dad219cb244572b74da2b20c7fe39cb3fa9e/flake.nix#L206
+          pkgs = nixpkgs.legacyPackages.${system};
+          treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        in
+        treefmtEval.config.build.wrapper
+      );
+
+      checks = eachSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        in
+        {
+          treefmt-nix = treefmtEval.config.build.check self;
+        }
+      );
+    };
 }
 ```

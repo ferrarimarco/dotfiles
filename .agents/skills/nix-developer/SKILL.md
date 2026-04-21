@@ -21,7 +21,7 @@ configurations.
 - **Declarative Over Imperative:** Avoid `nix-env` or imperative state
   manipulation. Everything should be declared in code.
 - **Formatting and linting:** Configure `treefmt` to run `nixfmt`, `deadnix`,
-  and `statix`. For more information, see
+  and `statix`. Run formatting with `nix fmt`. For more information, see
   [references/nix-treefmt.md](references/nix-treefmt.md).
 
 ## Workflows
@@ -65,7 +65,7 @@ When configuring user-specific dotfiles or packages:
 
 ### Flake development
 
-- Explicitly pin the flake to a release branch:
-  `url = "github:NixOS/nixpkgs/nixos-25.11"`.
+- Explicitly pin the flake to a release branch (e.g.,
+  `url = "github:NixOS/nixpkgs/nixos-25.11"`).
 - Use `inputs.nixpkgs.follows` to unify `nixpkgs` across all inputs.
 - Pass inputs to modules using `specialArgs = { inherit inputs; }`.
