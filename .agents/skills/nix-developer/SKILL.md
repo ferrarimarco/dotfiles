@@ -36,15 +36,28 @@ When tasked with setting up a project environment:
   and `nativeBuildInputs` (build tools).
 - Include standard development tools (e.g., linters, LSPs) relevant to the
   project's primary languages.
+- Recommend setting up `direnv` with `use flake` in `.envrc` for automatic shell
+  loading.
 
 ### 2. NixOS Host Configuration
 
-When configuring a NixOS machine:
+When configuring a NixOS machine, prioritize testability and separation of
+concerns by splitting configuration layers:
 
-- Organize configurations logically, separating hardware specifics
-  (`hardware-configuration.nix`) from logical services and packages.
-- Ensure the configuration is exposed via `nixosConfigurations` in a root
-  `flake.nix`.
+- **Logical Configuration (`configuration.nix`):** Declare all logical
+  features—roles, logical packages, system services (e.g. SSH), local users,
+  state version, and network parameters. This file should remain agnostic of
+  physical hardware.
+- **Physical Entrypoint (`default.nix`):** A thin entrypoint module that only
+  imports the logical configuration (`configuration.nix`), physical hardware
+  profile (`hardware.nix`), and disk partition definitions (`disko.nix`).
+- **Submodule Encapsulation:** Keep the high-level entrypoint clean by importing
+  hardware/filesystem modules (e.g., `inputs.disko.nixosModules.disko`) directly
+  inside the configuration submodules that require them (e.g., `disko.nix`),
+  rather than at the top level.
+- **Expose via Flakes:** Expose the complete target system under
+  `nixosConfigurations` in `flake.nix` importing the physical `default.nix`
+  entrypoint.
 
 ### 3. Home Manager (User Environment)
 
@@ -54,6 +67,24 @@ When configuring user-specific dotfiles or packages:
 - Structure configurations by grouping related programs (e.g., `git`, `shell`,
   `editor`).
 
+### 4. Integration Testing & Verification
+
+To verify NixOS host configurations in a robust, reproducible way, implement
+sandboxed VM integration tests:
+
+- **Service-Aware VM Testing:** Use the NixOS test framework (`nixosTest` /
+  `pkgs.testers.nixosTest`) to run VMs in QEMU. Prioritize declarative,
+  auto-deriving test generators (`make-test.nix`) that analyze the host's
+  evaluated system configuration to dynamically provision QEMU serial devices
+  and dynamically concatenate Python test assertions.
+- **Zero-Maintenance Flake Discovery:** Avoid manual check declarations.
+  Configure `flake.nix` checks to auto-scan the `hosts/` directory and
+  automatically register any host that has a `test.nix` file, ensuring CI
+  instantly tests any new host configuration.
+- **Read the Reference Guide:** For a complete walkthrough, implementation
+  example, and advanced debugging tips, see
+  [references/nix-testing.md](references/nix-testing.md).
+
 ## Best Practices
 
 - **Pinning:** Keep inputs pinned and explicitly manage `flake.lock`.
@@ -62,6 +93,14 @@ When configuring user-specific dotfiles or packages:
 - **Reviewing Changes:** When modifying configurations, review the resulting
   diffs and use `nix flake check` or `nix build` to validate syntax and
   evaluation before applying.
+- **Developer Workflow & Debugging:**
+  - Use `nix eval --raw .#checks.<system>.<test-name>.testScript` to dry-run
+    evaluate and inspect compiled Python test scripts without booting a VM.
+  - When writing VM test assertions for asynchronous services (like QEMU guest
+    agent), use `machine.wait_for_file` to block until udev creates the device
+    node before asserting on the service unit.
+  - See [references/nix-testing.md](references/nix-testing.md) for advanced
+    testing best practices.
 
 ### Flake development
 
