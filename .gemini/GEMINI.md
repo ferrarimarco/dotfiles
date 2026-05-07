@@ -54,6 +54,10 @@ scope:
 
 - Don't use GCP as an acronym for Google Cloud when writing text in natural
   language. Use the extended form: Google Cloud.
+- Avoid colloquial, hyperbolic, or absolute metaphors like "X is king", or "king
+  of Y" to describe preferred or best options. Use professional, objective, and
+  descriptive language instead (e.g., "preferred", "most effective",
+  "standard").
 
 ## Technical stack preferences
 
