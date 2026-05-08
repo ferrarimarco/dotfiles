@@ -37,7 +37,13 @@ dotfiles.
 The dotfiiles include configuration files for the following software:
 
 - cURL
-- Git
+- Git:
+  - [`.gitconfig`](.gitconfig): Global Git config containing core preferences,
+    and productivity aliases.
+  - [`.gitconfig-workspaces`](.gitconfig-workspaces): GitHub Workspace-specific
+    config.
+  - [`gitignore`](gitignore): Global git ignore list to exclude common
+    temporary, system, and editor files.
 - iTerm2
 - Nano
 - Nix
@@ -76,14 +82,3 @@ The dotfiles include a the following Git hooks. For each Git hook type,
     ```sh
     git config core.hooksPath .git/hooks
     ```
-
-## Thanks
-
-I used these dotfiles as inspiration and guidance:
-
-- [Jessie Frazelle](https://github.com/jessfraz/dotfiles)
-- [Kevin Suttle](https://github.com/kevinSuttle/dotfiles)
-- [Mathias Bynens](https://github.com/mathiasbynens/dotfiles)
-- [Nicolas Gallagher](https://github.com/necolas/dotfiles)
-- [Peter Ward](https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html)
-- [rmandvikar](https://github.com/rmandvikar/dotfiles)

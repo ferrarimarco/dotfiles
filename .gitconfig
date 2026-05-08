@@ -95,7 +95,17 @@ up = "!f() { git pull origin $(git symbolic-ref refs/remotes/origin/HEAD | sed '
 # Move HEAD to n commits before the current commit, but keep the index
 # and the working directory as is
 # Ref: https://git-scm.com/docs/git-reset#Documentation/git-reset.txt---soft
-undo = "!u() { git reset --soft HEAD~${1}; }; u"
+undo = "!u() { git reset --soft HEAD~${1:-1}; }; u"
+
+# Move HEAD to n commits before the current commit, keep the changes in
+# the working directory, but unstage them
+# Ref: https://git-scm.com/docs/git-reset#Documentation/git-reset.txt---mixed
+uncommit = "!uc() { git reset HEAD~${1:-1}; }; uc"
+
+# Move HEAD to n commits before the current commit, and discard all changes
+# in the index and the working directory
+# Ref: https://git-scm.com/docs/git-reset#Documentation/git-reset.txt---hard
+wipe = "!w() { git reset --hard HEAD~${1:-1}; }; w"
 
 # Get the list of top authors by commit count
 top = !git log --format=format:%an | sort | uniq -c | sort -nr | head -n 20
@@ -160,6 +170,12 @@ untracked = cyan
 # Detect copies as well as renames
 renames = copies
 
+# Use the histogram diff algorithm which produces much more readable diffs for humans
+algorithm = histogram
+
+# Highlights moved lines in diffs differently, making code reorganizations easy to spot
+colorMoved = default
+
 [fetch]
 # https://git-scm.com/docs/git-config#Documentation/git-config.txt-fetchprune
 # Fetch will automatically behave as if the --prune option was given on the command line.
@@ -182,6 +198,9 @@ autocorrect = 1
 
 # Include summaries of merged commits in newly created merge commit messages
 log = true
+
+# Show common ancestor's code in conflict markers (zdiff3 is cleaner than classic diff3)
+conflictstyle = zdiff3
 
 [pull]
 
@@ -243,6 +262,32 @@ user = ferrarimarco
 # working directory is set to that repository:
 # git config --bool gerrit.createChangeId "true"
 createChangeId = false
+
+[rebase]
+
+# Automatically stash untracked/staged changes before a rebase and restore them afterward
+autoStash = true
+
+# Automatically set `--stat` during interactive rebase to see changes
+stat = true
+
+[rerere]
+
+# Enable automatic conflict resolution recording and reuse
+enabled = true
+
+# Automatically stage resolved conflicts
+autoUpdate = true
+
+[init]
+
+# Set the standard default branch name for newly initialized local repositories
+defaultBranch = main
+
+[column]
+
+# Lists branches and tags in clean, multi-column layouts instead of one giant vertical list
+ui = auto
 
 [includeIf "gitdir/i:~/workspaces-work/"]
 
