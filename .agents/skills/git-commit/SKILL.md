@@ -123,7 +123,10 @@ EOF
 - Present tense: "add" not "added"
 - Imperative mood: "fix bug" not "fixes bug"
 - Reference issues: `Closes #123`, `Refs #456`
-- Keep description under 72 characters
+- **Strict 50/72 Character Rule**:
+  - The commit subject (first line) must not exceed **50 characters**.
+  - All subsequent body/footer lines must be wrapped to not exceed **72
+    characters**.
 
 ## Git Safety Protocol
 
@@ -132,3 +135,14 @@ EOF
 - NEVER skip hooks (--no-verify) unless user asks
 - NEVER force push to main/master
 - If commit fails due to hooks, fix and create NEW commit (don't amend)
+
+## Troubleshooting & Container Permissions
+
+- **Permission Denied on Git Control Files**: In containerized or volume-mounted
+  sandboxes (e.g. Docker environments running as root), containers might alter
+  ownership of Git control files (such as `.git/config` or `.git/index`) to
+  `root`.
+- **Resolution**: If Git commits fail with `Permission denied` errors, run
+  `ls -la .git/` to check file ownership. Report permissions/ownership issues
+  directly to the user so they can restore proper ownership (e.g., using
+  `chown`).
