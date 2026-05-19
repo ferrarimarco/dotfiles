@@ -81,8 +81,12 @@ sandboxed VM integration tests:
   Configure `flake.nix` checks to auto-scan the `hosts/` directory and
   automatically register any host that has a `test.nix` file, ensuring CI
   instantly tests any new host configuration.
+- **Pure-Evaluation Mocking:** Utilize conditional paths (`builtins.pathExists`)
+  and VM-overrides (`lib.mkVMOverride`) in the test suite to dynamically mock
+  out private/non-tracked keys and configuration files, ensuring isolated tests
+  evaluate successfully.
 - **Read the Reference Guide:** For a complete walkthrough, implementation
-  example, and advanced debugging tips, see
+  example, and advanced debugging/mocking tips, see
   [references/nix-testing.md](references/nix-testing.md).
 
 ## Best Practices

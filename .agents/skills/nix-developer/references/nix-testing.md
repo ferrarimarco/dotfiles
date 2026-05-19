@@ -174,3 +174,58 @@ You can boot a test VM and interact with it manually:
     ```python
     machine.shell_interact()
     ```
+
+## 4. Pure-Evaluation Mocking Pattern (Nix-Safe Mocking)
+
+When NixOS configurations import logical modules that depend on external,
+non-Git-tracked resources (such as secrets, configuration files, or private SSH
+bootstrap keys), the integration test framework (`nixosTest`) will fail to
+evaluate in isolation due to missing paths.
+
+To prevent configuration errors and avoid hardcoding mock values in production
+host files, follow this **Pure-Evaluation Mocking Pattern**:
+
+### 1. Declare Optional or Default Checks in Configuration
+
+In the host's configuration or physical entrypoint, use `builtins.pathExists` or
+`lib.mkDefault` to load physical keys conditionally:
+
+```nix
+# hosts/hl02/default.nix
+let
+  keyPath = ../../ssh-keys/bootstrap_id_ed25519.pub;
+  bootstrapKey = if builtins.pathExists keyPath then
+    builtins.readFile keyPath
+  else
+    "ssh-ed25519 AAAA...mock_key_for_testing..."; # Pure eval fallback
+in
+{
+  users.users.root.openssh.authorizedKeys.keys = [ bootstrapKey ];
+}
+```
+
+### 2. Inject Mock Inputs via `extraConfig` in the Test Generator
+
+Inside the centralized integration test generator (`make-test.nix`), leverage
+the `extraConfig` attribute to dynamically override configurations and stub
+external dependencies during test evaluation:
+
+```nix
+# tests/make-test.nix
+pkgs.testers.nixosTest {
+  nodes.machine = { config, lib, ... }: {
+    imports = [
+      hostConfiguration
+    ];
+
+    # Override hardware profiles and keys to run in pure QEMU sandboxes
+    services.openssh.enable = lib.mkVMOverride true;
+
+    # Mock network parameters if needed
+    networking.interfaces.eth0.useDHCP = lib.mkVMOverride true;
+  };
+}
+```
+
+Using `lib.mkVMOverride` ensures that even if a host defines rigid physical
+properties, the test VM successfully forces QEMU-compatible values.
