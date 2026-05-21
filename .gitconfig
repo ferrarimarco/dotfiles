@@ -116,6 +116,11 @@ reset-branch = !git fetch --all && git reset --hard @{u}
 # List all defined Git aliases
 alias=!git config -l | grep ^alias | cut -c 7- | sort
 
+[advice]
+
+# Silence advice when cherry-picking a commit that has already been applied
+skippedCherryPicks = false
+
 [apply]
 
 # Detect whitespace errors when applying a patch
