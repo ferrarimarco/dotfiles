@@ -127,6 +127,9 @@ EOF
   - The commit subject (first line) must not exceed **50 characters**.
   - All subsequent body/footer lines must be wrapped to not exceed **72
     characters**.
+- **Use Bulleted Lists for Clarity**: If the commit describes multiple distinct
+  but related changes, use a bulleted list in the body. Ensure each bullet point
+  is wrapped to 72 characters.
 
 ## Git Safety Protocol
 
