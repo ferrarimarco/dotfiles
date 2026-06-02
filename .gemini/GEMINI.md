@@ -59,6 +59,10 @@ scope:
   descriptive language instead (e.g., "preferred", "most effective",
   "standard").
 
+### Markdown
+
+- Avoid the use of "&" in section titles.
+
 ## Technical stack preferences
 
 - Operating system:
