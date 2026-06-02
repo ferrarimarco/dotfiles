@@ -32,10 +32,28 @@ update them just by pulling the latest changes.
 This section describes the customizations and configurations included in these
 dotfiles.
 
+### Agent skills
+
+#### Design
+
+- `design-spec`: Design specifications for new features.
+- `validate-spec`: Validate a specification (spec) to spot ambiguities,
+  inconsistencies, unclear or missing instructions, data, information, or
+  requirements.
+- `maintain-living-specs`: Automate the synchronization of living design
+  specifications (markdown) with code changes in the repository.
+
+#### Development
+
+- `git-commit`: Execute Git commit with conventional commit message.
+- `nix-developer`: Develop declarative Nix and NixOS configurations.
+- `terraform-developer`: Develop declarative Terraform configurations.
+
 ### Software configuration
 
 The dotfiiles include configuration files for the following software:
 
+- Antigravity CLI
 - cURL
 - Git:
   - [`.gitconfig`](.gitconfig): Global Git config containing core preferences,

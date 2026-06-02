@@ -1,0 +1,18 @@
+{
+  "colorScheme": "tokyo night",
+  "enableTelemetry": false,
+  "model": "Gemini 3.5 Flash (Medium)",
+  "notifications": true,
+  "permissions": {
+    "allow": [
+      "command(nix flake check)",
+      "command(git status)",
+      "command(git diff)",
+      "command(git ls-files)",
+      "command(git branch -a)",
+      "command(grep)",
+      "command(git branch)",
+      "command(ls)"
+    ]
+  }
+}

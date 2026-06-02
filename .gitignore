@@ -21,3 +21,6 @@ super-linter.log
 
 # Python venv
 .env
+
+# Antigravity
+.antigravitycli
