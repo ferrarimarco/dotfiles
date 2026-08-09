@@ -96,7 +96,8 @@ import ../../tests/make-test.nix {
 ## 2. Flake Autodiscovery of Tests
 
 To maintain a zero-maintenance test suite, avoid manually listing host tests
-inside `checks` in `flake.nix`. Instead, use Nix builtins to auto-discover them:
+inside `checks` in `flake.nix`. Instead, use Nix built-ins to auto-discover
+them:
 
 ```nix
   outputs = { self, nixpkgs, ... }@inputs:

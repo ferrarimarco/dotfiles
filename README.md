@@ -41,7 +41,7 @@ dotfiles.
   inconsistencies, unclear or missing instructions, data, information, or
   requirements.
 - `maintain-living-specs`: Automate the synchronization of living design
-  specifications (markdown) with code changes in the repository.
+  specifications (Markdown) with code changes in the repository.
 
 #### Development
 
@@ -60,7 +60,7 @@ The dotfiiles include configuration files for the following software:
     and productivity aliases.
   - [`.gitconfig-workspaces`](.gitconfig-workspaces): GitHub Workspace-specific
     config.
-  - [`gitignore`](gitignore): Global git ignore list to exclude common
+  - [`gitignore`](gitignore): Global Git ignore list to exclude common
     temporary, system, and editor files.
 - iTerm2
 - Nano

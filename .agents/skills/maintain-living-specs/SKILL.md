@@ -1,7 +1,7 @@
 ---
 name: maintain-living-specs
 description:
-  Automate the synchronization of living design specifications (markdown) with
+  Automate the synchronization of living design specifications (Markdown) with
   code changes in the repository. Use when code modifications or feature
   completions occur, to ensure status tables and global indexes remain in
   perfect alignment.
@@ -12,7 +12,7 @@ license: MIT
 
 This skill provides a standardized, automated approach to maintaining **living
 design specifications** in the repository, preventing documentation drift by
-programmatically synchronizing markdown status tables with the physical state of
+programmatically synchronizing Markdown status tables with the physical state of
 the codebase.
 
 ## Core Principles
@@ -63,6 +63,6 @@ available:
 
 - **Objective Statusing:** Never mark a feature as `Fully Implemented` unless it
   passes all unit and integration tests or has successfully built in CI.
-- **Clean Tables:** Ensure that table borders and markdown formatting are
+- **Clean Tables:** Ensure that table borders and Markdown formatting are
   perfectly aligned. Do not use trailing whitespaces or introduce vertical
   separators outside the table.
