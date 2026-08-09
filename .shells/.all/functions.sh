@@ -488,6 +488,10 @@ install_dotfiles() {
   # ~/.gemini/skills
   symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.gemini/skills"
 
+  # Claude Code loads skills from:
+  # ~/.claude/skills
+  symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.claude/skills"
+
   WSL_CONFIGURATION_FILE_PATH="/etc/wsl.conf"
   if is_wsl && [ -e "${WSL_CONFIGURATION_FILE_PATH}" ]; then
     sudo cp -fv "${HOME}/.config/wsl/wsl.conf" "${WSL_CONFIGURATION_FILE_PATH}"
