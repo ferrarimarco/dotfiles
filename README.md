@@ -45,6 +45,7 @@ dotfiles.
 
 #### Development
 
+- `ansible-developer`: Develop Ansible roles and playbooks.
 - `git-commit`: Execute Git commit with conventional commit message.
 - `nix-developer`: Develop declarative Nix and NixOS configurations.
 - `terraform-developer`: Develop declarative Terraform configurations.
