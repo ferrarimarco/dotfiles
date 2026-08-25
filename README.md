@@ -55,6 +55,7 @@ dotfiles.
 The dotfiiles include configuration files for the following software:
 
 - Antigravity CLI
+- Claude Code
 - cURL
 - Git:
   - [`.gitconfig`](.gitconfig): Global Git config containing core preferences,

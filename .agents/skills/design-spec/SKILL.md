@@ -25,6 +25,12 @@ feature.
    system constraints.
 3. **Identify Edge Cases:** Proactively point out potential edge cases, security
    risks, scalability bottlenecks, and potential negative user experiences.
+4. **Record Rejected Alternatives:** when the user chooses between competing
+   approaches, capture the rejected options and the reason for rejection in
+   the spec (a lightweight decision record). This prevents re-litigating the
+   same trade-off later and preserves the constraint that drove the choice
+   (e.g., "encrypted secrets in a public repository were considered and
+   rejected because Git history is immortal").
 
 ## Workflow
 

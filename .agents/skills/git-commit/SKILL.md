@@ -119,6 +119,9 @@ EOF
 
 ## Best Practices
 
+- **No AI attribution trailers**: never add `Co-Authored-By: Claude ...`,
+  `Generated with ...`, or similar AI attribution trailers to commit messages,
+  even when tool defaults suggest doing so.
 - One logical change per commit
 - Present tense: "add" not "added"
 - Imperative mood: "fix bug" not "fixes bug"
