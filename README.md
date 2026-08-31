@@ -9,7 +9,7 @@ These are the dotfiles I use on my systems and development environments.
 To install these dotfiles:
 
 1. Clone this repository with Git.
-1. Setup the dotfiles.
+1. Set up the dotfiles.
 
    If you're on a Unix-based system (Linux, macOS, Windows Subsystem for Linux),
    run:
@@ -24,8 +24,8 @@ To install these dotfiles:
    setup-windows.ps1
    ```
 
-All the dotfiles and binaries will be symlinked to their destinations so you can
-update them just by pulling the latest changes.
+All the dotfiles will be symlinked to their destinations so you can update them
+just by pulling the latest changes.
 
 ## Contents
 
@@ -52,7 +52,7 @@ dotfiles.
 
 ### Software configuration
 
-The dotfiiles include configuration files for the following software:
+The dotfiles include configuration files for the following software:
 
 - Antigravity CLI
 - Claude Code
@@ -88,15 +88,17 @@ shell they are applicable to. All the customizations are in the
 
 ### Git hooks
 
-The dotfiles include a the following Git hooks. For each Git hook type,
+The dotfiles include the following Git hooks. For each Git hook type,
 `.git-hooks/git-hook-runner.sh` will run the hooks listed in the
 `.git-hooks/<Git hook name>.d` directory in alphabetic order.
 
 - `commit-msg` hooks:
   - `100-gerrit-commit-msg`: adds a `Change-Id` trailer to the commit message.
-    Useful when working with Gerrit. This hook is disabled by default. Enable it
-    by running:
+    Useful when working with Gerrit. This hook runs on every commit, but it
+    exits without modifying the message because the global Git configuration
+    sets `gerrit.createChangeId` to `false`. Enable it for a given repository by
+    running the following command in that repository:
 
     ```sh
-    git config core.hooksPath .git/hooks
+    git config --bool gerrit.createChangeId "true"
     ```
