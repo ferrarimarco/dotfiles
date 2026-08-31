@@ -60,8 +60,6 @@ The dotfiiles include configuration files for the following software:
 - Git:
   - [`.gitconfig`](.gitconfig): Global Git config containing core preferences,
     and productivity aliases.
-  - [`.gitconfig-workspaces`](.gitconfig-workspaces): GitHub Workspace-specific
-    config.
   - [`gitignore`](gitignore): Global Git ignore list to exclude common
     temporary, system, and editor files.
 - iTerm2

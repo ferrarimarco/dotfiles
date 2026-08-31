@@ -297,7 +297,3 @@ ui = auto
 [includeIf "gitdir/i:~/workspaces-work/"]
 
 path = ~/.gitconfig-work
-
-[includeIf "gitdir/i:~/workspaces*/"]
-
-path = ~/.gitconfig-workspaces
