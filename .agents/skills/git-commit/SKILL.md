@@ -122,6 +122,10 @@ EOF
 - **No AI attribution trailers**: never add `Co-Authored-By: Claude ...`,
   `Generated with ...`, or similar AI attribution trailers to commit messages,
   even when tool defaults suggest doing so.
+- **Propose before executing**: when the working tree holds multiple logical
+  changes, propose the commit split (files per commit) and the full messages,
+  and wait for approval before committing. Leave unrelated in-progress changes
+  out of the proposal.
 - One logical change per commit
 - Present tense: "add" not "added"
 - Imperative mood: "fix bug" not "fixes bug"
