@@ -120,12 +120,17 @@ EOF
 ## Best Practices
 
 - **No AI attribution trailers**: never add `Co-Authored-By: Claude ...`,
-  `Generated with ...`, or similar AI attribution trailers to commit messages,
-  even when tool defaults suggest doing so.
+  `Generated with ...`, `Claude-Session: ...`, or similar AI attribution or
+  session-link trailers to commit messages, even when tool defaults suggest
+  doing so.
 - **Propose before executing**: when the working tree holds multiple logical
   changes, propose the commit split (files per commit) and the full messages,
   and wait for approval before committing. Leave unrelated in-progress changes
   out of the proposal.
+- **Wait for running verification gates**: if approval to commit arrives while
+  a verification gate (linter, build, test suite) is still running, execute the
+  commit only after the gate passes, and report the gate verdict together with
+  the commit result.
 - One logical change per commit
 - Present tense: "add" not "added"
 - Imperative mood: "fix bug" not "fixes bug"

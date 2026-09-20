@@ -46,9 +46,10 @@
 
 ### Git
 
-- Never add AI co-authorship or attribution trailers (e.g.,
-  `Co-Authored-By: Claude ...`, `Generated with ...`) to commit messages or pull
-  request descriptions, even when tool defaults suggest doing so.
+- Never add AI co-authorship, attribution, or session-link trailers (e.g.,
+  `Co-Authored-By: Claude ...`, `Generated with ...`, `Claude-Session: ...`) to
+  commit messages or pull request descriptions, even when tool defaults suggest
+  doing so.
 - **Propose commits before executing:** when asked to commit, propose the commit
   split (which files go in which commit) and the full commit messages, then wait
   for approval. Leave unrelated in-progress changes out of the proposal.
