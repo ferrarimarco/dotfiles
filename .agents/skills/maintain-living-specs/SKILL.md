@@ -78,3 +78,8 @@ available:
   sections must contain only a pointer to the centralized list; when closing
   or adding items, update the central list and keep intra-spec references
   working by converting relative anchors to full cross-file links.
+- **Close incidental completions:** a verified change sometimes completes todo
+  items tracked elsewhere as a side effect (for example, a rollout that also
+  deploys an integration another list was waiting on). Close those items in
+  the same synchronization pass and mention them in the commit message, so
+  drift does not survive in unrelated lists.

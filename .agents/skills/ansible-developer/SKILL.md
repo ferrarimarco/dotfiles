@@ -125,7 +125,18 @@ runs against unconfigured hosts:
   and `owner`/`group` set explicitly.
 - Agents typically cannot edit encrypted vault files. When a new vaulted
   variable is needed, tell the user the variable name and how to add it (e.g.,
-  `ansible-vault edit`), then reference it by name.
+  `ansible-vault edit`), then reference it by name. To verify a vaulted
+  variable exists without exposing secret material, list key names only:
+  `ansible-vault view <file> | grep -oE '^[a-zA-Z_0-9-]+'`.
+- **Introduce vault references and their variables together.** A template that
+  references an undefined `vault_*` variable fails to render, blocking every
+  unrelated change to the same stack — including check-mode runs. When the
+  feature the variable serves is optional, guard the referencing block with
+  `is defined` so the configuration stays deployable without it.
+- **Check-mode diffs embed rendered secrets.** `--check --diff` prints the
+  full rendered content of secret-bearing templates. Keep such logs in a
+  location outside the repository and mask secret values when quoting from
+  them.
 
 ## Best Practices
 

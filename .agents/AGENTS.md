@@ -68,6 +68,12 @@ scope:
   run and review the predicted changes for unintended destructive effects
   (deletions, teardowns, replacements), not just for errors. Treat an unexpected
   destructive prediction as a bug to root-cause before applying.
+- **Distinguish pre-existing failures from regressions:** when a dry-run,
+  check, or test fails, determine whether the failure predates your change
+  (e.g., it reproduces on the unchanged code, or the failing element is one
+  your change never touched) before attributing it to your work. Report which
+  case it is, with the evidence, and propose how to handle a pre-existing
+  failure instead of silently working around it.
 - **Verify state changes:** after a state-changing operation completes (e.g., an
   infrastructure apply, a configuration playbook run, a service restart), verify
   the actual resulting state with read-only checks and report the evidence,
