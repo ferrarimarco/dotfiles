@@ -10,5 +10,6 @@
 - When adding a skill, add a one-line entry to the "Agent skills" section of
   `README.md` under the matching category, keeping categories and entries in
   alphabetical order.
-- Create only the files in this repository. The setup script creates and
-  maintains the home-directory symlinks; never create or repair them manually.
+- Create only the files in this repository. The setup script symlinks the whole
+  skills directory into the home directory, so a new skill needs no linking;
+  never create or repair home-directory symlinks manually.

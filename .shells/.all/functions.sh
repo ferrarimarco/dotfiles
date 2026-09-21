@@ -316,13 +316,33 @@ symlink_file() {
   SOURCE_FILE_PATH="${1}"
   DESTINATION_FILE_PATH="${2}"
   DESTINATION_DIRECTORY_PATH="$(dirname "${DESTINATION_FILE_PATH}")"
-  echo "Ensuring that the ${DESTINATION_DIRECTORY_PATH} directory exists"
-  mkdir -pv "${DESTINATION_DIRECTORY_PATH}"
-  echo "Creating a symbolic link from ${SOURCE_FILE_PATH} to ${DESTINATION_FILE_PATH}"
-  ln -sfnv "${SOURCE_FILE_PATH}" "${DESTINATION_FILE_PATH}"
+  SYMLINK_FILE_RET_CODE=0
+
+  if [ -e "${DESTINATION_FILE_PATH}" ] && [ ! -L "${DESTINATION_FILE_PATH}" ]; then
+    # A directory that only contains symbolic links (and subdirectories) is a
+    # leftover of a previous per-file linking layout: replace it. Anything else
+    # is user data that must not be overwritten.
+    if [ -d "${DESTINATION_FILE_PATH}" ] && [ "$(find "${DESTINATION_FILE_PATH}" -not -type l -not -type d | wc -l)" -eq 0 ]; then
+      echo "${DESTINATION_FILE_PATH} is a directory that only contains symbolic links. Removing it..."
+      rm -rf "${DESTINATION_FILE_PATH}"
+    else
+      echo "${DESTINATION_FILE_PATH} already exists and it's not a symbolic link. Refusing to overwrite it. Details:"
+      ls -alh "${DESTINATION_FILE_PATH}"
+      SYMLINK_FILE_RET_CODE=1
+    fi
+  fi
+
+  if [ "${SYMLINK_FILE_RET_CODE}" -eq 0 ]; then
+    echo "Ensuring that the ${DESTINATION_DIRECTORY_PATH} directory exists"
+    mkdir -pv "${DESTINATION_DIRECTORY_PATH}"
+    echo "Creating a symbolic link from ${SOURCE_FILE_PATH} to ${DESTINATION_FILE_PATH}"
+    ln -sfnv "${SOURCE_FILE_PATH}" "${DESTINATION_FILE_PATH}"
+  fi
+
   unset SOURCE_FILE_PATH
   unset DESTINATION_FILE_PATH
   unset DESTINATION_DIRECTORY_PATH
+  return "${SYMLINK_FILE_RET_CODE}"
 }
 
 update_brew() {
@@ -461,36 +481,41 @@ install_dotfiles() {
 
   echo "Setting up dotfiles from source directory: ${SOURCE_PATH}..."
 
-  find "${SOURCE_PATH}" -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -name ".*.swp" >tmp
+  # Skills are linked as a whole directory below, not file by file
+  find "${SOURCE_PATH}" -type f -path "*/\.*" -not -name ".gitignore" -not -path "*/\.github/*" -not -path "*/\.git/*" -not -path "*/\.agents/skills/*" -not -name ".*.swp" >tmp
+  INSTALL_DOTFILES_RET_CODE=0
   while IFS= read -r file; do
     # Strip the ${SOURCE_PATH} prefix from the file path
     file_base_path="${file##"${SOURCE_PATH}/"}"
     file_path="${HOME}/${file_base_path}"
     echo "File to link: ${file}. File base path: ${file_base_path}. Target file path: ${file_path}"
 
-    if [ -e "${file_path}" ] && [ ! -L "${file_path}" ]; then
-      echo "${file_path} already exists and it's a regular file, not a symbolic link. Details:"
-      ls -alh "${file_path}"
-
-      BACKUP_FILE_PATH="${file_path}.backup"
-      echo "Moving ${file_path} to ${BACKUP_FILE_PATH}..."
-      mv "${file_path}" "${BACKUP_FILE_PATH}"
+    if ! symlink_file "${file}" "${file_path}"; then
+      INSTALL_DOTFILES_RET_CODE=1
+      break
     fi
-
-    symlink_file "${file}" "${file_path}"
   done <tmp
   rm tmp
+  if [ "${INSTALL_DOTFILES_RET_CODE}" -ne 0 ]; then
+    unset INSTALL_DOTFILES_RET_CODE
+    return 1
+  fi
+  unset INSTALL_DOTFILES_RET_CODE
 
-  symlink_file "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore"
+  symlink_file "${SOURCE_PATH}/gitignore" "${HOME}/.gitignore" || return 1
+
+  # Generic agents load skills from:
+  # ~/.agents/skills
+  symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.agents/skills" || return 1
 
   # Antigravity CLI loads skills from:
   # ~/.gemini/antigravity-cli/skills
   # ~/.gemini/skills
-  symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.gemini/skills"
+  symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.gemini/skills" || return 1
 
   # Claude Code loads skills from:
   # ~/.claude/skills
-  symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.claude/skills"
+  symlink_file "${SOURCE_PATH}/.agents/skills" "${HOME}/.claude/skills" || return 1
 
   WSL_CONFIGURATION_FILE_PATH="/etc/wsl.conf"
   if is_wsl && [ -e "${WSL_CONFIGURATION_FILE_PATH}" ]; then
