@@ -1,3 +1,3 @@
 # Claude configuration file
 
-@./.agents/AGENTS.md
+@./AGENTS.md
