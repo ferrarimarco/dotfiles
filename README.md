@@ -37,18 +37,25 @@ dotfiles.
 #### Design
 
 - `design-spec`: Design specifications for new features.
+- `maintain-living-specs`: Automate the synchronization of living design
+  specifications (Markdown) with code changes in the repository.
 - `validate-spec`: Validate a specification (spec) to spot ambiguities,
   inconsistencies, unclear or missing instructions, data, information, or
   requirements.
-- `maintain-living-specs`: Automate the synchronization of living design
-  specifications (Markdown) with code changes in the repository.
 
 #### Development
 
 - `ansible-developer`: Develop Ansible roles and playbooks.
 - `git-commit`: Execute Git commit with conventional commit message.
 - `nix-developer`: Develop declarative Nix and NixOS configurations.
+- `systemd-developer`: Develop and debug systemd units, timers, sandboxing, and
+  watchdogs.
 - `terraform-developer`: Develop declarative Terraform configurations.
+
+#### Operations
+
+- `troubleshoot-host`: Investigate an unresponsive, frozen, or crashed host
+  after recovery.
 
 ### Software configuration
 
