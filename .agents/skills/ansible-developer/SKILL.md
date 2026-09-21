@@ -139,8 +139,11 @@ runs against unconfigured hosts:
 - Agents typically cannot edit encrypted vault files. When a new vaulted
   variable is needed, tell the user the variable name and how to add it (e.g.,
   `ansible-vault edit`), then reference it by name. To verify a vaulted
-  variable exists without exposing secret material, list key names only:
-  `ansible-vault view <file> | grep -oE '^[a-zA-Z_0-9-]+'`.
+  variable exists without exposing secret material, list key names only, e.g.
+  `ansible-vault view <file> | grep -oE '^vault[a-zA-Z_0-9-]*'`. Anchor the
+  filter on the project's vault variable prefix: when the view runs through a
+  wrapper script, the wrapper's log lines share stdout with the decrypted
+  content, and a generic `^[a-zA-Z_0-9-]+` filter surfaces them too.
 - **Introduce vault references and their variables together.** A template that
   references an undefined `vault_*` variable fails to render, blocking every
   unrelated change to the same stack — including check-mode runs. When the
