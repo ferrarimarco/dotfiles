@@ -1,6 +1,6 @@
 ---
 name: troubleshoot-host
-description:
+description: >-
   Investigate an unresponsive, frozen, or crashed host after recovery. Use when
   a machine stopped responding, froze, kernel-panicked, rebooted unexpectedly,
   or required a manual power cycle, and the user wants to know why and how to

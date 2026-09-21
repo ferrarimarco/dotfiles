@@ -1,8 +1,8 @@
 ---
 name: design-spec
-description:
-  "Design a robust, well-thought-out specification for a new feature. Use when
-  user asks to design a new feature, a new spec, or mentions /design-spec."
+description: >-
+  Design a robust, well-thought-out specification for a new feature. Use when
+  user asks to design a new feature, a new spec, or mentions /design-spec.
 license: MIT
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: terraform-developer
-description:
+description: >-
   Develop declarative Terraform configurations. Use when the user asks to
   create, update, or debug Terraform code, Terraform descriptors, Terraform
   resources, Terraform modules, or when you need to develop Terraform code.

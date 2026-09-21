@@ -1,6 +1,6 @@
 ---
 name: maintain-living-specs
-description:
+description: >-
   Automate the synchronization of living design specifications (Markdown) with
   code changes in the repository. Use when code modifications or feature
   completions occur, to ensure status tables and global indexes remain in

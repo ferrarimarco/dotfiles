@@ -1,9 +1,9 @@
 ---
 name: validate-spec
-description:
-  "Validate a specification (spec) to spot ambiguities, inconsistencies, unclear
+description: >-
+  Validate a specification (spec) to spot ambiguities, inconsistencies, unclear
   or missing instructions, data, information, or requirements. Use when user
-  asks to validate a spec, or mentions /validate-spec."
+  asks to validate a spec, or mentions /validate-spec.
 license: MIT
 ---
 

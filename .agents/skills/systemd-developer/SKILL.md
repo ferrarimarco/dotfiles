@@ -1,6 +1,6 @@
 ---
 name: systemd-developer
-description:
+description: >-
   Develop and debug systemd units, timers, sandboxing, and watchdogs. Use when
   creating, updating, or debugging systemd services, timers, unit hardening and
   security directives, state directories, or watchdog configuration, whether the

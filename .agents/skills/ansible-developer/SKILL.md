@@ -1,6 +1,6 @@
 ---
 name: ansible-developer
-description:
+description: >-
   Develop declarative, idempotent Ansible roles, playbooks, and inventories. Use
   when the user asks to create, update, or debug Ansible code, roles, playbooks,
   inventory variables, or when you need to develop Ansible automation.
