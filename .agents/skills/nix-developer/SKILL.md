@@ -103,6 +103,11 @@ sandboxed VM integration tests:
   - When writing VM test assertions for asynchronous services (like QEMU guest
     agent), use `machine.wait_for_file` to block until udev creates the device
     node before asserting on the service unit.
+  - The test driver's `machine.succeed` runs commands under `pipefail`: an
+    early-exiting pipe consumer (`grep -q`) on a large producer (e.g. a
+    metrics endpoint scrape) fails the pipeline with the producer's write
+    error. Use a consumer that reads the full stream, such as
+    `grep <pattern> > /dev/null`.
   - See [references/nix-testing.md](references/nix-testing.md) for advanced
     testing best practices.
 
@@ -112,6 +117,12 @@ sandboxed VM integration tests:
   `url = "github:NixOS/nixpkgs/nixos-25.11"`).
 - Use `inputs.nixpkgs.follows` to unify `nixpkgs` across all inputs.
 - Pass inputs to modules using `specialArgs = { inherit inputs; }`.
+- In a Git repository, flake evaluation only sees Git-tracked files: `git add`
+  newly created files before building or evaluating, or they are invisible and
+  evaluation fails with a "not tracked by Git" error.
+- Build flake checks with `--no-link` when the repository's `result` symlink
+  carries meaning (e.g. staged build artifacts another tool consumes), so the
+  check build does not clobber it.
 
 ### References
 

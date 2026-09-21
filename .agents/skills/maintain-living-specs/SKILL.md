@@ -83,3 +83,7 @@ available:
   deploys an integration another list was waiting on). Close those items in
   the same synchronization pass and mention them in the commit message, so
   drift does not survive in unrelated lists.
+- **Record deferred plans as todos:** when part of an approved plan is put on
+  hold, add the deferred work to the centralized todo list in the same
+  synchronization pass (with the date and why it is on hold), and close it
+  when the deferred work later lands.

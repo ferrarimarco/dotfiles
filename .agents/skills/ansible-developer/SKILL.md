@@ -23,6 +23,13 @@ inventories that are idempotent, check-mode friendly, and data-driven.
   states on consecutive runs is a bug, even if the end state is correct.
 - **Fully qualified collection names:** always use FQCNs
   (`ansible.builtin.copy`, `community.general.parted`, `ansible.posix.mount`).
+- **Deployment gates and consumer endpoints must agree:** when a per-host flag
+  gates a service's deployment while consumers reach it through a separate
+  endpoint variable (e.g. `<service>_endpoint_fqdn`), nothing forces the
+  endpoint host to be one where the gate is true — the service can silently
+  never deploy while consumers point at a host that will never run it. Derive
+  both from the same source, or verify the endpoint host actually renders the
+  service.
 
 ## Variable Precedence Traps
 
@@ -35,6 +42,12 @@ inventories that are idempotent, check-mode friendly, and data-driven.
 - Symptom of a shadowed enablement flag: check mode predicts `state: absent` or
   service teardown for a feature that should be active. Root-cause the flag's
   effective value before applying.
+- In a cross-host loop (e.g. `with_items: "{{ groups['all'] }}"`), the fallback
+  in `hostvars[item].my_flag | default(my_flag)` resolves `my_flag` against the
+  **play host**, not the item: hosts that do not define the flag silently
+  inherit the current host's value. Use an explicit literal default
+  (`| default(false)`), and keep it consistent with every other place that
+  gates on the same flag.
 
 ## Read-Then-Act Pattern for Non-Idempotent Modules
 

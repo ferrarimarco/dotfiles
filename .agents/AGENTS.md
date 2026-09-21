@@ -83,6 +83,13 @@ scope:
   inspect the file, instead of piping through filters like `tail` or `head`.
   Filters discard the evidence needed to diagnose failures, and in a pipeline
   the filter's exit status masks the command's real one.
+- **Beware early-exiting pipe consumers under `pipefail`:** a consumer that
+  exits at the first match (`grep -q`, `head`) closes the pipe while the
+  producer is still writing; with large output the producer then fails with a
+  write error (for example curl exit code 23) and, under `pipefail`, fails the
+  whole pipeline despite the match succeeding. When the pipeline's exit status
+  matters, use a consumer that reads the full stream (for example
+  `grep <pattern> > /dev/null`).
 - **Verify services through the consumer's access path:** when smoke-testing a
   service, prefer a test that exercises the same stack real consumers use (same
   client software, credentials, and network route) over installing ad-hoc tools
