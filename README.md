@@ -57,6 +57,11 @@ dotfiles.
 - `troubleshoot-host`: Investigate an unresponsive, frozen, or crashed host
   after recovery.
 
+#### Workflow
+
+- `capture-learnings`: Distill durable lessons from the current session and
+  saved memories into version-controlled agent instructions and skills.
+
 ### Software configuration
 
 The dotfiles include configuration files for the following software:
