@@ -83,6 +83,10 @@ scope:
   inspect the file, instead of piping through filters like `tail` or `head`.
   Filters discard the evidence needed to diagnose failures, and in a pipeline
   the filter's exit status masks the command's real one.
+- **`curl` needs `--fail` when its success gates the next step:** without it,
+  HTTP error responses (404, 500) still exit 0, so a verification like
+  `curl -X POST ... && echo done` reports success for a request the server
+  rejected.
 - **Beware early-exiting pipe consumers under `pipefail`:** a consumer that
   exits at the first match (`grep -q`, `head`) closes the pipe while the
   producer is still writing; with large output the producer then fails with a

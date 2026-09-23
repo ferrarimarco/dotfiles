@@ -154,6 +154,16 @@ runs against unconfigured hosts:
   location outside the repository and mask secret values when quoting from
   them.
 
+## Containerized Service Configuration
+
+- **A replaced bind-mounted file is invisible to the running container.**
+  Templating a config file that a container bind-mounts individually replaces
+  the file's inode, while the container keeps the old one; hot-reload
+  endpoints then reload stale content and report success. After templating
+  such a file, restart the container instead of relying on a reload, and
+  verify the change through the service's own API (active configuration,
+  target lists), not by reading the file on the host.
+
 ## Best Practices
 
 - Name every task descriptively; task names are the run's user interface.
