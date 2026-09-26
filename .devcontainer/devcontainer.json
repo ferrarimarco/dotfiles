@@ -13,9 +13,7 @@
           "--config",
           "/workspaces/super-linter/.github/linters/.hadolint.yaml"
         ],
-        "markdownlint.config": {
-          "extends": "${workspaceFolder}/.github/linters/.markdown-lint.yml"
-        },
+        "markdownlint.configFile": "${workspaceFolder}/.github/linters/.markdown-lint.yml",
         "prettier.resolveGlobalModules": true,
         "redhat.telemetry.enabled": false,
         "telemetry.telemetryLevel": "off",
