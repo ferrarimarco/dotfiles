@@ -8,7 +8,7 @@
   "editor.quickSuggestions": {
     "other": true,
     "comments": false,
-    "strings": true
+    "strings": true,
   },
   "editor.renderControlCharacters": true,
   "editor.renderWhitespace": "all",
@@ -22,7 +22,7 @@
   "files.associations": {
     ".pages": "yaml",
     ".terraformrc": "terraform",
-    "Vagrantfile": "ruby"
+    "Vagrantfile": "ruby",
   },
   "files.eol": "\n",
   "files.insertFinalNewline": true,
@@ -42,7 +42,7 @@
   "remote.SSH.defaultExtensions": [
     "docker.docker",
     "ms-azuretools.vscode-containers",
-    "ms-vscode-remote.vscode-remote-extensionpack"
+    "ms-vscode-remote.vscode-remote-extensionpack",
   ],
   "remote.SSH.connectTimeout": 30,
   "telemetry.telemetryLevel": "off",
@@ -52,17 +52,17 @@
   "terminal.integrated.fontFamily": "MesloLGS NF",
   "terminal.integrated.fontSize": 12,
   "workbench.colorCustomizations": {
-    "editorRuler.foreground": "#cfbcc391"
+    "editorRuler.foreground": "#cfbcc391",
   },
   "workbench.enableExperiments": false,
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.startupEditor": "newUntitledFile",
   "[markdown]": {
-    "editor.wordWrap": "off"
+    "editor.wordWrap": "off",
   },
   "[python]": {
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
-  }
+      "source.organizeImports": "explicit",
+    },
+  },
 }

@@ -80,7 +80,8 @@ The dotfiles include configuration files for the following software:
 - SSH client
 - Terraform
 - Tmux
-- Visual Studio Code
+- Visual Studio Code (VS Code).
+  [VS Code settings are JSON with Comments files](https://code.visualstudio.com/docs/languages/json#_json-with-comments).
 - Wget
 - Windows Subsystem for Linux
 
