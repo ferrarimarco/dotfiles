@@ -112,6 +112,10 @@ scope:
 ### Markdown
 
 - Avoid the use of "&" in section titles.
+- Wrap prose at 80 columns.
+- Do not use `---` horizontal rules; YAML frontmatter delimiters are the one
+  permitted use.
+- Do not end headings with punctuation.
 
 ## Technical stack preferences
 

@@ -13,3 +13,5 @@
 - Create only the files in this repository. The setup script symlinks the whole
   skills directory into the home directory, so a new skill needs no linking;
   never create or repair home-directory symlinks manually.
+- Frontmatter values: `license: MIT`, and `metadata.source: <url>` when the
+  skill is adapted from external material.
