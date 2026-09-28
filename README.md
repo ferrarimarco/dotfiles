@@ -61,6 +61,7 @@ dotfiles.
 
 - `capture-learnings`: Distill durable lessons from the current session and
   saved memories into version-controlled agent instructions and skills.
+- `create-skill`: Create, improve, consolidate, and diagnose agent skills.
 
 ### Software configuration
 
