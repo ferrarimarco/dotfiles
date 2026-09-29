@@ -24,3 +24,6 @@ super-linter.log
 
 # Antigravity
 .antigravitycli
+
+# Claude Code skills synced from the claude.ai account
+.agents/skills/synced/
