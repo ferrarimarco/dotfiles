@@ -20,7 +20,10 @@ inventories that are idempotent, check-mode friendly, and data-driven.
   data, not by conditionals scattered in tasks.
 - **Idempotency is the contract:** every task must converge to the declared
   state and report `ok` on a second run. A task that flaps between `changed`
-  states on consecutive runs is a bug, even if the end state is correct.
+  states on consecutive runs is a bug, even if the end state is correct. For a
+  timer-triggered service that runs to completion, declare the state of the
+  timer, not of the service: a `started` service that exits is started again,
+  and reports `changed`, on every run.
 - **Fully qualified collection names:** always use FQCNs
   (`ansible.builtin.copy`, `community.general.parted`, `ansible.posix.mount`).
 - **Deployment gates and consumer endpoints must agree:** when a per-host flag
@@ -163,6 +166,29 @@ runs against unconfigured hosts:
   such a file, restart the container instead of relying on a reload, and
   verify the change through the service's own API (active configuration,
   target lists), not by reading the file on the host.
+
+## Testing with Molecule
+
+- **Failures are layered:** a failing stage hides every failure after it. After
+  a fix, rerun until both converge and idempotence pass before reporting the
+  test as fixed, and expect defects that accumulated while the test was red.
+- **Minimal test images expose missing prerequisites:** a module may need a
+  Python library on the target that real hosts happen to have (for example,
+  `ansible.builtin.deb822_repository` needs `python3-debian`). Prefer the
+  module's own install option (`install_python_debian: true`, ansible-core
+  2.20 and later) at its first use over reordering tasks: the option acts only
+  when the library is missing.
+- **A task skipped by tags registers nothing:** unlike a task skipped by `when`,
+  it leaves its `register` variable undefined, so consumers need
+  `| default([])`.
+- Tag the tasks that download large artifacts or start workloads with
+  `molecule-notest`, which Molecule skips by default, and cover what they
+  validated with cheaper checks.
+- An unset environment variable interpolates to null in `molecule.yml`, which
+  fails the schema validation for string fields: give optional variables a
+  default (`${VAR:-""}`).
+- The test mounts the working tree: don't edit the files under test while a run
+  is in progress.
 
 ## Best Practices
 
