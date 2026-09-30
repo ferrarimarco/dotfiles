@@ -92,6 +92,16 @@ sandboxed VM integration tests:
 ## Best Practices
 
 - **Pinning:** Keep inputs pinned and explicitly manage `flake.lock`.
+- **Module reconciliation defaults:** before keeping part of a service's
+  configuration imperative (managed through its API or GUI), read the module's
+  activation-time reconciliation behavior in the nixpkgs source at the version
+  in use. Many modules delete or replace undeclared objects on every
+  activation by default (e.g. `services.syncthing` `overrideDevices` and
+  `overrideFolders` default to `true` and delete undeclared devices and
+  folders as stale even when the configuration declares none), and declared
+  objects are re-applied wholesale, stripping imperatively added fields.
+  Disable such flags explicitly, and verify the imperative state survives the
+  first activation.
 - **Modularity:** Split large configurations into separate modules using the
   `imports = [ ... ];` pattern.
 - **Reviewing Changes:** When modifying configurations, review the resulting
@@ -108,6 +118,11 @@ sandboxed VM integration tests:
     metrics endpoint scrape) fails the pipeline with the producer's write
     error. Use a consumer that reads the full stream, such as
     `grep <pattern> > /dev/null`.
+  - `machine.wait_for_unit` proves the unit is active, not that the service
+    accepts requests: under boot load, probes right after activation can be
+    refused or return incomplete responses. Assert on service behavior with
+    `machine.wait_until_succeeds(..., timeout=N)` instead of a one-shot
+    `machine.succeed`.
   - See [references/nix-testing.md](references/nix-testing.md) for advanced
     testing best practices.
 
