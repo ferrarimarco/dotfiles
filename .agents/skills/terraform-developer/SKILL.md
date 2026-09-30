@@ -38,6 +38,16 @@ descriptors, modules, resources.
   unprompted. When migrating, follow the provider's indicated replacement
   (e.g., move an inline `acl` block to the dedicated ACL resource, keeping
   references so dependency ordering is preserved).
+- **Review plans for `forces replacement` on stateful resources:** an
+  attribute the platform can change in place may still be force-new in the
+  provider (e.g. LXC container mount points in `bpg/proxmox`), turning a small
+  addition into a destroy-and-recreate of a resource that carries state or a
+  bootstrap procedure. Never approve such a plan as if it were an update. When
+  replacement is unacceptable, fast-forward the live infrastructure
+  imperatively to exactly what the provider would render — including ordering
+  details such as slot or index numbering — then run a plan and verify it
+  reports no changes (the refresh reconciles the state), and record the
+  provider limitation with its upstream issue.
 - **Verify applies in state and in the real infrastructure:** after an apply,
   confirm the change with a read-only inspection of the recorded state and a
   read-only check against the live system (CLI or API of the target platform),
