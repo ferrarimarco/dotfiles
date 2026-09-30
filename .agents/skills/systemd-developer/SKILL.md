@@ -33,6 +33,16 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
 - `Type=oneshot` for run-to-completion jobs (usually timer-triggered);
   `Type=simple`/`exec` for daemons. `RemainAfterExit=true` keeps a oneshot
   "active" after success when other units depend on its state.
+- More than one `ExecStart=` is only valid with `Type=oneshot`: any other type
+  makes systemd refuse the unit ("bad unit file setting").
+- `RuntimeMaxSec=` has no effect on `Type=oneshot` services; limit them with
+  `TimeoutStartSec=`, which covers all the `ExecStart=` commands together.
+  Without it a oneshot has no timeout at all: the start timeout is disabled by
+  default for `Type=oneshot`.
+- Starting or restarting a `Type=oneshot` service blocks until its commands
+  complete and reports their failure, while `Type=simple`/`exec` return as soon
+  as the process starts. This changes what a restart from configuration
+  management reports: prefer restarting the timer of a timer-triggered job.
 
 ## Sandboxing and State Directories
 
@@ -63,6 +73,8 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   `systemd-analyze calendar '<expr>'`.
 - Add `Persistent=true` when a missed activation (host powered off) should run
   at the next boot.
+- A timer fails to start with a generic "Job failed" when the service it
+  activates is invalid: verify the service unit, not only the timer.
 
 ## Watchdogs
 
