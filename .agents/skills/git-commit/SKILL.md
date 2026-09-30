@@ -164,7 +164,12 @@ survived.
   and wait for approval before committing. Leave unrelated in-progress changes
   out of the proposal. Give each proposed commit an identifier that is unique
   across the repositories in the proposal (for example, `H1` and `D1`), so an
-  approval of some commits is unambiguous.
+  approval of some commits is unambiguous. When the user reviews commits one at
+  a time, an approval covers only the commit under review: create it and stop,
+  instead of executing the rest of the batch.
+- **Stage the exact paths of the approved commit**: never stage a directory
+  wholesale when it may contain generated output or another session's work, and
+  confirm the staged diff stat matches the proposal before committing.
 - **Validate messages before proposing them**: when the repository lints commit
   messages, run each proposed message through that linter, with the repository
   configuration, before presenting the proposal. A lint run after committing
