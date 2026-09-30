@@ -46,6 +46,10 @@
 - Pin third-party GitHub Actions to a full commit SHA, with the release in a
   trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`). Resolve the SHA
   from the release tag instead of writing it from memory.
+- Treat identifiers that public infrastructure resolves to a network location
+  (for example, Syncthing device IDs, which global discovery maps to a
+  device's current public addresses) as private material: keep them out of
+  public repositories, even though they grant no authentication.
 
 ### Git
 
@@ -62,10 +66,11 @@
   keep them out of your work, and report them. Before a rebase, save the working
   tree diff outside the repository, and afterward verify that the uncommitted
   changes survived. Generated output that a build produces from the working tree
-  includes the uncommitted and untracked sources of every session. After another
-  session rewrites history, verify your commits before building on them: use the
-  reflog to find the commits they replace, and compare their changes and
-  messages.
+  includes the uncommitted and untracked sources of every session: when the
+  output must reflect committed sources only, build it in a temporary worktree
+  checked out at the target commit. After another session rewrites history,
+  verify your commits before building on them: use the reflog to find the
+  commits they replace, and compare their changes and messages.
 
 ### Problem solving patterns and processes
 
@@ -99,7 +104,9 @@ scope:
 - **Verify state changes:** after a state-changing operation completes (e.g., an
   infrastructure apply, a configuration playbook run, a service restart), verify
   the actual resulting state with read-only checks and report the evidence,
-  rather than assuming success from the tool's exit status.
+  rather than assuming success from the tool's exit status. A service unit
+  reporting active does not guarantee the service accepts requests:
+  verification probes issued right after activation need bounded retries.
 - **Capture full output of long-running checks:** redirect the complete output
   of long-running commands (linters, builds, test suites) to a log file and
   inspect the file, instead of piping through filters like `tail` or `head`.
