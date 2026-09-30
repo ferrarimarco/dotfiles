@@ -89,6 +89,20 @@ git add src/components/*
 git add -p
 ```
 
+Interactive staging needs a terminal. To stage part of a file without one, write
+the intended content to the index, or apply a partial patch to it:
+
+```bash
+# Stage the content of a prepared copy of the file
+git update-index --cacheinfo "100644,$(git hash-object -w <copy>),<path>"
+
+# Stage a patch that contains only the hunks to commit
+git apply --cached <patch>
+```
+
+When generated output is committed together with its sources, regenerate it for
+each commit so that every commit is consistent on its own.
+
 **Never commit secrets** (.env, credentials.json, private keys).
 
 ### 3. Generate Commit Message
@@ -98,7 +112,8 @@ Analyze the diff to determine:
 - **Type**: What kind of change is this?
 - **Scope**: What area/module is affected?
 - **Description**: One-line summary of what changed (present tense, imperative
-  mood, <72 chars)
+  mood). The whole subject, including type and scope, must not exceed 50
+  characters.
 
 ### 4. Execute Commit
 
@@ -117,6 +132,27 @@ EOF
 )"
 ```
 
+### 5. Reword Unpushed Commits
+
+An interactive rebase needs a terminal. To reword unpushed commits without one,
+recreate them on the same trees, oldest first, preserving the author and
+committer identities and dates:
+
+```bash
+# Clean the message: unlike git commit, git commit-tree keeps trailing blank
+# lines
+git stripspace < <message> > <clean message>
+
+git commit-tree "<commit>^{tree}" -p <new parent> -F <clean message>
+
+# Move the branch only if its tip is still the one you started from
+git update-ref refs/heads/<branch> <new tip> <old tip>
+```
+
+Before moving the branch, verify that the tree of the new tip is identical to
+the tree of the old tip. Afterward, verify that the uncommitted changes
+survived.
+
 ## Best Practices
 
 - **No AI attribution trailers**: never add `Co-Authored-By: Claude ...`,
@@ -126,7 +162,15 @@ EOF
 - **Propose before executing**: when the working tree holds multiple logical
   changes, propose the commit split (files per commit) and the full messages,
   and wait for approval before committing. Leave unrelated in-progress changes
-  out of the proposal.
+  out of the proposal. Give each proposed commit an identifier that is unique
+  across the repositories in the proposal (for example, `H1` and `D1`), so an
+  approval of some commits is unambiguous.
+- **Validate messages before proposing them**: when the repository lints commit
+  messages, run each proposed message through that linter, with the repository
+  configuration, before presenting the proposal. A lint run after committing
+  finds a failure too late, and may only check the last commit of a batch while
+  CI checks all the pushed commits. When the linter configuration changes,
+  validate all the unpushed commits against it before pushing.
 - **Wait for running verification gates**: if approval to commit arrives while
   a verification gate (linter, build, test suite) is still running, execute the
   commit only after the gate passes, and report the gate verdict together with
@@ -134,7 +178,11 @@ EOF
 - One logical change per commit
 - Present tense: "add" not "added"
 - Imperative mood: "fix bug" not "fixes bug"
-- Reference issues: `Closes #123`, `Refs #456`
+- Reference issues in a footer after a blank line: `Closes #123`, `Refs #456`.
+  Keep issue references with a hash sign (`#123`, `owner/repo#123`) and footer
+  keywords out of the message body, or write the references without the hash
+  sign: the parser reads them as the start of the footer, depending on where the
+  lines wrap. Validation is the reliable check.
 - **Strict 50/72 Character Rule**:
   - The commit subject (first line) must not exceed **50 characters**.
   - All subsequent body/footer lines must be wrapped to not exceed **72
