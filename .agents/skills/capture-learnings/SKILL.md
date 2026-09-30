@@ -99,9 +99,11 @@ Apply this priority order to session findings and promoted memories alike:
 
 The plan presented for approval must list:
 
-- per-file summaries of the proposed edits, each with the session event or
-  memory that motivated it;
-- the list of memories to delete or rewrite afterward.
+- the proposed edits, as one table for each target file with a row for each edit
+  and two columns: the proposed update, and its rationale (the session event or
+  memory that motivated it);
+- the memories to delete or rewrite afterward, as a table with a row for each
+  memory and two columns: the action, and its rationale.
 
 ## 7. Apply the Approved Plan
 
