@@ -80,7 +80,16 @@ Propose only changes that generalize beyond the session. Discard:
 
 - one-off facts;
 - anything already covered by existing instructions;
-- anything derivable from a repository's own code or documentation.
+- anything derivable from a repository's own code or documentation;
+- anything the session already captured in a project's own knowledge base
+  (guides, specifications, todo items): verify it landed, instead of
+  re-proposing it.
+
+Project-routed lessons are best captured during the session, in the project's
+own knowledge base, while the context is fresh; the capture run then handles
+the cross-project residue. Concurrent sessions may also run their own capture:
+before proposing, check the target files' recent history and working tree for
+capture edits from other sessions, and reconcile instead of duplicating.
 
 ## 5. Route Each Finding
 
@@ -116,6 +125,11 @@ The plan presented for approval must list:
   `MEMORY.md`. Leave non-promoted memories untouched.
 - If a memory mixed a rule with state, rewrite it to hold only the state and
   note where the rule moved.
+- Before editing any target file, check its repository's working tree: defer
+  or coordinate edits to files carrying uncommitted user changes, instead of
+  editing into another session's work.
+- Route edits to a project's own files through that repository's validation
+  pipeline and commit conventions; dotfiles edits follow the dotfiles flow.
 - Keep the target file's Markdown style: no `---` horizontal rules and no
   trailing punctuation in headings. Memory-file frontmatter delimiters are the
   one permitted use of `---`; general file-format rules are in the global
