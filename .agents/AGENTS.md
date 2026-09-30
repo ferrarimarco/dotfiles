@@ -43,6 +43,9 @@
 
 - Never execute destructive commands (e.g., `rm -rf`, `git push --force`) or
   modify sensitive credentials without an explicit user directive to do so.
+- Pin third-party GitHub Actions to a full commit SHA, with the release in a
+  trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`). Resolve the SHA
+  from the release tag instead of writing it from memory.
 
 ### Git
 
@@ -52,7 +55,17 @@
   doing so.
 - **Propose commits before executing:** when asked to commit, propose the commit
   split (which files go in which commit) and the full commit messages, then wait
-  for approval. Leave unrelated in-progress changes out of the proposal.
+  for approval. The `git-commit` skill holds the full procedure.
+- **Expect concurrent sessions in the same checkout:** other sessions may edit
+  and commit while you work. Before staging, committing, rebasing, or building
+  generated output, check the status and the log for changes you did not make,
+  keep them out of your work, and report them. Before a rebase, save the working
+  tree diff outside the repository, and afterward verify that the uncommitted
+  changes survived. Generated output that a build produces from the working tree
+  includes the uncommitted and untracked sources of every session. After another
+  session rewrites history, verify your commits before building on them: use the
+  reflog to find the commits they replace, and compare their changes and
+  messages.
 
 ### Problem solving patterns and processes
 
@@ -60,6 +73,15 @@ When you're tasked with solving a problem, you MUST fully understand the problem
 scope:
 
 - Don't make facts up.
+- **Verify third-party behavior against the version in use:** before
+  recommending a change that depends on how a tool, module, or service behaves,
+  read its source or documentation at the version in use (for example, the
+  module file inside the container image that runs it). Label what you did not
+  verify as an expectation.
+- **Prefer the smallest fix at the point of failure:** before proposing to move,
+  reorder, or restructure existing tasks or code, establish why the current
+  arrangement exists (history, comments, or asking), and consider a local fix
+  first.
 - Ask clarifying questions if needed.
 - **Access to information:** When you cannot get access to data or information
   you need, you MUST stop and tell the user.
@@ -94,6 +116,11 @@ scope:
   whole pipeline despite the match succeeding. When the pipeline's exit status
   matters, use a consumer that reads the full stream (for example
   `grep <pattern> > /dev/null`).
+- **Agent shells run zsh with the user's profile:** zsh does not split unquoted
+  variables into words, so a command prefix stored in a variable fails with
+  "command not found"; use a function or an array instead. The profile defines
+  `diff` as a function that wraps `git diff`; use `command diff` or `cmp` to
+  compare files.
 - **Verify services through the consumer's access path:** when smoke-testing a
   service, prefer a test that exercises the same stack real consumers use (same
   client software, credentials, and network route) over installing ad-hoc tools
