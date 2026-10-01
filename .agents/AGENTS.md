@@ -160,6 +160,16 @@ scope:
 - Do not use `---` horizontal rules; YAML frontmatter delimiters are the one
   permitted use.
 - Do not end headings with punctuation.
+- Do not number section headings in documents or specifications (`# Heading`,
+  not `# 1. Heading` or `## 2.1 Heading`).
+
+### Google Docs
+
+- Use the `TITLE` style for the document title and start top-level sections at
+  `HEADING_1` style.
+- Preserve the document's native named styles (`NORMAL_TEXT`, `TITLE`,
+  `HEADING_1`–`HEADING_3`) by omitting explicit font family, font size, color,
+  and paragraph spacing overrides on prose and headings.
 
 ## Technical stack preferences
 
