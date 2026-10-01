@@ -19,6 +19,11 @@
   and wait for a fresh explicit approval before editing.
 - **Tone:** Keep responses concise, direct, and professional. Avoid
   conversational filler or unnecessary apologies.
+- **Show file paths in text:** When referencing files in responses, include the
+  path as inline code (`~/path/to/file` under the user's home directory, or
+  `/path/to/file` otherwise) in the visible text rather than relying solely on
+  `file://` Markdown links, because chat UIs collapse `file://` links to the
+  basename.
 
 ### Design
 
