@@ -46,8 +46,9 @@ descriptors, modules, resources.
   procedure. Never approve such a plan as if it were an update. When replacement
   is unacceptable, fast-forward the live infrastructure imperatively to exactly
   what the provider would render — including ordering details such as slot or
-  index numbering — then run a plan and verify it reports no changes (the
-  refresh reconciles the state), and record the cause with its upstream issue.
+  index numbering, and attributes the provider computes when unset — then run a
+  plan and verify it reports no changes (the refresh reconciles the state), and
+  record the cause with its upstream issue.
 - **Verify applies in state and in the real infrastructure:** after an apply,
   confirm the change with a read-only inspection of the recorded state and a
   read-only check against the live system (CLI or API of the target platform),
