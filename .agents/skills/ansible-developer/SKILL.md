@@ -49,8 +49,8 @@ inventories that are idempotent, check-mode friendly, and data-driven.
   in `hostvars[item].my_flag | default(my_flag)` resolves `my_flag` against the
   **play host**, not the item: hosts that do not define the flag silently
   inherit the current host's value. Use an explicit literal default
-  (`| default(false)`), and keep it consistent with every other place that
-  gates on the same flag.
+  (`| default(false)`), and keep it consistent with every other place that gates
+  on the same flag.
 
 ## Read-Then-Act Pattern for Non-Idempotent Modules
 
@@ -141,8 +141,8 @@ runs against unconfigured hosts:
   and `owner`/`group` set explicitly.
 - Agents typically cannot edit encrypted vault files. When a new vaulted
   variable is needed, tell the user the variable name and how to add it (e.g.,
-  `ansible-vault edit`), then reference it by name. To verify a vaulted
-  variable exists without exposing secret material, list key names only, e.g.
+  `ansible-vault edit`), then reference it by name. To verify a vaulted variable
+  exists without exposing secret material, list key names only, e.g.
   `ansible-vault view <file> | grep -oE '^vault[a-zA-Z_0-9-]*'`. Anchor the
   filter on the project's vault variable prefix: when the view runs through a
   wrapper script, the wrapper's log lines share stdout with the decrypted
@@ -152,20 +152,19 @@ runs against unconfigured hosts:
   unrelated change to the same stack — including check-mode runs. When the
   feature the variable serves is optional, guard the referencing block with
   `is defined` so the configuration stays deployable without it.
-- **Check-mode diffs embed rendered secrets.** `--check --diff` prints the
-  full rendered content of secret-bearing templates. Keep such logs in a
-  location outside the repository and mask secret values when quoting from
-  them.
+- **Check-mode diffs embed rendered secrets.** `--check --diff` prints the full
+  rendered content of secret-bearing templates. Keep such logs in a location
+  outside the repository and mask secret values when quoting from them.
 
 ## Containerized Service Configuration
 
 - **A replaced bind-mounted file is invisible to the running container.**
   Templating a config file that a container bind-mounts individually replaces
-  the file's inode, while the container keeps the old one; hot-reload
-  endpoints then reload stale content and report success. After templating
-  such a file, restart the container instead of relying on a reload, and
-  verify the change through the service's own API (active configuration,
-  target lists), not by reading the file on the host.
+  the file's inode, while the container keeps the old one; hot-reload endpoints
+  then reload stale content and report success. After templating such a file,
+  restart the container instead of relying on a reload, and verify the change
+  through the service's own API (active configuration, target lists), not by
+  reading the file on the host.
 
 ## Testing with Molecule
 
@@ -175,9 +174,9 @@ runs against unconfigured hosts:
 - **Minimal test images expose missing prerequisites:** a module may need a
   Python library on the target that real hosts happen to have (for example,
   `ansible.builtin.deb822_repository` needs `python3-debian`). Prefer the
-  module's own install option (`install_python_debian: true`, ansible-core
-  2.20 and later) at its first use over reordering tasks: the option acts only
-  when the library is missing.
+  module's own install option (`install_python_debian: true`, ansible-core 2.20
+  and later) at its first use over reordering tasks: the option acts only when
+  the library is missing.
 - **A task skipped by tags registers nothing:** unlike a task skipped by `when`,
   it leaves its `register` variable undefined, so consumers need
   `| default([])`.

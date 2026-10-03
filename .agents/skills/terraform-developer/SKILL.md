@@ -23,38 +23,37 @@ descriptors, modules, resources.
 
 ## Best Practices
 
-- **Discover the repository's Terraform entrypoint first:** before invoking
-  the `terraform` binary, check whether the repository runs Terraform through
-  a wrapper (a script, Makefile target, or task runner) that owns environment
+- **Discover the repository's Terraform entrypoint first:** before invoking the
+  `terraform` binary, check whether the repository runs Terraform through a
+  wrapper (a script, Makefile target, or task runner) that owns environment
   setup, backend configuration, variable files, or stack ordering. If one
-  exists, use it exclusively — raw `terraform` invocations bypass that setup
-  and can corrupt state or apply with missing variables. Do not assume
-  `validate` or plan-only paths exist in the wrapper; ask or propose extending
-  the wrapper instead of working around it.
-- **Surface provider deprecation warnings and ask:** when a plan or apply
-  emits a provider deprecation warning (e.g., an inline block superseded by a
+  exists, use it exclusively — raw `terraform` invocations bypass that setup and
+  can corrupt state or apply with missing variables. Do not assume `validate` or
+  plan-only paths exist in the wrapper; ask or propose extending the wrapper
+  instead of working around it.
+- **Surface provider deprecation warnings and ask:** when a plan or apply emits
+  a provider deprecation warning (e.g., an inline block superseded by a
   dedicated resource), report it to the user and ask whether to migrate now or
   record it as a tracked TODO — do not silently ignore it, and do not migrate
-  unprompted. When migrating, follow the provider's indicated replacement
-  (e.g., move an inline `acl` block to the dedicated ACL resource, keeping
-  references so dependency ordering is preserved).
-- **Review plans for `forces replacement` on stateful resources:** an
-  attribute the platform can change in place may still be force-new in the
-  provider, by design or by a regression (for example, `bpg/proxmox` 0.93.0
-  replaced LXC containers when a mount point was added), turning a small
-  addition into a destroy-and-recreate of a resource that carries state or a
-  bootstrap procedure. Never approve such a plan as if it were an update. When
-  replacement is unacceptable, fast-forward the live infrastructure
-  imperatively to exactly what the provider would render — including ordering
-  details such as slot or index numbering — then run a plan and verify it
-  reports no changes (the refresh reconciles the state), and record the cause
-  with its upstream issue.
+  unprompted. When migrating, follow the provider's indicated replacement (e.g.,
+  move an inline `acl` block to the dedicated ACL resource, keeping references
+  so dependency ordering is preserved).
+- **Review plans for `forces replacement` on stateful resources:** an attribute
+  the platform can change in place may still be force-new in the provider, by
+  design or by a regression (for example, `bpg/proxmox` 0.93.0 replaced LXC
+  containers when a mount point was added), turning a small addition into a
+  destroy-and-recreate of a resource that carries state or a bootstrap
+  procedure. Never approve such a plan as if it were an update. When replacement
+  is unacceptable, fast-forward the live infrastructure imperatively to exactly
+  what the provider would render — including ordering details such as slot or
+  index numbering — then run a plan and verify it reports no changes (the
+  refresh reconciles the state), and record the cause with its upstream issue.
 - **Verify applies in state and in the real infrastructure:** after an apply,
   confirm the change with a read-only inspection of the recorded state and a
   read-only check against the live system (CLI or API of the target platform),
-  not just the apply's exit status. Note that an apply with no changes does
-  not rewrite a local state file, so file modification times are not evidence
-  of what ran.
+  not just the apply's exit status. Note that an apply with no changes does not
+  rewrite a local state file, so file modification times are not evidence of
+  what ran.
 - **Terraform dependencies lockfile:** Generate Terraform dependency lockfiles
   running `terraform init`, and remind the user to do so and commit the lock
   file. If the infrastructure is shared across different operating systems or

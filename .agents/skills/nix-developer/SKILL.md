@@ -95,13 +95,12 @@ sandboxed VM integration tests:
 - **Module reconciliation defaults:** before keeping part of a service's
   configuration imperative (managed through its API or GUI), read the module's
   activation-time reconciliation behavior in the nixpkgs source at the version
-  in use. Many modules delete or replace undeclared objects on every
-  activation by default (e.g. `services.syncthing` `overrideDevices` and
-  `overrideFolders` default to `true` and delete undeclared devices and
-  folders as stale even when the configuration declares none), and declared
-  objects are re-applied wholesale, stripping imperatively added fields.
-  Disable such flags explicitly, and verify the imperative state survives the
-  first activation.
+  in use. Many modules delete or replace undeclared objects on every activation
+  by default (e.g. `services.syncthing` `overrideDevices` and `overrideFolders`
+  default to `true` and delete undeclared devices and folders as stale even when
+  the configuration declares none), and declared objects are re-applied
+  wholesale, stripping imperatively added fields. Disable such flags explicitly,
+  and verify the imperative state survives the first activation.
 - **Modularity:** Split large configurations into separate modules using the
   `imports = [ ... ];` pattern.
 - **Reviewing Changes:** When modifying configurations, review the resulting
@@ -114,10 +113,9 @@ sandboxed VM integration tests:
     agent), use `machine.wait_for_file` to block until udev creates the device
     node before asserting on the service unit.
   - The test driver's `machine.succeed` runs commands under `pipefail`: an
-    early-exiting pipe consumer (`grep -q`) on a large producer (e.g. a
-    metrics endpoint scrape) fails the pipeline with the producer's write
-    error. Use a consumer that reads the full stream, such as
-    `grep <pattern> > /dev/null`.
+    early-exiting pipe consumer (`grep -q`) on a large producer (e.g. a metrics
+    endpoint scrape) fails the pipeline with the producer's write error. Use a
+    consumer that reads the full stream, such as `grep <pattern> > /dev/null`.
   - `machine.wait_for_unit` proves the unit is active, not that the service
     accepts requests: under boot load, probes right after activation can be
     refused or return incomplete responses. Assert on service behavior with
