@@ -107,8 +107,16 @@ runs against unconfigured hosts:
 - Verify idempotency and check-mode cleanliness after changes: a real run
   followed by a `--check --diff` run should report no changes.
 - Always run `--check --diff` before an apply and **review the predictions, not
-  just the exit status**: unexpected `state: absent` or teardown predictions
-  mean an enablement variable resolved differently than intended.
+  just the exit status**: first confirm in the log that the intended task (and
+  its item) actually ran, because a clean run that never exercised the change
+  proves nothing; then treat unexpected `state: absent` or teardown predictions
+  as an enablement variable that resolved differently than intended.
+- Gate a role's destructive tasks (for example, an exclusive `authorized_keys`
+  replacement in a bootstrap role) on host group or enablement variables, not on
+  tags: a monolithic playbook run with `--tags <x>,untagged` still runs every
+  role's untagged tasks on every host in the play, so out-of-scope hosts see
+  destructive predictions. Scoping the run to the narrowest playbook is a
+  secondary safeguard, not the fix.
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
