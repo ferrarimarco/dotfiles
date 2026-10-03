@@ -99,8 +99,15 @@ sandboxed VM integration tests:
   by default (e.g. `services.syncthing` `overrideDevices` and `overrideFolders`
   default to `true` and delete undeclared devices and folders as stale even when
   the configuration declares none), and declared objects are re-applied
-  wholesale, stripping imperatively added fields. Disable such flags explicitly,
-  and verify the imperative state survives the first activation.
+  wholesale, stripping imperatively added fields. Replacement can also act at
+  the settings-section level: declaring a single key can reset the section's
+  undeclared keys on every activation. Disable such flags explicitly, leave
+  sections holding imperative fields undeclared, and verify the imperative state
+  survives the first activation. The deployed generation's setup unit is the
+  authoritative version-in-use evidence: locate it in the module source, read
+  the script it runs, and note the API verbs and which calls can fail silently.
+  When the behavior is a defect, check nixpkgs master for an upstream fix before
+  designing a workaround, and record which release delivers it.
 - **Modularity:** Split large configurations into separate modules using the
   `imports = [ ... ];` pattern.
 - **Reviewing Changes:** When modifying configurations, review the resulting
