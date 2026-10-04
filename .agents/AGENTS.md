@@ -59,7 +59,12 @@
 - Treat identifiers that public infrastructure resolves to a network location
   (for example, Syncthing device IDs, which global discovery maps to a device's
   current public addresses) as private material: keep them out of public
-  repositories, even though they grant no authentication.
+  repositories, even though they grant no authentication. Such identifiers,
+  and other personal names, also surface as metric labels and alert
+  annotations: private sinks (a local TSDB, a private notification channel)
+  may carry them, but committed monitoring artifacts — alert rule
+  expressions, dashboards — must stay generic and reference public names
+  only.
 
 ### Git
 
