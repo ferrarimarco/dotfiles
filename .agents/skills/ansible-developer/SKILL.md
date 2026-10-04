@@ -117,6 +117,13 @@ runs against unconfigured hosts:
   role's untagged tasks on every host in the play, so out-of-scope hosts see
   destructive predictions. Scoping the run to the narrowest playbook is a
   secondary safeguard, not the fix.
+- A task carrying any tag is no longer `untagged`: a skip-marker tag (for
+  example `molecule-notest`) silently deselects the task from
+  `--tags <x>,untagged` runs, so deployment steps that depend on it (such as
+  restarting the services that read a changed configuration) quietly stop
+  happening in scoped runs. When such a task must still run there, pair the
+  marker with the `always` tag: `--skip-tags` beats `always`, so the
+  test-skip behavior survives.
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
