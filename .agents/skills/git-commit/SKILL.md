@@ -169,7 +169,11 @@ survived.
   instead of executing the rest of the batch.
 - **Stage the exact paths of the approved commit**: never stage a directory
   wholesale when it may contain generated output or another session's work, and
-  confirm the staged diff stat matches the proposal before committing.
+  confirm the staged diff stat matches the proposal before committing. Check
+  it with `git diff --staged --numstat --no-renames`: with
+  `diff.renames = copies` in the user's gitconfig, copy detection pairs a new
+  generated file with a similar file modified in the same change and reports
+  the difference between them as deletions.
 - **Validate messages before proposing them**: when the repository lints commit
   messages, run each proposed message through that linter, with the repository
   configuration, before presenting the proposal. A lint run after committing
