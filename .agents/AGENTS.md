@@ -48,6 +48,11 @@
   word or phrase span around each change rather than replacing whole sentences
   or paragraphs, and keep each replacement within a single formatting run (for
   example, separate a bold prefix from its unbolded body).
+- **Re-read before editing again after a formatter ran:** formatters rewrap
+  prose, pad table cells, and reflow code, so exact-match edits computed from
+  the pre-format text fail. Make all the edits first and format once, or
+  re-read the file after formatting, and match table content by name rather
+  than by padded cell text.
 
 ### Safety
 
@@ -74,7 +79,9 @@
   doing so.
 - **Propose commits before executing:** when asked to commit, propose the commit
   split (which files go in which commit) and the full commit messages, then wait
-  for approval. The `git-commit` skill holds the full procedure.
+  for approval. A plan approval covers the edits, never the commit, even when
+  the plan ends with a commit step: present the split and the messages and wait,
+  also late in a long session. The `git-commit` skill holds the full procedure.
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
@@ -93,6 +100,11 @@ When you're tasked with solving a problem, you MUST fully understand the problem
 scope:
 
 - Don't make facts up.
+- **A name match is not deployment evidence:** a grep hit on a tool's name in
+  configuration (a port variable, an image pin kept for dependency tracking)
+  does not show the tool is deployed. Before stating that something is in use,
+  confirm a service definition (a Compose template, a systemd unit, an enabled
+  Nix module option) and, where possible, the running state.
 - **Verify third-party behavior against the version in use:** before
   recommending a change that depends on how a tool, module, or service behaves,
   read its source or documentation at the version in use (for example, the
@@ -138,11 +150,22 @@ scope:
   whole pipeline despite the match succeeding. When the pipeline's exit status
   matters, use a consumer that reads the full stream (for example
   `grep <pattern> > /dev/null`).
+- **Fetching web pages from the agent shell:** some sites reject every
+  unauthenticated route (web, mobile, API, JSON): after two failed routes, ask
+  for pasted content or a saved PDF instead of retrying. Short links from
+  sharing services may land on an interstitial page; the target is usually in
+  the canonical link of the returned page. Sites behind bot protection usually
+  answer 403 to curl and to fetch tools.
 - **Agent shells run zsh with the user's profile:** zsh does not split unquoted
   variables into words, so a command prefix stored in a variable fails with
-  "command not found"; use a function or an array instead. The profile defines
-  `diff` as a function that wraps `git diff`; use `command diff` or `cmp` to
-  compare files.
+  "command not found"; use a function or an array instead. zsh also ties the
+  lowercase arrays `path`, `fpath`, `cdpath`, `manpath`, `mailpath`,
+  `module_path`, and `psvar` to the uppercase scalar parameters (`PATH`,
+  `FPATH`, ...), so never use them as loop or scratch variable names:
+  `while read -r path` replaces the command search path and every following
+  external command fails with "command not found". The profile
+  defines `diff` as a function that wraps `git diff`; use `command diff` or
+  `cmp` to compare files.
 - **Verify services through the consumer's access path:** when smoke-testing a
   service, prefer a test that exercises the same stack real consumers use (same
   client software, credentials, and network route) over installing ad-hoc tools
