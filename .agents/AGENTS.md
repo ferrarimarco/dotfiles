@@ -166,7 +166,8 @@ scope:
   permitted use.
 - Do not end headings with punctuation.
 - Do not number section headings in documents or specifications (`# Heading`,
-  not `# 1. Heading` or `## 2.1 Heading`).
+  not `# 1. Heading` or `## 2.1 Heading`); the numbered procedure steps of a
+  skill are the exception.
 
 ### Google Docs
 
