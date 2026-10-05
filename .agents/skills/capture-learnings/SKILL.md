@@ -13,7 +13,8 @@ license: MIT
 
 Turn what a session taught into durable, version-controlled instructions. The
 output is a set of tightened AGENTS.md files and skills, plus a cleaned-up
-memory store; the process is analyze, propose, wait for approval, then apply.
+memory store; the process is analyze, verify, propose, wait for approval,
+apply, then review.
 
 ## 1. Resolve the Configuration Layout
 
@@ -58,7 +59,14 @@ Review the conversation for:
 - questions the agent had to ask that better instructions would have answered;
 - mistakes caused by missing, ambiguous, or contradictory instructions;
 - workflow steps the agent had to rediscover;
-- environment quirks learned the hard way.
+- environment quirks learned the hard way;
+- later corrections to rules that earlier capture runs wrote (the target file's
+  history shows the commit): these are signals about this skill's process as
+  well as about the target.
+
+This run is part of the session too. Before presenting the plan, mine the run
+itself: conventions it had to look up, rules it rewrote after a check, and
+review findings on its output. Route those to this skill.
 
 ## 3. Review Saved Memories for Promotion
 
@@ -79,7 +87,10 @@ memory directory or `MEMORY.md` does not exist, state that and skip this step.
 Propose only changes that generalize beyond the session. Discard:
 
 - one-off facts;
-- anything already covered by existing instructions;
+- anything already covered by existing instructions, unless the session
+  (including this run) did not apply the covering rule: then the finding is
+  about reachability, and the fix is adding the check to the step where the
+  agent was working, not discarding it;
 - anything derivable from a repository's own code or documentation;
 - anything the session already captured in a project's own knowledge base
   (guides, specifications, todo items): verify it landed, instead of
@@ -103,8 +114,27 @@ Apply this priority order to session findings and promoted memories alike:
 4. A new skill, only when a recurring task type has no home; propose it in the
    plan and, once approved, create the skill.
 5. `~/.claude/CLAUDE.md`, only for rules that apply exclusively to Claude Code.
+6. This skill, when the defect is in how a lesson was captured rather than in
+   its content.
 
-## 6. Present the Plan and Wait
+## 6. Verify Each Proposed Rule
+
+A rule outlives the session, so it is held to the standard of a recommendation:
+
+- A rule about a tool's or module's behavior is checked against its
+  documentation or source at the version in use, and names the component
+  responsible: a wrong attribution sends the next agent to work around the
+  wrong layer.
+- A workaround is proposed only after checking the tool for a native option
+  that covers the case.
+- A tendency is written as a tendency, with how to check the specific case,
+  never as a universal.
+- Each rule is applied to its own motivating example, read as the next agent
+  would read it, to confirm it gives the right answer there.
+- A new skill follows the repository's skill conventions for naming, body
+  layout, and README registration, and the plan shows its name and description.
+
+## 7. Present the Plan and Wait
 
 The plan presented for approval must list:
 
@@ -114,12 +144,14 @@ The plan presented for approval must list:
 - the memories to delete or rewrite afterward, as a table with a row for each
   memory and two columns: the action, and its rationale.
 
-## 7. Apply the Approved Plan
+## 8. Apply the Approved Plan
 
 - Edit in place and prefer tightening over growing: update or merge into
-  existing rules instead of appending near-duplicates, and rewrite sections that
-  have accreted overlapping rules. Keep the imperative, concise style of the
-  target file. A net line-count reduction is a valid outcome.
+  existing rules that overlap instead of appending near-duplicates, and rewrite
+  sections that have accreted overlapping rules. An unrelated lesson that lands
+  in the same section gets its own bullet with a bold lead, since readers scan
+  bullet leads. Keep the imperative, concise style of the target file. A net
+  line-count reduction is a valid outcome.
 - Remove a promoted memory only after its rule is written to the destination
   file, in the same apply step: delete the memory file and its line in
   `MEMORY.md`. Leave non-promoted memories untouched.
@@ -135,4 +167,6 @@ The plan presented for approval must list:
   one permitted use of `---`; general file-format rules are in the global
   `AGENTS.md`.
 
-After applying, do not commit unless asked.
+After applying, have a reviewer that did not write the rules read the diff: a
+fresh subagent given only the diff and the target files, or the harness's code
+review. Fix what it finds before reporting. Do not commit unless asked.
