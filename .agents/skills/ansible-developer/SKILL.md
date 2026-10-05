@@ -122,11 +122,21 @@ runs against unconfigured hosts:
   `--tags <x>,untagged` runs, so deployment steps that depend on it (such as
   restarting the services that read a changed configuration) quietly stop
   happening in scoped runs. When such a task must still run there, pair the
-  marker with the `always` tag: `--skip-tags` beats `always`, so the
-  test-skip behavior survives.
+  marker with the `always` tag: `--skip-tags` beats `always`, so the test-skip
+  behavior survives.
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
+- Modules that write atomically (`ansible.posix.authorized_key`, `template`,
+  `copy`) rename a temporary file over the target, which replaces a symlink with
+  a regular file while check mode shows a diff against the link target. When
+  another system owns the file through that link (Proxmox links root's
+  `authorized_keys` into its cluster filesystem and re-merges it at every boot),
+  set the module's `follow: true` so it converges the link target, and leave the
+  target's directory to its owner (`manage_dir: false`); otherwise the owner
+  merges the stray file back later and the keys flap between runs and reboots.
+  Declare the entries that owner always re-adds (the node's own key) as part of
+  an exclusive set, instead of letting them come and go.
 
 ## Mount Points and Network Filesystems
 
@@ -192,6 +202,9 @@ runs against unconfigured hosts:
   module's own install option (`install_python_debian: true`, ansible-core 2.20
   and later) at its first use over reordering tasks: the option acts only when
   the library is missing.
+- **Installer-generated files are absent from test images:** a node's SSH key
+  or a product's state file exists only where the installer ran, so guard reads
+  of them with a `stat` and let the role converge without them.
 - **A task skipped by tags registers nothing:** unlike a task skipped by `when`,
   it leaves its `register` variable undefined, so consumers need
   `| default([])`.
@@ -212,6 +225,13 @@ runs against unconfigured hosts:
 - Keep role variable names prefixed and unambiguous
   (`<role_or_feature>_<what>`), and document expected structure next to
   non-obvious defaults.
+- Ansible doubles the backslashes inside inline `{{ }}` expressions in playbook
+  and variable YAML before Jinja sees them, so a `join('\n')` written in a
+  folded (`>-`) or literal (`|`) scalar produces one line with a literal `\n`
+  in it. Template files are rendered without that escaping, so the same literal
+  in a `.j2` file is a newline. For an inline expression that needs a newline
+  or tab, write the scalar double-quoted so YAML performs the escape, or keep
+  the separator in a variable defined with a double-quoted value.
 - Prefer `systemd` units, timers, and handlers over cron entries and ad-hoc
   restarts; notify handlers from the tasks that change the relevant files.
 - When a task list grows beyond one concern, split it into included task files
