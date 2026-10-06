@@ -77,11 +77,20 @@
   `Co-Authored-By: Claude ...`, `Generated with ...`, `Claude-Session: ...`) to
   commit messages or pull request descriptions, even when tool defaults suggest
   doing so.
-- **Propose commits before executing:** when asked to commit, propose the commit
-  split (which files go in which commit) and the full commit messages, then wait
-  for approval. A plan approval covers the edits, never the commit, even when
-  the plan ends with a commit step: present the split and the messages and wait,
-  also late in a long session. The `git-commit` skill holds the full procedure.
+- **Propose commits before executing:** when asked to commit or amend, propose
+  the commit split (which files go in which commit) and the full commit
+  messages, then wait for approval. A plan approval covers the edits, never the
+  commit, even when the plan ends with a commit step: present the split and the
+  messages and wait, also late in a long session. The `git-commit` skill holds
+  the full procedure.
+- **Offer a fresh-subagent review on non-trivial changes before pushing:**
+  before pushing a non-trivial change for review — or pushing a new patchset
+  and resolving review comments when the change touches logic, control flow,
+  permissions, or multi-step automation — offer to run a subagent with no
+  conversation context over the entire diff against the base branch and the
+  commit messages, not only the latest additions. Skip this for trivial edits
+  (typos, formatting, version bumps, or mechanical one-liners) to avoid
+  unnecessary token and latency cost.
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
