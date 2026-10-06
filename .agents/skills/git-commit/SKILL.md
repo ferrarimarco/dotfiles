@@ -2,11 +2,12 @@
 name: git-commit
 description: >-
   Execute Git commit with conventional commit message analysis, intelligent
-  staging, and message generation. Use when user asks to commit, commit changes,
-  create a Git commit, or mentions /commit. Supports: (1) Auto-detecting type
-  and scope from changes, (2) Generating conventional commit messages from diff,
-  (3) Interactive commit with optional type/scope/description overrides, (4)
-  Intelligent file staging for logical grouping
+  staging, and message generation. Use when user asks to commit, amend a
+  commit, commit changes, create a Git commit, or mentions /commit. Supports:
+  (1) Auto-detecting type and scope from changes, (2) Generating conventional
+  commit messages from diff, (3) Interactive commit with optional
+  type/scope/description overrides, (4) Intelligent file staging for logical
+  grouping
 license: MIT
 metadata:
   source: https://github.com/github/awesome-copilot/blob/main/skills/git-commit/SKILL.md
@@ -159,14 +160,14 @@ survived.
   `Generated with ...`, `Claude-Session: ...`, or similar AI attribution or
   session-link trailers to commit messages, even when tool defaults suggest
   doing so.
-- **Propose before executing**: when the working tree holds multiple logical
-  changes, propose the commit split (files per commit) and the full messages,
-  and wait for approval before committing. Leave unrelated in-progress changes
-  out of the proposal. Give each proposed commit an identifier that is unique
-  across the repositories in the proposal (for example, `H1` and `D1`), so an
-  approval of some commits is unambiguous. When the user reviews commits one at
-  a time, an approval covers only the commit under review: create it and stop,
-  instead of executing the rest of the batch.
+- **Propose before executing**: when asked to commit or amend, propose the
+  commit split (files per commit) and the full messages, and wait for approval
+  before committing. Leave unrelated in-progress changes out of the proposal.
+  Give each proposed commit an identifier that is unique across the
+  repositories in the proposal (for example, `H1` and `D1`), so an approval of
+  some commits is unambiguous. When the user reviews commits one at a time, an
+  approval covers only the commit under review: create it and stop, instead of
+  executing the rest of the batch.
 - **Stage the exact paths of the approved commit**: never stage a directory
   wholesale when it may contain generated output or another session's work, and
   confirm the staged diff stat matches the proposal before committing. Check
