@@ -111,12 +111,18 @@ runs against unconfigured hosts:
   its item) actually ran, because a clean run that never exercised the change
   proves nothing; then treat unexpected `state: absent` or teardown predictions
   as an enablement variable that resolved differently than intended.
+- An **intended** `state: absent` prediction on a directory still needs a look
+  at the live directory's contents before the apply: a container bind mount can
+  keep instance state (device identity, databases) under a path that looks like
+  configuration, so the removal destroys state, not just config.
 - Gate a role's destructive tasks (for example, an exclusive `authorized_keys`
   replacement in a bootstrap role) on host group or enablement variables, not on
   tags: a monolithic playbook run with `--tags <x>,untagged` still runs every
   role's untagged tasks on every host in the play, so out-of-scope hosts see
   destructive predictions. Scoping the run to the narrowest playbook is a
-  secondary safeguard, not the fix.
+  secondary safeguard, not the fix — but still the default invocation, since
+  `--tags <x>,untagged` also selects the untagged tasks of every other play in a
+  chained playbook.
 - A task carrying any tag is no longer `untagged`: a skip-marker tag (for
   example `molecule-notest`) silently deselects the task from
   `--tags <x>,untagged` runs, so deployment steps that depend on it (such as
@@ -202,9 +208,9 @@ runs against unconfigured hosts:
   module's own install option (`install_python_debian: true`, ansible-core 2.20
   and later) at its first use over reordering tasks: the option acts only when
   the library is missing.
-- **Installer-generated files are absent from test images:** a node's SSH key
-  or a product's state file exists only where the installer ran, so guard reads
-  of them with a `stat` and let the role converge without them.
+- **Installer-generated files are absent from test images:** a node's SSH key or
+  a product's state file exists only where the installer ran, so guard reads of
+  them with a `stat` and let the role converge without them.
 - **A task skipped by tags registers nothing:** unlike a task skipped by `when`,
   it leaves its `register` variable undefined, so consumers need
   `| default([])`.
@@ -225,13 +231,21 @@ runs against unconfigured hosts:
 - Keep role variable names prefixed and unambiguous
   (`<role_or_feature>_<what>`), and document expected structure next to
   non-obvious defaults.
+- **Converge opt-in packages both ways with one task:** for packages the feature
+  owns exclusively, derive the apt state from the enablement flag
+  (`state: "{{ 'present' if <feature>_enabled else 'absent' }}"`) instead of a
+  `when`-gated install task, so hosts that opt out actively remove the packages
+  instead of skipping; a package another role or the base system also needs must
+  not be removed by an opt-out. Pass package lists directly to `name`: the
+  `ansible.builtin.apt` documentation notes that a `loop` processes each package
+  individually and that passing the list is much more efficient.
 - Ansible doubles the backslashes inside inline `{{ }}` expressions in playbook
   and variable YAML before Jinja sees them, so a `join('\n')` written in a
-  folded (`>-`) or literal (`|`) scalar produces one line with a literal `\n`
-  in it. Template files are rendered without that escaping, so the same literal
-  in a `.j2` file is a newline. For an inline expression that needs a newline
-  or tab, write the scalar double-quoted so YAML performs the escape, or keep
-  the separator in a variable defined with a double-quoted value.
+  folded (`>-`) or literal (`|`) scalar produces one line with a literal `\n` in
+  it. Template files are rendered without that escaping, so the same literal in
+  a `.j2` file is a newline. For an inline expression that needs a newline or
+  tab, write the scalar double-quoted so YAML performs the escape, or keep the
+  separator in a variable defined with a double-quoted value.
 - Prefer `systemd` units, timers, and handlers over cron entries and ad-hoc
   restarts; notify handlers from the tasks that change the relevant files.
 - When a task list grows beyond one concern, split it into included task files
