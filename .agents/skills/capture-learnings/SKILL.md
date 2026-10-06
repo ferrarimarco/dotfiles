@@ -129,6 +129,9 @@ A rule outlives the session, so it is held to the standard of a recommendation:
   that covers the case.
 - A tendency is written as a tendency, with how to check the specific case,
   never as a universal.
+- A workflow step with non-trivial token or time cost (such as a subagent
+  pass) is scoped to the cases where it pays off and skipped on trivial
+  work, rather than mandated on every run.
 - Each rule is applied to its own motivating example, read as the next agent
   would read it, to confirm it gives the right answer there.
 - A new skill follows the repository's skill conventions for naming, body
@@ -167,6 +170,8 @@ The plan presented for approval must list:
   one permitted use of `---`; general file-format rules are in the global
   `AGENTS.md`.
 
-After applying, have a reviewer that did not write the rules read the diff: a
-fresh subagent given only the diff and the target files, or the harness's code
-review. Fix what it finds before reporting. Do not commit unless asked.
+After applying a non-trivial change (new rules, rewritten sections, or a new
+skill, as opposed to typos or mechanical one-liners), have a reviewer that did
+not write the rules read the diff: a fresh subagent given only the diff and
+the target files, or the harness's code review. Fix what it finds before
+reporting. Do not commit unless asked.
