@@ -191,7 +191,7 @@ survived.
 - One logical change per commit
 - Present tense: "add" not "added"
 - Imperative mood: "fix bug" not "fixes bug"
-- Reference issues in a footer after a blank line: `Closes #123`, `Refs #456`.
+- Reference issues in a footer after an empty line: `Closes #123`, `Refs #456`.
   Keep issue references with a hash sign (`#123`, `owner/repo#123`) and footer
   keywords out of the message body, or write the references without the hash
   sign: the parser reads them as the start of the footer, depending on where the

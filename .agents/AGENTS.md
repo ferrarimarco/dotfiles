@@ -167,7 +167,7 @@ scope:
 - **Beware early-exiting pipe consumers under `pipefail`:** a consumer that
   exits at the first match (`grep -q`, `head`) closes the pipe while the
   producer is still writing; with large output the producer then fails with a
-  write error (for example curl exit code 23) and, under `pipefail`, fails the
+  write error (for example cURL exit code 23) and, under `pipefail`, fails the
   whole pipeline despite the match succeeding. When the pipeline's exit status
   matters, use a consumer that reads the full stream (for example
   `grep <pattern> > /dev/null`).
@@ -176,10 +176,10 @@ scope:
   for pasted content or a saved PDF instead of retrying. Short links from
   sharing services may land on an interstitial page; the target is usually in
   the canonical link of the returned page. Sites behind bot protection usually
-  answer 403 to curl and to fetch tools.
-- **Agent shells run zsh with the user's profile:** zsh does not split unquoted
+  answer 403 to cURL and to fetch tools.
+- **Agent shells run Zsh with the user's profile:** Zsh does not split unquoted
   variables into words, so a command prefix stored in a variable fails with
-  "command not found"; use a function or an array instead. zsh also ties the
+  "command not found"; use a function or an array instead. Zsh also ties the
   lowercase arrays `path`, `fpath`, `cdpath`, `manpath`, `mailpath`,
   `module_path`, and `psvar` to the uppercase scalar parameters (`PATH`,
   `FPATH`, ...), so never use them as loop or scratch variable names:

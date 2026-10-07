@@ -37,13 +37,13 @@ When code changes are staged or successfully verified:
     - If the code is partially implemented: `Partially Implemented`.
     - If the code is fully operational, styled, and verified in tests:
       `Fully Implemented`.
-4.  For infrastructure specs, implementation and deployment are distinct
-    states: code can be `Fully Implemented` but not yet applied to the real
-    environment. The **Status** column tracks implementation only; record
-    pending deployment as a caveat in the **Details** column (e.g., "not yet
-    applied", "applied on node A; node B not yet run") and remove the caveat
-    once the deployment is verified. Do not introduce separate
-    deployment-status values in the Status column.
+4.  For infrastructure specs, implementation and deployment are distinct states:
+    code can be `Fully Implemented` but not yet applied to the real environment.
+    The **Status** column tracks implementation only; record pending deployment
+    as a caveat in the **Details** column (e.g., "not yet applied", "applied on
+    node A; node B not yet run") and remove the caveat once the deployment is
+    verified. Do not introduce separate deployment-status values in the Status
+    column.
 
 ### 2. Synchronizing Individual Specifications
 
@@ -69,21 +69,21 @@ available:
 ## Best Practices
 
 - **Objective Statusing:** Never mark a feature as `Fully Implemented` unless it
-  passes all unit and integration tests or has successfully built in CI.
+  passes all unit and integration tests or builds cleanly in CI.
 - **Clean Tables:** Ensure that table borders and Markdown formatting are
   perfectly aligned. Do not use trailing whitespaces or introduce vertical
   separators outside the table.
 - **Centralized TODOs:** if the specs index has a centralized future-work /
-  TODOs section, keep all future work items there. Per-spec "Future Work"
-  sections must contain only a pointer to the centralized list; when closing
-  or adding items, update the central list and keep intra-spec references
-  working by converting relative anchors to full cross-file links.
+  todos section, keep all future work items there. Per-spec "Future Work"
+  sections must contain only a pointer to the centralized list; when closing or
+  adding items, update the central list and keep intra-spec references working
+  by converting relative anchors to full cross-file links.
 - **Close incidental completions:** a verified change sometimes completes todo
   items tracked elsewhere as a side effect (for example, a rollout that also
-  deploys an integration another list was waiting on). Close those items in
-  the same synchronization pass and mention them in the commit message, so
-  drift does not survive in unrelated lists.
+  deploys an integration another list was waiting on). Close those items in the
+  same synchronization pass and mention them in the commit message, so drift
+  does not survive in unrelated lists.
 - **Record deferred plans as todos:** when part of an approved plan is put on
   hold, add the deferred work to the centralized todo list in the same
-  synchronization pass (with the date and why it is on hold), and close it
-  when the deferred work later lands.
+  synchronization pass (with the date and why it is on hold), and close it when
+  the deferred work later lands.

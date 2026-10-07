@@ -13,8 +13,8 @@ license: MIT
 
 Turn what a session taught into durable, version-controlled instructions. The
 output is a set of tightened AGENTS.md files and skills, plus a cleaned-up
-memory store; the process is analyze, verify, propose, wait for approval,
-apply, then review.
+memory store; the process is analyze, verify, propose, wait for approval, apply,
+then review.
 
 ## 1. Resolve the Configuration Layout
 
@@ -37,9 +37,9 @@ git -C "$(dirname "$(realpath ~/.agents/AGENTS.md)")" rev-parse --show-toplevel
   project being worked on, if present. If the project has only a `CLAUDE.md`,
   treat it as the project file; if it includes another file, edit the included
   file.
-- Per-project memories: a store the harness manages for the current project,
-  not version-controlled and not shared across machines or agents. Locate it
-  from the harness's own context rather than by guessing a path; if the harness
+- Per-project memories: a store the harness manages for the current project, not
+  version-controlled and not shared across machines or agents. Locate it from
+  the harness's own context rather than by guessing a path; if the harness
   announces no store, treat it as absent. Edit memories at their real
   home-directory location. Claude Code announces the path in its system prompt
   (`~/.claude/projects/<project>/memory/`), with `MEMORY.md` as the index and
@@ -97,8 +97,8 @@ Propose only changes that generalize beyond the session. Discard:
   re-proposing it.
 
 Project-routed lessons are best captured during the session, in the project's
-own knowledge base, while the context is fresh; the capture run then handles
-the cross-project residue. Concurrent sessions may also run their own capture:
+own knowledge base, while the context is fresh; the capture run then handles the
+cross-project residue. Concurrent sessions may also run their own capture:
 before proposing, check the target files' recent history and working tree for
 capture edits from other sessions, and reconcile instead of duplicating.
 
@@ -123,19 +123,20 @@ A rule outlives the session, so it is held to the standard of a recommendation:
 
 - A rule about a tool's or module's behavior is checked against its
   documentation or source at the version in use, and names the component
-  responsible: a wrong attribution sends the next agent to work around the
-  wrong layer.
-- A workaround is proposed only after checking the tool for a native option
-  that covers the case.
+  responsible: a wrong attribution sends the next agent to work around the wrong
+  layer.
+- A workaround is proposed only after checking the tool for a native option that
+  covers the case.
 - A tendency is written as a tendency, with how to check the specific case,
   never as a universal.
-- A workflow step with non-trivial token or time cost (such as a subagent
-  pass) is scoped to the cases where it pays off and skipped on trivial
-  work, rather than mandated on every run.
+- A workflow step with non-trivial token or time cost (such as a subagent pass)
+  is scoped to the cases where it pays off and skipped on trivial work, rather
+  than mandated on every run.
 - Each rule is applied to its own motivating example, read as the next agent
   would read it, to confirm it gives the right answer there.
 - A new skill follows the repository's skill conventions for naming, body
-  layout, and README registration, and the plan shows its name and description.
+  layout, and `README.md` registration, and the plan shows its name and
+  description.
 
 ## 7. Present the Plan and Wait
 
@@ -160,8 +161,8 @@ The plan presented for approval must list:
   `MEMORY.md`. Leave non-promoted memories untouched.
 - If a memory mixed a rule with state, rewrite it to hold only the state and
   note where the rule moved.
-- Before editing any target file, check its repository's working tree: defer
-  or coordinate edits to files carrying uncommitted user changes, instead of
+- Before editing any target file, check its repository's working tree: defer or
+  coordinate edits to files carrying uncommitted user changes, instead of
   editing into another session's work.
 - Route edits to a project's own files through that repository's validation
   pipeline and commit conventions; dotfiles edits follow the dotfiles flow.
@@ -172,6 +173,6 @@ The plan presented for approval must list:
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill, as opposed to typos or mechanical one-liners), have a reviewer that did
-not write the rules read the diff: a fresh subagent given only the diff and
-the target files, or the harness's code review. Fix what it finds before
-reporting. Do not commit unless asked.
+not write the rules read the diff: a fresh subagent given only the diff and the
+target files, or the harness's code review. Fix what it finds before reporting.
+Do not commit unless asked.

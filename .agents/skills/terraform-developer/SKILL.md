@@ -34,7 +34,7 @@ descriptors, modules, resources.
 - **Surface provider deprecation warnings and ask:** when a plan or apply emits
   a provider deprecation warning (e.g., an inline block superseded by a
   dedicated resource), report it to the user and ask whether to migrate now or
-  record it as a tracked TODO — do not silently ignore it, and do not migrate
+  record it as a tracked todo — do not silently ignore it, and do not migrate
   unprompted. When migrating, follow the provider's indicated replacement (e.g.,
   move an inline `acl` block to the dedicated ACL resource, keeping references
   so dependency ordering is preserved).

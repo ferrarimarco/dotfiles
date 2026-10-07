@@ -28,7 +28,7 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   truncating; `truncate:` (systemd >= 248) and `append:` variants change that
   behavior. Before using a directive, check the **oldest** systemd version in
   the fleet (`systemctl --version`); prefer a portable workaround (e.g., an
-  `ExecStartPre` `rm`) with a TODO over a directive that fails to parse on older
+  `ExecStartPre` `rm`) with a todo over a directive that fails to parse on older
   hosts.
 - `Type=oneshot` for run-to-completion jobs (usually timer-triggered);
   `Type=simple`/`exec` for daemons. `RemainAfterExit=true` keeps a oneshot

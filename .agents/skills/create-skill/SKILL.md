@@ -17,8 +17,8 @@ that misfire.
 
 ## Principles
 
-- The description decides whether the skill loads; the body decides what
-  happens next. Write each for its reader.
+- The description decides whether the skill loads; the body decides what happens
+  next. Write each for its reader.
 - Every line of `SKILL.md` costs context on each activation. Keep the file to
   what the agent must do, push detail to `references/`, and prefer tightening
   over growing: a fix that removes lines is a valid fix.
@@ -50,16 +50,16 @@ verifiable outputs benefit from tests; subjective ones usually do not.
 Find where the harness loads skills from and where that location is
 version-controlled, since the two may differ. Harnesses read a user skills
 directory such as `~/.claude/skills` or `~/.gemini/skills`, and a project may
-add its own. When such a directory is a symlink into a dotfiles checkout,
-follow it rather than assuming a path:
+add its own. When such a directory is a symlink into a dotfiles checkout, follow
+it rather than assuming a path:
 
 ```sh
 git -C "$(realpath ~/.claude/skills)" rev-parse --show-toplevel
 ```
 
-Create the skill in the version-controlled location, following that
-repository's `AGENTS.md` for its conventions and registration rules, and read
-two or three existing skills there first to match their style.
+Create the skill in the version-controlled location, following that repository's
+`AGENTS.md` for its conventions and registration rules, and read two or three
+existing skills there first to match their style.
 
 ### 3. Decide Whether a Skill Is the Right Unit
 
@@ -86,16 +86,16 @@ other frontmatter fields and the body following the Skill Structure section.
 ### 6. Write Test Prompts
 
 Write two or three realistic prompts, the kind a user would type, with concrete
-context such as file names and casual phrasing, and fix the success criteria
-for each before running anything. Then run them with the ablation test in
+context such as filenames and casual phrasing, and fix the success criteria for
+each before running anything. Then run them with the ablation test in
 improvement step 4.
 
 ## Skill Improvement Process
 
 Repeat steps 1 to 5 until the user is satisfied, the feedback comes back empty,
-or further iterations stop producing meaningful change. Every test subagent
-must report the skills it loaded and the steps it took, since the parent sees
-only its report.
+or further iterations stop producing meaningful change. Every test subagent must
+report the skills it loaded and the steps it took, since the parent sees only
+its report.
 
 ### 1. Reproduce
 
@@ -118,9 +118,8 @@ anything.
 ### 3. Fix the Smallest Thing
 
 Change only what explains the failure, and prefer removing or tightening lines
-over adding them. Read what the test subagents did, not only what they
-produced, and remove parts of the skill that send the model on unproductive
-work.
+over adding them. Read what the test subagents did, not only what they produced,
+and remove parts of the skill that send the model on unproductive work.
 
 ### 4. Run an Ablation Test
 
@@ -136,16 +135,16 @@ enumerate skills at startup will not notice a mid-session move.
 
 ### 5. Bundle Repeated Work
 
-When the test runs independently write the same helper script or repeat the
-same multi-step approach, put it once in `scripts/` and point the skill at it.
+When the test runs independently write the same helper script or repeat the same
+multi-step approach, put it once in `scripts/` and point the skill at it.
 
 ### 6. Consolidate Duplicates
 
 When two skills share triggers or content, merge into the more general one and
-retire the other: delete its directory, reverse its registration steps from
-the repository's `AGENTS.md`, and search the remaining skills and instruction
-files for references to it, since a stale mention sends the agent to a skill
-that no longer exists.
+retire the other: delete its directory, reverse its registration steps from the
+repository's `AGENTS.md`, and search the remaining skills and instruction files
+for references to it, since a stale mention sends the agent to a skill that no
+longer exists.
 
 ## Skill Description
 
@@ -171,8 +170,8 @@ alone decides whether the skill triggers.
 ## Skill Structure
 
 Follow [the structure reference](references/skill-structure.md) for the
-directory layout, every frontmatter field and its constraints, body content,
-and context budgets.
+directory layout, every frontmatter field and its constraints, body content, and
+context budgets.
 
 - Body layout: one H1 with the skill title, a one- or two-sentence purpose
   statement, then H2 sections, numbered for procedures and thematic for bodies

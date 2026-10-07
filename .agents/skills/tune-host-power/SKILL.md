@@ -54,8 +54,8 @@ expected gains, and per-step measured deltas for the experiments that run.
   policies per host, DIPM and DevSleep support (`hdparm -I`), NVMe APST states
   (`smartctl -c`), and which drives hold data versus sit empty.
 - Out of band: install the IPMI tool on hosts with a BMC and read fan speeds,
-  the fan mode, temperatures, and the DCMI power reading. A zero or missing
-  DCMI reading means either that the PSU has no PMBus or that the BMC does not
+  the fan mode, temperatures, and the DCMI power reading. A zero or missing DCMI
+  reading means either that the PSU has no PMBus or that the BMC does not
   implement DCMI power management: check the sensor repository (`ipmitool sdr`)
   for power sensors before settling for the wall meter as the only instrument.
 - PSU: identify the model and age. Certification efficiency applies at 20% to

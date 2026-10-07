@@ -82,19 +82,19 @@ network:
 - **The configuration on disk is not necessarily the configuration in effect.**
   Verify what the process actually loaded through its own API or status
   endpoints (active targets, runtime settings), never by reading files. A
-  container that bind-mounts a single file keeps serving the old inode after
-  the file is atomically replaced, so hot-reload endpoints "succeed" against
-  stale content; only a container restart re-binds the file.
+  container that bind-mounts a single file keeps serving the old inode after the
+  file is atomically replaced, so hot-reload endpoints "succeed" against stale
+  content; only a container restart re-binds the file.
 - **Suspect connection tracking after network topology changes.** Moving a
-  container between published ports and host networking leaves conntrack
-  entries that keep translating live flows to the old container address, which
-  another container may inherit; continuous traffic (gossip, keepalives)
-  refreshes the entries indefinitely. Get evidence with a packet capture
+  container between published ports and host networking leaves conntrack entries
+  that keep translating live flows to the old container address, which another
+  container may inherit; continuous traffic (gossip, keepalives) refreshes the
+  entries indefinitely. Get evidence with a packet capture
   (`tcpdump -ni any udp port <port>`: a hop onto a bridge interface betrays the
-  stale translation), then delete the entries with `conntrack -D` or starve
-  the flow for longer than the UDP stream timeout (120 seconds) by stopping
-  the sender.
+  stale translation), then delete the entries with `conntrack -D` or starve the
+  flow for longer than the UDP stream timeout (120 seconds) by stopping the
+  sender.
 - **Cluster membership is not data flow.** A distributed system reporting
-  healthy peers proves connectivity, not replication: verify with an
-  end-to-end payload (a replicated record, a deduplicated notification)
-  before declaring it healthy.
+  healthy peers proves connectivity, not replication: verify with an end-to-end
+  payload (a replicated record, a deduplicated notification) before declaring it
+  healthy.

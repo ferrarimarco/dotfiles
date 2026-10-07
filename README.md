@@ -56,8 +56,8 @@ dotfiles.
 
 - `troubleshoot-host`: Investigate an unresponsive, frozen, or crashed host
   after recovery.
-- `tune-host-power`: Estimate and lower the power consumption of a physical
-  host with measured baselines and reversible experiments.
+- `tune-host-power`: Estimate and lower the power consumption of a physical host
+  with measured baselines and reversible experiments.
 
 #### Workflow
 
