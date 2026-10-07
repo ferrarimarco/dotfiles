@@ -15,3 +15,9 @@
   never create or repair home-directory symlinks manually.
 - Frontmatter values: `license: MIT`, and `metadata.source: <url>` when the
   skill is adapted from external material.
+
+### Formatting and linting
+
+- Run `./scripts/lint.sh format [paths...]` to format files with `prettier` and
+  `shfmt`, `./scripts/lint.sh fix` to run Super-Linter in fix mode, and
+  `./scripts/lint.sh lint` to run Super-Linter locally.
