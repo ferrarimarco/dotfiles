@@ -7,6 +7,10 @@
 - **Discovery Phase:** You may autonomously use read-only tools (e.g.,
   searching, reading files, running non-modifying shell commands) to gather
   information without asking for permission or explaining your plan beforehand.
+  When a read-only check itself requires user confirmation (for example, an
+  unsandboxed query against a live database or service), run it first and report
+  its findings before proposing or executing any state-changing command: never
+  bundle a read-only check and a write into one step or run the write first.
 - **Planning Phase:** Once discovery is complete, and BEFORE making any file
   modifications or executing state-changing system commands, you MUST stop and
   explain your detailed implementation plan.
@@ -36,6 +40,11 @@
 - Pragmatically assess if self-hosting services and data is worth over a managed
   service, especially when the managed service bears too many, or unreliable
   dependencies.
+- **Extend existing workflows before adding new components:** before proposing a
+  new standalone CLI, script, or service to automate or enforce a recurring
+  workflow step, check whether an existing build rule, presubmit check, or agent
+  skill already in that lifecycle can carry it without adding another component
+  to maintain.
 
 ### File Format
 
@@ -50,9 +59,9 @@
   example, separate a bold prefix from its unbolded body).
 - **Re-read before editing again after a formatter ran:** formatters rewrap
   prose, pad table cells, and reflow code, so exact-match edits computed from
-  the pre-format text fail. Make all the edits first and format once, or
-  re-read the file after formatting, and match table content by name rather
-  than by padded cell text.
+  the pre-format text fail. Make all the edits first and format once, or re-read
+  the file after formatting, and match table content by name rather than by
+  padded cell text.
 
 ### Safety
 
@@ -64,12 +73,11 @@
 - Treat identifiers that public infrastructure resolves to a network location
   (for example, Syncthing device IDs, which global discovery maps to a device's
   current public addresses) as private material: keep them out of public
-  repositories, even though they grant no authentication. Such identifiers,
-  and other personal names, also surface as metric labels and alert
-  annotations: private sinks (a local TSDB, a private notification channel)
-  may carry them, but committed monitoring artifacts — alert rule
-  expressions, dashboards — must stay generic and reference public names
-  only.
+  repositories, even though they grant no authentication. Such identifiers, and
+  other personal names, also surface as metric labels and alert annotations:
+  private sinks (a local TSDB, a private notification channel) may carry them,
+  but committed monitoring artifacts — alert rule expressions, dashboards — must
+  stay generic and reference public names only.
 
 ### Git
 
@@ -83,9 +91,13 @@
   commit, even when the plan ends with a commit step: present the split and the
   messages and wait, also late in a long session. The `git-commit` skill holds
   the full procedure.
+- **Focus commit and changelist descriptions on why:** keep commit and
+  changelist descriptions concise and focused on why the change is needed (the
+  problem or constraint it solves) rather than cataloging what the diff already
+  shows.
 - **Offer a fresh-subagent review on non-trivial changes before pushing:**
-  before pushing a non-trivial change for review — or pushing a new patchset
-  and resolving review comments when the change touches logic, control flow,
+  before pushing a non-trivial change for review — or pushing a new patchset and
+  resolving review comments when the change touches logic, control flow,
   permissions, or multi-step automation — offer to run a subagent with no
   conversation context over the entire diff against the base branch and the
   commit messages, not only the latest additions. Skip this for trivial edits
@@ -172,9 +184,9 @@ scope:
   `module_path`, and `psvar` to the uppercase scalar parameters (`PATH`,
   `FPATH`, ...), so never use them as loop or scratch variable names:
   `while read -r path` replaces the command search path and every following
-  external command fails with "command not found". The profile
-  defines `diff` as a function that wraps `git diff`; use `command diff` or
-  `cmp` to compare files.
+  external command fails with "command not found". The profile defines `diff` as
+  a function that wraps `git diff`; use `command diff` or `cmp` to compare
+  files.
 - **Verify services through the consumer's access path:** when smoke-testing a
   service, prefer a test that exercises the same stack real consumers use (same
   client software, credentials, and network route) over installing ad-hoc tools
@@ -208,6 +220,13 @@ scope:
 - Preserve the document's native named styles (`NORMAL_TEXT`, `TITLE`,
   `HEADING_1`–`HEADING_3`) by omitting explicit font family, font size, color,
   and paragraph spacing overrides on prose and headings.
+- **Insert plain text before applying inline code or emphasis styles:** in
+  Google Docs API batch updates, each `insertText` inherits the character style
+  of the preceding character, and in Suggest Mode an `updateTextStyle` request
+  setting the base font is ignored as a no-op against `NORMAL_TEXT`. When
+  inserting paragraphs that mix prose and inline code (`Courier New`), insert
+  the full unstyled paragraph text first so it inherits `NORMAL_TEXT`, then
+  apply `Courier New` or bold to specific inline spans afterward.
 
 ## Technical stack preferences
 
