@@ -111,38 +111,3 @@ if ! is_command_available "gcloud"; then
     unset _CONTAINER_NAME
   }
 fi
-
-super_linter() {
-  _CONTAINER_IMAGE_ID="ghcr.io/github/super-linter:${CONTAINER_IMAGE_VERSION:-"latest"}"
-  update_container_image "${_CONTAINER_IMAGE_ID}"
-
-  _CONTAINER_NAME="super_linter"
-  del_stopped "${_CONTAINER_NAME}"
-
-  set_docker_interactive_and_tty_options
-
-  # shellcheck disable=SC2086
-  docker run \
-    ${_DOCKER_INTERACTIVE_TTY_OPTION} \
-    --env ACTIONS_RUNNER_DEBUG="${ACTIONS_RUNNER_DEBUG:-"false"}" \
-    --env ANSIBLE_DIRECTORY="${ANSIBLE_DIRECTORY:-"/ansible"}" \
-    --env DEFAULT_WORKSPACE=/tmp/lint \
-    --env DISABLE_ERRORS=false \
-    --env ERROR_ON_MISSING_EXEC_BIT=true \
-    --env IGNORE_GITIGNORED_FILES=true \
-    --env KUBERNETES_KUBEVAL_OPTIONS="--strict --ignore-missing-schemas --schema-location https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/" \
-    --env LINTER_RULES_PATH="${LINTER_RULES_PATH:-"."}" \
-    --env MULTI_STATUS=false \
-    --env RUN_LOCAL=true \
-    --env VALIDATE_ALL_CODEBASE=true \
-    --name "${_CONTAINER_NAME}" \
-    --rm \
-    --volume "$(pwd)":/tmp/lint \
-    --volume /etc/localtime:/etc/localtime:ro \
-    --workdir /tmp/lint \
-    "${_CONTAINER_IMAGE_ID}" \
-    "$@"
-
-  unset _CONTAINER_IMAGE_ID
-  unset _CONTAINER_NAME
-}
