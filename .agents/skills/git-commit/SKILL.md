@@ -2,10 +2,10 @@
 name: git-commit
 description: >-
   Execute Git commit with conventional commit message analysis, intelligent
-  staging, and message generation. Use when user asks to commit, amend a
-  commit, commit changes, create a Git commit, or mentions /commit. Supports:
-  (1) Auto-detecting type and scope from changes, (2) Generating conventional
-  commit messages from diff, (3) Interactive commit with optional
+  staging, and message generation. Use when user asks to commit, amend a commit,
+  commit changes, create a Git commit, or mentions /commit. Supports: (1)
+  Auto-detecting type and scope from changes, (2) Generating conventional commit
+  messages from diff, (3) Interactive commit with optional
   type/scope/description overrides, (4) Intelligent file staging for logical
   grouping
 license: MIT
@@ -115,6 +115,9 @@ Analyze the diff to determine:
 - **Description**: One-line summary of what changed (present tense, imperative
   mood). The whole subject, including type and scope, must not exceed 50
   characters.
+- **Body**: When a body is needed, keep it concise and explain why the change is
+  made (the problem, root cause, or constraint) rather than restating what the
+  diff already shows.
 
 ### 4. Execute Commit
 
@@ -163,26 +166,26 @@ survived.
 - **Propose before executing**: when asked to commit or amend, propose the
   commit split (files per commit) and the full messages, and wait for approval
   before committing. Leave unrelated in-progress changes out of the proposal.
-  Give each proposed commit an identifier that is unique across the
-  repositories in the proposal (for example, `H1` and `D1`), so an approval of
-  some commits is unambiguous. When the user reviews commits one at a time, an
-  approval covers only the commit under review: create it and stop, instead of
-  executing the rest of the batch.
+  Give each proposed commit an identifier that is unique across the repositories
+  in the proposal (for example, `H1` and `D1`), so an approval of some commits
+  is unambiguous. When the user reviews commits one at a time, an approval
+  covers only the commit under review: create it and stop, instead of executing
+  the rest of the batch.
 - **Stage the exact paths of the approved commit**: never stage a directory
   wholesale when it may contain generated output or another session's work, and
-  confirm the staged diff stat matches the proposal before committing. Check
-  it with `git diff --staged --numstat --no-renames`: with
-  `diff.renames = copies` in the user's gitconfig, copy detection pairs a new
-  generated file with a similar file modified in the same change and reports
-  the difference between them as deletions.
+  confirm the staged diff stat matches the proposal before committing. Check it
+  with `git diff --staged --numstat --no-renames`: with `diff.renames = copies`
+  in the user's gitconfig, copy detection pairs a new generated file with a
+  similar file modified in the same change and reports the difference between
+  them as deletions.
 - **Validate messages before proposing them**: when the repository lints commit
   messages, run each proposed message through that linter, with the repository
   configuration, before presenting the proposal. A lint run after committing
   finds a failure too late, and may only check the last commit of a batch while
   CI checks all the pushed commits. When the linter configuration changes,
   validate all the unpushed commits against it before pushing.
-- **Wait for running verification gates**: if approval to commit arrives while
-  a verification gate (linter, build, test suite) is still running, execute the
+- **Wait for running verification gates**: if approval to commit arrives while a
+  verification gate (linter, build, test suite) is still running, execute the
   commit only after the gate passes, and report the gate verdict together with
   the commit result.
 - One logical change per commit
