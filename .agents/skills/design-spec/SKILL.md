@@ -36,8 +36,10 @@ feature.
    "encrypted secrets in a public repository were considered and rejected
    because Git history is immortal").
 5. **Be Concise and Focused:** Keep specifications and design documents concise,
-   focusing on the most important architectural details and avoiding repetition
-   or unnecessary verbosity.
+   focusing on the most important architectural details. State each problem or
+   invariant once without repeating it in the solution or migration plan, omit
+   file-by-file inventories, and do not repeat command flags already defined in
+   earlier sections.
 
 ## Workflow
 
