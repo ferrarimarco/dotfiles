@@ -90,7 +90,8 @@
   messages, then wait for approval. A plan approval covers the edits, never the
   commit, even when the plan ends with a commit step: present the split and the
   messages and wait, also late in a long session. The `git-commit` skill holds
-  the full procedure.
+  the full procedure, including the subject length limit: load it before
+  drafting the messages.
 - **Focus commit and changelist descriptions on why:** keep commit and
   changelist descriptions concise and focused on why the change is needed (the
   problem or constraint it solves) rather than cataloging what the diff already
@@ -176,7 +177,17 @@ scope:
   for pasted content or a saved PDF instead of retrying. Short links from
   sharing services may land on an interstitial page; the target is usually in
   the canonical link of the returned page. Sites behind bot protection usually
-  answer 403 to cURL and to fetch tools.
+  answer 403 to cURL and to fetch tools. When a documentation site returns a
+  placeholder (JavaScript-only, such as the Terraform Registry) or truncated
+  content, fetch the source from the project's repository at the version in use
+  instead of guessing raw URLs: list a directory with
+  `gh api 'repos/<org>/<repo>/contents/<dir>?ref=<tag>'`, then download a file
+  with the same endpoint on the file path and
+  `-H 'Accept: application/vnd.github.raw+json'`. When the placeholder page
+  hides the repository link, the site's JSON API usually names it (the Terraform
+  Registry does in the `source` field of
+  `registry.terraform.io/v1/modules/<ns>/<name>/<provider>` and
+  `/v1/providers/<ns>/<name>`).
 - **Agent shells run Zsh with the user's profile:** Zsh does not split unquoted
   variables into words, so a command prefix stored in a variable fails with
   "command not found"; use a function or an array instead. Zsh also ties the
@@ -186,7 +197,12 @@ scope:
   `while read -r path` replaces the command search path and every following
   external command fails with "command not found". The profile defines `diff` as
   a function that wraps `git diff`; use `command diff` or `cmp` to compare
-  files.
+  files. `set -e` is inert when the harness runs the command through `eval`
+  inside an AND-list (Claude Code's Bash tool does): Zsh ignores `ERR_EXIT` in
+  that context, and a subshell inherits it. Run a multi-step state-changing
+  sequence as a separate process (`zsh -ec '...'`, which honours `-e` but does
+  not load the interactive profile, so its functions and aliases are unavailable
+  inside), or chain the steps with `&&`, so a failing step stops the later ones.
 - **Verify services through the consumer's access path:** when smoke-testing a
   service, prefer a test that exercises the same stack real consumers use (same
   client software, credentials, and network route) over installing ad-hoc tools
