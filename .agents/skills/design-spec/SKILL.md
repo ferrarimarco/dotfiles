@@ -26,7 +26,9 @@ feature.
 2. **Challenge Assumptions:** Do not blindly accept what the user proposes.
    Actively challenge their assumptions. Ask why a feature is needed, what
    alternative approaches were considered, and whether it aligns with broader
-   system constraints.
+   system constraints. Ask whether the feature is one consumer of a wider
+   capability (a feature for one host versus a service for every host), and
+   propose the general framing when its extra cost is small.
 3. **Identify Edge Cases:** Proactively point out potential edge cases, security
    risks, scalability bottlenecks, and potential negative user experiences.
 4. **Record Rejected Alternatives:** when the user chooses between competing
@@ -39,7 +41,9 @@ feature.
    focusing on the most important architectural details. State each problem or
    invariant once without repeating it in the solution or migration plan, omit
    file-by-file inventories, and do not repeat command flags already defined in
-   earlier sections.
+   earlier sections. Give each component's detail exactly one home: where the
+   document has an overview, it names the component in one line and defers to
+   that component's section.
 
 ## Workflow
 
