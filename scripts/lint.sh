@@ -166,30 +166,30 @@ main() {
   fi
 
   case "${command}" in
-    lint)
-      lint_codebase "$@"
-      ;;
-    fix)
-      fix_codebase "$@"
-      ;;
-    format)
-      format_prettier "$@"
-      format_shfmt "$@"
-      ;;
-    format-prettier)
-      format_prettier "$@"
-      ;;
-    format-shfmt)
-      format_shfmt "$@"
-      ;;
-    help | -h | --help)
-      usage
-      ;;
-    *)
-      echo "Unknown command: ${command}" >&2
-      usage >&2
-      exit 1
-      ;;
+  lint)
+    lint_codebase "$@"
+    ;;
+  fix)
+    fix_codebase "$@"
+    ;;
+  format)
+    format_prettier "$@"
+    format_shfmt "$@"
+    ;;
+  format-prettier)
+    format_prettier "$@"
+    ;;
+  format-shfmt)
+    format_shfmt "$@"
+    ;;
+  help | -h | --help)
+    usage
+    ;;
+  *)
+    echo "Unknown command: ${command}" >&2
+    usage >&2
+    exit 1
+    ;;
   esac
 }
 
