@@ -35,6 +35,9 @@ misbehave.
   (repeating for days) from anything that first appears near the end.
 - Kernel signatures:
   `journalctl -b -1 -k | grep -iE "voltage|throttl|oom|hung|I/O error|BUG|Oops|segfault|reset|disconnect"`.
+  `-k` implies the current boot even with `--since`: a search across boots uses
+  `journalctl _TRANSPORT=kernel --since <date>` instead, or it silently returns
+  one boot's worth.
 - Crash persistence: `/sys/fs/pstore/` and `/var/lib/systemd/pstore/`.
 - Platform-specific state: on Raspberry Pi, `vcgencmd get_throttled` (sticky
   bits reset on power cycle) and `sudo vclog --msg`; on servers, IPMI/SEL logs;
@@ -43,6 +46,11 @@ misbehave.
   sectors are a finding even when unrelated to the incident.
 
 ## 3. Use Monitoring History
+
+Start with the alert history: Alertmanager's active alerts and the `ALERTS`
+series over the preceding days. An alert that fired before the incident (a SMART
+pending-sector alert thirty hours before a disk stopped reading) is the first
+lead, and an alert that fired and was not acted on is a finding in itself.
 
 If the host (or fleet) runs a metrics backend, query the time series leading up
 to the death window: temperature, load, memory available, disk I/O. Normal
@@ -68,6 +76,12 @@ independently bounds the freeze time.
   say so rather than forcing a root cause. Likely candidate causes (power
   transient, platform or firmware bug, aging kernel) can be listed as
   hypotheses, clearly labeled.
+- Before rebooting a host whose disk is failing, add `nofail` (and
+  `x-systemd.device-timeout=`) to every non-root mount the boot can survive
+  without, and plan the rescue boot medium: once the disk is gone, systemd waits
+  for the device and fails `local-fs.target` into the emergency shell, which
+  nobody reaches on a headless host, and which `sulogin` refuses to open when
+  root is locked.
 - Separate **resilience fixes** (hardware watchdog so the host self-recovers;
   see the `systemd-developer` skill) from **root-cause fixes** (kernel or
   firmware updates, hardware replacement), and propose both.
@@ -98,3 +112,17 @@ network:
   healthy peers proves connectivity, not replication: verify with an end-to-end
   payload (a replicated record, a deduplicated notification) before declaring it
   healthy.
+- **"Input/output error" in an application log usually points below the
+  application:** the backing device, or the server or session of a network
+  mount. Read the kernel log for that mount first. A mounted filesystem keeps
+  answering `df` and directory listings from cache after its disk has stopped
+  responding, so those working is no evidence the disk is fine; a read that
+  bypasses the page cache (`dd if=<file> iflag=direct`, or a read of the block
+  device) settles it.
+- **A USB disk stuck in a reset loop is the diagnosis; capture the evidence,
+  then power it off.** After the kernel log and a time-bounded `smartctl`, power
+  it off before diagnosing anything else on the host: a disk that resets every
+  few seconds leaves udev workers and the USB storage thread in uninterruptible
+  wait, which strands sibling devices (a serial dongle never gets its `by-id`
+  link) and triggers UAS command aborts on other disks of the same controller,
+  the host's root disk included.

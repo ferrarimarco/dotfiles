@@ -60,13 +60,18 @@ Review the conversation for:
 - mistakes caused by missing, ambiguous, or contradictory instructions;
 - workflow steps the agent had to rediscover;
 - environment quirks learned the hard way;
+- detection and recovery gaps: an incident that monitoring missed or caught
+  late, or a recovery that a runbook step would have shortened;
 - later corrections to rules that earlier capture runs wrote (the target file's
   history shows the commit): these are signals about this skill's process as
   well as about the target.
 
 This run is part of the session too. Before presenting the plan, mine the run
 itself: conventions it had to look up, rules it rewrote after a check, and
-review findings on its output. Route those to this skill.
+review findings on its output. Route those to this skill. Then run a blind-spot
+check: list the kinds of findings the session produced, and treat a kind that
+matches no signal above, or has no destination in the routing list, as an edit
+to this skill rather than a finding to drop.
 
 ## 3. Review Saved Memories for Promotion
 
@@ -107,15 +112,21 @@ capture edits from other sessions, and reconcile instead of duplicating.
 Apply this priority order to session findings and promoted memories alike:
 
 1. An existing skill, when the lesson is specific to a task type a skill already
-   covers (an Ansible lesson goes into `ansible-developer`).
-2. The project's `AGENTS.md`, when the lesson is specific to one repository.
+   covers (an Ansible lesson goes into `ansible-developer`). An agent that did
+   not consult monitoring the project already had is an instruction gap, not a
+   monitoring gap.
+2. The project's `AGENTS.md`, when the lesson is a rule for the agent that is
+   specific to one repository.
 3. The global `~/.agents/AGENTS.md`, only for rules that apply to all projects
    and fit its existing sections.
 4. A new skill, only when a recurring task type has no home; propose it in the
    plan and, once approved, create the skill.
 5. `~/.claude/CLAUDE.md`, only for rules that apply exclusively to Claude Code.
-6. This skill, when the defect is in how a lesson was captured rather than in
-   its content.
+6. The project's operational artifacts (alert rules, runbooks, todo items),
+   through the project's own pipeline, when the lesson is a check or a procedure
+   the project should run rather than a rule for the agent.
+7. This skill, when the defect is in how a lesson was captured, or when the
+   blind-spot check found a kind of lesson it never asks about.
 
 ## 6. Verify Each Proposed Rule
 
@@ -174,5 +185,7 @@ The plan presented for approval must list:
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill, as opposed to typos or mechanical one-liners), have a reviewer that did
 not write the rules read the diff: a fresh subagent given only the diff and the
-target files, or the harness's code review. Fix what it finds before reporting.
-Do not commit unless asked.
+target files, or the harness's code review. Review every repository the run
+edited, the project's runbooks and todo items included, not only the dotfiles: a
+runbook carries the same kind of technical claims as a skill. Fix what it finds
+before reporting. Do not commit unless asked.

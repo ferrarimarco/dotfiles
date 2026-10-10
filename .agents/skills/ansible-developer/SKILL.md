@@ -33,6 +33,11 @@ inventories that are idempotent, check-mode friendly, and data-driven.
   never deploy while consumers point at a host that will never run it. Derive
   both from the same source, or verify the endpoint host actually renders the
   service.
+- **Moving a workload re-points every consumer:** endpoint variables may live in
+  a role's `vars`, not in the inventory. Before stating that nothing points at a
+  host, grep inventory, role defaults and vars, and templates for the hostname
+  and the `*_endpoint_fqdn` variables; then re-run the playbook for every host
+  that reads them (monitoring probe targets included).
 
 ## Variable Precedence Traps
 

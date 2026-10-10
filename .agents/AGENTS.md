@@ -155,7 +155,11 @@ scope:
   the actual resulting state with read-only checks and report the evidence,
   rather than assuming success from the tool's exit status. A service unit
   reporting active does not guarantee the service accepts requests: verification
-  probes issued right after activation need bounded retries.
+  probes issued right after activation need bounded retries. After a reboot or
+  restart, derive the list of running services from a fresh listing and report
+  only what it shows: never carry an earlier "up" forward; a service absent from
+  the new listing is a finding to report, not a gap to fill from the earlier
+  one.
 - **Capture full output of long-running checks:** redirect the complete output
   of long-running commands (linters, builds, test suites) to a log file and
   inspect the file, instead of piping through filters like `tail` or `head`.
