@@ -150,16 +150,25 @@ scope:
   never touched) before attributing it to your work. Report which case it is,
   with the evidence, and propose how to handle a pre-existing failure instead of
   silently working around it.
+- **Detection before the fix:** when fixing a failure that monitoring did not
+  catch, prefer adding or repairing the check first and confirming it fires on
+  the broken state, then applying the fix and confirming the check clears. When
+  the fix cannot wait, reproduce the failure afterwards to exercise the check. A
+  check never exercised on the real failure is unverified.
 - **Verify state changes:** after a state-changing operation completes (e.g., an
   infrastructure apply, a configuration playbook run, a service restart), verify
   the actual resulting state with read-only checks and report the evidence,
   rather than assuming success from the tool's exit status. A service unit
   reporting active does not guarantee the service accepts requests: verification
-  probes issued right after activation need bounded retries. After a reboot or
-  restart, derive the list of running services from a fresh listing and report
-  only what it shows: never carry an earlier "up" forward; a service absent from
-  the new listing is a finding to report, not a gap to fill from the earlier
-  one.
+  probes issued right after activation need bounded retries. An exporter or
+  endpoint answering is not data present: check for the series or records its
+  consumers rely on (a metrics exporter can answer scrapes with none of the
+  series the alerts use). After a reboot or restart, derive the list of running
+  services from a fresh listing and report only what it shows: never carry an
+  earlier "up" forward; a service absent from the new listing is a finding to
+  report, not a gap to fill from the earlier one. A before-and-after difference
+  is reported from a diff of the saved before and after outputs, never from
+  counts remembered from different baselines.
 - **Capture full output of long-running checks:** redirect the complete output
   of long-running commands (linters, builds, test suites) to a log file and
   inspect the file, instead of piping through filters like `tail` or `head`.

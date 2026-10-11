@@ -61,7 +61,9 @@ Review the conversation for:
 - workflow steps the agent had to rediscover;
 - environment quirks learned the hard way;
 - detection and recovery gaps: an incident that monitoring missed or caught
-  late, or a recovery that a runbook step would have shortened;
+  late, or a recovery that a runbook step would have shortened; note whether the
+  check existed before the fix was applied, since a check added together with
+  the fix never saw the real failure;
 - later corrections to rules that earlier capture runs wrote (the target file's
   history shows the commit): these are signals about this skill's process as
   well as about the target.

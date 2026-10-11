@@ -115,7 +115,14 @@ runs against unconfigured hosts:
   just the exit status**: first confirm in the log that the intended task (and
   its item) actually ran, because a clean run that never exercised the change
   proves nothing; then treat unexpected `state: absent` or teardown predictions
-  as an enablement variable that resolved differently than intended.
+  as an enablement variable that resolved differently than intended. A declared
+  change missing from the predictions is usually a skipped item, or one dropped
+  by tags, `--limit`, or an empty loop list. The default callback prints only
+  `skipping: ... (item=...)`; run with `-v` to see the item's `skip_reason` and
+  `false_condition`, or read the task's `when` against the item's fields: a
+  `state` value no task matches (`present` where the task tests
+  `state == 'file'`) disables the entry silently and leaves the file on the host
+  as it was.
 - An **intended** `state: absent` prediction on a directory still needs a look
   at the live directory's contents before the apply: a container bind mount can
   keep instance state (device identity, databases) under a path that looks like
@@ -161,6 +168,11 @@ runs against unconfigured hosts:
 - Remember `ansible.posix.mount` keys fstab entries by `path`: changing `src` or
   `opts` for the same path replaces the entry — useful for migrations, but
   review what it replaces.
+- **`state: absent` removes the mount point:** `ansible.posix.mount` also
+  deletes the directory and fails when it is not empty; `absent_from_fstab`
+  (ansible.posix 1.5.1 and later) drops only the fstab line and leaves the
+  directory alone, which is what a dead disk's entry needs while a placeholder
+  tree still lives under its path.
 - Smoke-test a new network share from a consumer host through the real client
   stack: an ephemeral mount using the deployed credentials file and the same
   mount options production will use (then unmount and remove the mount point)
