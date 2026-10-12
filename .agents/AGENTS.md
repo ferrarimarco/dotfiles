@@ -115,6 +115,14 @@
   checked out at the target commit. After another session rewrites history,
   verify your commits before building on them: use the reflog to find the
   commits they replace, and compare their changes and messages.
+- **Verify push state before reporting it:** a remote-tracking ref
+  (`origin/<branch>`) reflects this checkout's last fetch or push, not the
+  remote, so a push the user made from another clone, session, or the web UI is
+  invisible to `git log origin/<branch>..`. Before listing unpushed commits or
+  offering a pre-push review, confirm the remote tip
+  (`git ls-remote origin <branch>` reads it without touching local refs; a fetch
+  also works) or ask whether the user already pushed, and report what the check
+  showed rather than the stale ref.
 
 ### Problem solving patterns and processes
 
