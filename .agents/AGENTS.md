@@ -147,6 +147,11 @@ scope:
 - Ask clarifying questions if needed.
 - **Access to information:** When you cannot get access to data or information
   you need, you MUST stop and tell the user.
+- **Re-scan before executing a planned migration step:** commits landed after a
+  plan was drafted can introduce new instances of the patterns the plan targets
+  or modify files it enumerates. Before executing each step, re-scan the current
+  working tree against the step's target patterns and reconcile the plan if the
+  matches or target files changed.
 - **Dry-run before applying:** when a tool offers a dry-run or check mode (e.g.,
   Ansible `--check --diff`, `terraform plan`), run it before the state-changing
   run and review the predicted changes for unintended destructive effects
@@ -257,13 +262,15 @@ scope:
 - Preserve the document's native named styles (`NORMAL_TEXT`, `TITLE`,
   `HEADING_1`–`HEADING_3`) by omitting explicit font family, font size, color,
   and paragraph spacing overrides on prose and headings.
-- **Insert plain text before applying inline code or emphasis styles:** in
-  Google Docs API batch updates, each `insertText` inherits the character style
-  of the preceding character, and in Suggest Mode an `updateTextStyle` request
-  setting the base font is ignored as a no-op against `NORMAL_TEXT`. When
-  inserting paragraphs that mix prose and inline code (`Courier New`), insert
-  the full unstyled paragraph text first so it inherits `NORMAL_TEXT`, then
-  apply `Courier New` or bold to specific inline spans afterward.
+- **Insert plain text at a `NORMAL_TEXT` boundary before applying inline
+  styles:** in Google Docs API batch updates, each `insertText` at index `i`
+  inherits the character style of `i - 1`, and in Suggest Mode an
+  `updateTextStyle` request resetting the base font is ignored as a no-op
+  against `NORMAL_TEXT`. Never insert prose at the end of a `Courier New`, bold,
+  or link run: anchor the insertion immediately after a `NORMAL_TEXT` character
+  (such as an adjacent space, punctuation mark, or prose word), insert the full
+  unstyled text first so it inherits `NORMAL_TEXT`, and apply `Courier New` or
+  emphasis only to the specific inline spans afterward.
 
 ## Technical stack preferences
 

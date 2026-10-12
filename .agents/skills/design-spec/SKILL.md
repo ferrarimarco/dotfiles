@@ -44,6 +44,14 @@ feature.
    earlier sections. Give each component's detail exactly one home: where the
    document has an overview, it names the component in one line and defers to
    that component's section.
+6. **Structure Migration Plans for Incremental Safety and Regression
+   Prevention:** When a spec includes a multi-step migration or refactoring
+   plan, scope each step (commit or changelist) to a single cohesive goal rather
+   than bundling unrelated mechanical changes, pair every class of defect the
+   migration remediates with an automated check (presubmit, linter, or test) in
+   the enforcement step so it cannot regress, and end with a post-migration
+   verification step that audits artifacts added or modified while the migration
+   was in flight.
 
 ## Workflow
 
