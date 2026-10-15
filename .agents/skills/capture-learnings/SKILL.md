@@ -33,10 +33,10 @@ git -C "$(dirname "$(realpath ~/.agents/AGENTS.md)")" rev-parse --show-toplevel
 - `<root>/.agents/skills`: one directory per skill, each with a `SKILL.md`.
   `~/.claude/skills` links to it where Claude Code is installed; use
   `realpath ~/.claude/skills` as a cross-check when it exists.
-- `<project>/AGENTS.md`: project-specific rules at the repository root of the
-  project being worked on, if present. If the project has only a `CLAUDE.md`,
-  treat it as the project file; if it includes another file, edit the included
-  file.
+- `<project>/AGENTS.md` and `<project>/.agents/skills`: project-specific rules
+  and skills in the repository being worked on, if present. If the project has
+  only a `CLAUDE.md` (or `.claude/skills`), treat it as the project file or
+  skills directory; if it includes another file, edit the included file.
 - Per-project memories: a store the harness manages for the current project, not
   version-controlled and not shared across machines or agents. Locate it from
   the harness's own context rather than by guessing a path; if the harness
@@ -46,9 +46,9 @@ git -C "$(dirname "$(realpath ~/.agents/AGENTS.md)")" rev-parse --show-toplevel
   one Markdown file per memory carrying `name`, `description`, and
   `metadata.type` of `user | feedback | project | reference`.
 
-Edit only the resolved files inside the dotfiles checkout. Never replace a
-symlink with a regular file, and never edit an unlinked copy under the home
-directory.
+For global configuration, edit only the resolved files inside the dotfiles
+checkout. Never replace a symlink with a regular file, and never edit an
+unlinked copy under the home directory.
 
 ## 2. Mine the Session for Signals
 
@@ -103,11 +103,15 @@ Propose only changes that generalize beyond the session. Discard:
   (guides, specifications, todo items): verify it landed, instead of
   re-proposing it.
 
-Project-routed lessons are best captured during the session, in the project's
-own knowledge base, while the context is fresh; the capture run then handles the
-cross-project residue. Concurrent sessions may also run their own capture:
-before proposing, check the target files' recent history and working tree for
-capture edits from other sessions, and reconcile instead of duplicating.
+Capture project-routed lessons during the session, in the project's own
+knowledge base, while the context is fresh; when a capture run finds uncaptured
+project-specific lessons for `<project>/.agents/skills`, `<project>/AGENTS.md`,
+or project documentation, propose them in the plan alongside the cross-project
+residue rather than skipping them because the project checkout is on an
+in-flight branch or has a pending changelist. Concurrent sessions may also run
+their own capture: before proposing, check the target files' recent history and
+working tree for capture edits from other sessions, and reconcile instead of
+duplicating.
 
 ## 5. Route Each Finding
 
@@ -147,9 +151,13 @@ A rule outlives the session, so it is held to the standard of a recommendation:
   than mandated on every run.
 - Each rule is applied to its own motivating example, read as the next agent
   would read it, to confirm it gives the right answer there.
+- A rule routed to the global dotfiles (`~/.agents/AGENTS.md` and
+  `<root>/.agents/skills/*`, which live in a public repository) keeps examples
+  and attributions generic and omits internal corporate hostnames, URLs, package
+  names, and identifiers from work sessions.
 - A new skill follows the repository's skill conventions for naming, body
-  layout, and `README.md` registration, and the plan shows its name and
-  description.
+  layout, and skill-index registration (such as `README.md`), and the plan shows
+  its name and description.
 
 ## 7. Present the Plan and Wait
 
