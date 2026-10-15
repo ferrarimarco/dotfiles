@@ -165,6 +165,12 @@ scope:
   never touched) before attributing it to your work. Report which case it is,
   with the evidence, and propose how to handle a pre-existing failure instead of
   silently working around it.
+- **Rehearse recovery paths on scratch targets:** a verification of a restore, a
+  migration rollback, or a failover runs against a copy or a scratch location,
+  never against live state, unless the user asked for the real operation; an
+  in-place restore run as a rehearsal rolled a live service back by hours. A dry
+  run of the command proves the command, not the outcome, so it does not replace
+  the scratch rehearsal.
 - **Detection before the fix:** when fixing a failure that monitoring did not
   catch, prefer adding or repairing the check first and confirming it fires on
   the broken state, then applying the fix and confirming the check clears. When
