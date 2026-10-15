@@ -89,9 +89,11 @@
   the commit split (which files go in which commit) and the full commit
   messages, then wait for approval. A plan approval covers the edits, never the
   commit, even when the plan ends with a commit step: present the split and the
-  messages and wait, also late in a long session. The `git-commit` skill holds
-  the full procedure, including the subject length limit: load it before
-  drafting the messages.
+  messages and wait, also late in a long session. The global `git-commit` skill
+  (`~/.agents/skills/git-commit/SKILL.md`) holds the full procedure, including
+  the subject length limit and pre-proposal linting: always load it before
+  drafting the messages, in addition to any repository-local commit skill, which
+  supplements rather than replaces these rules.
 - **Focus commit and changelist descriptions on why:** keep commit and
   changelist descriptions concise and focused on why the change is needed (the
   problem or constraint it solves) rather than cataloging what the diff already
