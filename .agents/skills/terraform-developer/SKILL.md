@@ -55,15 +55,20 @@ descriptors, modules, resources.
   not just the apply's exit status. Note that an apply with no changes does not
   rewrite a local state file, so file modification times are not evidence of
   what ran.
-- **Terraform dependencies lockfile:** Generate Terraform dependency lockfiles
-  running `terraform init`, and remind the user to do so and commit the lock
-  file. If the infrastructure is shared across different operating systems or
-  architectures, use
-  `terraform providers lock -platform=linux_amd64 -platform=darwin_arm64 ...` to
-  ensure all necessary platforms are covered.
+- **Terraform dependencies lockfile:** Generate and update Terraform dependency
+  lockfiles (`.terraform.lock.hcl`) with Terraform and commit the lockfile;
+  never hand-edit it. If the infrastructure is shared across operating systems
+  or architectures, or when `required_providers` version bounds change and the
+  already-locked version still satisfies the new range (`terraform init` does
+  not update the lockfile once local-platform hashes are present), run
+  `terraform providers lock -platform=linux_amd64 -platform=darwin_arm64 ...`
+  for every platform tracked in the lockfile.
 - **Validation and formatting:** Run `terraform validate` to check for syntax
-  errors and issues. Run `terraform fmt` (or `terraform fmt -recursive`) to
-  automatically fix formatting issues.
+  errors and issues; after any change to `required_providers` or
+  `.terraform.lock.hcl`, run
+  `terraform init -backend=false -input=false -lockfile=readonly` and
+  `terraform validate` to verify the lockfile. Run `terraform fmt` (or
+  `terraform fmt -recursive`) to automatically fix formatting issues.
 - **Planning:** Run `terraform plan` after making modifications to verify the
   execution plan matches the intended structural changes.
 - **Resource naming convention:** follow these rules when naming resources.
