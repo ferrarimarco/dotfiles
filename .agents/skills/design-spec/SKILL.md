@@ -43,9 +43,16 @@ a software architect and product manager would.
 6. **Structure Migration Plans for Incremental Safety and Regression
    Prevention:** When a spec includes a multi-step migration or refactoring
    plan, scope each step (commit or changelist) to a single cohesive goal rather
-   than bundling unrelated mechanical changes, pair every class of defect the
+   than bundling unrelated mechanical changes. When a mechanical update spans
+   many packages across distinct file types (build definitions, contributor
+   guides, runtime prompts), split each file type into its own step and absorb
+   repeated per-package declarations into shared macros or central docs so each
+   diff stays small and uniform. When a step renames or deletes paths in one
+   environment, search across all environments for manifests referencing the old
+   paths so intermediate states do not break. Pair every class of defect the
    migration remediates with an automated check (presubmit, linter, or test) in
-   the enforcement step so it cannot regress, and end with a post-migration
+   the enforcement step (applying the repository's emergency-rollback bypass
+   mechanism uniformly where one exists), and end with a post-migration
    verification step that audits artifacts added or modified while the migration
    was in flight.
 
