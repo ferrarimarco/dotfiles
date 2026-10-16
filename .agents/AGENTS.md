@@ -27,11 +27,13 @@
   option labels sends the user back to ask what the issue is.
 - **Tone:** Keep responses concise, direct, and professional. Avoid
   conversational filler or unnecessary apologies.
-- **Show file paths in text:** When referencing files in responses, include the
-  path as inline code (`~/path/to/file` under the user's home directory, or
-  `/path/to/file` otherwise) in the visible text rather than relying solely on
-  `file://` Markdown links, because chat UIs collapse `file://` links to the
-  basename.
+- **Show file paths in text:** Because chat UIs collapse `file://` Markdown
+  links to the basename, always include the path in inline code alongside the
+  link, scoped to the active project or repository root (or the shortest suffix
+  that disambiguates the file within the current section); use `~/path/to/file`
+  or `/path/to/file` only for files outside the active repository. When
+  comparing multiple workspaces, name each workspace once in the heading or lead
+  rather than prefixing every path.
 
 ### Design
 
@@ -113,7 +115,10 @@
   automation, offer to run a subagent with no conversation context over the
   entire diff against the base branch and the commit messages, not only the
   latest additions. Skip trivial edits (typos, formatting, version bumps,
-  mechanical one-liners).
+  mechanical one-liners). When a change also requires an expensive or
+  working-tree-digest-locked evaluation or benchmark run, settle open design or
+  diff-size questions, complete the review, apply its fixes, and run formatters
+  before launching the evaluation rather than running it in parallel.
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
@@ -253,6 +258,12 @@ Agent shells run Zsh with the user's profile.
   error (cURL exit code 23) and, under `pipefail`, fails the whole pipeline
   despite the match succeeding. When the exit status matters, use a consumer
   that reads the full stream (`grep <pattern> > /dev/null`).
+- **Pass explicit non-interactive flags to CLI tools in scripts and background
+  tasks:** CLIs that create commits, mail reviews, or resolve merges often
+  default to opening `$EDITOR`, a pager, or a confirmation prompt. Before
+  scripting or backgrounding such a tool, verify its non-interactive flags from
+  `--help` or the relevant skill reference, and never fall back to a bare
+  invocation when a guessed flag fails.
 
 ### Terminology
 
@@ -273,6 +284,10 @@ Agent shells run Zsh with the user's profile.
 - Do not number section headings in documents or specifications (`# Heading`,
   not `# 1. Heading` or `## 2.1 Heading`); the numbered procedure steps of a
   skill are the exception.
+- **Use standard Markdown in chat replies:** reserve artifact-only widget syntax
+  (such as `carousel` slide blocks) for artifact files, and use standard
+  headings, lists, and fenced code blocks in direct chat responses so the chat
+  renderer does not break.
 
 ## Technical stack preferences
 
