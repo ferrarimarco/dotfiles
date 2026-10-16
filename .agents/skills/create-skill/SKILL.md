@@ -21,7 +21,11 @@ that misfire.
   next. Write each for its reader.
 - Every line of `SKILL.md` costs context on each activation. Keep the file to
   what the agent must do, push detail to `references/`, and prefer tightening
-  over growing: a fix that removes lines is a valid fix.
+  over growing: a fix that removes lines is a valid fix. When a repository keeps
+  per-skill contributor guidelines (such as `references/contributing.md`, linked
+  via a one-sentence pointer in `SKILL.md`), scope them strictly to what the
+  skill owns versus delegates and link to the repository's central contributor
+  guide for generic build, test, and evaluation workflows.
 - One skill per task type; overlapping skills split the trigger and drift apart.
 - Skills do not depend on each other by name. When one needs another, describe
   the outcome in words that match the other skill's triggers.
