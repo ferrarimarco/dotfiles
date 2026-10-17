@@ -31,6 +31,14 @@ that misfire.
   cases. All-caps ALWAYS and NEVER, rigid structures, and fixes that only
   satisfy the examples are warning signs: a skill runs across many prompts, and
   a model that understands the reason handles the ones you did not test.
+- Match the freedom of an instruction to the fragility of the step: prose
+  heuristics where several approaches work, a parameterized template where one
+  pattern is preferred, an exact command with nothing to add where the sequence
+  is fragile. Name one default and the condition that changes it, instead of
+  listing alternatives.
+- Bodies are timeless and use one term per concept: no date-conditional
+  instructions (retired behavior goes in a collapsed "Old patterns" section or
+  is dropped), and no synonyms for a tool, field, or action.
 - Verify by behavior, not by reading: run the triggering prompt and compare
   outcomes.
 
@@ -78,16 +86,24 @@ extend it instead.
   distributed skills.
 - The slash command is the skill name (`/<name>`).
 
-### 5. Write the Skill
+### 5. Establish the Baseline
+
+When tests are warranted, write two or three realistic prompts, the kind a user
+would type, with concrete context such as filenames and casual phrasing, and fix
+the success criteria for each. Run them against fresh subagents with no skill
+and record the specific failures: the skill exists to fix those, not to document
+what the model already does.
+
+### 6. Write the Skill
 
 Write the description following the Skill Description section below, and the
-other frontmatter fields and the body following the Skill Structure section.
-
-### 6. Write Test Prompts
-
-Write two or three realistic prompts, the kind a user would type, with concrete
-context such as filenames and casual phrasing, and fix the success criteria for
-each before running anything. Then run them with the ablation test in
+other frontmatter fields and the body following the Skill Structure section,
+with the minimum content that fixes the recorded failures (or, without tests,
+the gaps found in step 1). For quality-critical output, build a feedback loop
+into the body: draft, validate against a script or a reference checklist, fix,
+repeat until clean; for batch or destructive work, have the skill's reader write
+a plan file and validate it before executing. When tests were written, run the
+with-skill side against the baseline from step 5 as the ablation test in
 improvement step 4.
 
 ## Skill Improvement Process
@@ -131,7 +147,9 @@ measures the change rather than the skill's existence. Keep the change only if
 the new version is better against the criteria in a way you can name. Where the
 harness has no subagents, move the skill directory out of the skills tree
 temporarily and start a fresh session for each run, since harnesses that
-enumerate skills at startup will not notice a mid-session move.
+enumerate skills at startup will not notice a mid-session move. When the skill
+will serve more than one model, run the pair at least on the smallest and the
+largest: a body tuned for one may over- or under-explain for the other.
 
 ### 5. Bundle Repeated Work
 
@@ -181,8 +199,8 @@ context budgets.
 ## References
 
 - [Agent Skills specification](https://agentskills.io/specification)
-- [Claude Agent Skills overview](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview)
-- [Claude Agent Skills best practices](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices)
+- [Claude Agent Skills overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)
+- [Claude Agent Skills best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
 - [Claude Code skills](https://code.claude.com/docs/en/skills)
 - [Antigravity skills](https://antigravity.google/docs/skills/)
 - [Anthropic skills repository](https://github.com/anthropics/skills)
