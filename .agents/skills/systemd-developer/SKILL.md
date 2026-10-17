@@ -72,7 +72,15 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
 - `OnCalendar=` expressions can be validated with
   `systemd-analyze calendar '<expr>'`.
 - Add `Persistent=true` when a missed activation (host powered off) should run
-  at the next boot.
+  at the next boot. That catch-up run fires right after boot, before the
+  service's dependencies are necessarily up: give the service `Requires=` and
+  `After=` on the daemon it drives (`docker.service`; `After=` alone orders
+  without pulling in) and `RequiresMountsFor=` the paths it uses, or the first
+  run after an outage fails on a missing mount. `RequiresMountsFor=` covers only
+  mounts systemd manages (fstab entries, `.mount` units): for a path another
+  service mounts (a ZFS dataset via `zfs-mount.service`, a mergerfs pool, a
+  directory a container populates), add `After=` on that service, or guard the
+  run with `ConditionPathIsMountPoint=`.
 - A timer fails to start with a generic "Job failed" when the service it
   activates is invalid: verify the service unit, not only the timer.
 

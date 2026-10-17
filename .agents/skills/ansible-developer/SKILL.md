@@ -37,7 +37,11 @@ inventories that are idempotent, check-mode friendly, and data-driven.
   a role's `vars`, not in the inventory. Before stating that nothing points at a
   host, grep inventory, role defaults and vars, and templates for the hostname
   and the `*_endpoint_fqdn` variables; then re-run the playbook for every host
-  that reads them (monitoring probe targets included).
+  that reads them (monitoring probe targets included). Consumers configured
+  outside the repository (a home automation integration's URL, a client's saved
+  server address) are listed from the consumer's own configuration store and
+  re-pointed there; a stale one logs a connection error every poll until someone
+  reads that log.
 
 ## Variable Precedence Traps
 
@@ -142,6 +146,19 @@ runs against unconfigured hosts:
   happening in scoped runs. When such a task must still run there, pair the
   marker with the `always` tag: `--skip-tags` beats `always`, so the test-skip
   behavior survives.
+- **Check mode may not predict image pulls or container recreation:** when the
+  pull and `up` are `command` tasks (a role that shells out to
+  `docker compose`), check mode skips them and predicts neither, so a stack
+  applied after a gap silently recreates every container whose image pin changed
+  since the last run; `community.docker.docker_compose_v2` runs `up --dry-run`
+  in check mode and shows the recreation, but not the pull. Either way, before
+  applying after a gap, compare each service's pinned image with the image its
+  running container was created from
+  (`docker inspect --format '{{.Config.Image}}'`) and state which containers the
+  apply will upgrade, so a change scoped to one service does not upgrade others
+  unannounced. A string match is conclusive only for digest pins: with a tag (or
+  `pull_policy: always`), run `docker compose pull` and then
+  `docker compose --dry-run up` to see which containers it would recreate.
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
@@ -206,6 +223,16 @@ runs against unconfigured hosts:
 
 ## Containerized Service Configuration
 
+- **Quotes in a Compose `environment:` list entry are literal.** Compose passes
+  `- KEY="value"` to the container with the quotes included (list form is not
+  shell syntax), so a template that writes them sets a different value than a
+  shell would. When such a value keys something (a restic repository password,
+  an encryption key), the form the first run used is locked in, and every other
+  path that supplies the secret (a playbook, a one-off command) must reproduce
+  the literal exactly; confirm which form the key accepts before building on
+  either. New values use the map form (`KEY: value`) or an `env_file`, where the
+  parser handles quoting; the reproduce-the-literal rule is for repositories
+  already keyed with the quoted form.
 - **A replaced bind-mounted file is invisible to the running container.**
   Templating a config file that a container bind-mounts individually replaces
   the file's inode, while the container keeps the old one; hot-reload endpoints
@@ -243,6 +270,16 @@ runs against unconfigured hosts:
 ## Best Practices
 
 - Name every task descriptively; task names are the run's user interface.
+- **A playbook whose effect is not gated by inventory data requires an explicit
+  target:** a restore, a reset, or a one-off that acts on every host it reaches
+  takes `hosts` from a variable with no default (`hosts: "{{ target_hosts }}"`),
+  so a run without it fails when the play loads instead of fanning out, and a
+  forgotten `--limit` cannot restore every host in the inventory. `hosts`
+  resolves only from extra vars and play vars, never from inventory vars, so the
+  target is passed as `-e target_hosts=...`; `--syntax-check`, `--list-hosts`,
+  and lint presubmits over such a playbook need the same `-e`, because the play
+  is validated before the syntax-check short-circuit. Converge playbooks, whose
+  tasks are no-ops on hosts that declare no data, keep `hosts: all`.
 - Use `become: true` at task level, not play level, so read-only tasks stay
   unprivileged where possible.
 - Keep role variable names prefixed and unambiguous
