@@ -67,6 +67,12 @@
 
 - Never execute destructive commands (e.g., `rm -rf`, `git push --force`) or
   modify sensitive credentials without an explicit user directive to do so.
+- **A cleanup that deletes reads its target from a dedicated variable:** a
+  routine that empties a directory (a drill target, a scratch area) takes the
+  path from a variable the deployment sets for that purpose, never from the
+  general-purpose target that a one-off invocation can point at live data, and
+  refuses `/`, the configuration tree, and the data it is meant to protect
+  before registering the cleanup.
 - Pin third-party GitHub Actions to a full commit SHA, with the release in a
   trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`). Resolve the SHA
   from the release tag instead of writing it from memory.
@@ -171,6 +177,17 @@ scope:
   in-place restore run as a rehearsal rolled a live service back by hours. A dry
   run of the command proves the command, not the outcome, so it does not replace
   the scratch rehearsal.
+- **Pre-change copies go through the production backup path:** before a change
+  that can damage a service's state (an upgrade across a breaking release, a
+  re-seed, a migration), run the service's backup job by hand and record the
+  snapshot it saved, so the copy also exercises the backup and restore paths
+  (and is encrypted at rest where the backup path encrypts); an ad-hoc tarball
+  is the fallback where no backup path exists.
+- **Elapsed time comes from the host clock:** before claiming "no snapshot
+  since" or "stable for twenty minutes", read `date -u` on the host next to the
+  timestamps compared and compare in one zone: each tool prints its process's
+  time zone (the journal the host's, container logs and most metrics UTC), and
+  the conversation's sense of time is not a clock.
 - **Detection before the fix:** when fixing a failure that monitoring did not
   catch, prefer adding or repairing the check first and confirming it fires on
   the broken state, then applying the fix and confirming the check clears. When
@@ -179,22 +196,31 @@ scope:
 - **Verify state changes:** after a state-changing operation completes (e.g., an
   infrastructure apply, a configuration playbook run, a service restart), verify
   the actual resulting state with read-only checks and report the evidence,
-  rather than assuming success from the tool's exit status. A service unit
-  reporting active does not guarantee the service accepts requests: verification
-  probes issued right after activation need bounded retries. An exporter or
-  endpoint answering is not data present: check for the series or records its
-  consumers rely on (a metrics exporter can answer scrapes with none of the
-  series the alerts use). After a reboot or restart, derive the list of running
-  services from a fresh listing and report only what it shows: never carry an
-  earlier "up" forward; a service absent from the new listing is a finding to
-  report, not a gap to fill from the earlier one. A before-and-after difference
-  is reported from a diff of the saved before and after outputs, never from
-  counts remembered from different baselines.
+  rather than assuming success from the tool's exit status.
+  - A service unit reporting active does not guarantee the service accepts
+    requests: verification probes issued right after activation need bounded
+    retries.
+  - An exporter or endpoint answering is not data present: check for the series
+    or records its consumers rely on (a metrics exporter can answer scrapes with
+    none of the series the alerts use).
+  - A message bus holding the right retained payloads is not the consumer having
+    consumed them: read the consumer's own state store (its registry, its state
+    database) before reporting the consumer healthy.
+  - After a reboot or restart, derive the list of running services from a fresh
+    listing and report only what it shows: never carry an earlier "up" forward;
+    a service absent from the new listing is a finding to report, not a gap to
+    fill from the earlier one.
+  - A before-and-after difference is reported from a diff of the saved before
+    and after outputs, never from counts remembered from different baselines.
 - **Capture full output of long-running checks:** redirect the complete output
   of long-running commands (linters, builds, test suites) to a log file and
   inspect the file, instead of piping through filters like `tail` or `head`.
   Filters discard the evidence needed to diagnose failures, and in a pipeline
-  the filter's exit status masks the command's real one.
+  the filter's exit status masks the command's real one. When a summary table
+  reports verdicts, filter on the verdict column (for example
+  `grep -iE 'fail|error'`, after confirming the spelling the tool prints), never
+  on an expected list of tool names: the tool left out of the list is the one
+  that failed.
 - **`curl` needs `--fail` when its success gates the next step:** without it,
   HTTP error responses (404, 500) still exit 0, so a verification like
   `curl -X POST ... && echo done` reports success for a request the server
