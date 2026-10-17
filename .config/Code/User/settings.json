@@ -1,4 +1,6 @@
 {
+  "chat.titleBar.openInAgentsWindow.enabled": false,
+  "chat.titleBar.signIn.enabled": false,
   "cmake.configureOnOpen": false,
   "editor.detectIndentation": false,
   "editor.formatOnPaste": true,
