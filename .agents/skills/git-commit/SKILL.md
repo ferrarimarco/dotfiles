@@ -81,26 +81,40 @@ EOF
 )"
 ```
 
-### 5. Reword Unpushed Commits
+### 5. Amend or Reword an Unpushed Commit
 
-An interactive rebase needs a terminal. To reword unpushed commits without one,
-recreate them on the same trees, oldest first, preserving the author and
-committer identities and dates:
+An interactive rebase needs a terminal only for its editors. To change an older
+unpushed commit without one, record the change as a fixup commit and let a
+non-interactive rebase fold it in:
 
 ```bash
-# Clean the message: unlike git commit, git commit-tree keeps trailing blank
-# lines
-git stripspace < <message> > <clean message>
+# Content change: stage it, then
+git commit --fixup=<commit>
 
-git commit-tree "<commit>^{tree}" -p <new parent> -F <clean message>
+# Message change: the fixup takes its message from the editor only (-m and -F
+# are refused), on a template whose first line is "amend! <old subject>"; the
+# editor script keeps that line and replaces the rest with the new message
+NEW_MESSAGE=<clean message> GIT_EDITOR='sh -c "{ head -1 \"$1\"; echo; cat \"$NEW_MESSAGE\"; } > \"$1.tmp\" && mv \"$1.tmp\" \"$1\"" sh' \
+  git commit --fixup=reword:<commit>
 
-# Move the branch only if its tip is still the one you started from
-git update-ref refs/heads/<branch> <new tip> <old tip>
+# --autosquash is a no-op without -i in git 2.39; a sequence editor that
+# accepts the generated plan as is makes the interactive rebase run without a
+# terminal. --autostash carries an uncommitted working tree across (its pop
+# can conflict: save the diff first, as the Concurrent Sessions section says);
+# --root replaces <commit>^ when the target is the root commit
+GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash --autostash <commit>^
 ```
 
-Before moving the branch, verify that the tree of the new tip is identical to
-the tree of the old tip. Afterward, verify that the uncommitted changes
-survived.
+The hooks run when the fixup commit is created (pre-commit on the content,
+commit-msg on the `fixup!` or `amend!` subject), not during the rebase, so a
+reworded subject still goes through the message validation of the Best Practices
+on its own. Verify afterward that `git rev-parse HEAD^{tree}` equals the tree of
+the tip immediately before the rebase, fixup commits included (always true when
+nothing conflicted), and that `git range-diff <base>..<old tip> <base>..HEAD`
+marks only the targeted commit as changed, with `=` on every other row. The
+plumbing route (`git commit-tree` on the same trees plus `git update-ref`
+guarded by the old tip) also works on a dirty tree, but it runs no hook, so
+reserve it for a repository without them.
 
 ## Best Practices
 
@@ -150,7 +164,14 @@ report them. In particular:
 - After another session rewrites history, verify your commits before building on
   them: use the reflog to find the commits they replace, and compare patches and
   messages with `git range-diff <old base>..<old tip> <new base>..<new tip>`,
-  whose `=` rows mean identical patch, message, and author.
+  whose `=` rows mean identical patch, message, and author. When you are the one
+  rewriting, state the replaced range and the new tip in your reply, and send
+  them to the peers where the harness allows it: their notes and messages carry
+  the old hashes.
+- Before reporting that a peer's commit introduced a defect, read what that
+  commit did to the file (`git diff <commit>^! -- <path>`): a diff of the
+  working tree against the tip locates the fix, not the culprit, and an amend
+  aimed at the wrong commit rewrites history twice.
 - A partial commit that must leave another session's staged changes alone goes
   through a temporary index: set `GIT_INDEX_FILE` on each command that stages
   (`read-tree HEAD`, `apply --cached`, `update-index`) and on the `git commit`

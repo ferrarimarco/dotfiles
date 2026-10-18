@@ -313,11 +313,14 @@ runs against unconfigured hosts:
 - **No quote characters around a `{{ }}` expression inside a folded block:** a
   whole-string scalar such as `"{{ expr }}"` is fine (YAML strips the quotes),
   but a `>-` block whose content starts and ends with `"` hands the quotes to
-  Jinja, and ansible-core 2.19 removed the final literal-evaluation pass of
-  template results (the 2.19 porting guide's templating section), so the result
-  stays the string rendering of a list and the next list concatenation fails
-  with "can only concatenate list (not _AnsibleTaggedStr) to list", where older
-  versions silently re-parsed the string.
+  Jinja, so the result is the string rendering of a list and the next list
+  concatenation fails with "can only concatenate list (not ...) to list" (the
+  type name in the message depends on the core, the operand order on which side
+  the string sits). This is not a version change: a scratch test on ansible-core
+  2.17 fails the same way, and the literal re-evaluation that 2.19 removed only
+  ever applied to unquoted results. Check a list-building fact with
+  `{{ my_fact | type_debug }}` in a `debug` task right after the `set_fact`:
+  `list`, not `str`.
 - Prefer `systemd` units, timers, and handlers over cron entries and ad-hoc
   restarts; notify handlers from the tasks that change the relevant files.
 - When a task list grows beyond one concern, split it into included task files
