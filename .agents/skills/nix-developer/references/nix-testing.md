@@ -125,7 +125,7 @@ them:
     };
 ```
 
-## 3. Developer Workflows & Debugging
+## 3. Developer Workflows and Debugging
 
 ### Dry-Run Test Script Inspection
 

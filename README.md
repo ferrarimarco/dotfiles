@@ -37,8 +37,8 @@ dotfiles.
 #### Design
 
 - `design-spec`: Design specifications for new features.
-- `maintain-living-specs`: Automate the synchronization of living design
-  specifications (Markdown) with code changes in the repository.
+- `maintain-living-specs`: Keep living design specifications (Markdown) in sync
+  with code changes in the repository.
 - `validate-spec`: Validate a specification (spec) to spot ambiguities,
   inconsistencies, unclear or missing instructions, data, information, or
   requirements.

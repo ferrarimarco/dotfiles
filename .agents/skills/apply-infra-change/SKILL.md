@@ -32,6 +32,16 @@ state-changing run and review the predicted changes for unintended destructive
 effects (deletions, teardowns, replacements), not just for errors. Treat an
 unexpected destructive prediction as a bug to root-cause before applying.
 
+A Compose stack applied after a gap recreates every container whose image pin
+changed since the last run, and an Ansible check run whose pull and `up` are
+`command` tasks predicts neither the pull nor the recreation. Before such an
+apply, compare each service's pinned image with the image its running container
+was created from (`docker inspect --format '{{.Config.Image}}'`) and state which
+containers the apply will upgrade, so a change scoped to one service does not
+upgrade others unannounced. A string match is conclusive only for digest pins:
+with a tag (or `pull_policy: always`), run `docker compose pull` first, then
+`docker compose --dry-run up` to see which containers it would recreate.
+
 ## 3. Rehearse Recovery Paths on Scratch Targets
 
 A verification of a restore, a migration rollback, or a failover runs against a

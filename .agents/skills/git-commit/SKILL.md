@@ -3,11 +3,7 @@ name: git-commit
 description: >-
   Execute Git commit with conventional commit message analysis, intelligent
   staging, and message generation. Use when user asks to commit, amend a commit,
-  commit changes, create a Git commit, or mentions /commit. Supports: (1)
-  Auto-detecting type and scope from changes, (2) Generating conventional commit
-  messages from diff, (3) Interactive commit with optional
-  type/scope/description overrides, (4) Intelligent file staging for logical
-  grouping
+  commit changes, create a Git commit, or mentions /commit.
 license: MIT
 metadata:
   source: https://github.com/github/awesome-copilot/blob/main/skills/git-commit/SKILL.md
@@ -15,83 +11,23 @@ metadata:
 
 # Git Commit with Conventional Commits
 
-## Overview
-
-Create standardized, semantic Git commits using the Conventional Commits
-specification. Analyze the actual diff to determine appropriate type, scope, and
-message.
-
-## Conventional Commit Format
-
-```text
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-## Commit Types
-
-| Type       | Purpose                        |
-| ---------- | ------------------------------ |
-| `feat`     | New feature                    |
-| `fix`      | Bugfix                         |
-| `docs`     | Documentation only             |
-| `style`    | Formatting/style (no logic)    |
-| `refactor` | Code refactor (no feature/fix) |
-| `perf`     | Performance improvement        |
-| `test`     | Add/update tests               |
-| `build`    | Build system/dependencies      |
-| `ci`       | CI/config changes              |
-| `chore`    | Maintenance/misc               |
-| `revert`   | Revert commit                  |
-
-## Breaking Changes
-
-```text
-# Exclamation mark after type/scope
-feat!: remove deprecated endpoint
-
-# BREAKING CHANGE footer
-feat: allow config to extend other configs
-
-BREAKING CHANGE: `extends` key behavior changed
-```
+Create Conventional Commits (`<type>[optional scope]: <description>`, an
+optional body, optional footers) from the actual diff. A breaking change carries
+`!` after the type or scope (`feat!: remove deprecated endpoint`) or a
+`BREAKING CHANGE:` footer.
 
 ## Workflow
 
 ### 1. Analyze Diff
 
-```bash
-# If files are staged, use staged diff
-git diff --staged
-
-# If nothing staged, use working tree diff
-git diff
-
-# Also check status
-git status --porcelain
-```
+Read the staged diff when files are staged, the working tree diff otherwise, and
+check `git status --porcelain` for untracked files and changes you did not make.
 
 ### 2. Stage Files (if needed)
 
-If nothing is staged or you want to group changes differently:
-
-```bash
-# Stage specific files
-git add path/to/file1 path/to/file2
-
-# Stage by pattern
-git add *.test.*
-git add src/components/*
-
-# Interactive staging
-git add -p
-```
-
-Interactive staging needs a terminal. To stage part of a file without one, write
-the intended content to the index, or apply a partial patch to it:
+Stage the exact paths of each commit. Interactive staging (`git add -p`) needs a
+terminal. To stage part of a file without one, write the intended content to the
+index, or apply a partial patch to it:
 
 ```bash
 # Stage the content of a prepared copy of the file
@@ -115,17 +51,21 @@ Analyze the diff to determine:
 - **Description**: One-line summary of what changed (present tense, imperative
   mood). The whole subject, including type and scope, must not exceed 50
   characters.
-- **Body**: When a body is needed, keep it concise and explain why the change is
-  made (the problem, root cause, or constraint) rather than restating what the
-  diff already shows.
+- **Body**: when needed, keep it concise and explain why the change is made (the
+  problem, root cause, or constraint) rather than restating what the diff shows.
+  Wrap every line, bullet points included, at 72 characters, and use a bulleted
+  list for several distinct but related changes.
+- **Footers**: reference issues after an empty line: `Closes #123`, `Refs #456`.
+  Keep issue references with a hash sign (`#123`, `owner/repo#123`) and footer
+  keywords out of the message body, or write the references without the hash
+  sign: the parser reads them as the start of the footer, depending on where the
+  lines wrap. Validation is the reliable check.
 
 ### 4. Execute Commit
 
-```bash
-# Single line
-git commit -m "<type>[scope]: <description>"
+Write a multi-line message without a terminal through a quoted heredoc:
 
-# Multi-line with body/footer
+```bash
 git commit -m "$(cat <<'EOF'
 <type>[scope]: <description>
 
@@ -188,28 +128,13 @@ survived.
   verification gate (linter, build, test suite) is still running, execute the
   commit only after the gate passes, and report the gate verdict together with
   the commit result.
-- One logical change per commit
-- Present tense: "add" not "added"
-- Imperative mood: "fix bug" not "fixes bug"
-- Reference issues in a footer after an empty line: `Closes #123`, `Refs #456`.
-  Keep issue references with a hash sign (`#123`, `owner/repo#123`) and footer
-  keywords out of the message body, or write the references without the hash
-  sign: the parser reads them as the start of the footer, depending on where the
-  lines wrap. Validation is the reliable check.
-- **Strict 50/72 Character Rule**:
-  - The commit subject (first line) must not exceed **50 characters**.
-  - All subsequent body/footer lines must be wrapped to not exceed **72
-    characters**.
-- **Use Bulleted Lists for Clarity**: If the commit describes multiple distinct
-  but related changes, use a bulleted list in the body. Ensure each bullet point
-  is wrapped to 72 characters.
+- One logical change per commit.
 
 ## Concurrent Sessions
 
-Other sessions may edit and commit in the same checkout while you work. Before
-staging, committing, rebasing, or building generated output, check the status
-and the log for changes you did not make, keep them out of your work, and report
-them.
+Before staging, committing, rebasing, or building generated output, check the
+status and the log for changes you did not make, keep them out of your work, and
+report them. In particular:
 
 - Before a rebase, save the working tree diff outside the repository, and
   afterward verify that the uncommitted changes survived.
@@ -223,19 +148,12 @@ them.
 
 ## Git Safety Protocol
 
-- NEVER update Git config
-- NEVER run destructive commands (--force, hard reset) without explicit request
-- NEVER skip hooks (--no-verify) unless user asks
-- NEVER force push to main/master
-- If commit fails due to hooks, fix and create NEW commit (don't amend)
-
-## Troubleshooting & Container Permissions
-
-- **Permission Denied on Git Control Files**: In containerized or volume-mounted
-  sandboxes (e.g. Docker environments running as root), containers might alter
-  ownership of Git control files (such as `.git/config` or `.git/index`) to
-  `root`.
-- **Resolution**: If Git commits fail with `Permission denied` errors, run
-  `ls -la .git/` to check file ownership. Report permissions/ownership issues
-  directly to the user so they can restore proper ownership (e.g., using
-  `chown`).
+- Never update the Git configuration.
+- Never skip hooks (`--no-verify`) unless the user asks.
+- Never force push to the default branch.
+- If a commit fails because of a hook, fix the cause and create a new commit;
+  don't amend.
+- In a containerized or volume-mounted sandbox, a container running as root may
+  change the ownership of Git control files (`.git/config`, `.git/index`). When
+  a commit fails with `Permission denied`, run `ls -la .git/` and report the
+  ownership to the user so they can restore it (for example with `chown`).

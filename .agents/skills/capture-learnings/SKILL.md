@@ -27,9 +27,8 @@ git -C "$(dirname "$(realpath ~/.agents/AGENTS.md)")" rev-parse --show-toplevel
 
 - `~/.agents/AGENTS.md`: global instructions loaded by all agents. Resolve with
   `realpath ~/.agents/AGENTS.md`.
-- `~/.claude/CLAUDE.md`: Claude-specific entry point that only references
-  `~/.agents/AGENTS.md`. `~/.claude/CLAUDE.md` stays a thin pointer; don't route
-  rules into it unless they are specific to Claude.
+- `~/.claude/CLAUDE.md`: Claude-specific entry point that references
+  `~/.agents/AGENTS.md` and holds only rules specific to Claude.
 - `<root>/.agents/skills`: one directory per skill, each with a `SKILL.md`.
   `~/.claude/skills` links to it where Claude Code is installed; use
   `realpath ~/.claude/skills` as a cross-check when it exists.
@@ -118,8 +117,8 @@ duplicating.
 Apply this priority order to session findings and promoted memories alike:
 
 1. An existing skill, when the lesson is specific to a task type a skill already
-   covers (an Ansible lesson goes into `ansible-developer`). An agent that did
-   not consult monitoring the project already had is an instruction gap, not a
+   covers (an Ansible lesson goes into the Ansible skill). An agent that did not
+   consult monitoring the project already had is an instruction gap, not a
    monitoring gap.
 2. The project's `AGENTS.md`, when the lesson is a rule for the agent that is
    specific to one repository.
@@ -187,10 +186,6 @@ The plan presented for approval must list:
   editing into another session's work.
 - Route edits to a project's own files through that repository's validation
   pipeline and commit conventions; dotfiles edits follow the dotfiles flow.
-- Keep the target file's Markdown style: no `---` horizontal rules and no
-  trailing punctuation in headings. Memory-file frontmatter delimiters are the
-  one permitted use of `---`; general file-format rules are in the global
-  `AGENTS.md`.
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill, as opposed to typos or mechanical one-liners), have a reviewer that did

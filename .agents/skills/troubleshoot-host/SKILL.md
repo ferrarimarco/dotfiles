@@ -87,9 +87,9 @@ independently bounds the freeze time.
   for the device and fails `local-fs.target` into the emergency shell, which
   nobody reaches on a headless host, and which `sulogin` refuses to open when
   root is locked.
-- Separate **resilience fixes** (hardware watchdog so the host self-recovers;
-  see the `systemd-developer` skill) from **root-cause fixes** (kernel or
-  firmware updates, hardware replacement), and propose both.
+- Separate **resilience fixes** (a hardware watchdog armed through systemd so
+  the host self-recovers) from **root-cause fixes** (kernel or firmware updates,
+  hardware replacement), and propose both.
 - Record secondary findings surfaced along the way (failing disks, broken units,
   stale exporters) even when unrelated to the incident.
 

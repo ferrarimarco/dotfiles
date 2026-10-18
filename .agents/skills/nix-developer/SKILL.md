@@ -67,20 +67,19 @@ When configuring user-specific dotfiles or packages:
 - Structure configurations by grouping related programs (e.g., `git`, `shell`,
   `editor`).
 
-### 4. Integration Testing & Verification
+### 4. Integration Testing and Verification
 
-To verify NixOS host configurations in a robust, reproducible way, implement
-sandboxed VM integration tests:
+Verify NixOS host configurations with sandboxed VM integration tests:
 
 - **Service-Aware VM Testing:** Use the NixOS test framework (`nixosTest` /
   `pkgs.testers.nixosTest`) to run VMs in QEMU. Prioritize declarative,
   auto-deriving test generators (`make-test.nix`) that analyze the host's
   evaluated system configuration to dynamically provision QEMU serial devices
   and dynamically concatenate Python test assertions.
-- **Zero-Maintenance Flake Discovery:** Avoid manual check declarations.
-  Configure `flake.nix` checks to auto-scan the `hosts/` directory and
-  automatically register any host that has a `test.nix` file, ensuring CI
-  instantly tests any new host configuration.
+- **Automatic Flake Discovery:** Avoid manual check declarations. Configure
+  `flake.nix` checks to auto-scan the `hosts/` directory and automatically
+  register any host that has a `test.nix` file, ensuring CI instantly tests any
+  new host configuration.
 - **Pure-Evaluation Mocking:** Utilize conditional paths (`builtins.pathExists`)
   and VM-overrides (`lib.mkVMOverride`) in the test suite to dynamically mock
   out private/non-tracked keys and configuration files, ensuring isolated tests
@@ -113,19 +112,19 @@ sandboxed VM integration tests:
 - **Reviewing Changes:** When modifying configurations, review the resulting
   diffs and use `nix flake check` or `nix build` to validate syntax and
   evaluation before applying.
-- **Developer Workflow & Debugging:**
+- **Developer Workflow and Debugging:**
   - Use `nix eval --raw .#checks.<system>.<test-name>.testScript` to dry-run
     evaluate and inspect compiled Python test scripts without booting a VM.
   - When writing VM test assertions for asynchronous services (like QEMU guest
     agent), use `machine.wait_for_file` to block until udev creates the device
     node before asserting on the service unit.
-  - The test driver's `machine.succeed` runs commands under `pipefail`: an
-    early-exiting pipe consumer (`grep -q`) on a large producer (e.g. a metrics
-    endpoint scrape) fails the pipeline with the producer's write error. Use a
-    consumer that reads the full stream, such as `grep <pattern> > /dev/null`.
+  - The test driver's `machine.succeed` runs commands under `pipefail`, so an
+    early-exiting pipe consumer (`grep -q`) on a large producer fails the
+    pipeline; use a consumer that reads the full stream, such as
+    `grep <pattern> > /dev/null`.
   - `machine.wait_for_unit` proves the unit is active, not that the service
-    accepts requests: under boot load, probes right after activation can be
-    refused or return incomplete responses. Assert on service behavior with
+    accepts requests (under boot load, probes right after activation can be
+    refused or return incomplete responses): assert on behavior with
     `machine.wait_until_succeeds(..., timeout=N)` instead of a one-shot
     `machine.succeed`.
   - See [references/nix-testing.md](references/nix-testing.md) for advanced

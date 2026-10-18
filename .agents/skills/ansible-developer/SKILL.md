@@ -118,10 +118,10 @@ runs against unconfigured hosts:
 - Always run `--check --diff` before an apply and **review the predictions, not
   just the exit status**: first confirm in the log that the intended task (and
   its item) actually ran, because a clean run that never exercised the change
-  proves nothing; then treat unexpected `state: absent` or teardown predictions
-  as an enablement variable that resolved differently than intended. A declared
-  change missing from the predictions is usually a skipped item, or one dropped
-  by tags, `--limit`, or an empty loop list. The default callback prints only
+  proves nothing; then root-cause unexpected `state: absent` or teardown
+  predictions (see Variable Precedence Traps) before applying. A declared change
+  missing from the predictions is usually a skipped item, or one dropped by
+  tags, `--limit`, or an empty loop list. The default callback prints only
   `skipping: ... (item=...)`; run with `-v` to see the item's `skip_reason` and
   `false_condition`, or read the task's `when` against the item's fields: a
   `state` value no task matches (`present` where the task tests
@@ -154,11 +154,8 @@ runs against unconfigured hosts:
   in check mode and shows the recreation, but not the pull. Either way, before
   applying after a gap, compare each service's pinned image with the image its
   running container was created from
-  (`docker inspect --format '{{.Config.Image}}'`) and state which containers the
-  apply will upgrade, so a change scoped to one service does not upgrade others
-  unannounced. A string match is conclusive only for digest pins: with a tag (or
-  `pull_policy: always`), run `docker compose pull` and then
-  `docker compose --dry-run up` to see which containers it would recreate.
+  (`docker inspect --format '{{.Config.Image}}'`; a string match is conclusive
+  only for digest pins), and state which containers the apply will upgrade.
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
@@ -191,11 +188,10 @@ runs against unconfigured hosts:
   directory alone, which is what a dead disk's entry needs while a placeholder
   tree still lives under its path.
 - Smoke-test a new network share from a consumer host through the real client
-  stack: an ephemeral mount using the deployed credentials file and the same
-  mount options production will use (then unmount and remove the mount point)
-  proves more than a share listing from an ad-hoc client tool, and avoids
-  installing extra packages. Even though it is ephemeral, it is a state change:
-  get approval first.
+  stack: an ephemeral mount with the deployed credentials file and the
+  production mount options, then unmount and remove the mount point. It proves
+  more than a share listing from an ad-hoc client tool, and it is a state change
+  even though it is ephemeral: get approval first.
 
 ## Secrets
 

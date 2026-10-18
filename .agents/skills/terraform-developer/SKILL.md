@@ -52,9 +52,8 @@ descriptors, modules, resources.
 - **Verify applies in state and in the real infrastructure:** after an apply,
   confirm the change with a read-only inspection of the recorded state and a
   read-only check against the live system (CLI or API of the target platform),
-  not just the apply's exit status. Note that an apply with no changes does not
-  rewrite a local state file, so file modification times are not evidence of
-  what ran.
+  not just the apply's exit status. An apply with no changes does not rewrite a
+  local state file, so file modification times are not evidence of what ran.
 - **Terraform dependencies lockfile:** Generate and update Terraform dependency
   lockfiles (`.terraform.lock.hcl`) with Terraform and commit the lockfile;
   never hand-edit it. If the infrastructure is shared across operating systems
@@ -105,12 +104,11 @@ descriptors, modules, resources.
     type        = string
   }
 
-  # Prefer this
   data "google_project" "google_cloud_project" {
     project_id = var.google_cloud_project_id
   }
 
-  resource "google_project_service" "google_cloud_apis_good_example" {
+  resource "google_project_service" "google_cloud_apis" {
     for_each = toset([
       "cloudresourcemanager.googleapis.com",
       "compute.googleapis.com",
@@ -121,18 +119,7 @@ descriptors, modules, resources.
     project                    = data.google_project.google_cloud_project.project_id
     service                    = each.key
   }
-
-  # Over this
-  resource "google_project_service" "google_cloud_apis_bad_example" {
-    for_each = toset([
-      "cloudresourcemanager.googleapis.com",
-      "compute.googleapis.com",
-    ])
-
-    disable_dependent_services = false
-    disable_on_destroy         = false
-    project                    = var.google_cloud_project_id
-    service                    = each.key
-  }
-
   ```
+
+  Setting `project = var.google_cloud_project_id` on the resource directly is
+  the pattern to avoid.
