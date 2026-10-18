@@ -64,7 +64,12 @@ Analyze the diff to determine:
   Keep issue references with a hash sign (`#123`, `owner/repo#123`) and footer
   keywords out of the message body, or write the references without the hash
   sign: the parser reads them as the start of the footer, depending on where the
-  lines wrap. Validation is the reliable check.
+  lines wrap. The same applies to any body line that starts with a word or
+  hyphenated token followed by a colon and a space (`Note: ...`,
+  `configured: ...`), wrapped or deliberate: commitlint reads it as the first
+  footer line, parses the rest of the message as footer, and warns about the
+  missing blank line, so reword such a line or rewrap it. Validation is the
+  reliable check.
 
 ### 4. Execute Commit
 
