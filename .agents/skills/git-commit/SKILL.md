@@ -145,6 +145,15 @@ report them. In particular:
 - After another session rewrites history, verify your commits before building on
   them: use the reflog to find the commits they replace, and compare their
   changes and messages.
+- A partial commit that must leave another session's staged changes alone goes
+  through a temporary index: set `GIT_INDEX_FILE` on each command that stages
+  (`read-tree HEAD`, `apply --cached`, `update-index`) and on the `git commit`
+  itself, which then commits that index, runs the hooks, and moves the branch
+  without touching the shared index. Never export the variable around
+  `git worktree add`, which writes the index it is given. Run the staged numstat
+  check against the temporary index before committing, then
+  `git reset -- <own paths>` so the shared index matches the new tip for the
+  committed paths only.
 
 ## Git Safety Protocol
 

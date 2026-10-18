@@ -107,7 +107,13 @@
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
-  keep them out of your work, and report them.
+  keep them out of your work, and report them. Before a state-changing run that
+  reads the working tree (a playbook apply, a deploy, a build that gets
+  installed), list the uncommitted changes you did not make under the paths the
+  run reads; run from a worktree checked out at the reviewed commit, or ask the
+  user (or message the peer session, where the harness allows it) before
+  running. A run from a dirty tree carries their work to the hosts, and is
+  reported as such.
 - **Verify push state before reporting it:** a remote-tracking ref
   (`origin/<branch>`) reflects this checkout's last fetch or push, not the
   remote, so a push made from another clone, session, or the web UI is invisible
