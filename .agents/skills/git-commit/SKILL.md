@@ -204,6 +204,23 @@ survived.
   but related changes, use a bulleted list in the body. Ensure each bullet point
   is wrapped to 72 characters.
 
+## Concurrent Sessions
+
+Other sessions may edit and commit in the same checkout while you work. Before
+staging, committing, rebasing, or building generated output, check the status
+and the log for changes you did not make, keep them out of your work, and report
+them.
+
+- Before a rebase, save the working tree diff outside the repository, and
+  afterward verify that the uncommitted changes survived.
+- Generated output that a build produces from the working tree includes the
+  uncommitted and untracked sources of every session: when the output must
+  reflect committed sources only, build it in a temporary worktree checked out
+  at the target commit.
+- After another session rewrites history, verify your commits before building on
+  them: use the reflog to find the commits they replace, and compare their
+  changes and messages.
+
 ## Git Safety Protocol
 
 - NEVER update Git config

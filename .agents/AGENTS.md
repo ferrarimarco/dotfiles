@@ -52,11 +52,6 @@
   - Ensure the file ends with a single final newline.
   - Do not add or leave any trailing whitespace on any lines.
   - Strictly match the existing indentation style of the file or project.
-- **Minimize diff in suggested edits:** when proposing edits in suggest or
-  review mode (such as Google Docs Suggest Mode), target the smallest unique
-  word or phrase span around each change rather than replacing whole sentences
-  or paragraphs, and keep each replacement within a single formatting run (for
-  example, separate a bold prefix from its unbolded body).
 - **Re-read before editing again after a formatter ran:** formatters rewrap
   prose, pad table cells, and reflow code, so exact-match edits computed from
   the pre-format text fail. Make all the edits first and format once, or re-read
@@ -115,14 +110,7 @@
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
-  keep them out of your work, and report them. Before a rebase, save the working
-  tree diff outside the repository, and afterward verify that the uncommitted
-  changes survived. Generated output that a build produces from the working tree
-  includes the uncommitted and untracked sources of every session: when the
-  output must reflect committed sources only, build it in a temporary worktree
-  checked out at the target commit. After another session rewrites history,
-  verify your commits before building on them: use the reflog to find the
-  commits they replace, and compare their changes and messages.
+  keep them out of your work, and report them.
 - **Verify push state before reporting it:** a remote-tracking ref
   (`origin/<branch>`) reflects this checkout's last fetch or push, not the
   remote, so a push the user made from another clone, session, or the web UI is
@@ -160,58 +148,18 @@ scope:
   or modify files it enumerates. Before executing each step, re-scan the current
   working tree against the step's target patterns and reconcile the plan if the
   matches or target files changed.
-- **Dry-run before applying:** when a tool offers a dry-run or check mode (e.g.,
-  Ansible `--check --diff`, `terraform plan`), run it before the state-changing
-  run and review the predicted changes for unintended destructive effects
-  (deletions, teardowns, replacements), not just for errors. Treat an unexpected
-  destructive prediction as a bug to root-cause before applying.
+- **Apply changes to live state with evidence at every step:** before a change
+  that can damage a service's state, take a copy through the service's own
+  backup path; dry-run first when the tool offers it and review the predictions
+  for deletions, teardowns, and replacements; rehearse restores and rollbacks on
+  a scratch copy, never on live state; and after the apply, verify the result
+  with read-only checks and report that evidence rather than the exit status.
 - **Distinguish pre-existing failures from regressions:** when a dry-run, check,
   or test fails, determine whether the failure predates your change (e.g., it
   reproduces on the unchanged code, or the failing element is one your change
   never touched) before attributing it to your work. Report which case it is,
   with the evidence, and propose how to handle a pre-existing failure instead of
   silently working around it.
-- **Rehearse recovery paths on scratch targets:** a verification of a restore, a
-  migration rollback, or a failover runs against a copy or a scratch location,
-  never against live state, unless the user asked for the real operation; an
-  in-place restore run as a rehearsal rolled a live service back by hours. A dry
-  run of the command proves the command, not the outcome, so it does not replace
-  the scratch rehearsal.
-- **Pre-change copies go through the production backup path:** before a change
-  that can damage a service's state (an upgrade across a breaking release, a
-  re-seed, a migration), run the service's backup job by hand and record the
-  snapshot it saved, so the copy also exercises the backup and restore paths
-  (and is encrypted at rest where the backup path encrypts); an ad-hoc tarball
-  is the fallback where no backup path exists.
-- **Elapsed time comes from the host clock:** before claiming "no snapshot
-  since" or "stable for twenty minutes", read `date -u` on the host next to the
-  timestamps compared and compare in one zone: each tool prints its process's
-  time zone (the journal the host's, container logs and most metrics UTC), and
-  the conversation's sense of time is not a clock.
-- **Detection before the fix:** when fixing a failure that monitoring did not
-  catch, prefer adding or repairing the check first and confirming it fires on
-  the broken state, then applying the fix and confirming the check clears. When
-  the fix cannot wait, reproduce the failure afterwards to exercise the check. A
-  check never exercised on the real failure is unverified.
-- **Verify state changes:** after a state-changing operation completes (e.g., an
-  infrastructure apply, a configuration playbook run, a service restart), verify
-  the actual resulting state with read-only checks and report the evidence,
-  rather than assuming success from the tool's exit status.
-  - A service unit reporting active does not guarantee the service accepts
-    requests: verification probes issued right after activation need bounded
-    retries.
-  - An exporter or endpoint answering is not data present: check for the series
-    or records its consumers rely on (a metrics exporter can answer scrapes with
-    none of the series the alerts use).
-  - A message bus holding the right retained payloads is not the consumer having
-    consumed them: read the consumer's own state store (its registry, its state
-    database) before reporting the consumer healthy.
-  - After a reboot or restart, derive the list of running services from a fresh
-    listing and report only what it shows: never carry an earlier "up" forward;
-    a service absent from the new listing is a finding to report, not a gap to
-    fill from the earlier one.
-  - A before-and-after difference is reported from a diff of the saved before
-    and after outputs, never from counts remembered from different baselines.
 - **Capture full output of long-running checks:** redirect the complete output
   of long-running commands (linters, builds, test suites) to a log file and
   inspect the file, instead of piping through filters like `tail` or `head`.
@@ -232,22 +180,6 @@ scope:
   whole pipeline despite the match succeeding. When the pipeline's exit status
   matters, use a consumer that reads the full stream (for example
   `grep <pattern> > /dev/null`).
-- **Fetching web pages from the agent shell:** some sites reject every
-  unauthenticated route (web, mobile, API, JSON): after two failed routes, ask
-  for pasted content or a saved PDF instead of retrying. Short links from
-  sharing services may land on an interstitial page; the target is usually in
-  the canonical link of the returned page. Sites behind bot protection usually
-  answer 403 to cURL and to fetch tools. When a documentation site returns a
-  placeholder (JavaScript-only, such as the Terraform Registry) or truncated
-  content, fetch the source from the project's repository at the version in use
-  instead of guessing raw URLs: list a directory with
-  `gh api 'repos/<org>/<repo>/contents/<dir>?ref=<tag>'`, then download a file
-  with the same endpoint on the file path and
-  `-H 'Accept: application/vnd.github.raw+json'`. When the placeholder page
-  hides the repository link, the site's JSON API usually names it (the Terraform
-  Registry does in the `source` field of
-  `registry.terraform.io/v1/modules/<ns>/<name>/<provider>` and
-  `/v1/providers/<ns>/<name>`).
 - **Agent shells run Zsh with the user's profile:** Zsh does not split unquoted
   variables into words, so a command prefix stored in a variable fails with
   "command not found"; use a function or an array instead. Zsh also ties the
@@ -263,11 +195,6 @@ scope:
   sequence as a separate process (`zsh -ec '...'`, which honours `-e` but does
   not load the interactive profile, so its functions and aliases are unavailable
   inside), or chain the steps with `&&`, so a failing step stops the later ones.
-- **Verify services through the consumer's access path:** when smoke-testing a
-  service, prefer a test that exercises the same stack real consumers use (same
-  client software, credentials, and network route) over installing ad-hoc tools
-  — for example, a temporary CIFS mount with production mount options and the
-  deployed credentials file, rather than adding `smbclient` to a host.
 
 ### Terminology
 
@@ -288,23 +215,6 @@ scope:
 - Do not number section headings in documents or specifications (`# Heading`,
   not `# 1. Heading` or `## 2.1 Heading`); the numbered procedure steps of a
   skill are the exception.
-
-### Google Docs
-
-- Use the `TITLE` style for the document title and start top-level sections at
-  `HEADING_1` style.
-- Preserve the document's native named styles (`NORMAL_TEXT`, `TITLE`,
-  `HEADING_1`–`HEADING_3`) by omitting explicit font family, font size, color,
-  and paragraph spacing overrides on prose and headings.
-- **Insert plain text at a `NORMAL_TEXT` boundary before applying inline
-  styles:** in Google Docs API batch updates, each `insertText` at index `i`
-  inherits the character style of `i - 1`, and in Suggest Mode an
-  `updateTextStyle` request resetting the base font is ignored as a no-op
-  against `NORMAL_TEXT`. Never insert prose at the end of a `Courier New`, bold,
-  or link run: anchor the insertion immediately after a `NORMAL_TEXT` character
-  (such as an adjacent space, punctuation mark, or prose word), insert the full
-  unstyled text first so it inherits `NORMAL_TEXT`, and apply `Courier New` or
-  emphasis only to the specific inline spans afterward.
 
 ## Technical stack preferences
 

@@ -54,6 +54,8 @@ dotfiles.
 
 #### Operations
 
+- `apply-infra-change`: Apply a change to a running service or host with a
+  pre-change backup, a reviewed dry-run, and verified results.
 - `troubleshoot-host`: Investigate an unresponsive, frozen, or crashed host
   after recovery.
 - `tune-host-power`: Estimate and lower the power consumption of a physical host
@@ -64,6 +66,13 @@ dotfiles.
 - `capture-learnings`: Distill durable lessons from the current session and
   saved memories into version-controlled agent instructions and skills.
 - `create-skill`: Create, improve, consolidate, and diagnose agent skills.
+- `fetch-web-source`: Fetch documentation or source at the version in use when a
+  web page does not serve it.
+
+#### Writing
+
+- `edit-google-docs`: Edit Google Docs through the Docs API while preserving
+  native styles and keeping suggestions small.
 
 ### Software configuration
 

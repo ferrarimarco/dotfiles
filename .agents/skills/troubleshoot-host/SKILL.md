@@ -19,6 +19,11 @@ misbehave.
 
 ## 1. Establish the Timeline
 
+- **Elapsed time comes from the host clock:** before claiming "no snapshot
+  since" or "stable for twenty minutes", read `date -u` on the host next to the
+  timestamps compared and compare in one zone: each tool prints its process's
+  time zone (the journal the host's, container logs and most metrics UTC), and
+  the conversation's sense of time is not a clock.
 - `uptime` and `last -x reboot shutdown` for the recovery boot time.
 - `journalctl --list-boots`: the **end timestamp of the previous boot** is the
   last moment the system was alive enough to log.
