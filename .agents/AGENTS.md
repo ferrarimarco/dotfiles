@@ -110,10 +110,16 @@
   keep them out of your work, and report them. Before a state-changing run that
   reads the working tree (a playbook apply, a deploy, a build that gets
   installed), list the uncommitted changes you did not make under the paths the
-  run reads; run from a worktree checked out at the reviewed commit, or ask the
-  user (or message the peer session, where the harness allows it) before
-  running. A run from a dirty tree carries their work to the hosts, and is
-  reported as such.
+  run reads; run from a worktree checked out at the reviewed commit, or, where
+  the harness allows it, message the peer sessions working in the checkout, wait
+  for their acknowledgement that nothing is in flight, and tell them when the
+  run is done; fall back to asking the user when no peer answers. A run from a
+  dirty tree carries their work to the hosts, and is reported as such.
+- **Coordinate with peer sessions in the checkout:** when a peer asks what you
+  are working on, answer in one line with the theme, the paths you edit, and the
+  applies you plan; when a check or test reveals a defect in a peer's area, send
+  that peer the evidence and the proposed fix instead of fixing it yourself,
+  unless the user directs otherwise.
 - **Verify push state before reporting it:** a remote-tracking ref
   (`origin/<branch>`) reflects this checkout's last fetch or push, not the
   remote, so a push made from another clone, session, or the web UI is invisible
@@ -133,6 +139,10 @@ scope:
   tool is deployed. Before stating that something is in use, confirm a service
   definition (a Compose template, a systemd unit, an enabled Nix module option)
   and, where possible, the running state.
+- **A cached artifact may still be in use:** before proposing to delete a
+  container image or a store path, find which scripts and pin files resolve to
+  it; a local script can read the version a CI workflow file pins rather than
+  the one the latest bump commit names.
 - **Verify third-party behavior against the version in use:** before
   recommending a change that depends on how a tool, module, or service behaves,
   read its source or documentation at that version (for example, the module file
