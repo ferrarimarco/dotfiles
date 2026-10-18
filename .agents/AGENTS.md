@@ -21,6 +21,10 @@
   scope of an already-approved plan (including by answering a clarifying
   question), the earlier approval no longer stands. Re-present the updated plan
   and wait for a fresh explicit approval before editing.
+- **Explain the issue before asking for a decision:** when a choice is the
+  user's to make, first state in plain language what the problem is, why it
+  arose, and what each option costs, then ask. A question that carries only
+  option labels sends the user back to ask what the issue is.
 - **Tone:** Keep responses concise, direct, and professional. Avoid
   conversational filler or unnecessary apologies.
 - **Show file paths in text:** When referencing files in responses, include the
@@ -45,6 +49,12 @@
   workflow step, check whether an existing build rule, presubmit check, or agent
   skill already in that lifecycle can carry it without adding another component
   to maintain.
+- **Diagnose structure before proposing mitigations:** when asked for a
+  strategy, or after a mitigation is rejected as a workaround, separate the
+  structural causes (a monolithic build unit, tests with no map from changed
+  files to affected cases, a human step inside an automated loop) from
+  configuration-level mitigations, present the causes first, and label a
+  mitigation as one rather than as the fix.
 
 ### File Format
 
@@ -124,9 +134,12 @@
   (`origin/<branch>`) reflects this checkout's last fetch or push, not the
   remote, so a push made from another clone, session, or the web UI is invisible
   to `git log origin/<branch>..`. Before listing unpushed commits or offering a
-  pre-push review, read the remote tip (`git ls-remote origin <branch>` does so
-  without touching local refs; a fetch also works) or ask whether the user
-  already pushed, and report what the check showed rather than the stale ref.
+  pre-push review, read the remote tip
+  (`git ls-remote origin refs/heads/<branch>` does so without touching local
+  refs; a fetch also works) or ask whether the user already pushed, and report
+  what the check showed rather than the stale ref. Spell the full ref: a bare
+  branch name is a tail pattern that also matches `refs/for/<branch>` or a tag
+  of that name, and a stray ref then reports a tip the branch never had.
 
 ### Problem solving patterns and processes
 
@@ -180,6 +193,25 @@ scope:
   filter on the verdict column (`grep -iE 'fail|error'`, after confirming the
   spelling the tool prints), never on an expected list of tool names: the tool
   left out of the list is the one that failed.
+- **Check disk headroom before and during long builds:** read the free space on
+  the host that runs the step (the Docker host for image builds) before an image
+  build, a pull, or a test suite, and check it first when a step fails on a
+  write or stalls. A full disk surfaces as unrelated symptoms (a tool failing to
+  download its database, a version check exiting 128), and a build client was
+  observed to stall after BuildKit's metadata write failed on it.
+- **A quiet step is not a hang:** before canceling a long-running step, find the
+  tool's own progress signal (BuildKit prints byte counters for image pulls, but
+  a layer fetched from a registry build cache showed only the periodic step
+  marker until it completed), sample network and disk growth over several
+  minutes rather than seconds, and set a bounded wait; a canceled download may
+  discard the partial transfer.
+- **Run suites that write into the checkout one at a time:** when test suites
+  install into, or write output under, the shared working tree, run them
+  sequentially or each from its own worktree; concurrent runs read each other's
+  artifacts and fail on them.
+- **Spot-check a delegated report before relaying it:** verify the claims a
+  subagent's recommendation rests on against the file or tool it cites, and keep
+  what you did not verify labeled as the agent's claim.
 
 ### Shell
 
@@ -200,6 +232,17 @@ Agent shells run Zsh with the user's profile.
   separate process (`zsh -ec '...'`, which honours `-e` but does not load the
   interactive profile, so its functions and aliases are unavailable), or chain
   the steps with `&&`, so a failing step stops the later ones.
+- **A process-pattern kill matches the shell that contains it:** an unanchored
+  pattern also matches the command line of the shell running the command that
+  holds it, so `pkill -f` kills the harness shell, or a background job, and
+  `pgrep -f` reports it as a false positive. List first with
+  `pgrep -af <pattern>`, drop the shell lines (this session's and peer
+  sessions'), and kill the remaining PIDs, or anchor the pattern to argv[0]
+  exactly as the listing shows it (`^/usr/bin/docker ...` when the listing shows
+  a path). A client that delegates to a child does the work there
+  (`docker buildx build` runs `/usr/libexec/docker/cli-plugins/docker-buildx`),
+  so kill the child or the process tree, or cancel through the client, rather
+  than the parent alone.
 - **`curl` needs `--fail` when its success gates the next step:** without it,
   HTTP error responses (404, 500) still exit 0, so
   `curl -X POST ... && echo done` reports success for a request the server
