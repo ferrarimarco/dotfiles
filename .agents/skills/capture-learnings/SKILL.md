@@ -63,6 +63,8 @@ Review the conversation for:
   late, or a recovery that a runbook step would have shortened; note whether the
   check existed before the fix was applied, since a check added together with
   the fix never saw the real failure;
+- a test fixture or CI matrix that never exercises a code path the real data
+  uses, so CI stays green while real runs fail;
 - later corrections to rules that earlier capture runs wrote (the target file's
   history shows the commit): these are signals about this skill's process as
   well as about the target.

@@ -37,6 +37,11 @@ git update-index --cacheinfo "100644,$(git hash-object -w <copy>),<path>"
 git apply --cached <patch>
 ```
 
+A path whose deletion is already staged matches no pathspec for `git add`: leave
+it out of the path list, since the deletion is already in the index. When the
+index content may differ from the patch's base (another session is editing the
+file), see [Concurrent Sessions](#concurrent-sessions).
+
 When generated output is committed together with its sources, regenerate it for
 each commit so that every commit is consistent on its own.
 
@@ -143,8 +148,9 @@ report them. In particular:
   reflect committed sources only, build it in a temporary worktree checked out
   at the target commit.
 - After another session rewrites history, verify your commits before building on
-  them: use the reflog to find the commits they replace, and compare their
-  changes and messages.
+  them: use the reflog to find the commits they replace, and compare patches and
+  messages with `git range-diff <old base>..<old tip> <new base>..<new tip>`,
+  whose `=` rows mean identical patch, message, and author.
 - A partial commit that must leave another session's staged changes alone goes
   through a temporary index: set `GIT_INDEX_FILE` on each command that stages
   (`read-tree HEAD`, `apply --cached`, `update-index`) and on the `git commit`
@@ -153,7 +159,17 @@ report them. In particular:
   `git worktree add`, which writes the index it is given. Run the staged numstat
   check against the temporary index before committing, then
   `git reset -- <own paths>` so the shared index matches the new tip for the
-  committed paths only.
+  committed paths only; first compare the paths with
+  `git diff --cached --name-only` on the shared index, since the reset silently
+  unstages a peer's hunks in any path both sessions touch.
+- For a file whose index content may differ from the patch's base (another
+  session is editing it), prefer the prepared-copy route over a patch: a hunk
+  with little context (`--unified=0` applied with `--unidiff-zero`, or a removed
+  line that occurs more than once) can land on the wrong line when the index
+  content moved, and the result still commits. Validate the staged blob before
+  committing (`git show :<path>`, parsed or linted, with `GIT_INDEX_FILE` set
+  when staging through a temporary index, or the shared index's blob is what
+  gets checked).
 
 ## Git Safety Protocol
 

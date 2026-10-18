@@ -156,6 +156,12 @@ runs against unconfigured hosts:
   running container was created from
   (`docker inspect --format '{{.Config.Image}}'`; a string match is conclusive
   only for digest pins), and state which containers the apply will upgrade.
+- **Check with the tag scope the apply will use:** a full check on a host that
+  only ever received tag-scoped runs mixes the change under review with the
+  drift those runs never delivered, and the drift can be destructive (an
+  inventory-wide SSH hardening that locks out the access in use, a config file
+  removal). Read the full check separately, as a drift report, and apply with
+  the scoped check's predictions.
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
@@ -248,6 +254,14 @@ runs against unconfigured hosts:
   module's own install option (`install_python_debian: true`, ansible-core 2.20
   and later) at its first use over reordering tasks: the option acts only when
   the library is missing.
+- **Enable a feature in the test inventory with a representative data item,**
+  not with the flag alone: a flag without its data (a modules list, a mounts
+  list) skips the loop that builds the feature's facts, so a code path only the
+  real inventory exercises stays green in CI while every real run fails.
+- **Check free space on the Docker data root before a run**
+  (`df -h "$(docker info --format '{{.DockerRootDir}}')"`): a full disk kills
+  the converge with "No space left on device" at an arbitrary task, and the
+  layered-failure rule then hides the real verdict.
 - **Installer-generated files are absent from test images:** a node's SSH key or
   a product's state file exists only where the installer ran, so guard reads of
   them with a `stat` and let the role converge without them.
@@ -296,6 +310,14 @@ runs against unconfigured hosts:
   a `.j2` file is a newline. For an inline expression that needs a newline or
   tab, write the scalar double-quoted so YAML performs the escape, or keep the
   separator in a variable defined with a double-quoted value.
+- **No quote characters around a `{{ }}` expression inside a folded block:** a
+  whole-string scalar such as `"{{ expr }}"` is fine (YAML strips the quotes),
+  but a `>-` block whose content starts and ends with `"` hands the quotes to
+  Jinja, and ansible-core 2.19 removed the final literal-evaluation pass of
+  template results (the 2.19 porting guide's templating section), so the result
+  stays the string rendering of a list and the next list concatenation fails
+  with "can only concatenate list (not _AnsibleTaggedStr) to list", where older
+  versions silently re-parsed the string.
 - Prefer `systemd` units, timers, and handlers over cron entries and ad-hoc
   restarts; notify handlers from the tasks that change the relevant files.
 - When a task list grows beyond one concern, split it into included task files
