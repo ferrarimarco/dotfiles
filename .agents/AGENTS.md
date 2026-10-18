@@ -60,25 +60,25 @@
 
 ### Safety
 
-- Never execute destructive commands (e.g., `rm -rf`, `git push --force`) or
-  modify sensitive credentials without an explicit user directive to do so.
+- Never execute destructive commands (e.g., `rm -rf`, `git push --force`,
+  `git reset --hard`) or modify sensitive credentials without an explicit user
+  directive to do so.
 - **A cleanup that deletes reads its target from a dedicated variable:** a
-  routine that empties a directory (a drill target, a scratch area) takes the
-  path from a variable the deployment sets for that purpose, never from the
-  general-purpose target that a one-off invocation can point at live data, and
-  refuses `/`, the configuration tree, and the data it is meant to protect
-  before registering the cleanup.
+  routine that empties a directory takes the path from a variable the deployment
+  sets for that purpose, never from a general-purpose target that a one-off
+  invocation can point at live data, and refuses `/`, the configuration tree,
+  and the data it protects before the cleanup is registered.
 - Pin third-party GitHub Actions to a full commit SHA, with the release in a
   trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`). Resolve the SHA
   from the release tag instead of writing it from memory.
 - Treat identifiers that public infrastructure resolves to a network location
-  (for example, Syncthing device IDs, which global discovery maps to a device's
-  current public addresses) as private material: keep them out of public
-  repositories, even though they grant no authentication. Such identifiers, and
-  other personal names, also surface as metric labels and alert annotations:
-  private sinks (a local TSDB, a private notification channel) may carry them,
-  but committed monitoring artifacts — alert rule expressions, dashboards — must
-  stay generic and reference public names only.
+  (for example Syncthing device IDs, which global discovery maps to a device's
+  public addresses) as private material and keep them out of public
+  repositories, even though they grant no authentication. Such identifiers and
+  personal names also surface as metric labels and alert annotations: private
+  sinks (a local TSDB, a private notification channel) may carry them, but
+  committed monitoring artifacts (alert rule expressions, dashboards) must stay
+  generic and reference public names only.
 
 ### Git
 
@@ -86,39 +86,35 @@
   `Co-Authored-By: Claude ...`, `Generated with ...`, `Claude-Session: ...`) to
   commit messages or pull request descriptions, even when tool defaults suggest
   doing so.
-- **Propose commits before executing:** when asked to commit or amend, propose
-  the commit split (which files go in which commit) and the full commit
-  messages, then wait for approval. A plan approval covers the edits, never the
-  commit, even when the plan ends with a commit step: present the split and the
-  messages and wait, also late in a long session. The global `git-commit` skill
-  (`~/.agents/skills/git-commit/SKILL.md`) holds the full procedure, including
-  the subject length limit and pre-proposal linting: always load it before
-  drafting the messages, in addition to any repository-local commit skill, which
-  supplements rather than replaces these rules.
-- **Focus commit and changelist descriptions on why:** keep commit and
-  changelist descriptions concise and focused on why the change is needed (the
-  problem or constraint it solves) rather than cataloging what the diff already
-  shows.
+- **Propose commits before executing:** when asked to commit or amend, present
+  the commit split and the full messages, then wait for approval. A plan
+  approval covers the edits, never the commit, even when the plan ends with a
+  commit step, and this holds late in a long session too. Always load the global
+  `git-commit` skill (`~/.agents/skills/git-commit/SKILL.md`) before drafting
+  the messages: it holds the procedure, the subject length limit, and
+  pre-proposal linting, and any repository-local commit skill supplements rather
+  than replaces it.
+- **Focus commit and changelist descriptions on why:** keep them concise and
+  explain why the change is needed (the problem or constraint it solves) rather
+  than cataloging what the diff already shows.
 - **Offer a fresh-subagent review on non-trivial changes before pushing:**
-  before pushing a non-trivial change for review — or pushing a new patchset and
-  resolving review comments when the change touches logic, control flow,
-  permissions, or multi-step automation — offer to run a subagent with no
-  conversation context over the entire diff against the base branch and the
-  commit messages, not only the latest additions. Skip this for trivial edits
-  (typos, formatting, version bumps, or mechanical one-liners) to avoid
-  unnecessary token and latency cost.
+  before pushing a change for review, or a new patchset that resolves review
+  comments and touches logic, control flow, permissions, or multi-step
+  automation, offer to run a subagent with no conversation context over the
+  entire diff against the base branch and the commit messages, not only the
+  latest additions. Skip trivial edits (typos, formatting, version bumps,
+  mechanical one-liners).
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
   keep them out of your work, and report them.
 - **Verify push state before reporting it:** a remote-tracking ref
   (`origin/<branch>`) reflects this checkout's last fetch or push, not the
-  remote, so a push the user made from another clone, session, or the web UI is
-  invisible to `git log origin/<branch>..`. Before listing unpushed commits or
-  offering a pre-push review, confirm the remote tip
-  (`git ls-remote origin <branch>` reads it without touching local refs; a fetch
-  also works) or ask whether the user already pushed, and report what the check
-  showed rather than the stale ref.
+  remote, so a push made from another clone, session, or the web UI is invisible
+  to `git log origin/<branch>..`. Before listing unpushed commits or offering a
+  pre-push review, read the remote tip (`git ls-remote origin <branch>` does so
+  without touching local refs; a fetch also works) or ask whether the user
+  already pushed, and report what the check showed rather than the stale ref.
 
 ### Problem solving patterns and processes
 
@@ -126,16 +122,16 @@ When you're tasked with solving a problem, you MUST fully understand the problem
 scope:
 
 - Don't make facts up.
-- **A name match is not deployment evidence:** a grep hit on a tool's name in
-  configuration (a port variable, an image pin kept for dependency tracking)
-  does not show the tool is deployed. Before stating that something is in use,
-  confirm a service definition (a Compose template, a systemd unit, an enabled
-  Nix module option) and, where possible, the running state.
+- **A name match is not deployment evidence:** a grep hit on a tool's name (a
+  port variable, an image pin kept for dependency tracking) does not show the
+  tool is deployed. Before stating that something is in use, confirm a service
+  definition (a Compose template, a systemd unit, an enabled Nix module option)
+  and, where possible, the running state.
 - **Verify third-party behavior against the version in use:** before
   recommending a change that depends on how a tool, module, or service behaves,
-  read its source or documentation at the version in use (for example, the
-  module file inside the container image that runs it). Label what you did not
-  verify as an expectation.
+  read its source or documentation at that version (for example, the module file
+  inside the container image that runs it). Label what you did not verify as an
+  expectation.
 - **Prefer the smallest fix at the point of failure:** before proposing to move,
   reorder, or restructure existing tasks or code, establish why the current
   arrangement exists (history, comments, or asking), and consider a local fix
@@ -143,58 +139,61 @@ scope:
 - Ask clarifying questions if needed.
 - **Access to information:** When you cannot get access to data or information
   you need, you MUST stop and tell the user.
-- **Re-scan before executing a planned migration step:** commits landed after a
-  plan was drafted can introduce new instances of the patterns the plan targets
-  or modify files it enumerates. Before executing each step, re-scan the current
-  working tree against the step's target patterns and reconcile the plan if the
-  matches or target files changed.
+- **Re-scan before executing a planned migration step:** commits landed after
+  the plan was drafted can add instances of the patterns it targets or modify
+  files it enumerates. Before each step, re-scan the working tree against the
+  step's target patterns and reconcile the plan if the matches or target files
+  changed.
 - **Apply changes to live state with evidence at every step:** before a change
   that can damage a service's state, take a copy through the service's own
-  backup path; dry-run first when the tool offers it and review the predictions
-  for deletions, teardowns, and replacements; rehearse restores and rollbacks on
-  a scratch copy, never on live state; and after the apply, verify the result
-  with read-only checks and report that evidence rather than the exit status.
+  backup path; dry-run when the tool offers it and review the predictions for
+  deletions, teardowns, and replacements; rehearse restores and rollbacks on a
+  scratch copy, never on live state; after the apply, verify with read-only
+  checks and report that evidence rather than the exit status.
 - **Distinguish pre-existing failures from regressions:** when a dry-run, check,
-  or test fails, determine whether the failure predates your change (e.g., it
-  reproduces on the unchanged code, or the failing element is one your change
-  never touched) before attributing it to your work. Report which case it is,
-  with the evidence, and propose how to handle a pre-existing failure instead of
-  silently working around it.
+  or test fails, determine whether the failure predates your change (it
+  reproduces on the unchanged code, or your change never touched the failing
+  element) before attributing it to your work. Report which case it is with the
+  evidence, and propose how to handle a pre-existing failure instead of silently
+  working around it.
 - **Capture full output of long-running checks:** redirect the complete output
   of long-running commands (linters, builds, test suites) to a log file and
-  inspect the file, instead of piping through filters like `tail` or `head`.
-  Filters discard the evidence needed to diagnose failures, and in a pipeline
-  the filter's exit status masks the command's real one. When a summary table
-  reports verdicts, filter on the verdict column (for example
-  `grep -iE 'fail|error'`, after confirming the spelling the tool prints), never
-  on an expected list of tool names: the tool left out of the list is the one
-  that failed.
+  inspect the file instead of piping through `tail` or `head`: filters discard
+  the evidence needed to diagnose failures, and in a pipeline the filter's exit
+  status masks the command's real one. When a summary table reports verdicts,
+  filter on the verdict column (`grep -iE 'fail|error'`, after confirming the
+  spelling the tool prints), never on an expected list of tool names: the tool
+  left out of the list is the one that failed.
+
+### Shell
+
+Agent shells run Zsh with the user's profile.
+
+- **Zsh does not split unquoted variables into words:** a command prefix stored
+  in a variable fails with "command not found"; use a function or an array.
+- **Zsh ties lowercase arrays to uppercase parameters:** `path`, `fpath`,
+  `cdpath`, `manpath`, `mailpath`, `module_path`, and `psvar` mirror `PATH`,
+  `FPATH`, and so on. Never use them as loop or scratch variable names:
+  `while read -r path` replaces the command search path and every following
+  external command fails with "command not found".
+- **The profile defines `diff` as a function wrapping `git diff`:** use
+  `command diff` or `cmp` to compare files.
+- **`set -e` is inert under the harness's `eval`:** Claude Code's Bash tool runs
+  the command through `eval` inside an AND-list, where Zsh ignores `ERR_EXIT`,
+  and a subshell inherits that. Run a multi-step state-changing sequence as a
+  separate process (`zsh -ec '...'`, which honours `-e` but does not load the
+  interactive profile, so its functions and aliases are unavailable), or chain
+  the steps with `&&`, so a failing step stops the later ones.
 - **`curl` needs `--fail` when its success gates the next step:** without it,
-  HTTP error responses (404, 500) still exit 0, so a verification like
+  HTTP error responses (404, 500) still exit 0, so
   `curl -X POST ... && echo done` reports success for a request the server
   rejected.
 - **Beware early-exiting pipe consumers under `pipefail`:** a consumer that
   exits at the first match (`grep -q`, `head`) closes the pipe while the
-  producer is still writing; with large output the producer then fails with a
-  write error (for example cURL exit code 23) and, under `pipefail`, fails the
-  whole pipeline despite the match succeeding. When the pipeline's exit status
-  matters, use a consumer that reads the full stream (for example
-  `grep <pattern> > /dev/null`).
-- **Agent shells run Zsh with the user's profile:** Zsh does not split unquoted
-  variables into words, so a command prefix stored in a variable fails with
-  "command not found"; use a function or an array instead. Zsh also ties the
-  lowercase arrays `path`, `fpath`, `cdpath`, `manpath`, `mailpath`,
-  `module_path`, and `psvar` to the uppercase scalar parameters (`PATH`,
-  `FPATH`, ...), so never use them as loop or scratch variable names:
-  `while read -r path` replaces the command search path and every following
-  external command fails with "command not found". The profile defines `diff` as
-  a function that wraps `git diff`; use `command diff` or `cmp` to compare
-  files. `set -e` is inert when the harness runs the command through `eval`
-  inside an AND-list (Claude Code's Bash tool does): Zsh ignores `ERR_EXIT` in
-  that context, and a subshell inherits it. Run a multi-step state-changing
-  sequence as a separate process (`zsh -ec '...'`, which honours `-e` but does
-  not load the interactive profile, so its functions and aliases are unavailable
-  inside), or chain the steps with `&&`, so a failing step stops the later ones.
+  producer is still writing; with large output the producer fails with a write
+  error (cURL exit code 23) and, under `pipefail`, fails the whole pipeline
+  despite the match succeeding. When the exit status matters, use a consumer
+  that reads the full stream (`grep <pattern> > /dev/null`).
 
 ### Terminology
 
