@@ -122,9 +122,12 @@ duplicating.
 Apply this priority order to session findings and promoted memories alike:
 
 1. An existing skill, when the lesson is specific to a task type a skill already
-   covers (an Ansible lesson goes into the Ansible skill). An agent that did not
-   consult monitoring the project already had is an instruction gap, not a
-   monitoring gap.
+   covers (an Ansible lesson goes into the Ansible skill): route to the
+   project's skill (`<project>/.agents/skills/*`) when the rule is a convention
+   of that repository, or to the global skill (`<root>/.agents/skills/*`) when
+   it holds across all repositories, never both. An agent that did not consult
+   monitoring the project already had is an instruction gap, not a monitoring
+   gap.
 2. The project's `AGENTS.md`, when the lesson is a rule for the agent that is
    specific to one repository.
 3. The global `~/.agents/AGENTS.md`, only for rules that apply to all projects
