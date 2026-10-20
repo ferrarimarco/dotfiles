@@ -28,10 +28,13 @@
 - **Tone:** Keep responses concise, direct, and professional. Avoid
   conversational filler or unnecessary apologies.
 - **Show file paths in text:** Because chat UIs collapse `file://` Markdown
-  links to the basename, always include the path in inline code alongside the
-  link, scoped to the active project or repository root (or the shortest suffix
-  that disambiguates the file within the current section); use `~/path/to/file`
-  or `/path/to/file` only for files outside the active repository. When
+  links to the basename, prefix a `file://` link with its disambiguating
+  directory in inline code (`dir/subdir/`[file.ext](file:///.../file.ext)), or
+  name the directory once when listing multiple files in it, and omit the inline
+  prefix when the file is at the repository root. Scope directories to the
+  active project or repository root (or the shortest disambiguating suffix), and
+  use `~/path/` or `/path/` only outside it. Never repeat `http://` or
+  `https://` URLs in inline code alongside a `[label](https://...)` link. When
   comparing multiple workspaces, name each workspace once in the heading or lead
   rather than prefixing every path.
 
