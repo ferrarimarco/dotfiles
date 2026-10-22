@@ -108,7 +108,10 @@ Propose only changes that generalize beyond the session. Discard:
 - anything derivable from a repository's own code or documentation;
 - anything the session already captured in a project's own knowledge base
   (guides, specifications, todo items): verify it landed, instead of
-  re-proposing it.
+  re-proposing it. A lesson counts as captured only where the next change is
+  written against (the reference pattern, the guide, the convention list), not
+  only on the page of the incident that produced it: a rule that sits inside the
+  incident's own section is a finding to route onward.
 
 Capture project-routed lessons during the session, in the project's own
 knowledge base, while the context is fresh; when a capture run finds uncaptured
@@ -161,7 +164,10 @@ A rule outlives the session, so it is held to the standard of a recommendation:
   is scoped to the cases where it pays off and skipped on trivial work, rather
   than mandated on every run.
 - Each rule is applied to its own motivating example, read as the next agent
-  would read it, to confirm it gives the right answer there.
+  would read it, to confirm it gives the right answer there, and then to the
+  neighbouring case the next agent meets (a second host behind the same probe, a
+  unit nothing keeps loaded): a rule that silences, deletes, or reports more
+  than its example did is scoped down.
 - A rule routed to the global dotfiles (`~/.agents/AGENTS.md` and
   `<root>/.agents/skills/*`, which live in a public repository) keeps examples
   and attributions generic and omits internal corporate hostnames, URLs, package
@@ -175,19 +181,24 @@ A rule outlives the session, so it is held to the standard of a recommendation:
 The plan presented for approval must list:
 
 - the proposed edits, as one table for each target file with a row for each edit
-  and two columns: the proposed update, and its rationale (the session event or
-  memory that motivated it);
+  and three columns: the proposed update, its rationale (the session event or
+  memory that motivated it), and its evidence (the source file and version read,
+  the command run, or "expectation"). A row with no evidence is caught here, and
+  a finding appears in one file's table only;
 - the memories to delete or rewrite afterward, as a table with a row for each
   memory and two columns: the action, and its rationale.
 
 ## 8. Apply the Approved Plan
 
-- Edit in place and prefer tightening over growing: update or merge into
-  existing rules that overlap instead of appending near-duplicates, and rewrite
-  sections that have accreted overlapping rules. An unrelated lesson that lands
-  in the same section gets its own bullet with a bold lead, since readers scan
-  bullet leads. Keep the imperative, concise style of the target file. A net
-  line-count reduction is a valid outcome.
+- Edit in place and prefer tightening over growing: before appending a bullet,
+  search the target file for the subject and for the rules it interacts with,
+  then update or merge into existing rules that overlap instead of appending
+  near-duplicates, and rewrite sections that have accreted overlapping rules. A
+  new rule that contradicts an existing one in the file (a start task the file's
+  idempotency rule forbids) is a defect in the new rule. An unrelated lesson
+  that lands in the same section gets its own bullet with a bold lead, since
+  readers scan bullet leads. Keep the imperative, concise style of the target
+  file. A net line-count reduction is a valid outcome.
 - Remove a promoted memory only after its rule is written to the destination
   file, in the same apply step: delete the memory file and its line in
   `MEMORY.md`. Leave non-promoted memories untouched.
@@ -197,12 +208,17 @@ The plan presented for approval must list:
   coordinate edits to files carrying uncommitted user changes, instead of
   editing into another session's work.
 - Route edits to a project's own files through that repository's validation
-  pipeline and commit conventions; dotfiles edits follow the dotfiles flow.
+  pipeline and commit conventions; dotfiles edits follow the dotfiles flow. Run
+  the formatter before the review and read its diff: a rewrite beyond the edited
+  lines (a list turned loose by a stray blank line) is a structural defect to
+  fix, not formatter noise.
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill, as opposed to typos or mechanical one-liners), have a reviewer that did
-not write the rules read the diff: a fresh subagent given only the diff and the
-target files, or the harness's code review. Review every repository the run
-edited, the project's runbooks and todo items included, not only the dotfiles: a
-runbook carries the same kind of technical claims as a skill. Fix what it finds
-before reporting. Do not commit unless asked.
+not write the rules read the diff: a fresh subagent given the diff, the target
+files, and the verification standard of step 6, asked to check each technical
+claim against the tool's source or documentation at the version in use, or the
+harness's code review. Review every repository the run edited, the project's
+runbooks and todo items included, not only the dotfiles: a runbook carries the
+same kind of technical claims as a skill. Fix what it finds before reporting. Do
+not commit unless asked.
