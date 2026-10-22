@@ -51,9 +51,17 @@
   dependencies.
 - **Extend existing workflows before adding new components:** before proposing a
   new standalone CLI, script, or service to automate or enforce a recurring
-  workflow step, check whether an existing build rule, presubmit check, or agent
-  skill already in that lifecycle can carry it without adding another component
-  to maintain.
+  workflow step, check whether an existing build rule, presubmit check, CI
+  workflow, or agent skill already in that lifecycle can carry it without adding
+  another component to maintain: read the workflow files before proposing an
+  automation (a site build that CI already commits on pull requests).
+- **Express a cross-supervisor dependency in a native trigger:** when two
+  supervisors share a dependency (systemd owning a mount, a container engine
+  owning the containers that bind it), put the dependency where one of them has
+  a native vocabulary for it and leave the other's supervision alone. A polling
+  timer or a configuration-management run is the bridge of last resort, and the
+  control machine must never be the only caller that brings a host to its steady
+  state: what a host needs at boot belongs to the host.
 - **Diagnose structure before proposing mitigations:** when asked for a
   strategy, or after a mitigation is rejected as a workaround, separate the
   structural causes (a monolithic build unit, tests with no map from changed
@@ -173,6 +181,10 @@ scope:
   reorder, or restructure existing tasks or code, establish why the current
   arrangement exists (history, comments, or asking), and consider a local fix
   first.
+- **Check a structural fix against every consumer, planned ones included:** a
+  fix that assumes a dependency is local (a hypervisor passthrough in place of a
+  network share) fails the consumer that sits on another node; list the
+  consumers before presenting it.
 - Ask clarifying questions if needed.
 - **Access to information:** When you cannot get access to data or information
   you need, you MUST stop and tell the user.
@@ -261,9 +273,9 @@ Agent shells run Zsh with the user's profile.
   error (cURL exit code 23) and, under `pipefail`, fails the whole pipeline
   despite the match succeeding. When the exit status matters, use a consumer
   that reads the full stream (`grep <pattern> > /dev/null`).
-- **Pass explicit non-interactive flags to CLI tools in scripts and background
-  tasks:** CLIs that create commits, mail reviews, or resolve merges often
-  default to opening `$EDITOR`, a pager, or a confirmation prompt. Before
+- **Pass explicit non-interactive flags to command-line tools in scripts and
+  background tasks:** CLIs that create commits, mail reviews, or resolve merges
+  often default to opening `$EDITOR`, a pager, or a confirmation prompt. Before
   scripting or backgrounding such a tool, verify its non-interactive flags from
   `--help` or the relevant skill reference, and never fall back to a bare
   invocation when a guessed flag fails.
