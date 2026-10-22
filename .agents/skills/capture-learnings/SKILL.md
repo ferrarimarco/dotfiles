@@ -68,6 +68,9 @@ Review the conversation for:
 - statements the agent made to the user and corrected later (an attribution, a
   count read off the wrong listing, a "nothing changed"), with the check that
   would have caught each one first;
+- review gaps in code or document reviews: comments a human reviewer posted on
+  the change or document that the agent's review missed, and findings the agent
+  caught ad-hoc that existing skills or instructions do not yet cover;
 - later corrections to rules that earlier capture runs wrote (the target file's
   history shows the commit): these are signals about this skill's process as
   well as about the target.
@@ -119,7 +122,8 @@ duplicating.
 
 ## 5. Route Each Finding
 
-Apply this priority order to session findings and promoted memories alike:
+Route each session finding and promoted memory to the first matching destination
+in this priority order, never to both a skill and `AGENTS.md`:
 
 1. An existing skill, when the lesson is specific to a task type a skill already
    covers (an Ansible lesson goes into the Ansible skill): route to the
