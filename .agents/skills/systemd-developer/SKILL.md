@@ -43,6 +43,45 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   complete and reports their failure, while `Type=simple`/`exec` return as soon
   as the process starts. This changes what a restart from configuration
   management reports: prefer restarting the timer of a timer-triggered job.
+- `ExecStart=` substitutes `$VAR` and `${VAR}` itself, so an `sh -c` body writes
+  `$$` for a literal dollar (`$$(systemctl ...)`, `"$$unit"`);
+  `systemctl show -p ExecStart` prints the unexpanded line, so the first run's
+  journal is the check.
+- A finished `Type=oneshot` keeps its invocation ID while the unit stays loaded
+  (wanted by an active unit, or `RemainAfterExit=true`; observed on systemd 247
+  and 252): an unreferenced oneshot is unloaded once inactive and the ID is
+  gone. `systemctl show -p InvocationID --value <unit>` returns the ID of that
+  run, and `journalctl _SYSTEMD_INVOCATION_ID=<id>` after `journalctl --sync`
+  returns its output with the manager's own "Starting" and "Finished" lines
+  excluded, which makes the unit usable from a tool that needs the command's
+  output.
+
+## Dependencies and Triggers
+
+- `[Install] WantedBy=<mount unit>` (the escaped mount path from
+  `systemd-escape --path --suffix=mount`) runs a unit on every start of the
+  mount: at boot, from a retry, or by `systemctl start`. With
+  `RequiresMountsFor=<path>` the unit also requires the mount and orders after
+  it, so it never runs while the mount is absent. Wants directories under
+  `/etc/systemd/system` apply to the generated fstab mount units too.
+- A failed dependency fails the dependent's job ("Dependency failed for ...")
+  and leaves the dependent unit inactive, not failed: a failed-unit alert never
+  fires for it, so alert on the dependency (an expected-mount alert) instead.
+- systemd never retries a failed mount unit, and `nofail` turns the target's
+  requirement into a want and drops the ordering, so the boot reaches
+  `remote-fs.target` without it. The retry is a timer whose service starts the
+  failed mount units with `systemctl start --no-block`: a mount that fails again
+  fails its own unit, and a mount that succeeds pulls in the units wanted by it.
+  `x-systemd.automount`, systemd's own retry, acts on access only, hands the
+  mount error to the accessor, and nothing accesses an absent share whose
+  consumers are stopped. A mount that appears without a start job (an NFS `bg`
+  mount completing, a manual `mount`) marks the mount unit active but starts
+  nothing wanted by it.
+- A CIFS mount attempt against a server that drops packets takes longer than the
+  mount unit's 90 s default start timeout (the TCP connect retries alone run
+  about two minutes), so the timeout kills it; later attempts then failed at
+  once with "Host is down" for as long as the block lasted, and a refused
+  connection fails immediately.
 
 ## Sandboxing and State Directories
 

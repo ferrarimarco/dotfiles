@@ -18,6 +18,10 @@ inventories that are idempotent, check-mode friendly, and data-driven.
   `group_vars` lists and dictionaries) with defaults that make every task a
   no-op on hosts that do not opt in (`| default([])`). Hosts opt in by declaring
   data, not by conditionals scattered in tasks.
+- **Teardown must be reachable from the scope that created the resource:** a
+  resource rendered per enabled item (one unit per Compose project) needs its
+  removal in any run that disables the item, tag-scoped runs included; a sweep
+  gated on full runs covers renamed or removed items only.
 - **Idempotency is the contract:** every task must converge to the declared
   state and report `ok` on a second run. A task that flaps between `changed`
   states on consecutive runs is a bug, even if the end state is correct. For a
@@ -225,6 +229,12 @@ runs against unconfigured hosts:
 
 ## Containerized Service Configuration
 
+- **Docker's restart policy never retries a failed start.** It covers a
+  container that stayed up for ten seconds and later stopped. A start that fails
+  leaves the container stopped until something runs `docker compose up` again. A
+  bind source Docker cannot create fails the start: a path under an immutable
+  mount point, or a bind declared with `create_host_path: false`. Otherwise
+  Docker creates the directory and the container starts on the bare mount point.
 - **Quotes in a Compose `environment:` list entry are literal.** Compose passes
   `- KEY="value"` to the container with the quotes included (list form is not
   shell syntax), so a template that writes them sets a different value than a
@@ -245,6 +255,10 @@ runs against unconfigured hosts:
 
 ## Testing with Molecule
 
+- **A wrapper that builds one image tag for tests and playbook runs races:** two
+  concurrent invocations with different build targets rebuild the same tag under
+  each other (a playbook run left a Molecule run without its `molecule` binary).
+  Give the test target its own tag, or run them one at a time.
 - **Failures are layered:** a failing stage hides every failure after it. After
   a fix, rerun until both converge and idempotence pass before reporting the
   test as fixed, and expect defects that accumulated while the test was red.
@@ -280,6 +294,30 @@ runs against unconfigured hosts:
 ## Best Practices
 
 - Name every task descriptively; task names are the run's user interface.
+- **The playbook is a deploy-time caller, not the host's supervisor:** every
+  workload the host must bring up at boot gets a unit the host owns (a oneshot
+  that runs `docker compose up`, wanted by the boot target and by the mount
+  units it depends on), and the playbook starts the workload through that unit,
+  so each deploy exercises what the next boot relies on. Start it from a
+  `command` task: `systemctl start <unit>` blocks until the oneshot finishes,
+  and the task then prints that run's journal by invocation ID (systemd skill)
+  so `changed_when` can key on the command's output. The systemd module's
+  `state: started` on a oneshot is the flapping task the idempotency rule
+  forbids, and its result carries no journal to read.
+- **Keep SSH sessions alive through long tasks:** add
+  `-o ServerAliveInterval=30 -o ServerAliveCountMax=3` to `ssh_common_args`,
+  which Ansible appends for every SSH tool; setting `ssh_args` instead replaces
+  the `ControlMaster` and `ControlPersist` defaults that carry connection
+  multiplexing. A task that idles the session for minutes (a multi-gigabyte
+  image pull) otherwise hung a run for over an hour when something on the path
+  dropped the idle connection and the client never noticed; the keepalives keep
+  the path's state alive and bound the detection.
+- **Remove drift from a setting the role no longer manages by hand, not with a
+  lingering `state: absent` task:** when a role stops managing a setting that
+  one host still carries (a sysctl line, a file), remove it on that host with
+  approval and delete the task, so the role carries no removal task to clean up
+  later and a future need declares the setting afresh. A feature hosts can still
+  opt out of keeps its teardown in the role (see the teardown rule).
 - **A playbook whose effect is not gated by inventory data requires an explicit
   target:** a restore, a reset, or a one-off that acts on every host it reaches
   takes `hosts` from a variable with no default (`hosts: "{{ target_hosts }}"`),

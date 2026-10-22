@@ -42,6 +42,11 @@ upgrade others unannounced. A string match is conclusive only for digest pins:
 with a tag (or `pull_policy: always`), run `docker compose pull` first, then
 `docker compose --dry-run up` to see which containers it would recreate.
 
+A deploy after a gap can also carry a major version bump of a service: read its
+release notes against the deployed configuration first. A migrator that rewrites
+a file the role renders (a version key, a renamed option) restarts the service
+on every later run until the template follows the migrated file.
+
 ## 3. Rehearse Recovery Paths on Scratch Targets
 
 A verification of a restore, a migration rollback, or a failover runs against a
@@ -49,6 +54,12 @@ copy or a scratch location, never against live state, unless the user asked for
 the real operation; an in-place restore run as a rehearsal rolled a live service
 back by hours. A dry run of the command proves the command, not the outcome, so
 it does not replace the scratch rehearsal.
+
+Drill a recovery path by blocking the dependency from the client (a firewall
+rule dropping the share's port on the consumer host) rather than by stopping the
+shared service: the other consumers stay up, and the blocked case is the slow
+one (a hung attempt bounded by a timeout) that a stopped service, which refuses
+the connection at once, never exercises.
 
 ## 4. Put Detection in Place Before a Fix
 
@@ -64,6 +75,16 @@ After the operation completes, verify the actual resulting state with read-only
 checks and report the evidence, rather than assuming success from the tool's
 exit status.
 
+- A silence covers the alert's own duration, not only the maintenance window: a
+  reboot alert that fires for an hour after the boot outlives a one-hour silence
+  added just before the reboot. Probe alerts carry the probed target as their
+  instance, so a host silence misses them: add a second silence matching their
+  alert names and an instance pattern for the host's probed targets (matchers
+  within one silence are ANDed and anchored; the alert-name matcher alone
+  silences every target's probes). Read the suppressed-alerts gauge and the
+  notification counter of the alert manager afterwards to confirm nothing left.
+- Read the boot time of every machine the change touched: an apply that the plan
+  called an in-place update can have restarted it.
 - A service unit reporting active does not guarantee the service accepts
   requests: verification probes issued right after activation need bounded
   retries.

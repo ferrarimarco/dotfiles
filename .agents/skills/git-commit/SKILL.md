@@ -68,7 +68,7 @@ Analyze the diff to determine:
   hyphenated token followed by a colon and a space (`Note: ...`,
   `configured: ...`), wrapped or deliberate: commitlint reads it as the first
   footer line, parses the rest of the message as footer, and warns about the
-  missing blank line, so reword such a line or rewrap it. Validation is the
+  missing empty line, so reword such a line or rewrap it. Validation is the
   reliable check.
 
 ### 4. Execute Commit

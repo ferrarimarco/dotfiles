@@ -49,6 +49,16 @@ descriptors, modules, resources.
   index numbering, and attributes the provider computes when unset — then run a
   plan and verify it reports no changes (the refresh reconciles the state), and
   record the cause with its upstream issue.
+- **An in-place update can still restart the machine:** a plan's "update
+  in-place" says nothing about guest restarts. The `bpg/proxmox` VM resource's
+  `reboot_after_update` (true by default) reboots the VM through the guest
+  agent, or stops and starts it, when Proxmox holds the change for the next
+  start, the agent options included, with no word in the plan. Read the
+  provider's reboot semantics before promising no restart. With the opt-out,
+  only an operation that needs the VM powered off (a disk resize or move) fails;
+  a pending change is applied with a warning and waits in the hypervisor, so
+  read the apply output and the pending changes afterwards and schedule the
+  restart behind a silence.
 - **Verify applies in state and in the real infrastructure:** after an apply,
   confirm the change with a read-only inspection of the recorded state and a
   read-only check against the live system (CLI or API of the target platform),

@@ -60,8 +60,22 @@ lead, and an alert that fired and was not acted on is a finding in itself.
 If the host (or fleet) runs a metrics backend, query the time series leading up
 to the death window: temperature, load, memory available, disk I/O. Normal
 metrics until the end are themselves evidence: they rule out thermal runaway,
-OOM spirals, and load storms. Note when the last scrape happened; it
-independently bounds the freeze time.
+OOM spirals, and load storms. The last scrape independently bounds the freeze
+time; date it from the sample itself, since `timestamp()` returns the sample
+time only for a bare selector and the evaluation time otherwise:
+
+```promql
+max_over_time(
+  (
+    timestamp(up{instance=~"<host>.*"})
+    and up{instance=~"<host>.*"} == 1
+  )[60d:5m]
+)
+```
+
+A host that has been off for weeks is off by someone's decision more often than
+broken: check the project's notes for that decision before reporting the silence
+as a fault.
 
 ## 4. Check Recovery-Boot Health
 
