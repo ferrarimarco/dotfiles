@@ -232,6 +232,27 @@ scope:
 - **Spot-check a delegated report before relaying it:** verify the claims a
   subagent's recommendation rests on against the file or tool it cites, and keep
   what you did not verify labeled as the agent's claim.
+- **Hand a delegated task to the cheapest model tier that can do it:** the
+  session's own model is the user's choice and stays as configured; this rule
+  picks the model of a subagent. The examples name model families, not versions:
+  use the current release of the family.
+  - **Small tier** (for example Claude Haiku, Gemini Flash-Lite, GPT Luna) for a
+    lookup with a known target: the file that defines a variable, the hosts of
+    an inventory group, whether a command exists, a summary of a short log.
+  - **Mid tier, the default** (for example Claude Sonnet, Gemini Flash, GPT Sol)
+    for research and synthesis: documentation lookups, code exploration across a
+    few directories, drafting a guide page, routine implementation against a
+    clear specification.
+  - **Top tier** (for example Claude Opus, Gemini Argon, GPT Astra) only where
+    the agent must weigh ambiguous evidence: incident investigation, debugging
+    across subsystems, design review.
+  - **The pre-push diff review** runs at least on the top tier: on the session's
+    own model when that model is top tier or above (for example Claude Fable),
+    and on a top-tier model otherwise, whatever the session runs on. Forks are
+    the exception to every tier: they inherit the session's model. When a
+    cheaper run comes back thin or self-contradictory, rerun it one tier up
+    instead of redoing the work in the main thread, and spot-check every
+    delegated report as the previous rule requires.
 
 ### Shell
 
