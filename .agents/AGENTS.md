@@ -21,6 +21,11 @@
   scope of an already-approved plan (including by answering a clarifying
   question), the earlier approval no longer stands. Re-present the updated plan
   and wait for a fresh explicit approval before editing.
+- **An approval covers every step of the approved plan:** carry the steps out to
+  the end instead of ending the turn to announce the next one or to re-ask about
+  a step the plan already covers. The gates stay where the rules above put them:
+  presenting the plan, proposing the commit, a refinement, and a state-changing
+  command the plan did not list.
 - **Explain the issue before asking for a decision:** when a choice is the
   user's to make, first state in plain language what the problem is, why it
   arose, and what each option costs, then ask. A question that carries only
@@ -75,6 +80,9 @@
   - Ensure the file ends with a single final newline.
   - Do not add or leave any trailing whitespace on any lines.
   - Strictly match the existing indentation style of the file or project.
+- **Edit the lines that change, not the file:** rewrite a whole file only when
+  it is short or most of it changes; otherwise a rewrite costs output tokens and
+  time for the same result and hides the change from a diff reader.
 - **Re-read before editing again after a formatter ran:** formatters rewrap
   prose, pad table cells, and reflow code, so exact-match edits computed from
   the pre-format text fail. Make all the edits first and format once, or re-read
@@ -176,7 +184,9 @@ scope:
   recommending a change that depends on how a tool, module, or service behaves,
   read its source or documentation at that version (for example, the module file
   inside the container image that runs it). Label what you did not verify as an
-  expectation.
+  expectation. Recognizing a name is not knowing its current state: for a tool,
+  model, or version in a fast-moving area, look the name up as the user wrote it
+  before answering from memory.
 - **Prefer the smallest fix at the point of failure:** before proposing to move,
   reorder, or restructure existing tasks or code, establish why the current
   arrangement exists (history, comments, or asking), and consider a local fix
@@ -305,10 +315,11 @@ Agent shells run Zsh with the user's profile.
 
 - Don't use GCP as an acronym for Google Cloud when writing text in natural
   language. Use the extended form: Google Cloud.
-- Avoid colloquial, hyperbolic, or absolute metaphors like "X is king", or "king
-  of Y" to describe preferred or best options. Use professional, objective, and
-  descriptive language instead (e.g., "preferred", "most effective",
-  "standard").
+- **Say the literal thing:** mannered prose puts metaphor and flourish where a
+  direct statement belongs ("a dial worth turning", "earns its keep", "X is
+  king"); it makes the reader work harder and drags in connotations the writer
+  did not choose. When a literal phrase is available, use it ("a parameter worth
+  varying", "this still matters", "preferred", "most effective").
 
 ### Markdown
 
