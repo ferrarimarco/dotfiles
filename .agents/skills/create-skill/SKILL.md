@@ -43,6 +43,10 @@ that misfire.
 - Bodies are timeless and use one term per concept: no date-conditional
   instructions (retired behavior goes in a collapsed "Old patterns" section or
   is dropped), and no synonyms for a tool, field, or action.
+- Ask the reader for a short explanation or a summary of the actions it took,
+  never for its reasoning or thinking: a skill or tool description that asks the
+  model to write out its reasoning can be declined by safety classifiers, and
+  the summary is what the caller can verify anyway.
 - Verify by behavior, not by reading: run the triggering prompt and compare
   outcomes.
 
