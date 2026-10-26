@@ -69,8 +69,10 @@ Review the conversation for:
   count read off the wrong listing, a "nothing changed"), with the check that
   would have caught each one first;
 - review gaps in code or document reviews: comments a human reviewer posted on
-  the change or document that the agent's review missed, and findings the agent
-  caught ad-hoc that existing skills or instructions do not yet cover;
+  the change or document that the agent's review missed, findings a delegated
+  review returned on the agent's own output that its self-check had missed, and
+  findings the agent caught ad-hoc that existing skills or instructions do not
+  yet cover;
 - later corrections to rules that earlier capture runs wrote (the target file's
   history shows the commit): these are signals about this skill's process as
   well as about the target.
