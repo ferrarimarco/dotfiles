@@ -176,6 +176,10 @@ scope:
   tool is deployed. Before stating that something is in use, confirm a service
   definition (a Compose template, a systemd unit, an enabled Nix module option)
   and, where possible, the running state.
+- **An absence claim needs the same evidence as a presence claim:** before
+  stating that a tool or a repository lacks a capability (a dependency
+  ecosystem, an option, a workflow), read the tool's documentation at the
+  version in use and the repository's configuration.
 - **A cached artifact may still be in use:** before proposing to delete a
   container image or a store path, find which scripts and pin files resolve to
   it; a local script can read the version a CI workflow file pins rather than
