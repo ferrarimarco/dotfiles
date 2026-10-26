@@ -91,9 +91,10 @@ The dotfiles include configuration files for the following software:
   - [`.ssh/config`](.ssh/config): generic client configuration. It includes
     `~/.ssh/config.d/*` first, so host blocks that are local to a machine (which
     key authenticates to which host, agent forwarding) live there, outside the
-    repository, and take precedence. Keys are added to the agent on first use,
-    but only on the machine that owns the agent: on a remote host the agent is
-    the one forwarded from the client, and the key would be sent there.
+    repository, and take precedence. Keys are added to the agent on first use
+    with an eight-hour lifetime, but only on the machine that owns the agent: on
+    a remote host the agent is the one forwarded from the client, and the key
+    would be sent there.
   - The shells reuse the SSH agent that the host already runs instead of
     starting one per terminal: the inherited socket, the one the systemd user
     manager publishes, well-known socket paths, and agents started by hand, in
