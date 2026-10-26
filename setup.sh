@@ -332,6 +332,31 @@ setup_debian() {
   sudo gpasswd -a "$TARGET_USER" sudo
 }
 
+# Crostini has no graphical session target, so Debian's static
+# ssh-agent.service never starts and terminals get no agent. Pull the unit
+# into the user session so the host provides an agent at container start, and
+# the shells pick it up from the systemd user manager environment.
+setup_crostini_ssh_agent() {
+  SSH_AGENT_UNIT_NAME="ssh-agent.service"
+  if ! systemctl --user show -p Wants --value default.target | tr ' ' '\n' | grep -qx "${SSH_AGENT_UNIT_NAME}"; then
+    echo "Adding ${SSH_AGENT_UNIT_NAME} to the user session"
+    systemctl --user add-wants default.target "${SSH_AGENT_UNIT_NAME}"
+  fi
+  if ! systemctl --user is-active --quiet "${SSH_AGENT_UNIT_NAME}"; then
+    echo "Starting ${SSH_AGENT_UNIT_NAME}"
+    systemctl --user start "${SSH_AGENT_UNIT_NAME}"
+  fi
+  # The unit's launcher exits 0 without starting an agent when its
+  # preconditions fail (no Xsession.options, SSH_AUTH_SOCK already in the user
+  # manager environment), so check the result instead of the start command.
+  if ! systemctl --user is-active --quiet "${SSH_AGENT_UNIT_NAME}"; then
+    echo "ERROR: ${SSH_AGENT_UNIT_NAME} is not running after starting it:"
+    systemctl --user status --no-pager "${SSH_AGENT_UNIT_NAME}" || true
+    return 1
+  fi
+  unset SSH_AGENT_UNIT_NAME
+}
+
 setup_macos() {
   echo "Setting up macOS"
 
@@ -695,6 +720,9 @@ main() {
   if is_linux || is_macos; then
     if is_debian; then
       setup_debian
+      if is_crostini; then
+        setup_crostini_ssh_agent
+      fi
     elif is_macos; then
       setup_macos
       install_brew

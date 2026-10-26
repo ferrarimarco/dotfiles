@@ -128,6 +128,14 @@ export DEFAULT_SHELL_SHORT
 export USER_FONTS_DIRECTORY
 
 ###############################################################################
+# SSH agent                                                                   #
+###############################################################################
+
+# Reuse the agent the host runs instead of starting one per terminal. Failing
+# to find one is not an error: ssh then falls back to the key files.
+find_ssh_agent || true
+
+###############################################################################
 # Others                                                                      #
 ###############################################################################
 GCLOUD_CONFIG_DIRECTORY="${HOME}"/.config/gcloud

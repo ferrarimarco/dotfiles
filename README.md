@@ -87,7 +87,18 @@ The dotfiles include configuration files for the following software:
 - iTerm2
 - Nano
 - Nix
-- SSH client
+- SSH client:
+  - [`.ssh/config`](.ssh/config): generic client configuration. It includes
+    `~/.ssh/config.d/*` first, so host blocks that are local to a machine (which
+    key authenticates to which host, agent forwarding) live there, outside the
+    repository, and take precedence. Keys are added to the agent on first use,
+    but only on the machine that owns the agent: on a remote host the agent is
+    the one forwarded from the client, and the key would be sent there.
+  - The shells reuse the SSH agent that the host already runs instead of
+    starting one per terminal: the inherited socket, the one the systemd user
+    manager publishes, well-known socket paths, and agents started by hand, in
+    this order. On Crostini, `setup.sh` pulls Debian's `ssh-agent.service` into
+    the user session because no graphical session starts it there.
 - Terraform
 - Tmux
 - Visual Studio Code

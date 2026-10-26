@@ -41,6 +41,86 @@ if is_docker_available; then
   source_file_if_available "${DOCKERFUNCTIONS_PATH}" "DOCKERFUNCTIONS_PATH"
 fi
 
+# Return 0 when the socket at the given path is an SSH agent that answers.
+# ssh-add -l exits with 0 when the agent listed identities, 1 when it has none
+# or did not answer properly, and 2 when no agent is reachable. A socket that
+# accepts connections but does not speak the agent protocol (a dead forwarded
+# agent, an unrelated service) makes ssh-add block, so bound the probe.
+is_ssh_agent_alive() {
+  [ -S "${1-}" ] || return 1
+  if is_command_available timeout; then
+    SSH_AUTH_SOCK="${1}" timeout 2 ssh-add -l >/dev/null 2>&1
+  else
+    SSH_AUTH_SOCK="${1}" ssh-add -l >/dev/null 2>&1
+  fi
+  case "$?" in
+  0 | 1) return 0 ;;
+  *) return 1 ;;
+  esac
+}
+
+# Export SSH_AUTH_SOCK pointing at the given socket when an agent answers there.
+use_ssh_agent_socket() {
+  is_ssh_agent_alive "${1-}" || return 1
+  SSH_AUTH_SOCK="${1}"
+  export SSH_AUTH_SOCK
+}
+
+# Point SSH_AUTH_SOCK at an SSH agent that the host already runs.
+# The dotfiles never start an agent: the host (launchd on macOS, a systemd user
+# unit, a desktop session) owns its lifecycle, so the agent and the keys it
+# holds go away with the session. The sources, in order:
+# 1. the inherited SSH_AUTH_SOCK, when it answers (launchd on macOS, an agent
+#    forwarded to a remote host, a terminal started from a desktop session)
+# 2. the systemd user manager environment, where Debian's ssh-agent.service
+#    and the desktop environments publish the socket path
+# 3. well-known socket paths under XDG_RUNTIME_DIR
+# 4. agents started by hand in /tmp, probed before use
+# gpg-agent's SSH socket is left out on purpose: systemd socket activation
+# makes it always answer, and ssh-add would then store keys in GnuPG's key
+# store through pinentry instead of in a plain agent.
+find_ssh_agent() {
+  is_command_available ssh-add || return 0
+
+  is_ssh_agent_alive "${SSH_AUTH_SOCK-}" && return 0
+
+  if is_command_available systemctl; then
+    use_ssh_agent_socket "$(systemctl --user show-environment 2>/dev/null | sed -n 's/^SSH_AUTH_SOCK=//p')" && return 0
+  fi
+
+  if [ -n "${XDG_RUNTIME_DIR-}" ]; then
+    # openssh_agent: Debian's ssh-agent.service
+    # keyring/ssh, gcr/ssh: GNOME Keyring and its gcr-ssh-agent successor
+    # ssh-agent.sock: the conventional fixed path for a hand-managed agent
+    for _ssh_agent_socket in openssh_agent keyring/ssh gcr/ssh ssh-agent.sock; do
+      if use_ssh_agent_socket "${XDG_RUNTIME_DIR}/${_ssh_agent_socket}"; then
+        unset _ssh_agent_socket
+        return 0
+      fi
+    done
+  fi
+
+  # find instead of a glob: zsh aborts on a glob with no matches until NOMATCH
+  # is unset, which happens after the environment file runs. A here-document
+  # instead of a pipe keeps the loop, and the export, in the current shell.
+  # The trailing slash makes find descend /tmp where it is a symbolic link
+  # (macOS).
+  while IFS= read -r _ssh_agent_socket; do
+    if use_ssh_agent_socket "${_ssh_agent_socket}"; then
+      unset _ssh_agent_socket
+      return 0
+    fi
+  done <<EOF
+$(find /tmp/ -mindepth 2 -maxdepth 2 -type s -path '/tmp/ssh-*/agent.*' -user "$(id -u)" 2>/dev/null)
+EOF
+
+  unset _ssh_agent_socket
+  # Leave no dead socket behind: tools that treat the variable as
+  # authoritative then report "no agent" instead of a connection failure.
+  unset SSH_AUTH_SOCK
+  return 1
+}
+
 is_snap_available() {
   if is_command_available "snap" && [ -e "/run/snapd.socket" ]; then
     return 0
