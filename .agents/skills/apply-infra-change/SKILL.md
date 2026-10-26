@@ -47,6 +47,17 @@ release notes against the deployed configuration first. A migrator that rewrites
 a file the role renders (a version key, a renamed option) restarts the service
 on every later run until the template follows the migrated file.
 
+A by-hand rewrite of a state file the service reads at startup (an integration's
+stored configuration entry) gets its dry run before anything stops: the rewrite
+script first re-serializes the unchanged document and aborts unless the result
+matches the file byte for byte, since a store's layout can differ from what a
+default serializer produces (compact records inside an indented wrapper), and it
+asserts on the count of records it is about to change. Then run the stop, the
+backup copy, and the edit as one `sh -e` script on the host whose `EXIT` trap
+starts the service, so the success path and the abort path both end with the
+service running. Use the host's own shell: the control machine's shell may not
+exist there.
+
 ## 3. Rehearse Recovery Paths on Scratch Targets
 
 A verification of a restore, a migration rollback, or a failover runs against a
