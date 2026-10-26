@@ -570,6 +570,13 @@ install_dotfiles() {
     file_path="${HOME}/${file_base_path}"
     echo "File to link: ${file}. File base path: ${file_base_path}. Target file path: ${file_path}"
 
+    # CI runner images ship default shell files (.bashrc, .profile) in the
+    # home directory. Nobody owns them, so remove them instead of refusing.
+    if is_ci && [ -f "${file_path}" ] && [ ! -L "${file_path}" ]; then
+      echo "${file_path} is a runner default. Removing it..."
+      rm -fv "${file_path}"
+    fi
+
     if ! symlink_file "${file}" "${file_path}"; then
       INSTALL_DOTFILES_RET_CODE=1
       break
