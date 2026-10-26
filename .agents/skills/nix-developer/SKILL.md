@@ -21,7 +21,10 @@ configurations.
 - **Declarative Over Imperative:** Avoid `nix-env` or imperative state
   manipulation. Everything should be declared in code.
 - **Formatting and linting:** Configure `treefmt` to run `nixfmt`, `deadnix`,
-  and `statix`. Run formatting with `nix fmt`. For more information, see
+  and `statix`. Run formatting with `nix fmt` from the flake's directory: its
+  arguments are files to format, and it resolves the flake from the current
+  directory, so `nix fmt <flake directory>` run from elsewhere fails with "is
+  not part of a flake" (nix 2.34). For more information, see
   [references/nix-treefmt.md](references/nix-treefmt.md).
 
 ## Workflows
@@ -106,15 +109,33 @@ Verify NixOS host configurations with sandboxed VM integration tests:
   authoritative version-in-use evidence: locate it in the module source, read
   the script it runs, and note the API verbs and which calls can fail silently.
   When the behavior is a defect, check nixpkgs master for an upstream fix before
-  designing a workaround, and record which release delivers it.
+  designing a workaround, and record which release delivers it. The same reading
+  covers access control: a module that always writes an access-control file (an
+  ACL and a password file per listener, as `services.mosquitto` does) denies
+  what the daemon's own defaults allow, so an open service needs explicit
+  permissive settings, and its test needs a client of each identity the
+  consumers use.
 - **Modularity:** Split large configurations into separate modules using the
   `imports = [ ... ];` pattern.
 - **Reviewing Changes:** When modifying configurations, review the resulting
   diffs and use `nix flake check` or `nix build` to validate syntax and
   evaluation before applying.
 - **Developer Workflow and Debugging:**
-  - Use `nix eval --raw .#checks.<system>.<test-name>.testScript` to dry-run
-    evaluate and inspect compiled Python test scripts without booting a VM.
+  - To inspect the compiled Python test script without building or booting
+    anything, evaluate the test framework's internal option that holds it:
+    `nix eval --raw .#checks.<system>.<test-name>.config.testScriptString`. The
+    test derivation exposes no `testScript` attribute, and `config.testScript`
+    is a functor when the generator declares `testScript = { nodes, ... }: ...`,
+    so `nix eval --raw` fails on both. Building the `driver` output also runs
+    the script through mypy and pyflakes and writes it to
+    `<driver>/test-script`, but it pulls in the nodes' VM closures.
+  - A check proves only what its steps exercise, and its comment claims no more:
+    a persistence claim needs a restart between the write and the read (a
+    Mosquitto broker serves retained messages from its in-memory database, which
+    reaches the store a restart reloads at shutdown, every `autosave_interval`
+    of 30 minutes by default, and on SIGUSR1, so within a test only the shutdown
+    write lands), and a claim about an access rule needs a client of each
+    identity the consumers use.
   - When writing VM test assertions for asynchronous services (like QEMU guest
     agent), use `machine.wait_for_file` to block until udev creates the device
     node before asserting on the service unit.

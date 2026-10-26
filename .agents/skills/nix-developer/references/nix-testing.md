@@ -132,15 +132,21 @@ them:
 Because Python test scripts are dynamically compiled via Nix string
 interpolation, you cannot see the raw Python code inside `test.nix`.
 
-To dry-run evaluate and print the **fully compiled Python script** exactly as
-QEMU will execute it, run:
+To print the **fully compiled Python script** exactly as the driver will execute
+it, evaluate the internal option in which the test framework stores it
+(`testScriptString` in `nixos/lib/testing/testScript.nix`, the result of
+applying `testScript` to the evaluated nodes):
 
 ```shell
-nix eval --raw .#checks.<system>.<hostname>-test.testScript
+nix eval --raw .#checks.<system>.<hostname>-test.config.testScriptString
 ```
 
-This compiles the string interpolations and outputs the Python source instantly
-without booting a VM.
+This evaluates the string interpolations without building or booting anything.
+The test derivation exposes no `testScript` attribute, and `config.testScript`
+is a functor when the generator declares `testScript = { nodes, ... }: ...`, so
+`nix eval --raw` fails on both. Building the test's `driver` output also runs
+the script through mypy and pyflakes and writes it to `<driver>/test-script`, at
+the cost of building the nodes' VM closures.
 
 ### Asynchronous Udev Boot Races
 
