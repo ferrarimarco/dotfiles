@@ -210,7 +210,7 @@ The plan presented for approval must list:
 - Route edits to a project's own files through that repository's validation
   pipeline and commit conventions; dotfiles edits follow the dotfiles flow. Run
   the formatter before the review and read its diff: a rewrite beyond the edited
-  lines (a list turned loose by a stray blank line) is a structural defect to
+  lines (a list turned loose by a stray empty line) is a structural defect to
   fix, not formatter noise.
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
