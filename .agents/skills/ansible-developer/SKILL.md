@@ -125,10 +125,9 @@ runs against unconfigured hosts:
   proves nothing; then root-cause unexpected `state: absent` or teardown
   predictions (see Variable Precedence Traps) before applying. A declared change
   missing from the predictions is usually a skipped item, or one dropped by
-  tags, `--limit`, or an empty loop list. The default callback prints only
-  `skipping: ... (item=...)`; run with `-v` to see the item's `skip_reason` and
-  `false_condition`, or read the task's `when` against the item's fields: a
-  `state` value no task matches (`present` where the task tests
+  tags, `--limit`, or an empty loop list. Run with `-v` to see a skipped item's
+  `skip_reason` and `false_condition`, or read the task's `when` against the
+  item's fields: a `state` value no task matches (`present` where the task tests
   `state == 'file'`) disables the entry silently and leaves the file on the host
   as it was.
 - An **intended** `state: absent` prediction on a directory still needs a look
@@ -137,29 +136,24 @@ runs against unconfigured hosts:
   configuration, so the removal destroys state, not just config.
 - Gate a role's destructive tasks (for example, an exclusive `authorized_keys`
   replacement in a bootstrap role) on host group or enablement variables, not on
-  tags: a monolithic playbook run with `--tags <x>,untagged` still runs every
-  role's untagged tasks on every host in the play, so out-of-scope hosts see
-  destructive predictions. Scoping the run to the narrowest playbook is a
-  secondary safeguard, not the fix — but still the default invocation, since
-  `--tags <x>,untagged` also selects the untagged tasks of every other play in a
-  chained playbook.
+  tags: `--tags <x>,untagged` runs every role's untagged tasks across every play
+  and host in the invocation. Scoping the run to the narrowest playbook is the
+  default invocation and a secondary safeguard, not a substitute for the
+  variable gate.
 - A task carrying any tag is no longer `untagged`: a skip-marker tag (for
   example `molecule-notest`) silently deselects the task from
   `--tags <x>,untagged` runs, so deployment steps that depend on it (such as
   restarting the services that read a changed configuration) quietly stop
   happening in scoped runs. When such a task must still run there, pair the
-  marker with the `always` tag: `--skip-tags` beats `always`, so the test-skip
-  behavior survives.
-- **Check mode may not predict image pulls or container recreation:** when the
-  pull and `up` are `command` tasks (a role that shells out to
-  `docker compose`), check mode skips them and predicts neither, so a stack
-  applied after a gap silently recreates every container whose image pin changed
-  since the last run; `community.docker.docker_compose_v2` runs `up --dry-run`
-  in check mode and shows the recreation, but not the pull. Either way, before
-  applying after a gap, compare each service's pinned image with the image its
-  running container was created from
+  marker with the `always` tag (`--skip-tags` beats `always`, so the test-skip
+  behavior survives).
+- **Check mode may not predict image pulls or container recreation:** `command`
+  tasks running `docker compose` are skipped in check mode, and
+  `community.docker.docker_compose_v2` runs `up --dry-run` (showing recreation,
+  not pulls). Before applying after a gap, compare each service's pinned image
+  with its running container's image
   (`docker inspect --format '{{.Config.Image}}'`; a string match is conclusive
-  only for digest pins), and state which containers the apply will upgrade.
+  only for digest pins) and state which containers the apply will upgrade.
 - **Check with the tag scope the apply will use:** a full check on a host that
   only ever received tag-scoped runs mixes the change under review with the
   drift those runs never delivered, and the drift can be destructive (an
@@ -197,11 +191,6 @@ runs against unconfigured hosts:
   (ansible.posix 1.5.1 and later) drops only the fstab line and leaves the
   directory alone, which is what a dead disk's entry needs while a placeholder
   tree still lives under its path.
-- Smoke-test a new network share from a consumer host through the real client
-  stack: an ephemeral mount with the deployed credentials file and the
-  production mount options, then unmount and remove the mount point. It proves
-  more than a share listing from an ad-hoc client tool, and it is a state change
-  even though it is ephemeral: get approval first.
 
 ## Secrets
 
@@ -237,28 +226,23 @@ runs against unconfigured hosts:
   Docker creates the directory and the container starts on the bare mount point.
 - **Quotes in a Compose `environment:` list entry are literal.** Compose passes
   `- KEY="value"` to the container with the quotes included (list form is not
-  shell syntax), so a template that writes them sets a different value than a
-  shell would. When such a value keys something (a restic repository password,
+  shell syntax). When such a value keys something (a restic repository password,
   an encryption key), the form the first run used is locked in, and every other
   path that supplies the secret (a playbook, a one-off command) must reproduce
   the literal exactly; confirm which form the key accepts before building on
   either. New values use the map form (`KEY: value`) or an `env_file`, where the
-  parser handles quoting; the reproduce-the-literal rule is for repositories
-  already keyed with the quoted form.
+  parser handles quoting.
 - **A replaced bind-mounted file is invisible to the running container.**
-  Templating a config file that a container bind-mounts individually replaces
-  the file's inode, while the container keeps the old one; hot-reload endpoints
-  then reload stale content and report success. After templating such a file,
-  restart the container instead of relying on a reload, and verify the change
-  through the service's own API (active configuration, target lists), not by
-  reading the file on the host.
+  Templating a single bind-mounted config file replaces its inode while the
+  container keeps the old one, so hot-reload endpoints reload stale content.
+  Restart the container instead of reloading, and verify the active config
+  through the service's API.
 
 ## Testing with Molecule
 
 - **A wrapper that builds one image tag for tests and playbook runs races:** two
   concurrent invocations with different build targets rebuild the same tag under
-  each other (a playbook run left a Molecule run without its `molecule` binary).
-  Give the test target its own tag, or run them one at a time.
+  each other. Give the test target its own tag, or run them one at a time.
 - **Failures are layered:** a failing stage hides every failure after it. After
   a fix, rerun until both converge and idempotence pass before reporting the
   test as fixed, and expect defects that accumulated while the test was red.
@@ -294,24 +278,18 @@ runs against unconfigured hosts:
 ## Best Practices
 
 - Name every task descriptively; task names are the run's user interface.
-- **The playbook is a deploy-time caller, not the host's supervisor:** every
-  workload the host must bring up at boot gets a unit the host owns (a oneshot
-  that runs `docker compose up`, wanted by the boot target and by the mount
-  units it depends on), and the playbook starts the workload through that unit,
-  so each deploy exercises what the next boot relies on. Start it from a
-  `command` task: `systemctl start <unit>` blocks until the oneshot finishes,
-  and the task then prints that run's journal by invocation ID (systemd skill)
-  so `changed_when` can key on the command's output. The systemd module's
-  `state: started` on a oneshot is the flapping task the idempotency rule
-  forbids, and its result carries no journal to read.
+- **Start boot-supervised workloads through their host unit:** every workload
+  the host brings up at boot gets a host-owned unit (a oneshot running
+  `docker compose up`, wanted by the boot target and its mount units), and the
+  playbook starts it from a `command` task (`systemctl start <unit>`, then
+  reading that run's journal by invocation ID so `changed_when` can key on the
+  output) rather than `systemd` module `state: started`, which flaps on oneshots
+  and returns no journal.
 - **Keep SSH sessions alive through long tasks:** add
-  `-o ServerAliveInterval=30 -o ServerAliveCountMax=3` to `ssh_common_args`,
-  which Ansible appends for every SSH tool; setting `ssh_args` instead replaces
-  the `ControlMaster` and `ControlPersist` defaults that carry connection
-  multiplexing. A task that idles the session for minutes (a multi-gigabyte
-  image pull) otherwise hung a run for over an hour when something on the path
-  dropped the idle connection and the client never noticed; the keepalives keep
-  the path's state alive and bound the detection.
+  `-o ServerAliveInterval=30 -o ServerAliveCountMax=3` to `ssh_common_args`
+  (setting `ssh_args` replaces the `ControlMaster` and `ControlPersist`
+  multiplexing defaults), so long idle tasks such as multi-gigabyte image pulls
+  do not hang when an intermediate hop drops the connection.
 - **Remove drift from a setting the role no longer manages by hand, not with a
   lingering `state: absent` task:** when a role stops managing a setting that
   one host still carries (a sysctl line, a file), remove it on that host with
@@ -351,14 +329,12 @@ runs against unconfigured hosts:
 - **No quote characters around a `{{ }}` expression inside a folded block:** a
   whole-string scalar such as `"{{ expr }}"` is fine (YAML strips the quotes),
   but a `>-` block whose content starts and ends with `"` hands the quotes to
-  Jinja, so the result is the string rendering of a list and the next list
-  concatenation fails with "can only concatenate list (not ...) to list" (the
-  type name in the message depends on the core, the operand order on which side
-  the string sits). This is not a version change: a scratch test on ansible-core
-  2.17 fails the same way, and the literal re-evaluation that 2.19 removed only
-  ever applied to unquoted results. Check a list-building fact with
-  `{{ my_fact | type_debug }}` in a `debug` task right after the `set_fact`:
-  `list`, not `str`.
+  Jinja, turning a list into its string representation so later list
+  concatenation fails with "can only concatenate list (not ...) to list" (this
+  is not a version change: ansible-core 2.17 fails the same way, and the literal
+  re-evaluation that 2.19 removed only ever applied to unquoted results). Check
+  a list-building fact with `{{ my_fact | type_debug }}` in a `debug` task right
+  after the `set_fact` (`list`, not `str`).
 - Prefer `systemd` units, timers, and handlers over cron entries and ad-hoc
   restarts; notify handlers from the tasks that change the relevant files.
 - When a task list grows beyond one concern, split it into included task files

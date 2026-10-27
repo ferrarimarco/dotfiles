@@ -39,13 +39,11 @@ expected gains, and per-step measured deltas for the experiments that run.
 - CPU: RAPL package and DRAM watts (`/sys/class/powercap`), core and package
   C-state residency (`powertop`, `turbostat`), governor and driver mode
   (`/sys/devices/system/cpu/*/cpufreq`).
-- Platform ceiling: many server boards expose no package state deeper than C6
-  while consumer boards often reach C8 to C10, but the firmware decides either
-  way. Read the package C-state limit it programmed (the `pkg-cstate-limit`
-  field in the header `turbostat` prints on Intel hosts with MSR access) before
-  treating a C6 ceiling as the platform's, then rule out a blocked device. A
-  host already at its deepest state has no blocked state to unlock, so stories
-  of halving idle power by fixing one device do not transfer to it.
+- Platform ceiling: server boards often expose no package state deeper than C6
+  while consumer boards reach C8 to C10, as programmed by the firmware. Read
+  `pkg-cstate-limit` in the `turbostat` header (on Intel hosts with MSR access)
+  before treating a C6 ceiling as the platform's, then rule out a blocked
+  device; a host already at its deepest state has no blocked state to unlock.
 - PCIe: `lspci -vv` link capabilities versus link control (ASPM advertised
   versus enabled), the `pcie_aspm` policy, `_OSC` lines in the kernel log that
   show whether the firmware granted ASPM control, and devices the kernel refuses
@@ -54,10 +52,9 @@ expected gains, and per-step measured deltas for the experiments that run.
   policies per host, DIPM and DevSleep support (`hdparm -I`), NVMe APST states
   (`smartctl -c`), and which drives hold data versus sit empty.
 - Out of band: install the IPMI tool on hosts with a BMC and read fan speeds,
-  the fan mode, temperatures, and the DCMI power reading. A zero or missing DCMI
-  reading means either that the PSU has no PMBus or that the BMC does not
-  implement DCMI power management: check the sensor repository (`ipmitool sdr`)
-  for power sensors before settling for the wall meter as the only instrument.
+  the fan mode, temperatures, and the DCMI power reading. If DCMI power is zero
+  or missing (no PSU PMBus or no BMC DCMI support), check `ipmitool sdr` for
+  power sensors before relying solely on the wall meter.
 - PSU: identify the model and age. Certification efficiency applies at 20% to
   100% load; at the 5% to 10% load an idle server presents, a decade-old unit
   loses a quarter or more of the input power.

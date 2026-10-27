@@ -97,59 +97,40 @@ Verify NixOS host configurations with sandboxed VM integration tests:
 - **Module reconciliation defaults:** before keeping part of a service's
   configuration imperative (managed through its API or GUI), read the module's
   activation-time reconciliation behavior in the nixpkgs source at the version
-  in use. Many modules delete or replace undeclared objects on every activation
-  by default (e.g. `services.syncthing` `overrideDevices` and `overrideFolders`
-  default to `true` and delete undeclared devices and folders as stale even when
-  the configuration declares none), and declared objects are re-applied
-  wholesale, stripping imperatively added fields. Replacement can also act at
-  the settings-section level: declaring a single key can reset the section's
-  undeclared keys on every activation. Disable such flags explicitly, leave
-  sections holding imperative fields undeclared, and verify the imperative state
-  survives the first activation. The deployed generation's setup unit is the
-  authoritative version-in-use evidence: locate it in the module source, read
-  the script it runs, and note the API verbs and which calls can fail silently.
-  When the behavior is a defect, check nixpkgs master for an upstream fix before
-  designing a workaround, and record which release delivers it. The same reading
-  covers access control: a module that always writes an access-control file (an
-  ACL and a password file per listener, as `services.mosquitto` does) denies
-  what the daemon's own defaults allow, so an open service needs explicit
-  permissive settings, and its test needs a client of each identity the
-  consumers use.
+  in use (locate the deployed generation's setup unit in the module source, read
+  its script, and note the API verbs and which calls can fail silently). Many
+  modules delete or replace undeclared objects on every activation by default
+  (e.g. `services.syncthing` `overrideDevices` and `overrideFolders` default to
+  `true` and delete undeclared devices and folders even when none are declared),
+  strip imperatively added fields from declared objects, or reset undeclared
+  keys when any key in a settings section is declared. Disable such flags
+  explicitly, leave sections holding imperative fields undeclared, and verify
+  imperative state survives activation. When the behavior is a defect, check
+  nixpkgs master for an upstream fix before designing a workaround, and record
+  which release delivers it. The same reading covers access control: a module
+  that always writes an ACL or password file (as `services.mosquitto` does per
+  listener) denies what the daemon's defaults allow, so an open service needs
+  explicit permissive settings.
 - **Modularity:** Split large configurations into separate modules using the
   `imports = [ ... ];` pattern.
 - **Reviewing Changes:** When modifying configurations, review the resulting
   diffs and use `nix flake check` or `nix build` to validate syntax and
   evaluation before applying.
 - **Developer Workflow and Debugging:**
-  - To inspect the compiled Python test script without building or booting
-    anything, evaluate the test framework's internal option that holds it:
-    `nix eval --raw .#checks.<system>.<test-name>.config.testScriptString`. The
-    test derivation exposes no `testScript` attribute, and `config.testScript`
-    is a functor when the generator declares `testScript = { nodes, ... }: ...`,
-    so `nix eval --raw` fails on both. Building the `driver` output also runs
-    the script through mypy and pyflakes and writes it to
-    `<driver>/test-script`, but it pulls in the nodes' VM closures.
   - A check proves only what its steps exercise, and its comment claims no more:
-    a persistence claim needs a restart between the write and the read (a
-    Mosquitto broker serves retained messages from its in-memory database, which
-    reaches the store a restart reloads at shutdown, every `autosave_interval`
-    of 30 minutes by default, and on SIGUSR1, so within a test only the shutdown
-    write lands), and a claim about an access rule needs a client of each
-    identity the consumers use.
-  - When writing VM test assertions for asynchronous services (like QEMU guest
-    agent), use `machine.wait_for_file` to block until udev creates the device
-    node before asserting on the service unit.
-  - The test driver's `machine.succeed` runs commands under `pipefail`, so an
-    early-exiting pipe consumer (`grep -q`) on a large producer fails the
-    pipeline; use a consumer that reads the full stream, such as
-    `grep <pattern> > /dev/null`.
+    a persistence claim needs a restart between the write and the read (for
+    example, Mosquitto serves retained messages from memory and writes to disk
+    at shutdown, on `SIGUSR1`, or every `autosave_interval`), and an access-rule
+    claim needs a client of each identity the consumers use.
+  - The test driver's `machine.succeed` runs commands under `pipefail`, so avoid
+    early-exiting pipe consumers (`grep -q`) on large output.
   - `machine.wait_for_unit` proves the unit is active, not that the service
-    accepts requests (under boot load, probes right after activation can be
-    refused or return incomplete responses): assert on behavior with
+    accepts requests: assert on behavior with
     `machine.wait_until_succeeds(..., timeout=N)` instead of a one-shot
     `machine.succeed`.
-  - See [references/nix-testing.md](references/nix-testing.md) for advanced
-    testing best practices.
+  - For inspecting compiled test scripts (`config.testScriptString`), handling
+    asynchronous udev device races (`machine.wait_for_file`), and interactive VM
+    debugging, see [references/nix-testing.md](references/nix-testing.md).
 
 ### Flake development
 
@@ -166,6 +147,6 @@ Verify NixOS host configurations with sandboxed VM integration tests:
 
 ### References
 
-- [Nix command reference](references/nix-commands.md)
+- [Nix command reference](https://nix.dev/manual/nix/latest/command-ref/command-ref)
 - [treefmt example](references/nix-treefmt.md)
 - [NixOS Integration Testing Reference Guide](references/nix-testing.md)

@@ -27,13 +27,11 @@ requirements, as a software architect and quality assurance engineer would.
 
 ## Workflow
 
-1. The user provides a specification.
-2. Analyze it and identify gaps in the logic or missing requirements.
-3. Ask concise clarifying questions, grouped logically (e.g., Requirements, Data
-   Modeling, Edge Cases), at most 3-4 at a time.
-4. Iterate until all requirements are clear, robust, and complete, then
-   summarize the final validated specification.
-5. Ask whether to save the validated spec in a Markdown file. If so, ask whether
-   to update the existing spec file or create a new one; for a new file, ask
-   where to save it and what to name it, suggesting `docs/specs` as the default
-   location when that directory exists.
+1. Analyze the provided specification for gaps, ambiguities, or contradictions.
+2. Ask at most 3–4 concise clarifying questions at a time, grouped logically
+   (e.g., Requirements, Data Modeling, Edge Cases).
+3. Iterate until requirements are clear and complete, then present the validated
+   specification.
+4. Ask whether to save the validated spec in a Markdown file (updating the
+   existing file or creating a new one; for a new file, ask where to save it and
+   what to name it, suggesting `docs/specs` when that directory exists).

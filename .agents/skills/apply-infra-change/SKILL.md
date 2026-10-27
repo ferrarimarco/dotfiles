@@ -35,11 +35,10 @@ unexpected destructive prediction as a bug to root-cause before applying.
 A Compose stack applied after a gap recreates every container whose image pin
 changed since the last run, and an Ansible check run whose pull and `up` are
 `command` tasks predicts neither the pull nor the recreation. Before such an
-apply, compare each service's pinned image with the image its running container
-was created from (`docker inspect --format '{{.Config.Image}}'`) and state which
-containers the apply will upgrade, so a change scoped to one service does not
-upgrade others unannounced. A string match is conclusive only for digest pins:
-with a tag (or `pull_policy: always`), run `docker compose pull` first, then
+apply, compare each service's pinned image with its running container's image
+(`docker inspect --format '{{.Config.Image}}'`) and state which containers the
+apply will upgrade. A string match is conclusive only for digest pins: with a
+tag (or `pull_policy: always`), run `docker compose pull` first, then
 `docker compose --dry-run up` to see which containers it would recreate.
 
 A deploy after a gap can also carry a major version bump of a service: read its
@@ -47,16 +46,13 @@ release notes against the deployed configuration first. A migrator that rewrites
 a file the role renders (a version key, a renamed option) restarts the service
 on every later run until the template follows the migrated file.
 
-A by-hand rewrite of a state file the service reads at startup (an integration's
-stored configuration entry) gets its dry run before anything stops: the rewrite
-script first re-serializes the unchanged document and aborts unless the result
-matches the file byte for byte, since a store's layout can differ from what a
-default serializer produces (compact records inside an indented wrapper), and it
-asserts on the count of records it is about to change. Then run the stop, the
-backup copy, and the edit as one `sh -e` script on the host whose `EXIT` trap
-starts the service, so the success path and the abort path both end with the
-service running. Use the host's own shell: the control machine's shell may not
-exist there.
+For a by-hand rewrite of a state file the service reads at startup (such as an
+integration's stored configuration entry), dry-run the rewrite before stopping
+anything: re-serialize the unchanged document and abort unless it matches byte
+for byte (a store's layout can mix compact records inside an indented wrapper),
+and assert on the count of records to change. Then run the stop, backup copy,
+and edit as one `sh -e` script on the host whose `EXIT` trap starts the service,
+using the host's own shell.
 
 ## 3. Rehearse Recovery Paths on Scratch Targets
 
@@ -111,8 +107,9 @@ exit status.
   from the earlier one.
 - A before-and-after difference is reported from a diff of the saved before and
   after outputs, never from counts remembered from different baselines.
-- Smoke-test through the consumer's access path: prefer a test that exercises
-  the same stack real consumers use (same client software, credentials, and
-  network route) over installing ad-hoc tools; for example, a temporary CIFS
-  mount with production mount options and the deployed credentials file, rather
-  than adding `smbclient` to a host.
+- Smoke-test through the consumer's access path: exercise the same stack real
+  consumers use (same client software, credentials, and network route) instead
+  of installing ad-hoc tools—for example, an ephemeral CIFS mount with
+  production mount options and the deployed credentials file, followed by
+  unmounting and removing the mount point (get approval first, since even an
+  ephemeral mount is a state change), rather than adding `smbclient`.

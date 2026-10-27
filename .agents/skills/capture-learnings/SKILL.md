@@ -51,38 +51,31 @@ unlinked copy under the home directory.
 
 ## 2. Mine the Session for Signals
 
-Review the conversation for:
+Review the conversation (including this capture run itself) for:
 
-- corrections the user made;
-- tool calls the user rejected or interrupted;
-- questions the agent had to ask that better instructions would have answered;
-- mistakes caused by missing, ambiguous, or contradictory instructions;
-- workflow steps the agent had to rediscover;
-- environment quirks learned the hard way;
-- detection and recovery gaps: an incident that monitoring missed or caught
-  late, or a recovery that a runbook step would have shortened; note whether the
-  check existed before the fix was applied, since a check added together with
-  the fix never saw the real failure;
-- a test fixture or CI matrix that never exercises a code path the real data
-  uses, so CI stays green while real runs fail;
-- statements the agent made to the user and corrected later, or disproved during
-  this capture run (an attribution, a count read off the wrong listing, a
-  "nothing changed"), with the check that would have caught each one first;
-- review gaps in code or document reviews: comments a reviewer or review bot
-  posted on the change or document that the agent's review missed, findings a
-  delegated review returned on the agent's own output that its self-check had
-  missed, and findings the agent caught ad-hoc that existing skills or
-  instructions do not yet cover;
-- later corrections to rules that earlier capture runs wrote (the target file's
-  history shows the commit): these are signals about this skill's process as
-  well as about the target.
+- user corrections, and rejected or interrupted tool calls;
+- questions the agent had to ask, mistakes caused by missing, ambiguous, or
+  contradictory instructions, and workflow steps or environment quirks learned
+  the hard way;
+- statements the agent made and corrected later, or disproved during this run
+  (an attribution, a count off the wrong listing, a "nothing changed"), with the
+  check that would have caught each one first;
+- detection and recovery gaps: an incident monitoring missed or caught late, or
+  a recovery a runbook step would have shortened (note whether the check existed
+  before the fix, since a check added with the fix never saw the real failure);
+- test fixtures or CI matrices that never exercise a code path real data uses;
+- review gaps in code or document reviews: external reviewer or bot comments the
+  agent's review missed, delegated-review findings on the agent's output that
+  its self-check missed, and ad-hoc findings not yet covered by existing skills
+  or instructions;
+- later corrections to rules earlier capture runs wrote (shown in the target
+  file's commit history), which are signals about this skill's process as well
+  as the target.
 
-This run is part of the session too. Before presenting the plan, mine the run
-itself: conventions it had to look up, rules it rewrote after a check, and
-review findings on its output. Route those to this skill. Then run a blind-spot
-check: list the kinds of findings the session produced, and treat a kind that
-matches no signal above, or has no destination in the routing list, as an edit
-to this skill rather than a finding to drop.
+Before presenting the plan, route lessons from this run itself (conventions
+looked up, rules rewritten after a check, review findings on its output) and any
+signal kind that matched no bullet above or no destination in step 5 to this
+skill rather than dropping them.
 
 ## 3. Review Saved Memories for Promotion
 
@@ -102,125 +95,92 @@ memory directory or `MEMORY.md` does not exist, state that and skip this step.
 
 Propose only changes that generalize beyond the session. Discard:
 
-- one-off facts;
-- anything already covered by existing instructions, unless the session
-  (including this run) did not apply the covering rule: then the finding is
-  about reachability, and the fix is adding the check to the step where the
-  agent was working, not discarding it;
-- anything derivable from a repository's own code or documentation;
-- anything the session already captured in a project's own knowledge base
-  (guides, specifications, todo items): verify it landed, instead of
-  re-proposing it. A lesson counts as captured only where the next change is
-  written against (the reference pattern, the guide, the convention list), not
-  only on the page of the incident that produced it: a rule that sits inside the
-  incident's own section is a finding to route onward.
+- one-off facts, or anything derivable from a repository's own code or docs;
+- anything already covered by existing instructions, unless the session (or this
+  run) failed to apply the covering rule—then the gap is reachability, and the
+  fix is adding the check to the step where the agent was working;
+- anything the session already captured in a project's knowledge base (guides,
+  specifications, todo items): verify it landed where the next change is written
+  against (the reference pattern, guide, or convention list), not only inside an
+  incident's own section.
 
-Capture project-routed lessons during the session, in the project's own
-knowledge base, while the context is fresh; when a capture run finds uncaptured
-project-specific lessons for `<project>/.agents/skills`, `<project>/AGENTS.md`,
-or project documentation, propose them in the plan alongside the cross-project
-residue rather than skipping them because the project checkout is on an
-in-flight branch or has a pending changelist. Concurrent sessions may also run
-their own capture: before proposing, check the target files' recent history and
-working tree for capture edits from other sessions, and reconcile instead of
-duplicating.
+Propose uncaptured project-specific lessons for `<project>/.agents/skills`,
+`<project>/AGENTS.md`, or project documentation alongside cross-project lessons,
+even when the project checkout is on an in-flight branch or pending changelist.
+Check the target files' recent history and working tree for capture edits from
+concurrent sessions, and reconcile instead of duplicating.
 
 ## 5. Route Each Finding
 
 Route each session finding and promoted memory to the first matching destination
 in this priority order, never to both a skill and `AGENTS.md`:
 
-1. An existing skill, when the lesson is specific to a task type a skill already
-   covers (an Ansible lesson goes into the Ansible skill): route to the
-   project's skill (`<project>/.agents/skills/*`) when the rule is a convention
-   of that repository, or to the global skill (`<root>/.agents/skills/*`) when
-   it holds across all repositories, never both. An agent that did not consult
-   monitoring the project already had is an instruction gap, not a monitoring
-   gap.
-2. The project's `AGENTS.md`, when the lesson is a rule for the agent that is
-   specific to one repository.
-3. The global `~/.agents/AGENTS.md`, only for rules that apply to all projects
-   and fit its existing sections.
-4. A new skill, only when a recurring task type has no home; propose it in the
-   plan and, once approved, create the skill.
-5. `~/.claude/CLAUDE.md`, only for rules that apply exclusively to Claude Code.
+1. An existing skill for that task type: `<project>/.agents/skills/*` for a
+   repository-specific convention, or `<root>/.agents/skills/*` when it holds
+   across repositories, never both. An agent that skipped monitoring the project
+   already had is an instruction gap, not a monitoring gap.
+2. The project's `AGENTS.md`, for cross-task rules specific to one repository.
+3. The global `~/.agents/AGENTS.md`, only for rules that apply across all
+   projects and fit its existing sections.
+4. A new skill, only when a recurring task type has no home; propose its name
+   and description in the plan.
+5. `~/.claude/CLAUDE.md`, only for rules specific to Claude Code.
 6. The project's operational artifacts (alert rules, runbooks, todo items),
-   through the project's own pipeline, when the lesson is a check or a procedure
-   the project should run rather than a rule for the agent.
-7. This skill, when the defect is in how a lesson was captured, or when the
-   blind-spot check found a kind of lesson it never asks about.
+   through the project's pipeline, when the lesson is a check or procedure the
+   project should run rather than an agent rule.
+7. This skill, when the defect is in how a lesson was captured or routed.
 
 ## 6. Verify Each Proposed Rule
 
-A rule outlives the session, so it is held to the standard of a recommendation:
-
-- A rule about a tool's or module's behavior is checked against its
-  documentation or source at the version in use, and names the component
-  responsible: a wrong attribution sends the next agent to work around the wrong
-  layer.
-- A workaround is proposed only after checking the tool for a native option that
-  covers the case.
-- A tendency is written as a tendency, with how to check the specific case,
-  never as a universal.
-- A workflow step with non-trivial token or time cost (such as a subagent pass)
-  is scoped to the cases where it pays off and skipped on trivial work, rather
-  than mandated on every run.
-- Each rule is applied to its own motivating example, read as the next agent
-  would read it, to confirm it gives the right answer there, and then to the
-  neighbouring case the next agent meets (a second host behind the same probe, a
-  unit nothing keeps loaded): a rule that silences, deletes, or reports more
-  than its example did is scoped down.
-- A rule routed to the global dotfiles (`~/.agents/AGENTS.md` and
-  `<root>/.agents/skills/*`, which live in a public repository) keeps examples
-  and attributions generic and omits internal corporate hostnames, URLs, package
-  names, and identifiers from work sessions.
-- A new skill follows the repository's skill conventions for naming, body
-  layout, and skill-index registration (such as `README.md`), and the plan shows
-  its name and description.
+- Check any claim about a tool's or module's behavior against its source or
+  documentation at the version in use, and name the responsible component.
+- Propose a workaround only after checking the tool for a native option.
+- Write a tendency as a tendency, with how to check the specific case, never as
+  a universal.
+- Scope workflow steps with non-trivial token or time cost (such as subagent
+  passes) to the cases where they pay off, skipping trivial work.
+- Test each rule against its motivating example and the neighboring case the
+  next agent meets (a second host behind the same probe, an unloaded unit);
+  scope down any rule that silences, deletes, or reports more than its example.
+- Keep rules routed to the public dotfiles (`~/.agents/AGENTS.md` and
+  `<root>/.agents/skills/*`) generic, omitting internal corporate hostnames,
+  URLs, package names, and identifiers.
+- Follow the repository's skill conventions (`AGENTS.md`, `README.md`) when
+  creating a skill.
 
 ## 7. Present the Plan and Wait
 
 The plan presented for approval must list:
 
-- the proposed edits, as one table for each target file with a row for each edit
-  and three columns: the proposed update, its rationale (the session event or
-  memory that motivated it), and its evidence (the source file and version read,
-  the command run, or "expectation"). A row with no evidence is caught here, and
-  a finding appears in one file's table only;
-- the memories to delete or rewrite afterward, as a table with a row for each
-  memory and two columns: the action, and its rationale.
+- the proposed edits, as one table per target file with three columns: the
+  proposed update, its rationale (the session event or memory), and its evidence
+  (source file and version read, command run, or "expectation"); each finding
+  appears in one file's table only;
+- the memories to delete or rewrite afterward, as a table with two columns: the
+  action and its rationale.
 
 ## 8. Apply the Approved Plan
 
-- Edit in place and prefer tightening over growing: before appending a bullet,
-  search the target file for the subject and for the rules it interacts with,
-  then update or merge into existing rules that overlap instead of appending
-  near-duplicates, and rewrite sections that have accreted overlapping rules. A
-  new rule that contradicts an existing one in the file (a start task the file's
-  idempotency rule forbids) is a defect in the new rule. An unrelated lesson
-  that lands in the same section gets its own bullet with a bold lead, since
-  readers scan bullet leads. Keep the imperative, concise style of the target
-  file. A net line-count reduction is a valid outcome.
+- Edit in place and prefer tightening over growing: search the target file for
+  overlapping or interacting rules, merge or rewrite accreted sections instead
+  of appending near-duplicates, and ensure new rules do not contradict existing
+  ones. Give unrelated lessons in the same section their own bullet with a bold
+  lead, and keep the imperative, concise style of the target file. A net
+  line-count reduction is a valid outcome.
 - Remove a promoted memory only after its rule is written to the destination
-  file, in the same apply step: delete the memory file and its line in
-  `MEMORY.md`. Leave non-promoted memories untouched.
-- If a memory mixed a rule with state, rewrite it to hold only the state and
-  note where the rule moved.
-- Before editing any target file, check its repository's working tree: defer or
-  coordinate edits to files carrying uncommitted user changes, instead of
-  editing into another session's work.
+  file, in the same apply step: delete the memory file and its `MEMORY.md` line
+  (or rewrite memories that mixed a rule with state to keep only the state and
+  note where the rule moved). Leave non-promoted memories untouched.
+- Check each repository's working tree before editing, deferring or coordinating
+  around uncommitted changes from other sessions.
 - Route edits to a project's own files through that repository's validation
   pipeline and commit conventions; dotfiles edits follow the dotfiles flow. Run
-  the formatter before the review and read its diff: a rewrite beyond the edited
-  lines (a list turned loose by a stray empty line) is a structural defect to
-  fix, not formatter noise.
+  the formatter before review and inspect its diff: a rewrite beyond the edited
+  lines (such as a list turned loose by a stray empty line) is a structural
+  defect to fix.
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
-skill, as opposed to typos or mechanical one-liners), have a reviewer that did
-not write the rules read the diff: a fresh subagent given the diff, the target
-files, and the verification standard of step 6, asked to check each technical
-claim against the tool's source or documentation at the version in use, or the
-harness's code review. Review every repository the run edited, the project's
-runbooks and todo items included, not only the dotfiles: a runbook carries the
-same kind of technical claims as a skill. Fix what it finds before reporting. Do
-not commit unless asked.
+skill), have a fresh subagent or the harness's code review check the diff across
+every edited repository (including runbooks and todo items) against step 6 and
+the tool's source or docs at the version in use. Fix its findings before
+reporting. Do not commit unless asked.

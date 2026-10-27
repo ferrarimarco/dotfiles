@@ -59,11 +59,10 @@ descriptors, modules, resources.
   a pending change is applied with a warning and waits in the hypervisor, so
   read the apply output and the pending changes afterwards and schedule the
   restart behind a silence.
-- **Verify applies in state and in the real infrastructure:** after an apply,
-  confirm the change with a read-only inspection of the recorded state and a
-  read-only check against the live system (CLI or API of the target platform),
-  not just the apply's exit status. An apply with no changes does not rewrite a
-  local state file, so file modification times are not evidence of what ran.
+- **Verify applies in state and in the real infrastructure:** confirm the change
+  with a read-only check of the recorded state and of the live target platform;
+  a no-op apply does not rewrite a local state file, so file modification times
+  are not evidence of what ran.
 - **Terraform dependencies lockfile:** Generate and update Terraform dependency
   lockfiles (`.terraform.lock.hcl`) with Terraform and commit the lockfile;
   never hand-edit it. If the infrastructure is shared across operating systems
@@ -80,25 +79,15 @@ descriptors, modules, resources.
   `terraform fmt -recursive`) to automatically fix formatting issues.
 - **Planning:** Run `terraform plan` after making modifications to verify the
   execution plan matches the intended structural changes.
-- **Resource naming convention:** follow these rules when naming resources.
-  - Use lowercase letters and underscores (`_`) to separate words when naming
-    resources. Example: `server_vm`, not `server-vm`.
-  - Avoid repeating the resource type in the resource name. For example, prefer
-    `resource "aws_route_table" "public"` over
-    `resource "aws_route_table" "public_route_table"`.
-- **Variable definition:** follow these rules when defining variables.
-  - If necessary, add a suffix to the variable name that denotes the unit.
-    Example: `_gb` for gigabytes.
-  - Add a `description` and a `type` when defining Terraform variables.
-  - Implement variable `validation` if applicable. If you don't know how to
-    validate the variable, ask the user.
-- **Outputs definition:**
-  - Store outputs in a file named `outputs.tf` within the module or Terraform
-    service.
-  - Don't pass input variables as outputs directly. To ensure that an output
-    isn't evaluated until a resource is fully created, the output must reference
-    an exported attribute of the created resource (e.g.,
-    `value = google_compute_instance.web.id`).
+- **Resource naming:** use lowercase letters and underscores (`server_vm`, not
+  `server-vm`), and do not repeat the resource type in the name
+  (`resource "aws_route_table" "public"`, not `"public_route_table"`).
+- **Variables:** include `description` and `type`, suffix unit-bearing names
+  (e.g., `_gb`), and add a `validation` block where applicable (ask the user if
+  the validation rule is unclear).
+- **Outputs:** place outputs in `outputs.tf` and reference exported resource
+  attributes (`value = google_compute_instance.web.id`) rather than passing
+  input variables directly, so evaluation waits for resource creation.
 
 ### Data sources that reference variables
 

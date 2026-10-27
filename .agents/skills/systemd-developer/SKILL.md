@@ -36,13 +36,11 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
 - More than one `ExecStart=` is only valid with `Type=oneshot`: any other type
   makes systemd refuse the unit ("bad unit file setting").
 - `RuntimeMaxSec=` has no effect on `Type=oneshot` services; limit them with
-  `TimeoutStartSec=`, which covers all the `ExecStart=` commands together.
-  Without it a oneshot has no timeout at all: the start timeout is disabled by
-  default for `Type=oneshot`.
+  `TimeoutStartSec=`, which covers all `ExecStart=` commands together (disabled
+  by default for `Type=oneshot`).
 - Starting or restarting a `Type=oneshot` service blocks until its commands
   complete and reports their failure, while `Type=simple`/`exec` return as soon
-  as the process starts. This changes what a restart from configuration
-  management reports: prefer restarting the timer of a timer-triggered job.
+  as the process starts. For a timer-triggered job, prefer restarting the timer.
 - `ExecStart=` substitutes `$VAR` and `${VAR}` itself, so an `sh -c` body writes
   `$$` for a literal dollar (`$$(systemctl ...)`, `"$$unit"`);
   `systemctl show -p ExecStart` prints the unexpanded line, so the first run's
@@ -50,11 +48,9 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
 - A finished `Type=oneshot` keeps its invocation ID while the unit stays loaded
   (wanted by an active unit, or `RemainAfterExit=true`; observed on systemd 247
   and 252): an unreferenced oneshot is unloaded once inactive and the ID is
-  gone. `systemctl show -p InvocationID --value <unit>` returns the ID of that
-  run, and `journalctl _SYSTEMD_INVOCATION_ID=<id>` after `journalctl --sync`
-  returns its output with the manager's own "Starting" and "Finished" lines
-  excluded, which makes the unit usable from a tool that needs the command's
-  output.
+  gone. `systemctl show -p InvocationID --value <unit>` returns that run's ID,
+  and `journalctl _SYSTEMD_INVOCATION_ID=<id>` after `journalctl --sync` returns
+  its output without the manager's "Starting"/"Finished" lines.
 
 ## Dependencies and Triggers
 
@@ -69,19 +65,17 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   fires for it, so alert on the dependency (an expected-mount alert) instead.
 - systemd never retries a failed mount unit, and `nofail` turns the target's
   requirement into a want and drops the ordering, so the boot reaches
-  `remote-fs.target` without it. The retry is a timer whose service starts the
-  failed mount units with `systemctl start --no-block`: a mount that fails again
-  fails its own unit, and a mount that succeeds pulls in the units wanted by it.
-  `x-systemd.automount`, systemd's own retry, acts on access only, hands the
-  mount error to the accessor, and nothing accesses an absent share whose
-  consumers are stopped. A mount that appears without a start job (an NFS `bg`
-  mount completing, a manual `mount`) marks the mount unit active but starts
-  nothing wanted by it.
-- A CIFS mount attempt against a server that drops packets takes longer than the
-  mount unit's 90 s default start timeout (the TCP connect retries alone run
-  about two minutes), so the timeout kills it; later attempts then failed at
-  once with "Host is down" for as long as the block lasted, and a refused
-  connection fails immediately.
+  `remote-fs.target` without it. Retry with a timer whose service runs
+  `systemctl start --no-block` on failed mount units: a mount that fails again
+  (a CIFS mount against a packet-dropping server exceeds the 90 s default start
+  timeout before failing; subsequent attempts during the block fail with "Host
+  is down", while a refused connection fails immediately) fails its own unit,
+  and a mount that succeeds pulls in the units wanted by it.
+  `x-systemd.automount` acts on access only and hands the mount error to the
+  accessor (nothing accesses an absent share whose consumers are stopped), while
+  a mount that appears without a start job (an NFS `bg` mount completing, a
+  manual `mount`) marks the mount unit active without starting units wanted by
+  it.
 
 ## Sandboxing and State Directories
 

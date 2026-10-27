@@ -61,15 +61,12 @@ Analyze the diff to determine:
   Wrap every line, bullet points included, at 72 characters, and use a bulleted
   list for several distinct but related changes.
 - **Footers**: reference issues after an empty line: `Closes #123`, `Refs #456`.
-  Keep issue references with a hash sign (`#123`, `owner/repo#123`) and footer
-  keywords out of the message body, or write the references without the hash
-  sign: the parser reads them as the start of the footer, depending on where the
-  lines wrap. The same applies to any body line that starts with a word or
-  hyphenated token followed by a colon and a space (`Note: ...`,
-  `configured: ...`), wrapped or deliberate: commitlint reads it as the first
-  footer line, parses the rest of the message as footer, and warns about the
-  missing empty line, so reword such a line or rewrap it. Validation is the
-  reliable check.
+  Keep hash issue references (`#123`, `owner/repo#123`), footer keywords, and
+  lines starting with a word or hyphenated token followed by a colon and a space
+  (`Note: ...`, `configured: ...`) out of the body (reword or rewrap them, or
+  omit the hash sign): commitlint parses the first match and everything after it
+  as the footer and warns about a missing empty line. Validate with the
+  repository's commit linter to be sure.
 
 ### 4. Execute Commit
 
@@ -123,18 +120,12 @@ reserve it for a repository without them.
 
 ## Best Practices
 
-- **No AI attribution trailers**: never add `Co-Authored-By: Claude ...`,
-  `Generated with ...`, `Claude-Session: ...`, or similar AI attribution or
-  session-link trailers to commit messages, even when tool defaults suggest
-  doing so.
-- **Propose before executing**: when asked to commit or amend, propose the
-  commit split (files per commit) and the full messages, and wait for approval
-  before committing. Leave unrelated in-progress changes out of the proposal.
-  Give each proposed commit an identifier that is unique across the repositories
-  in the proposal (for example, `H1` and `D1`), so an approval of some commits
-  is unambiguous. When the user reviews commits one at a time, an approval
-  covers only the commit under review: create it and stop, instead of executing
-  the rest of the batch.
+- **Propose before executing**: propose the commit split (files per commit) and
+  full messages, leaving unrelated in-progress changes out, and wait for
+  approval. Give each proposed commit an identifier unique across the
+  repositories in the proposal (for example, `H1` and `D1`) so partial approvals
+  are unambiguous; when the user reviews commits one at a time, an approval
+  covers only the commit under review: create it and stop.
 - **Stage the exact paths of the approved commit**: never stage a directory
   wholesale when it may contain generated output or another session's work, and
   confirm the staged diff stat matches the proposal before committing. Check it
@@ -155,10 +146,6 @@ reserve it for a repository without them.
 - One logical change per commit.
 
 ## Concurrent Sessions
-
-Before staging, committing, rebasing, or building generated output, check the
-status and the log for changes you did not make, keep them out of your work, and
-report them. In particular:
 
 - Before a rebase, save the working tree diff outside the repository, and
   afterward verify that the uncommitted changes survived.

@@ -139,9 +139,8 @@ network:
   bypasses the page cache (`dd if=<file> iflag=direct`, or a read of the block
   device) settles it.
 - **A USB disk stuck in a reset loop is the diagnosis; capture the evidence,
-  then power it off.** After the kernel log and a time-bounded `smartctl`, power
-  it off before diagnosing anything else on the host: a disk that resets every
-  few seconds leaves udev workers and the USB storage thread in uninterruptible
-  wait, which strands sibling devices (a serial dongle never gets its `by-id`
-  link) and triggers UAS command aborts on other disks of the same controller,
-  the host's root disk included.
+  then power it off.** After capturing the kernel log and a time-bounded
+  `smartctl`, power the disk off before diagnosing anything else: repeated USB
+  resets stall udev workers and the USB storage thread in uninterruptible wait,
+  stranding sibling devices (`by-id` links) and triggering UAS command aborts on
+  other disks on the same controller (including the root disk).

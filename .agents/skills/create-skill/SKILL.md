@@ -141,36 +141,33 @@ anything.
 
 ### 3. Fix the Smallest Thing
 
-Change only what explains the failure, and prefer removing or tightening lines
-over adding them. Read what the test subagents did, not only what they produced,
-and remove parts of the skill that send the model on unproductive work.
+Change only what explains the failure, preferring tightening or removing lines.
+Read what the test subagents did, not only what they produced, and drop
+instructions that send the model on unproductive work.
 
 ### 4. Run an Ablation Test
 
-Launch two fresh subagents in parallel with the same self-contained prompt and
-the judging criteria fixed in advance; never a forking subagent, which inherits
-the parent context. The baseline invokes no skill when creating, or reads a
-pre-edit copy of `SKILL.md` from the scratchpad when improving, so the test
-measures the change rather than the skill's existence. Keep the change only if
-the new version is better against the criteria in a way you can name. Where the
-harness has no subagents, move the skill directory out of the skills tree
-temporarily and start a fresh session for each run, since harnesses that
-enumerate skills at startup will not notice a mid-session move. When the skill
-will serve more than one model, run the pair at least on the smallest and the
-largest: a body tuned for one may over- or under-explain for the other.
+Launch two fresh (non-forking) subagents in parallel with the same
+self-contained prompt and judging criteria fixed in advance. The baseline
+invokes no skill when creating, or reads a pre-edit copy of `SKILL.md` from the
+scratchpad when improving, so the test measures the change. Keep the change only
+if the new version is better against the criteria in a way you can name. Where
+the harness has no subagents, move the skill directory out of the skills tree
+temporarily and start a fresh session for each run (harnesses that enumerate
+skills at startup ignore mid-session moves). When the skill serves multiple
+models, run the pair on at least the smallest and the largest.
 
 ### 5. Bundle Repeated Work
 
-When the test runs independently write the same helper script or repeat the same
+When test runs independently write the same helper script or repeat the same
 multi-step approach, put it once in `scripts/` and point the skill at it.
 
 ### 6. Consolidate Duplicates
 
 When two skills share triggers or content, merge into the more general one and
 retire the other: delete its directory, reverse its registration steps from the
-repository's `AGENTS.md`, and search the remaining skills and instruction files
-for references to it, since a stale mention sends the agent to a skill that no
-longer exists.
+repository's `AGENTS.md`, and remove references to it across the remaining
+skills and instruction files.
 
 ## Skill Description
 
