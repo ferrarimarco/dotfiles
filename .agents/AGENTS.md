@@ -133,11 +133,14 @@
   comments and touches logic, control flow, permissions, or multi-step
   automation, offer to run a subagent with no conversation context over the
   entire diff against the base branch and the commit messages, not only the
-  latest additions. Skip trivial edits (typos, formatting, version bumps,
-  mechanical one-liners). When a change also requires an expensive or
-  working-tree-digest-locked evaluation or benchmark run, settle open design or
-  diff-size questions, complete the review, apply its fixes, and run formatters
-  before launching the evaluation rather than running it in parallel.
+  latest additions. Give the subagent the diff, the commit messages, and the
+  repository paths without a caller-written summary that rationalizes the
+  choices or narrates an intended spec. Skip trivial edits (typos, formatting,
+  version bumps, mechanical one-liners). When a change also requires an
+  expensive or working-tree-digest-locked evaluation or benchmark run, settle
+  open design or diff-size questions, complete the review, apply its fixes, and
+  run formatters before launching the evaluation rather than running it in
+  parallel.
 - **Expect concurrent sessions in the same checkout:** other sessions may edit
   and commit while you work. Before staging, committing, rebasing, or building
   generated output, check the status and the log for changes you did not make,
@@ -194,7 +197,9 @@ scope:
 - **Prefer the smallest fix at the point of failure:** before proposing to move,
   reorder, or restructure existing tasks or code, establish why the current
   arrangement exists (history, comments, or asking), and consider a local fix
-  first.
+  first. In a multi-step migration, do not pull forward a later cutover's
+  invariant change into an intermediate step when a local fix already satisfies
+  the current step.
 - **Check a structural fix against every consumer, planned ones included:** a
   fix that assumes a dependency is local (a hypervisor passthrough in place of a
   network share) fails the consumer that sits on another node; list the
