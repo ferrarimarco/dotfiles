@@ -96,19 +96,23 @@ memory directory or `MEMORY.md` does not exist, state that and skip this step.
 Propose only changes that generalize beyond the session. Discard:
 
 - one-off facts, or anything derivable from a repository's own code or docs;
-- anything already covered by existing instructions, unless the session (or this
-  run) failed to apply the covering rule—then the gap is reachability, and the
-  fix is adding the check to the step where the agent was working;
+- anything already covered by existing instructions: search every destination in
+  step 5 (each skill's `references/` included) first, and extend the home found
+  rather than opening a second one; a covering rule the session (or this run)
+  failed to apply is a reachability gap, fixed by adding the check to the step
+  where the agent was working;
 - anything the session already captured in a project's knowledge base (guides,
   specifications, todo items): verify it landed where the next change is written
   against (the reference pattern, guide, or convention list), not only inside an
   incident's own section.
 
-Propose uncaptured project-specific lessons for `<project>/.agents/skills`,
-`<project>/AGENTS.md`, or project documentation alongside cross-project lessons,
-even when the project checkout is on an in-flight branch or pending changelist.
-Check the target files' recent history and working tree for capture edits from
-concurrent sessions, and reconcile instead of duplicating.
+Capture project-routed lessons during the session, in the project's own
+knowledge base, while the context is fresh; propose uncaptured project-specific
+lessons for `<project>/.agents/skills`, `<project>/AGENTS.md`, or project
+documentation alongside cross-project lessons, even when the project checkout is
+on an in-flight branch or pending changelist. Check the target files' recent
+history and working tree for capture edits from concurrent sessions, and
+reconcile instead of duplicating.
 
 ## 5. Route Each Finding
 
@@ -117,8 +121,12 @@ in this priority order, never to both a skill and `AGENTS.md`:
 
 1. An existing skill for that task type: `<project>/.agents/skills/*` for a
    repository-specific convention, or `<root>/.agents/skills/*` when it holds
-   across repositories, never both. An agent that skipped monitoring the project
-   already had is an instruction gap, not a monitoring gap.
+   across repositories, never both. When a lesson spans a technology skill and
+   an operational skill, the procedure goes in one of them only. Within a skill,
+   put walkthroughs and code blocks in the `references/` file for that subtopic
+   (adding one when none exists) and keep `SKILL.md` to a pointer. An agent that
+   skipped monitoring the project already had is an instruction gap, not a
+   monitoring gap.
 2. The project's `AGENTS.md`, for cross-task rules specific to one repository.
 3. The global `~/.agents/AGENTS.md`, only for rules that apply across all
    projects and fit its existing sections.
@@ -132,6 +140,12 @@ in this priority order, never to both a skill and `AGENTS.md`:
 
 ## 6. Verify Each Proposed Rule
 
+- Search the destination for overlapping or interacting rules and propose a
+  merge or rewrite of the accreted section instead of a new bullet; resolve a
+  contradiction with an existing rule before the plan, by default in the new
+  rule. Write each rule as condition, mechanism, and action, with at most a
+  parenthetical example; the session narrative stays in the plan's rationale
+  column.
 - Check any claim about a tool's or module's behavior against its source or
   documentation at the version in use, and name the responsible component.
 - Propose a workaround only after checking the tool for a native option.
@@ -153,19 +167,18 @@ in this priority order, never to both a skill and `AGENTS.md`:
 The plan presented for approval must list:
 
 - the proposed edits, as one table per target file with three columns: the
-  proposed update, its rationale (the session event or memory), and its evidence
-  (source file and version read, command run, or "expectation"); each finding
-  appears in one file's table only;
+  proposed update (the merged or rewritten text naming the rule it replaces, or
+  "new"), its rationale (the session event or memory), and its evidence (source
+  file and version read, command run, or "expectation"); each finding appears in
+  one file's table only, a move as one row in the destination's table naming the
+  lines removed from the source;
 - the memories to delete or rewrite afterward, as a table with two columns: the
   action and its rationale.
 
 ## 8. Apply the Approved Plan
 
-- Edit in place and prefer tightening over growing: search the target file for
-  overlapping or interacting rules, merge or rewrite accreted sections instead
-  of appending near-duplicates, and ensure new rules do not contradict existing
-  ones. Give unrelated lessons in the same section their own bullet with a bold
-  lead, and keep the imperative, concise style of the target file. A net
+- Edit in place in the target file's imperative, concise style, giving unrelated
+  lessons in the same section their own bullet with a bold lead. A net
   line-count reduction is a valid outcome.
 - Remove a promoted memory only after its rule is written to the destination
   file, in the same apply step: delete the memory file and its `MEMORY.md` line
@@ -181,6 +194,7 @@ The plan presented for approval must list:
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill), have a fresh subagent or the harness's code review check the diff across
-every edited repository (including runbooks and todo items) against step 6 and
-the tool's source or docs at the version in use. Fix its findings before
-reporting. Do not commit unless asked.
+every edited repository (including runbooks and todo items) against step 6, the
+tool's source or docs at the version in use, and, where existing rules were
+merged or rewritten, for qualifiers, conditions, scope, and version evidence the
+rewrite dropped. Fix its findings before reporting. Do not commit unless asked.
