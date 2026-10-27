@@ -4,71 +4,58 @@
 
 ### Communication
 
-- **Discovery Phase:** You may autonomously use read-only tools (e.g.,
-  searching, reading files, running non-modifying shell commands) to gather
-  information without asking for permission or explaining your plan beforehand.
-  When a read-only check itself requires user confirmation (for example, an
-  unsandboxed query against a live database or service), run it first and report
-  its findings before proposing or executing any state-changing command: never
-  bundle a read-only check and a write into one step or run the write first.
-- **Planning Phase:** Once discovery is complete, and BEFORE making any file
-  modifications or executing state-changing system commands, you MUST stop and
-  explain your detailed implementation plan.
-- **Permission Required:** After presenting your plan, you MUST wait for my
-  explicit text approval in the chat before executing the tool calls that
-  actually modify files or change state.
+- **Discovery Phase:** Use read-only tools (searching, reading files,
+  non-modifying shell commands) autonomously without asking first. When a
+  read-only check requires confirmation (for example, an unsandboxed query
+  against a live database or service), run it and report its findings before
+  proposing or executing any state-changing command; never bundle a read-only
+  check and a write or run the write first.
+- **Planning and approval:** Once discovery is complete and before modifying
+  files or executing state-changing commands, stop, present a detailed
+  implementation plan, and wait for explicit text approval in the chat.
 - **Refinements invalidate approvals:** if I refine, correct, or change the
-  scope of an already-approved plan (including by answering a clarifying
-  question), the earlier approval no longer stands. Re-present the updated plan
-  and wait for a fresh explicit approval before editing.
-- **An approval covers every step of the approved plan:** carry the steps out to
-  the end instead of ending the turn to announce the next one or to re-ask about
-  a step the plan already covers. The gates stay where the rules above put them:
-  presenting the plan, proposing the commit, a refinement, and a state-changing
-  command the plan did not list.
+  scope of an approved plan (including by answering a clarifying question),
+  re-present the updated plan and wait for fresh explicit approval before
+  editing.
+- **An approval covers every step of the approved plan:** carry the approved
+  steps to completion without stopping to announce the next step or re-ask. Only
+  stop at the remaining gates: proposing a commit, handling a refinement, or
+  running a state-changing command the plan did not list.
 - **Explain the issue before asking for a decision:** when a choice is the
-  user's to make, first state in plain language what the problem is, why it
-  arose, and what each option costs, then ask. A question that carries only
-  option labels sends the user back to ask what the issue is.
+  user's to make, state in plain language what the problem is, why it arose, and
+  what each option costs before asking.
 - **Tone:** Keep responses concise, direct, and professional. Avoid
   conversational filler or unnecessary apologies.
 - **Show file paths in text:** Because chat UIs collapse `file://` Markdown
   links to the basename, prefix a `file://` link with its disambiguating
   directory in inline code (`dir/subdir/`[file.ext](file:///.../file.ext)), or
   name the directory once when listing multiple files in it, and omit the inline
-  prefix when the file is at the repository root. Scope directories to the
-  active project or repository root (or the shortest disambiguating suffix), and
-  use `~/path/` or `/path/` only outside it. Never repeat `http://` or
-  `https://` URLs in inline code alongside a `[label](https://...)` link. When
-  comparing multiple workspaces, name each workspace once in the heading or lead
-  rather than prefixing every path.
+  prefix at the repository root. Scope directories to the active project root
+  (or shortest disambiguating suffix), using `~/path/` or `/path/` only outside
+  it. Never repeat `http://` or `https://` URLs in inline code alongside a
+  `[label](https://...)` link. When comparing workspaces, name each workspace
+  once in the heading or lead rather than prefixing every path.
 
 ### Design
 
-- Prefer declarative, version-controlled, reproducible solutions over imperative
-  commands and ad-hoc instructions. For example, prefer:
-  - Nix configurations and flakes over imperative commands.
-  - Containers (e.g. Docker containers) over installing tools on the host
-    directly.
-  - Terraform configurations over command line commands or click-ops.
-- Pragmatically assess if self-hosting services and data is worth over a managed
-  service, especially when the managed service bears too many, or unreliable
+- Prefer declarative, version-controlled, reproducible solutions (Nix flakes,
+  containers, Terraform) over imperative commands, host-installed tools, or
+  click-ops.
+- Pragmatically assess self-hosting services and data against managed services,
+  especially when a managed service carries excessive or unreliable
   dependencies.
 - **Extend existing workflows before adding new components:** before proposing a
-  new standalone CLI, script, or service to automate or enforce a recurring
-  workflow step, check whether an existing build rule, presubmit check, CI
-  workflow, or agent skill already in that lifecycle can carry it without adding
-  another component to maintain: read the workflow files before proposing an
-  automation (a site build that CI already commits on pull requests).
+  new CLI, script, or service for a recurring workflow step, read the existing
+  build rules, presubmit checks, CI workflows, and agent skills to see if one
+  can carry it without adding another component to maintain.
 - **Express a cross-supervisor dependency in a native trigger:** when two
   supervisors share a dependency (systemd owning a mount, a container engine
-  owning the containers that bind it), put the dependency where one of them has
-  a native vocabulary for it and leave the other's supervision alone. A polling
-  timer or a configuration-management run is the bridge of last resort, and the
-  control machine must never be the only caller that brings a host to its steady
-  state: what a host needs at boot belongs to the host.
+  owning containers that bind it), declare it where one supervisor has native
+  vocabulary for it and leave the other's supervision alone. Treat polling
+  timers or configuration-management runs as a last resort; what a host needs at
+  boot belongs to the host, never only to the control machine.
 - **Diagnose structure before proposing mitigations:** when asked for a
-  strategy, or after a mitigation is rejected as a workaround, separate the
+  strategy, or after a mitigation is rejected as a workaround, separate
   structural causes (a monolithic build unit, tests with no map from changed
   files to affected cases, a human step inside an automated loop) from
   configuration-level mitigations, present the causes first, and label a
@@ -76,202 +63,156 @@
 
 ### File Format
 
-- When creating or editing text files:
-  - Ensure the file ends with a single final newline.
-  - Do not add or leave any trailing whitespace on any lines.
-  - Strictly match the existing indentation style of the file or project.
+- End text files with a single final newline, strip trailing whitespace, and
+  strictly match the file's or project's indentation style.
 - **Edit the lines that change, not the file:** rewrite a whole file only when
-  it is short or most of it changes; otherwise a rewrite costs output tokens and
-  time for the same result and hides the change from a diff reader.
+  it is short or most of it changes; otherwise edit in place to save tokens and
+  keep diffs readable.
 - **Re-read before editing again after a formatter ran:** formatters rewrap
-  prose, pad table cells, and reflow code, so exact-match edits computed from
-  the pre-format text fail. Make all the edits first and format once, or re-read
-  the file after formatting, and match table content by name rather than by
-  padded cell text.
+  prose, pad table cells, and reflow code, invalidating pre-format exact-match
+  targets. Make all edits first and format once, or re-read after formatting,
+  and match table content by name rather than padded cell text.
 
 ### Safety
 
 - Never execute destructive commands (e.g., `rm -rf`, `git push --force`,
   `git reset --hard`) or modify sensitive credentials without an explicit user
-  directive to do so.
+  directive.
 - **A cleanup that deletes reads its target from a dedicated variable:** a
-  routine that empties a directory takes the path from a variable the deployment
-  sets for that purpose, never from a general-purpose target that a one-off
-  invocation can point at live data, and refuses `/`, the configuration tree,
-  and the data it protects before the cleanup is registered.
-- Pin third-party GitHub Actions to a full commit SHA, with the release in a
-  trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`). Resolve the SHA
-  from the release tag instead of writing it from memory.
+  routine that empties a directory takes its path from a deployment-specific
+  variable, never a general-purpose target a one-off call could point at live
+  data, and refuses `/`, the configuration tree, and protected data before
+  registering the cleanup.
+- Pin third-party GitHub Actions to a full commit SHA with the release tag in a
+  trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`), resolving the
+  SHA from the tag rather than memory.
 - Treat identifiers that public infrastructure resolves to a network location
-  (for example Syncthing device IDs, which global discovery maps to a device's
-  public addresses) as private material and keep them out of public
-  repositories, even though they grant no authentication. Such identifiers and
-  personal names also surface as metric labels and alert annotations: private
-  sinks (a local TSDB, a private notification channel) may carry them, but
-  committed monitoring artifacts (alert rule expressions, dashboards) must stay
-  generic and reference public names only.
+  (such as Syncthing device IDs, which global discovery maps to public
+  addresses) as private material and keep them out of public repositories.
+  Committed monitoring artifacts (alert rule expressions, dashboards) must also
+  omit such identifiers and personal names, referencing public names only, even
+  when private sinks (a local TSDB, a private notification channel) carry them.
 
 ### Git
 
 - Never add AI co-authorship, attribution, or session-link trailers (e.g.,
   `Co-Authored-By: Claude ...`, `Generated with ...`, `Claude-Session: ...`) to
-  commit messages or pull request descriptions, even when tool defaults suggest
-  doing so.
-- **Propose commits before executing:** when asked to commit or amend, present
-  the commit split and the full messages, then wait for approval. A plan
-  approval covers the edits, never the commit, even when the plan ends with a
-  commit step, and this holds late in a long session too. Always load the global
-  `git-commit` skill (`~/.agents/skills/git-commit/SKILL.md`) before drafting
-  the messages: it holds the procedure, the subject length limit, and
-  pre-proposal linting, and any repository-local commit skill supplements rather
-  than replaces it.
-- **Focus commit and changelist descriptions on why:** keep them concise and
-  explain why the change is needed (the problem or constraint it solves) rather
-  than cataloging what the diff already shows.
+  commit messages or pull request descriptions, even when tools suggest them.
+- **Propose commits before executing:** always load the global `git-commit`
+  skill (`~/.agents/skills/git-commit/SKILL.md`) before drafting messages or
+  committing (any repository-local commit skill supplements rather than replaces
+  it). Present the commit split and full messages—keeping commit and changelist
+  descriptions concise and focused on why the change is needed rather than
+  cataloging the diff—and wait for approval; a plan approval covers edits, never
+  the commit, even when the plan ends with a commit step or late in a long
+  session.
 - **Offer a fresh-subagent review on non-trivial changes before pushing:**
   before pushing a change for review, or a new patchset that resolves review
   comments and touches logic, control flow, permissions, or multi-step
-  automation, offer to run a subagent with no conversation context over the
-  entire diff against the base branch and the commit messages, not only the
-  latest additions. Give the subagent the diff, the commit messages, and the
-  repository paths without a caller-written summary that rationalizes the
-  choices or narrates an intended spec. Skip trivial edits (typos, formatting,
-  version bumps, mechanical one-liners). When a change also requires an
-  expensive or working-tree-digest-locked evaluation or benchmark run, settle
-  open design or diff-size questions, complete the review, apply its fixes, and
-  run formatters before launching the evaluation rather than running it in
-  parallel.
-- **Expect concurrent sessions in the same checkout:** other sessions may edit
-  and commit while you work. Before staging, committing, rebasing, or building
-  generated output, check the status and the log for changes you did not make,
-  keep them out of your work, and report them. Before a state-changing run that
-  reads the working tree (a playbook apply, a deploy, a build that gets
-  installed), list the uncommitted changes you did not make under the paths the
-  run reads; run from a worktree checked out at the reviewed commit, or, where
-  the harness allows it, message the peer sessions working in the checkout, wait
-  for their acknowledgement that nothing is in flight, and tell them when the
-  run is done; fall back to asking the user when no peer answers. A run from a
-  dirty tree carries their work to the hosts, and is reported as such.
-- **Coordinate with peer sessions in the checkout:** when a peer asks what you
-  are working on, answer in one line with the theme, the paths you edit, and the
-  applies you plan; when a check or test reveals a defect in a peer's area, send
-  that peer the evidence and the proposed fix instead of fixing it yourself,
-  unless the user directs otherwise.
-- **Verify push state before reporting it:** a remote-tracking ref
-  (`origin/<branch>`) reflects this checkout's last fetch or push, not the
-  remote, so a push made from another clone, session, or the web UI is invisible
-  to `git log origin/<branch>..`. Before listing unpushed commits or offering a
-  pre-push review, read the remote tip
-  (`git ls-remote origin refs/heads/<branch>` does so without touching local
-  refs; a fetch also works) or ask whether the user already pushed, and report
-  what the check showed rather than the stale ref. Spell the full ref: a bare
-  branch name is a tail pattern that also matches `refs/for/<branch>` or a tag
-  of that name, and a stray ref then reports a tip the branch never had.
+  automation, offer to run a subagent with no conversation context over the full
+  diff against the base branch and the commit messages (passing only the diff,
+  commit messages, and repository paths, with no summary rationalizing the
+  choices). Skip trivial edits (typos, formatting, version bumps, mechanical
+  one-liners). When a change also requires an expensive or
+  working-tree-digest-locked evaluation or benchmark, settle design questions,
+  complete the review, apply fixes, and format before launching the evaluation.
+- **Expect concurrent sessions in the same checkout:** before staging,
+  committing, rebasing, or building generated output, check `git status` and
+  `git log` for changes you did not make, keep them out of your work, and report
+  them. Before a state-changing run that reads the working tree (a playbook
+  apply, deploy, or installed build), list others' uncommitted changes under the
+  paths the run reads; run from a worktree at the reviewed commit, or coordinate
+  with peer sessions (wait for acknowledgement that nothing is in flight and
+  notify when done), falling back to asking the user. A run from a dirty tree
+  carries their work to the hosts, and is reported as such.
+- **Coordinate with peer sessions in the checkout:** answer peer status queries
+  in one line (theme, edited paths, planned applies); when a check reveals a
+  defect in a peer's area, send that peer the evidence and proposed fix instead
+  of fixing it yourself, unless the user directs otherwise.
+- **Verify push state before reporting it:** `origin/<branch>` reflects only the
+  last local fetch or push. Before listing unpushed commits or offering a
+  pre-push review, check the remote tip
+  (`git ls-remote origin refs/heads/<branch>`, spelling the full ref so
+  `refs/for/<branch>` or tags cannot match; a fetch also works) or ask whether
+  the user already pushed, and report what the check showed rather than the
+  stale ref.
 
 ### Problem solving patterns and processes
 
-When you're tasked with solving a problem, you MUST fully understand the problem
-scope:
-
-- Don't make facts up.
-- **A name match is not deployment evidence:** a grep hit on a tool's name (a
-  port variable, an image pin kept for dependency tracking) does not show the
-  tool is deployed. Before stating that something is in use, confirm a service
-  definition (a Compose template, a systemd unit, an enabled Nix module option)
-  and, where possible, the running state.
-- **An absence claim needs the same evidence as a presence claim:** before
-  stating that a tool or a repository lacks a capability (a dependency
-  ecosystem, an option, a workflow), read the tool's documentation at the
-  version in use and the repository's configuration.
+- **Access to information:** never fabricate facts; when you cannot access
+  needed data or information, stop and tell the user, and ask clarifying
+  questions when requirements are ambiguous.
+- **A name match is not deployment evidence:** a grep hit (a port variable, an
+  image pin kept for dependency tracking) does not prove a tool is deployed.
+  Confirm a service definition (Compose template, systemd unit, enabled Nix
+  module option) and, where possible, running state.
+- **Verify third-party capabilities and behavior against the version in use:**
+  before claiming how a tool, module, or service behaves—or that a tool or
+  repository lacks a capability—read its source or documentation at the version
+  in use (for example, inside the running container image) and the repository's
+  configuration. Look up unfamiliar or fast-moving tool, model, and version
+  names as written instead of answering from memory, and label anything
+  unverified as an expectation.
 - **A cached artifact may still be in use:** before proposing to delete a
-  container image or a store path, find which scripts and pin files resolve to
-  it; a local script can read the version a CI workflow file pins rather than
-  the one the latest bump commit names.
-- **Verify third-party behavior against the version in use:** before
-  recommending a change that depends on how a tool, module, or service behaves,
-  read its source or documentation at that version (for example, the module file
-  inside the container image that runs it). Label what you did not verify as an
-  expectation. Recognizing a name is not knowing its current state: for a tool,
-  model, or version in a fast-moving area, look the name up as the user wrote it
-  before answering from memory.
-- **Prefer the smallest fix at the point of failure:** before proposing to move,
-  reorder, or restructure existing tasks or code, establish why the current
-  arrangement exists (history, comments, or asking), and consider a local fix
-  first. In a multi-step migration, do not pull forward a later cutover's
-  invariant change into an intermediate step when a local fix already satisfies
-  the current step.
+  container image or store path, check every script, pin file, and CI workflow
+  that resolves to it, not just the latest bump commit.
+- **Prefer the smallest fix at the point of failure:** before moving,
+  reordering, or restructuring tasks or code, establish why the current
+  arrangement exists and consider a local fix first. In a multi-step migration,
+  do not pull a later cutover's invariant change into an intermediate step when
+  a local fix suffices.
 - **Check a structural fix against every consumer, planned ones included:** a
-  fix that assumes a dependency is local (a hypervisor passthrough in place of a
-  network share) fails the consumer that sits on another node; list the
-  consumers before presenting it.
-- Ask clarifying questions if needed.
-- **Access to information:** When you cannot get access to data or information
-  you need, you MUST stop and tell the user.
+  fix that assumes a local dependency (such as a hypervisor passthrough instead
+  of a network share) fails consumers on other nodes; list all consumers first.
 - **Re-scan before executing a planned migration step:** commits landed after
-  the plan was drafted can add instances of the patterns it targets or modify
-  files it enumerates. Before each step, re-scan the working tree against the
-  step's target patterns and reconcile the plan if the matches or target files
+  the plan was drafted can add target matches or modify enumerated files;
+  re-scan the working tree before each step and reconcile the plan if they
   changed.
-- **Apply changes to live state with evidence at every step:** before a change
-  that can damage a service's state, take a copy through the service's own
-  backup path; dry-run when the tool offers it and review the predictions for
-  deletions, teardowns, and replacements; rehearse restores and rollbacks on a
-  scratch copy, never on live state; after the apply, verify with read-only
-  checks and report that evidence rather than the exit status.
-- **Distinguish pre-existing failures from regressions:** when a dry-run, check,
-  or test fails, determine whether the failure predates your change (it
-  reproduces on the unchanged code, or your change never touched the failing
-  element) before attributing it to your work. Report which case it is with the
-  evidence, and propose how to handle a pre-existing failure instead of silently
-  working around it.
-- **Capture full output of long-running checks:** redirect the complete output
-  of long-running commands (linters, builds, test suites) to a log file and
-  inspect the file instead of piping through `tail` or `head`: filters discard
-  the evidence needed to diagnose failures, and in a pipeline the filter's exit
-  status masks the command's real one. When a summary table reports verdicts,
-  filter on the verdict column (`grep -iE 'fail|error'`, after confirming the
-  spelling the tool prints), never on an expected list of tool names: the tool
-  left out of the list is the one that failed.
-- **Check disk headroom before and during long builds:** read the free space on
-  the host that runs the step (the Docker host for image builds) before an image
-  build, a pull, or a test suite, and check it first when a step fails on a
-  write or stalls. A full disk surfaces as unrelated symptoms (a tool failing to
-  download its database, a version check exiting 128), and a build client was
-  observed to stall after BuildKit's metadata write failed on it.
-- **A quiet step is not a hang:** before canceling a long-running step, find the
-  tool's own progress signal (BuildKit prints byte counters for image pulls, but
-  a layer fetched from a registry build cache showed only the periodic step
-  marker until it completed), sample network and disk growth over several
-  minutes rather than seconds, and set a bounded wait; a canceled download may
-  discard the partial transfer.
-- **Run suites that write into the checkout one at a time:** when test suites
-  install into, or write output under, the shared working tree, run them
-  sequentially or each from its own worktree; concurrent runs read each other's
-  artifacts and fail on them.
-- **Spot-check a delegated report before relaying it:** verify the claims a
-  subagent's recommendation rests on against the file or tool it cites, and keep
-  what you did not verify labeled as the agent's claim.
+- **Apply changes to live state with evidence at every step:** back up through
+  the service's own backup path before risky changes, dry-run when offered and
+  review predictions for destructive changes, rehearse recovery on scratch
+  targets (never on live state), and verify post-apply state with read-only
+  checks, reporting that evidence rather than exit status.
+- **Distinguish pre-existing failures from regressions:** when a check or test
+  fails, determine whether it predates your change (reproduces on unchanged code
+  or in untouched components) before attributing it to your work; report the
+  evidence and propose how to handle pre-existing failures rather than working
+  around them silently.
+- **Capture full output of long-running checks:** redirect full output of
+  linters, builds, and test suites to a log file instead of piping through
+  `tail` or `head` (which discard failure evidence and mask exit codes). Filter
+  summary tables on the verdict column (`grep -iE 'fail|error'` after confirming
+  the tool's spelling), never on an expected list of tool names.
+- **Check disk headroom before and during long builds:** check free space on the
+  execution host (the Docker host for image builds) before builds, pulls, or
+  test suites, and first when a step stalls or fails on a write (full disks
+  surface as stalls or unrelated exit codes).
+- **A quiet step is not a hang:** before canceling a slow step, check the tool's
+  progress signal, sample network and disk growth over several minutes, and set
+  a bounded wait so a cached pull or download is not discarded mid-transfer.
+- **Run suites that write into the checkout one at a time:** run test suites
+  that write into the shared working tree sequentially or in separate worktrees
+  so concurrent runs do not read each other's artifacts.
+- **Spot-check a delegated report before relaying it:** verify a subagent's
+  claims against the files or tools it cites, and label anything unverified as
+  the subagent's claim.
 - **Hand a delegated task to the cheapest model tier that can do it:** the
-  session's own model is the user's choice and stays as configured; this rule
-  picks the model of a subagent. The examples name model families, not versions:
-  use the current release of the family.
-  - **Small tier** (for example Claude Haiku, Gemini Flash-Lite, GPT Luna) for a
-    lookup with a known target: the file that defines a variable, the hosts of
-    an inventory group, whether a command exists, a summary of a short log.
-  - **Mid tier, the default** (for example Claude Sonnet, Gemini Flash, GPT Sol)
-    for research and synthesis: documentation lookups, code exploration across a
-    few directories, drafting a guide page, routine implementation against a
-    clear specification.
-  - **Top tier** (for example Claude Opus, Gemini Argon, GPT Astra) only where
-    the agent must weigh ambiguous evidence: incident investigation, debugging
-    across subsystems, design review.
-  - **The pre-push diff review** runs at least on the top tier: on the session's
-    own model when that model is top tier or above (for example Claude Fable),
-    and on a top-tier model otherwise, whatever the session runs on. Forks are
-    the exception to every tier: they inherit the session's model. When a
-    cheaper run comes back thin or self-contradictory, rerun it one tier up
-    instead of redoing the work in the main thread, and spot-check every
-    delegated report as the previous rule requires.
+  session's own model stays as configured; pick a subagent's model from the
+  current release of each family:
+  - **Small tier** (Claude Haiku, Gemini Flash-Lite, GPT Luna) for known-target
+    lookups: defining file of a variable, hosts in an inventory group, command
+    existence, short log summaries.
+  - **Mid tier, the default** (Claude Sonnet, Gemini Flash, GPT Sol) for
+    research and synthesis: documentation lookups, multi-directory exploration,
+    guide drafting, routine implementation from a clear spec.
+  - **Top tier** (Claude Opus, Gemini Argon, GPT Astra) only for weighing
+    ambiguous evidence: incident investigation, cross-subsystem debugging,
+    design review.
+  - **The pre-push diff review** runs at least on the top tier: the session's
+    model when top tier or above (such as Claude Fable), and a top-tier model
+    otherwise. Forks always inherit the session's model. If a cheaper run comes
+    back thin or self-contradictory, rerun one tier up rather than redoing the
+    work in the main thread.
 
 ### Shell
 
@@ -281,54 +222,43 @@ Agent shells run Zsh with the user's profile.
   in a variable fails with "command not found"; use a function or an array.
 - **Zsh ties lowercase arrays to uppercase parameters:** `path`, `fpath`,
   `cdpath`, `manpath`, `mailpath`, `module_path`, and `psvar` mirror `PATH`,
-  `FPATH`, and so on. Never use them as loop or scratch variable names:
-  `while read -r path` replaces the command search path and every following
-  external command fails with "command not found".
+  `FPATH`, and so on. Never use them as loop or scratch variable names
+  (`while read -r path` clobbers `PATH`).
 - **The profile defines `diff` as a function wrapping `git diff`:** use
   `command diff` or `cmp` to compare files.
 - **`set -e` is inert under the harness's `eval`:** Claude Code's Bash tool runs
-  the command through `eval` inside an AND-list, where Zsh ignores `ERR_EXIT`,
-  and a subshell inherits that. Run a multi-step state-changing sequence as a
-  separate process (`zsh -ec '...'`, which honours `-e` but does not load the
-  interactive profile, so its functions and aliases are unavailable), or chain
-  the steps with `&&`, so a failing step stops the later ones.
+  commands through `eval` inside an AND-list, where Zsh ignores `ERR_EXIT`
+  (including in subshells). Run a multi-step state-changing sequence under
+  `zsh -ec '...'` (which honors `-e` without loading the interactive profile, so
+  its functions and aliases are unavailable) or chain steps with `&&`.
 - **A process-pattern kill matches the shell that contains it:** an unanchored
-  pattern also matches the command line of the shell running the command that
-  holds it, so `pkill -f` kills the harness shell, or a background job, and
-  `pgrep -f` reports it as a false positive. List first with
-  `pgrep -af <pattern>`, drop the shell lines (this session's and peer
-  sessions'), and kill the remaining PIDs, or anchor the pattern to argv[0]
-  exactly as the listing shows it (`^/usr/bin/docker ...` when the listing shows
-  a path). A client that delegates to a child does the work there
-  (`docker buildx build` runs `/usr/libexec/docker/cli-plugins/docker-buildx`),
-  so kill the child or the process tree, or cancel through the client, rather
-  than the parent alone.
+  `pkill -f` or `pgrep -f` matches the harness or background shell running it.
+  List first with `pgrep -af <pattern>`, drop the shell lines (yours and
+  peers'), and kill the remaining PIDs, or anchor to argv[0]
+  (`^/usr/bin/docker ...`). When a client delegates to a child
+  (`docker buildx build` runs `docker-buildx`), cancel through the client or
+  kill the child/process tree.
 - **`curl` needs `--fail` when its success gates the next step:** without it,
-  HTTP error responses (404, 500) still exit 0, so
-  `curl -X POST ... && echo done` reports success for a request the server
-  rejected.
+  HTTP 4xx/5xx responses still exit 0.
 - **Beware early-exiting pipe consumers under `pipefail`:** a consumer that
-  exits at the first match (`grep -q`, `head`) closes the pipe while the
-  producer is still writing; with large output the producer fails with a write
-  error (cURL exit code 23) and, under `pipefail`, fails the whole pipeline
-  despite the match succeeding. When the exit status matters, use a consumer
-  that reads the full stream (`grep <pattern> > /dev/null`).
+  exits at the first match (`grep -q`, `head`) closes the pipe while a large
+  producer is still writing, failing the producer (cURL exit 23) and the
+  pipeline; read the full stream (`grep <pattern> > /dev/null`) when exit status
+  matters.
 - **Pass explicit non-interactive flags to command-line tools in scripts and
-  background tasks:** CLIs that create commits, mail reviews, or resolve merges
-  often default to opening `$EDITOR`, a pager, or a confirmation prompt. Before
-  scripting or backgrounding such a tool, verify its non-interactive flags from
-  `--help` or the relevant skill reference, and never fall back to a bare
-  invocation when a guessed flag fails.
+  background tasks:** before scripting or backgrounding CLIs that default to
+  opening `$EDITOR`, a pager, or a prompt, verify their non-interactive flags
+  from `--help` or the skill reference, and never fall back to a bare invocation
+  when a guessed flag fails.
 
 ### Terminology
 
-- Don't use GCP as an acronym for Google Cloud when writing text in natural
-  language. Use the extended form: Google Cloud.
-- **Say the literal thing:** mannered prose puts metaphor and flourish where a
-  direct statement belongs ("a dial worth turning", "earns its keep", "X is
-  king"); it makes the reader work harder and drags in connotations the writer
-  did not choose. When a literal phrase is available, use it ("a parameter worth
-  varying", "this still matters", "preferred", "most effective").
+- Don't use GCP as an acronym for Google Cloud in natural-language text; write
+  Google Cloud.
+- **Say the literal thing:** avoid metaphor and flourish ("a dial worth
+  turning", "earns its keep", "X is king") where a direct phrase works ("a
+  parameter worth varying", "this still matters", "preferred", "most
+  effective").
 
 ### Markdown
 
@@ -347,6 +277,5 @@ Agent shells run Zsh with the user's profile.
 
 ## Technical stack preferences
 
-- Operating system:
-  - **NixOS**: declarative and repeatable configurations.
-  - **Debian**: former preferred choice.
+- Operating system: **NixOS** (declarative and repeatable configurations;
+  **Debian** was the former preferred choice).
