@@ -65,14 +65,14 @@ Review the conversation for:
   the fix never saw the real failure;
 - a test fixture or CI matrix that never exercises a code path the real data
   uses, so CI stays green while real runs fail;
-- statements the agent made to the user and corrected later (an attribution, a
-  count read off the wrong listing, a "nothing changed"), with the check that
-  would have caught each one first;
-- review gaps in code or document reviews: comments a human reviewer posted on
-  the change or document that the agent's review missed, findings a delegated
-  review returned on the agent's own output that its self-check had missed, and
-  findings the agent caught ad-hoc that existing skills or instructions do not
-  yet cover;
+- statements the agent made to the user and corrected later, or disproved during
+  this capture run (an attribution, a count read off the wrong listing, a
+  "nothing changed"), with the check that would have caught each one first;
+- review gaps in code or document reviews: comments a reviewer or review bot
+  posted on the change or document that the agent's review missed, findings a
+  delegated review returned on the agent's own output that its self-check had
+  missed, and findings the agent caught ad-hoc that existing skills or
+  instructions do not yet cover;
 - later corrections to rules that earlier capture runs wrote (the target file's
   history shows the commit): these are signals about this skill's process as
   well as about the target.
