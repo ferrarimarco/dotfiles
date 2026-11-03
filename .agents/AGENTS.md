@@ -60,6 +60,29 @@
   files to affected cases, a human step inside an automated loop) from
   configuration-level mitigations, present the causes first, and label a
   mitigation as one rather than as the fix.
+- **Treat a committed symlink as a duplication signal:** a symlink in a
+  repository often means two components share a file (an alias or compatibility
+  name is the other case: check whether the target lies outside the tree a
+  consumer of the link's directory reads). Consumers that read only a subtree
+  and keep or resolve links within it (a container build context, an archive)
+  see a dangling link when the target lies outside it. In an assessment or
+  review, name the link; leave an alias whose target lies inside every
+  consumer's tree, and propose removing any other link: first by asking whether
+  the two consumers should be one component; otherwise by giving the file one
+  owner and having the others reference the owner's path through the tool's
+  native mechanism (a named build context, a path relative to the owning
+  module).
+- **Let the tool report its own requirement:** when a host may lack what a role,
+  script, or service needs (a tool or interpreter version), do not record the
+  requirement as a constant repeated in variables, comments, and guides; run the
+  tool at apply time so its own error fails the run (a script preflight running
+  the cheapest command that uses the flags it relies on), and let the runtime
+  unit fail with an alert.
+- **Upgrade the host that fails a requirement, never patch around it:** a
+  package pinned from another release, a binary installed beside the package
+  manager, or an option that silences the check (pip's Python requirement) is
+  state that drifts from the host's release and a second package manager to
+  maintain; move the host to a release that meets the requirement.
 
 ### File Format
 
@@ -72,6 +95,11 @@
   prose, pad table cells, and reflow code, invalidating pre-format exact-match
   targets. Make all edits first and format once, or re-read after formatting,
   and match table content by name rather than padded cell text.
+- **Comments carry the reason, not the instance:** a variable's or default's
+  comment says why it exists and what the value means; host names, dates,
+  incident references, and values the code or the tool already states belong in
+  the project's docs or todo items, maintained once. Identifiers a pin needs to
+  stay readable (the release tag beside a commit SHA) are the exception.
 
 ### Safety
 
@@ -111,9 +139,14 @@
   comments and touches logic, control flow, permissions, or multi-step
   automation, offer to run a subagent with no conversation context over the full
   diff against the base branch and the commit messages (passing only the diff,
-  commit messages, and repository paths, with no summary rationalizing the
-  choices). Skip trivial edits (typos, formatting, version bumps, mechanical
-  one-liners). When a change also requires an expensive or
+  the commit messages, the repository paths, the paths of the skills whose
+  conventions apply, and the logs of the runs that exercised the change, with
+  secrets masked and no summary rationalizing the choices). The brief states
+  that the review is static and read-only, with no execution of the project's
+  toolchain unless the user approved a run, and sets a time limit. A finding is
+  closed by the log of a run of the reviewed commit that exercised the code path
+  it concerns, not by argument. Skip trivial edits (typos, formatting, version
+  bumps, mechanical one-liners). When a change also requires an expensive or
   working-tree-digest-locked evaluation or benchmark, settle design questions,
   complete the review, apply fixes, and format before launching the evaluation.
 - **Expect concurrent sessions in the same checkout:** before staging,
@@ -245,6 +278,10 @@ Agent shells run Zsh with the user's profile.
   producer is still writing, failing the producer (cURL exit 23) and the
   pipeline; read the full stream (`grep <pattern> > /dev/null`) when exit status
   matters.
+- **A command substitution expanded before `$?` replaces its value:** in
+  `echo "… $(cmd) … $?"` the substitution runs during expansion, so the status
+  reported is the substitution's (zsh and bash alike); save `rc=$?` on its own
+  line first (`status` is read-only in zsh).
 - **Pass explicit non-interactive flags to command-line tools in scripts and
   background tasks:** before scripting or backgrounding CLIs that default to
   opening `$EDITOR`, a pager, or a prompt, verify their non-interactive flags
