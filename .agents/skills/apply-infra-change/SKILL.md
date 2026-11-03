@@ -113,3 +113,15 @@ exit status.
   production mount options and the deployed credentials file, followed by
   unmounting and removing the mount point (get approval first, since even an
   ephemeral mount is a state change), rather than adding `smbclient`.
+- A DHCP reservation added for a host that holds a dynamic lease splits the name
+  from the address until the host renews: depending on the server, DNS may
+  answer the name with the reserved address right after the restart (a router
+  that writes reservations to its hosts file does), while the host keeps its old
+  address until its renewal time (by default half the lease, counted from when
+  it was obtained), when the server refuses the old address and the host moves.
+  Consumers that reconnect by name fail in that window. Right after the apply,
+  renew the lease on the host (`dhcpcd -n <interface>`,
+  `networkctl renew <interface>`, or the client's equivalent) and re-read the
+  server's lease table: a state change the plan lists for approval, and one that
+  drops the connections to the old address, the agent's own SSH session
+  included, so run it detached when connected to that host.

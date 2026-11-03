@@ -113,7 +113,9 @@ reworded subject still goes through the message validation of the Best Practices
 on its own. Verify afterward that `git rev-parse HEAD^{tree}` equals the tree of
 the tip immediately before the rebase, fixup commits included (always true when
 nothing conflicted), and that `git range-diff <base>..<old tip> <base>..HEAD`
-marks only the targeted commit as changed, with `=` on every other row. The
+marks only the targeted commit as changed, with `=` on every other row. A `!`
+row passes only when its diff of diffs touches nothing but context lines or
+generated files; any changed `+` or `-` source line fails the check. The
 plumbing route (`git commit-tree` on the same trees plus `git update-ref`
 guarded by the old tip) also works on a dirty tree, but it runs no hook, so
 reserve it for a repository without them.
@@ -183,6 +185,20 @@ reserve it for a repository without them.
   committing (`git show :<path>`, parsed or linted, with `GIT_INDEX_FILE` set
   when staging through a temporary index, or the shared index's blob is what
   gets checked).
+- Re-read the branch tip immediately before a rewrite: commits a peer landed
+  above the target after the plan was made turn the fixup into a rebase of their
+  work. Prefer adding the fix as a new commit on top; a rewrite that replays
+  their commits needs their or the user's agreement first, and proves with
+  `git range-diff` that each comes through with its sources unchanged (generated
+  output may legitimately differ), sending the replaced range and the new tip,
+  as above, before moving the branch.
+- A rewrite built in a worktree lands on the branch in the primary worktree with
+  `git reset --keep <new tip>`, after confirming that `HEAD` is still the
+  expected old tip: it updates only the files the rewrite changed, leaves other
+  local and staged changes in place, and aborts when one of those files has
+  local changes (save the diff first in that case). A mixed reset plus
+  `git restore -- <paths>` also works, but it rewrites the shared index and
+  unstages peers' changes.
 
 ## Git Safety Protocol
 

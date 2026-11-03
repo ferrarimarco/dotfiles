@@ -117,6 +117,13 @@ runs against unconfigured hosts:
   the expected failure only in that case, or validate the **predicted** state
   (derived from data that does exist) instead of skipping the check entirely.
   Prefer predicting over skipping: a skipped verification hides drift.
+- The same rule applied to writes: a write through `raw`, or through `command`
+  or `shell` without `creates` or `removes`, is skipped in check mode, so a
+  write gated on a computed difference leaves the check run silent. Pair it with
+  a report task, a `debug` printing the differing values with `changed_when` on
+  the same condition, so the check run shows the prediction and a converged
+  target reports no change (a real run then counts the change twice, which is
+  cosmetic).
 - Verify idempotency and check-mode cleanliness after changes: a real run
   followed by a `--check --diff` run should report no changes.
 - Always run `--check --diff` before an apply and **review the predictions, not
@@ -274,6 +281,17 @@ runs against unconfigured hosts:
   default (`${VAR:-""}`).
 - The test mounts the working tree: don't edit the files under test while a run
   is in progress.
+- **Put gated test data where the gate opens:** a role that acts only off the
+  root filesystem (a path checked with `findmnt`) skips its initialization,
+  service starts, and preflights when the test data sits on the instance's root
+  filesystem; place it on a path mounted separately in the test instance (check
+  with `findmnt` there; `/tmp` on some images and drivers) so the gated tasks
+  run in CI, and record the reason in the comment beside the path in the test
+  inventory.
+- When roles read secrets through plain variables that the inventory maps to
+  `vault_*` names, a test inventory sets those variables to literal placeholders
+  (`port: "1234"`) instead of mapping them to placeholder `vault_*` variables,
+  which nothing else would reference.
 
 ## Best Practices
 
@@ -337,5 +355,9 @@ runs against unconfigured hosts:
   after the `set_fact` (`list`, not `str`).
 - Prefer `systemd` units, timers, and handlers over cron entries and ad-hoc
   restarts; notify handlers from the tasks that change the relevant files.
+- **Checkov's `uri` HTTPS check reads the literal value:** `CKV2_ANSIBLE_1`
+  requires `url` to start with `https://` as written, so a value that is only a
+  variable fails; start it with the literal scheme and template the rest (the
+  `get_url` check, `CKV2_ANSIBLE_2`, only rejects `http://` and `ftp://`).
 - When a task list grows beyond one concern, split it into included task files
   (`ansible.builtin.include_tasks`) gated by the data that activates them.
