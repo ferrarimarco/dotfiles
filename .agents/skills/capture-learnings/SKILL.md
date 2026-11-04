@@ -72,10 +72,9 @@ Review the conversation (including this capture run itself) for:
   file's commit history), which are signals about this skill's process as well
   as the target.
 
-Before presenting the plan, route lessons from this run itself (conventions
-looked up, rules rewritten after a check, review findings on its output) and any
-signal kind that matched no bullet above or no destination in step 5 to this
-skill rather than dropping them.
+Route lessons from this run itself (conventions looked up, rules rewritten after
+a check) and any signal kind that matched no bullet above or no destination in
+step 5 to this skill rather than dropping them.
 
 ## 3. Review Saved Memories for Promotion
 
@@ -136,7 +135,9 @@ in this priority order, never to both a skill and `AGENTS.md`:
 6. The project's operational artifacts (alert rules, runbooks, todo items),
    through the project's pipeline, when the lesson is a check or procedure the
    project should run rather than an agent rule.
-7. This skill, when the defect is in how a lesson was captured or routed.
+
+A defect in how a lesson was captured or routed is a separate finding, routed to
+this skill; the lesson itself takes its own route.
 
 ## 6. Verify Each Proposed Rule
 
@@ -144,10 +145,12 @@ in this priority order, never to both a skill and `AGENTS.md`:
   merge or rewrite of the accreted section instead of a new bullet; resolve a
   contradiction with an existing rule before the plan, by default in the new
   rule. Write each rule as condition, mechanism, and action, with at most a
-  parenthetical example; the session narrative stays in the plan's rationale
-  column.
+  parenthetical example; the session narrative, its figures and dates included,
+  stays in the plan's rationale column.
 - Check any claim about a tool's or module's behavior against its source or
-  documentation at the version in use, and name the responsible component.
+  documentation at the version in use, and name the responsible component. Label
+  an observed, undocumented behavior as observed, naming the version and the
+  check that confirms it.
 - Propose a workaround only after checking the tool for a native option.
 - Write a tendency as a tendency, with how to check the specific case, never as
   a universal.
@@ -166,12 +169,12 @@ in this priority order, never to both a skill and `AGENTS.md`:
 
 The plan presented for approval must list:
 
-- the proposed edits, as one table per target file with three columns: the
-  proposed update (the merged or rewritten text naming the rule it replaces, or
-  "new"), its rationale (the session event or memory), and its evidence (source
-  file and version read, command run, or "expectation"); each finding appears in
-  one file's table only, a move as one row in the destination's table naming the
-  lines removed from the source;
+- the proposed edits, per target file: the proposed text as a unified diff hunk
+  whose context lines show its placement, followed by one table row per hunk
+  with two columns, its rationale (the session event or memory) and its evidence
+  (source file and version read, command run, or "expectation"); each finding
+  appears under one file only, a move as a hunk in the source and one in the
+  destination sharing one row, placed under the destination;
 - the memories to delete or rewrite afterward, as a table with two columns: the
   action and its rationale.
 
@@ -194,7 +197,13 @@ The plan presented for approval must list:
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill), have a fresh subagent or the harness's code review check the diff across
-every edited repository (including runbooks and todo items) against step 6, the
-tool's source or docs at the version in use, and, where existing rules were
-merged or rewritten, for qualifiers, conditions, scope, and version evidence the
-rewrite dropped. Fix its findings before reporting. Do not commit unless asked.
+every edited repository (including runbooks and todo items) against steps 6 and
+8, the tool's source or docs at the version in use, and, where existing rules
+were merged or rewritten, for qualifiers, conditions, scope, and version
+evidence the rewrite dropped. Sort each finding: a defect in the lesson is fixed
+in the target file; a defect in the capture (a rule this skill lacks, or one the
+run skipped) is fixed in the target file and proposed as a follow-up plan for
+this skill in the step 7 format, with the review log as evidence, awaiting
+approval. The review report is the only record of these defects, since the fix
+lands before any commit and the commit history never shows them. Fix the lesson
+defects before reporting. Do not commit unless asked.
