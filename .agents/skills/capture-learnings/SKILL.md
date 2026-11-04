@@ -200,10 +200,13 @@ skill), have a fresh subagent or the harness's code review check the diff across
 every edited repository (including runbooks and todo items) against steps 6 and
 8, the tool's source or docs at the version in use, and, where existing rules
 were merged or rewritten, for qualifiers, conditions, scope, and version
-evidence the rewrite dropped. Sort each finding: a defect in the lesson is fixed
-in the target file; a defect in the capture (a rule this skill lacks, or one the
-run skipped) is fixed in the target file and proposed as a follow-up plan for
-this skill in the step 7 format, with the review log as evidence, awaiting
-approval. The review report is the only record of these defects, since the fix
-lands before any commit and the commit history never shows them. Fix the lesson
-defects before reporting. Do not commit unless asked.
+evidence the rewrite dropped. The brief asks the reviewer to tag each finding
+with the step 6 or step 8 rule it violates, if any. A tagged finding is a
+capture defect whatever its severity, since the rule existed and the run skipped
+it; an untagged finding about the lesson's substance is a lesson defect. Fix
+both in the target file, then propose the capture defects as a follow-up plan
+for this skill in the step 7 format, with the review log as evidence and the
+check added to the step where the run was working (step 4), awaiting approval.
+The review report is the only record of these defects, since the fix lands
+before any commit and the commit history never shows them. Do not commit unless
+asked.
