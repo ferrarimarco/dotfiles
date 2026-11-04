@@ -33,6 +33,9 @@ misbehave.
 - Narrow the death window using **known periodic activity as a clock**: a timer
   or cron job that fires every N minutes and whose last run appears in the log
   bounds the freeze to within one period.
+- **Copy small device logs first:** routers and ONTs keep a ring buffer that
+  chatter overwrites within hours (a few hundred kilobytes on a gateway): save
+  the device log to the scratchpad before anything else and record its span.
 
 ## 2. Sweep for Precursors
 
@@ -55,7 +58,11 @@ misbehave.
 Start with the alert history: Alertmanager's active alerts and the `ALERTS`
 series over the preceding days. An alert that fired before the incident (a SMART
 pending-sector alert thirty hours before a disk stopped reading) is the first
-lead, and an alert that fired and was not acted on is a finding in itself.
+lead, and an alert that fired and was not acted on is a finding in itself. Check
+that the alerts were delivered, not only that they fired: read Alertmanager's
+log and its failed-notification counter for the window. An alert that fired but
+could not leave the site because its channel sat behind the failed component (a
+chat bot behind the WAN) is a structural finding, separate from detection.
 
 If the host (or fleet) runs a metrics backend, query the time series leading up
 to the death window: temperature, load, memory available, disk I/O. Normal
@@ -72,6 +79,11 @@ max_over_time(
   )[60d:5m]
 )
 ```
+
+Date a textfile collector's producer from `node_textfile_mtime_seconds` or the
+unit's journal, never from the metric's last sample: a producer that leaves its
+file keeps serving old values as current, and one that deletes its file on exit
+leaves samples ending when the file was removed, long after it started failing.
 
 A host that has been off for weeks is off by someone's decision more often than
 broken: check the project's notes for that decision before reporting the silence
@@ -131,6 +143,12 @@ network:
   healthy peers proves connectivity, not replication: verify with an end-to-end
   payload (a replicated record, a deduplicated notification) before declaring it
   healthy.
+- **A recovery that ran many times without effect restarts the wrong layer.**
+  List the layers between the check and the failure (the router's session, the
+  CPE's forwarding plane, the optical link, the provider) and probe each on its
+  own (link state, ARP to the device, discovery replies) before judging the
+  recovery broken: a WAN check that keeps restarting PPPoE cannot reach a hung
+  ONT whose Ethernet link stayed up.
 - **"Input/output error" in an application log usually points below the
   application:** the backing device, or the server or session of a network
   mount. Read the kernel log for that mount first. A mounted filesystem keeps

@@ -162,6 +162,12 @@
   in one line (theme, edited paths, planned applies); when a check reveals a
   defect in a peer's area, send that peer the evidence and proposed fix instead
   of fixing it yourself, unless the user directs otherwise.
+- **Warn the peer whose apply will carry a defective commit of yours:** when the
+  commit carries a known defect or a pending fix, tell the peer which commit and
+  when the fix lands, so it applies from the fixed tip or holds the apply.
+- **A peer's report that its run carried your change means verify, not
+  re-apply:** it is the receiving side of the dirty-tree rule above, so verify
+  on the hosts that the change took effect instead of re-applying.
 - **Verify push state before reporting it:** `origin/<branch>` reflects only the
   last local fetch or push. Before listing unpushed commits or offering a
   pre-push review, check the remote tip

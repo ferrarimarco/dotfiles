@@ -60,9 +60,28 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   `RequiresMountsFor=<path>` the unit also requires the mount and orders after
   it, so it never runs while the mount is absent. Wants directories under
   `/etc/systemd/system` apply to the generated fstab mount units too.
-- A failed dependency fails the dependent's job ("Dependency failed for ...")
-  and leaves the dependent unit inactive, not failed: a failed-unit alert never
-  fires for it, so alert on the dependency (an expected-mount alert) instead.
+- **A failed dependency never shows as `failed`:** it fails the dependent's job
+  ("Dependency failed for ...") and leaves the dependent inactive, so a
+  failed-unit alert never fires for it; alert on the dependency (an
+  expected-mount alert) instead.
+- **A paced restart loop never samples as `failed`:** a unit whose `Restart=`
+  pacing stays under the start rate limit (default 5 starts per 10 s;
+  `StartLimitIntervalSec=0` disables it) alternates `activating (auto-restart)`
+  and brief runs; its `failed` state lasts only through the manager's transition
+  into `activating (auto-restart)`, so `systemctl --failed` and exporters never
+  catch it while the journal logs each run's "Failed with result". One that
+  trips the limit does stay failed (`systemctl show -p Result` says
+  `start-limit-hit`).
+- **Alert on the share of time in `activating` to catch the paced loop:**
+  average the node exporter's `node_systemd_unit_state{state="activating"}`
+  (needs `--collector.systemd`) over a window longer than the longest legitimate
+  start (a long `ExecStartPre=`, a `Type=notify` service waiting on a
+  dependency), with the threshold above the share one such start reaches.
+  Exclude `Type=oneshot` units (`type!="oneshot"`), which are `activating` for
+  their whole run (a looping oneshot then goes unseen too), and the
+  `user@.service` managers, which on systemd 247 and 252 were observed
+  `activating` through logins; confirm with `systemctl status user@<uid>` on the
+  version in use.
 - systemd never retries a failed mount unit, and `nofail` turns the target's
   requirement into a want and drops the ordering, so the boot reaches
   `remote-fs.target` without it. Retry with a timer whose service runs

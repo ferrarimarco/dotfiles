@@ -17,3 +17,9 @@
   and `opus` otherwise. The `CLAUDE_CODE_SUBAGENT_MODEL` setting supplies the
   mid-tier default when the argument is omitted; it does not reach the built-in
   Explore and Plan agents, so pass the argument to them.
+- For a command expected to exceed the Bash tool's two-minute default, pass
+  `timeout` (up to ten minutes) or wait on a condition with Monitor; start a
+  longer run with `run_in_background` and redirect its output to a log file. A
+  foreground call that outlives its timeout was moved to the background with an
+  empty output file (observed on Claude Code 2.1.311, not documented; a run that
+  outlives its timeout shows it).

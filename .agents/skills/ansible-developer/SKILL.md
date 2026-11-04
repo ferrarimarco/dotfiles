@@ -167,6 +167,12 @@ runs against unconfigured hosts:
   inventory-wide SSH hardening that locks out the access in use, a config file
   removal). Read the full check separately, as a drift report, and apply with
   the scoped check's predictions.
+- **A scoped check carries every unapplied commit in scope:** compare the
+  check's per-file diff with your hunks
+  (`git diff <base>..HEAD -- <rendered sources>` lists the rest, with the base
+  from the project's apply log or the user) and, before applying, present that
+  drift as the user's decision with its consequences (restarts, removals, the
+  alerts it will raise).
 - Know the check-mode artifacts: `ansible.builtin.get_url` always reports
   `changed` in check mode because it cannot verify remote content without
   downloading; confirm against the real run before treating it as drift.
