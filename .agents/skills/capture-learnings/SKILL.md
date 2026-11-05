@@ -141,12 +141,13 @@ this skill; the lesson itself takes its own route.
 
 ## 6. Verify Each Proposed Rule
 
-- Search the destination for overlapping or interacting rules and propose a
-  merge or rewrite of the accreted section instead of a new bullet; resolve a
-  contradiction with an existing rule before the plan, by default in the new
-  rule. Write each rule as condition, mechanism, and action, with at most a
-  parenthetical example; the session narrative, its figures and dates included,
-  stays in the plan's rationale column.
+- Search the destination and the global instructions for overlapping or
+  interacting rules, and for a term the new rule reuses with another meaning,
+  and propose a merge or rewrite of the accreted section instead of a new
+  bullet; resolve a contradiction with an existing rule before the plan, by
+  default in the new rule. Write each rule as condition, mechanism, and action,
+  with at most a parenthetical example; the session narrative, its figures and
+  dates included, stays in the plan's rationale column.
 - Check any claim about a tool's or module's behavior against its source or
   documentation at the version in use, and name the responsible component. Label
   an observed, undocumented behavior as observed, naming the version and the
@@ -181,8 +182,9 @@ The plan presented for approval must list:
 ## 8. Apply the Approved Plan
 
 - Edit in place in the target file's imperative, concise style, giving unrelated
-  lessons in the same section their own bullet with a bold lead. A net
-  line-count reduction is a valid outcome.
+  lessons in the same section their own bullet with a bold lead and no
+  positional reference to a neighbor ("the bullet above"). A net line-count
+  reduction is a valid outcome.
 - Remove a promoted memory only after its rule is written to the destination
   file, in the same apply step: delete the memory file and its `MEMORY.md` line
   (or rewrite memories that mixed a rule with state to keep only the state and
@@ -211,7 +213,7 @@ capture defect whatever its severity, since the rule existed and the run skipped
 it; an untagged finding about the lesson's substance is a lesson defect. Fix
 both in the target file, then propose the capture defects as a follow-up plan
 for this skill in the step 7 format, with the review log as evidence and the
-check added to the step where the run was working (step 4), awaiting approval.
-The review report is the only record of these defects, since the fix lands
-before any commit and the commit history never shows them. Do not commit unless
-asked.
+check added to the step where the run was working, as step 4 prescribes,
+awaiting approval. The review report is the only record of these defects, since
+the fix lands before any commit and the commit history never shows them. Do not
+commit unless asked.
