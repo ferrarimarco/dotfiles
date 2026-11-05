@@ -149,22 +149,29 @@ this skill; the lesson itself takes its own route.
   with at most a parenthetical example; the session narrative, its figures and
   dates included, stays in the plan's rationale column.
 - Check any claim about a tool's or module's behavior against its source or
-  documentation at the version in use, and name the responsible component. Label
-  an observed, undocumented behavior as observed, naming the version and the
-  check that confirms it.
+  documentation at the version in use, separating what a CLI wrapper transforms
+  from what the underlying tool or API returns, and name the responsible
+  component. Label an observed, undocumented behavior as observed, naming the
+  version and the check that confirms it.
 - Propose a workaround only after checking the tool for a native option.
-- Write a tendency as a tendency, with how to check the specific case, never as
-  a universal.
+- Write a tendency as a tendency, with how to check the specific case, and gate
+  a provider- or topology-specific check (such as separate credential and
+  billing accounts) on the condition where it applies, never as a universal.
 - Scope workflow steps with non-trivial token or time cost (such as subagent
   passes) to the cases where they pay off, skipping trivial work.
 - Test each rule against its motivating example and the neighboring case the
-  next agent meets (a second host behind the same probe, an unloaded unit);
-  scope down any rule that silences, deletes, or reports more than its example.
+  next agent meets (a second host behind the same probe, an unloaded unit, a
+  path present on only one ref or neither), running prescribed local commands on
+  a scratch fixture when practical; scope down or state the boundary of any rule
+  that silences, deletes, reports, or breaks more than its example.
 - Keep rules routed to the public dotfiles (`~/.agents/AGENTS.md` and
   `<root>/.agents/skills/*`) generic, omitting internal corporate hostnames,
-  URLs, package names, and identifiers.
+  URLs, package names, identifiers, and wrapper-specific output tokens.
 - Follow the repository's skill conventions (`AGENTS.md`, `README.md`) when
-  creating a skill.
+  creating or extending a skill: verify that `description` triggers on every
+  task the body covers, reconcile the purpose statement, directives, and
+  workflow steps when the scope widens, and keep the `README.md` catalog entry
+  aligned.
 
 ## 7. Present the Plan and Wait
 
@@ -193,9 +200,10 @@ The plan presented for approval must list:
   around uncommitted changes from other sessions.
 - Route edits to a project's own files through that repository's validation
   pipeline and commit conventions; dotfiles edits follow the dotfiles flow. Run
-  the formatter before review and inspect its diff: a rewrite beyond the edited
-  lines (such as a list turned loose by a stray empty line) is a structural
-  defect to fix.
+  the formatter before review and inspect its diff (a rewrite beyond the edited
+  lines, such as a list turned loose by a stray empty line, is a structural
+  defect to fix), then run the repository's linter and verify any automatic fix
+  in context.
 - A change to a skill's procedure that claims a new behavior (a step now
   reached, a plan now proposed) is verified by a skill ablation test (the
   pre-edit against the post-edit skill on one seeded prompt, criteria fixed
