@@ -114,6 +114,25 @@
 - Pin third-party GitHub Actions to a full commit SHA with the release tag in a
   trailing comment (e.g., `uses: owner/action@<sha> # v1.2.3`), resolving the
   SHA from the tag rather than memory.
+- **Enforce untrusted-branch CI gates from a ref the branch cannot edit:** a
+  sanitization step, policy check, or credential gate inside a workflow file
+  that runs from a feature branch or `pull_request` merge ref can be modified or
+  deleted by the same branch it constrains, and GitHub OIDC's `job_workflow_ref`
+  claim on a standalone branch or `pull_request` run resolves to that branch or
+  `refs/pull/<N>/merge` rather than the default branch. Run credential gates and
+  mint credentials from a workflow definition fixed to a protected ref—such as a
+  reusable workflow on the default branch matched by `job_workflow_ref`
+  (removing `uses:` forfeits the token), or a target-branch trigger that never
+  executes untrusted branch code or hooks with secrets or write tokens—and pin
+  merge-blocking policy workflows in repository rulesets so the branch cannot
+  replace `uses:` with a passing stub of the same job name. When restoring
+  control paths from `<base>` before reading a branch checkout, restore in
+  no-overlay mode (`git restore --source=<base> --staged --worktree --`, its
+  default, or `git checkout --no-overlay <base> --`) across candidate paths
+  present in `<base>` or `HEAD` (`git ls-tree --name-only <base> -- <paths>` and
+  `HEAD`, without trailing slashes, skipping the restore when none match), so
+  paths added on the branch are removed while absent paths do not abort the
+  command.
 - Treat identifiers that public infrastructure resolves to a network location
   (such as Syncthing device IDs, which global discovery maps to public
   addresses) as private material and keep them out of public repositories.
@@ -175,6 +194,18 @@
   `refs/for/<branch>` or tags cannot match; a fetch also works) or ask whether
   the user already pushed, and report what the check showed rather than the
   stale ref.
+- **Bound CI checkout depth to the commits the diff reads:** in pull-request CI
+  jobs that check out the synthetic merge commit (`refs/pull/<N>/merge` in
+  GitHub Actions, where `HEAD^1` is the base branch tip and `HEAD^2` is the PR
+  head) and only diff files against the base tip, `fetch-depth: 2` and
+  `git diff HEAD^1 HEAD` produce the PR's net merge diff without downloading the
+  full commit graph that `fetch-depth: 0` (even with `filter: blob:none`)
+  transfers on every push. Jobs that walk PR commits (`git log`, commit
+  linters), compute `merge-base` (`A...B` or `origin/<base>`), or share the step
+  unguarded with multi-commit `push` runs need deeper history, since
+  `fetch-depth: 2` grafts `HEAD` after its immediate parents (leaving `HEAD^2`
+  parentless on PRs and `HEAD~1` parentless on `push`) and omits
+  `origin/<base>`.
 
 ### Problem solving patterns and processes
 

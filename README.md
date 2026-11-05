@@ -37,9 +37,9 @@ dotfiles.
 #### Design
 
 - `design-spec`: Design specifications for new features.
-- `validate-spec`: Validate a specification (spec) to spot ambiguities,
-  inconsistencies, unclear or missing instructions, data, information, or
-  requirements.
+- `validate-spec`: Validate a specification (spec), design document, or
+  technical guide to spot ambiguities, inconsistencies, and unclear or missing
+  instructions, data, information, or requirements.
 
 #### Development
 
@@ -69,8 +69,8 @@ dotfiles.
 
 #### Writing
 
-- `edit-google-docs`: Edit Google Docs through the Docs API while preserving
-  native styles and keeping suggestions small.
+- `edit-google-docs`: Inspect and edit Google Docs through the Docs API while
+  preserving native styles and keeping suggestions small.
 
 ### Software configuration
 

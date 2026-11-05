@@ -1,19 +1,20 @@
 ---
 name: edit-google-docs
 description: >-
-  Edit, format, or suggest changes in a Google Doc through the Google Docs API,
-  a CLI wrapper, or an MCP tool, including batch updates and Suggest Mode. Use
-  when the user shares a docs.google.com link to change, asks to update, patch,
-  restyle, or propose edits to a Google Doc (or a design doc, plan, or spec
-  hosted in Google Docs), mentions Suggest Mode, named styles, headings, or
-  inline code in a document, or before running any CLI, MCP, or API call that
-  mutates a Google Doc.
+  Inspect, edit, format, or suggest changes in a Google Doc through the Google
+  Docs API, a CLI wrapper, or an MCP tool, including batch updates and Suggest
+  Mode. Use when the user shares a docs.google.com link, asks to read, review,
+  update, patch, restyle, or propose edits to a Google Doc (or a design doc,
+  plan, or spec hosted in Google Docs), mentions Suggest Mode, smart chips,
+  named styles, headings, inline code, or code blocks in a document, or before
+  running any CLI, MCP, or API call that mutates a Google Doc.
 license: MIT
 ---
 
 # Edit Google Docs
 
-Keep a Google Doc's native styling intact and its suggestion diff small.
+Keep a Google Doc's native styling intact and its suggestion diff small, and
+resolve smart chips and code blocks accurately when inspecting its content.
 
 ## Named Styles
 
@@ -45,3 +46,25 @@ of a `Courier New`, bold, or link run:
    adjacent space, punctuation mark, or prose word).
 2. Insert the full unstyled text first so it inherits `NORMAL_TEXT`.
 3. Apply `Courier New` or emphasis only to the specific inline spans afterward.
+
+## Inspecting Smart Chips and Code Blocks
+
+When a plain-text export or wrapper read drops link URIs or renders smart chips
+as opaque placeholders:
+
+- Inspect the raw `documents.get` JSON (`tabs[]` and recursive `childTabs[]` at
+  `documentTab.body.content` when `includeTabsContent=true`, or `body.content`
+  for the first tab only otherwise, recursing into
+  `table.tableRows[].tableCells[].content`) for typed paragraph elements:
+  `person.personProperties` (`name`, `email`), `richLink.richLinkProperties`
+  (`title`, `uri`), and `dateElement.dateElementProperties.displayText`.
+- In `textRun.content`, the Google Docs API v1 replaces unmodeled markers—both
+  native code-block boundaries and smart chips not exposed as typed paragraph
+  elements (such as third-party chips and dropdowns)—with `\ue907` (observed on
+  Docs API v1, not documented; confirm in `textRun.content` of `documents.get`).
+  Distinguish a code block from an unresolved chip by the paragraph's styling
+  (leading `\ue907` on monospace `textRun`s or a four-bordered paragraph), not
+  by the character alone.
+- For smart-chip links that `documents.get` leaves as bare `\ue907`, export the
+  document through Google Drive (`files.export`) as `text/markdown` or
+  `text/html` rather than `text/plain` (which strips link URIs).
