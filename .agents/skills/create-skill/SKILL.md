@@ -4,9 +4,9 @@ description: >-
   Create a new agent skill, improve existing ones, and consolidate or remove
   duplicate skills. Use when the user asks to create, add, scaffold, or rework a
   skill, or when a session determines that a recurring task type needs its own
-  skill, or when running skill ablation tests (with skill vs without skill), or
-  diagnosing why a skill didn't trigger, or when a skill produces wrong output,
-  or invokes `/create-skill`.
+  skill, or when running skill ablation tests (with skill vs without skill, or
+  pre-edit vs post-edit), or diagnosing why a skill didn't trigger, or when a
+  skill produces wrong output, or invokes `/create-skill`.
 license: MIT
 ---
 
@@ -150,12 +150,18 @@ instructions that send the model on unproductive work.
 Launch two fresh (non-forking) subagents in parallel with the same
 self-contained prompt and judging criteria fixed in advance. The baseline
 invokes no skill when creating, or reads a pre-edit copy of `SKILL.md` from the
-scratchpad when improving, so the test measures the change. Keep the change only
-if the new version is better against the criteria in a way you can name. Where
-the harness has no subagents, move the skill directory out of the skills tree
-temporarily and start a fresh session for each run (harnesses that enumerate
-skills at startup ignore mid-session moves). When the skill serves multiple
-models, run the pair on at least the smallest and the largest.
+scratchpad when improving, so the test measures the change. A skill whose run
+edits a version-controlled checkout (the agent configuration repository
+included) gets a git worktree per arm, so the arms neither collide nor write
+into the real tree; one whose procedure stops for user approval gets that
+approval granted in the prompt in advance, on the condition that the arm writes
+its plan out before continuing, so the test still records the plan (arms have
+been observed to honor this; confirm it in each arm's report). Keep the change
+only if the new version is better against the criteria in a way you can name.
+Where the harness has no subagents, move the skill directory out of the skills
+tree temporarily and start a fresh session for each run (harnesses that
+enumerate skills at startup ignore mid-session moves). When the skill serves
+multiple models, run the pair on at least the smallest and the largest.
 
 ### 5. Bundle Repeated Work
 

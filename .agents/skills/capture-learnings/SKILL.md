@@ -194,6 +194,11 @@ The plan presented for approval must list:
   the formatter before review and inspect its diff: a rewrite beyond the edited
   lines (such as a list turned loose by a stray empty line) is a structural
   defect to fix.
+- A change to a skill's procedure that claims a new behavior (a step now
+  reached, a plan now proposed) is verified by a skill ablation test (the
+  pre-edit against the post-edit skill on one seeded prompt, criteria fixed
+  first) after the review below has landed its fixes and before the commit is
+  proposed, not by argument; a fact or wording edit needs no run.
 
 After applying a non-trivial change (new rules, rewritten sections, or a new
 skill), have a fresh subagent or the harness's code review check the diff across

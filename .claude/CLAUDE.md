@@ -23,3 +23,8 @@
   foreground call that outlives its timeout was moved to the background with an
   empty output file (observed on Claude Code 2.1.311, not documented; a run that
   outlives its timeout shows it).
+- Unlike a background command, a subagent needs no wait: its completion arrives
+  as a harness notification, as the Agent and ScheduleWakeup tool descriptions
+  state, so never wait on its task output file with a loop that greps for a
+  completion marker: the file can stay a stub and the loop outlives the agent
+  (observed on Claude Code 2.1.311; `pgrep -af tasks/` lists such loops).
