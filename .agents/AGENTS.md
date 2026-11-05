@@ -96,7 +96,7 @@
   targets. Make all edits first and format once, or re-read after formatting,
   and match table content by name rather than padded cell text.
 - **Comments carry the reason, not the instance:** a variable's or default's
-  comment says why it exists and what the value means; host names, dates,
+  comment says why it exists and what the value means; hostnames, dates,
   incident references, and values the code or the tool already states belong in
   the project's docs or todo items, maintained once. Identifiers a pin needs to
   stay readable (the release tag beside a commit SHA) are the exception.
@@ -286,8 +286,8 @@ Agent shells run Zsh with the user's profile.
   matters.
 - **A command substitution expanded before `$?` replaces its value:** in
   `echo "… $(cmd) … $?"` the substitution runs during expansion, so the status
-  reported is the substitution's (zsh and bash alike); save `rc=$?` on its own
-  line first (`status` is read-only in zsh).
+  reported is the substitution's (Zsh and Bash alike); save `rc=$?` on its own
+  line first (`status` is read-only in Zsh).
 - **Pass explicit non-interactive flags to command-line tools in scripts and
   background tasks:** before scripting or backgrounding CLIs that default to
   opening `$EDITOR`, a pager, or a prompt, verify their non-interactive flags

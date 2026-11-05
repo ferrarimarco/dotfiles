@@ -192,8 +192,8 @@ reserve it for a repository without them.
   `git range-diff` that each comes through with its sources unchanged (generated
   output may legitimately differ), sending the replaced range and the new tip,
   as above, before moving the branch.
-- A rewrite built in a worktree lands on the branch in the primary worktree with
-  `git reset --keep <new tip>`, after confirming that `HEAD` is still the
+- A rewrite prepared in a worktree lands on the branch in the primary worktree
+  with `git reset --keep <new tip>`, after confirming that `HEAD` is still the
   expected old tip: it updates only the files the rewrite changed, leaves other
   local and staged changes in place, and aborts when one of those files has
   local changes (save the diff first in that case). A mixed reset plus

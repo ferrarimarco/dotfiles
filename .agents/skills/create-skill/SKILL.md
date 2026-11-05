@@ -152,7 +152,7 @@ self-contained prompt and judging criteria fixed in advance. The baseline
 invokes no skill when creating, or reads a pre-edit copy of `SKILL.md` from the
 scratchpad when improving, so the test measures the change. A skill whose run
 edits a version-controlled checkout (the agent configuration repository
-included) gets a git worktree per arm, so the arms neither collide nor write
+included) gets a Git worktree per arm, so the arms neither collide nor write
 into the real tree; one whose procedure stops for user approval gets that
 approval granted in the prompt in advance, on the condition that the arm writes
 its plan out before continuing, so the test still records the plan (arms have
