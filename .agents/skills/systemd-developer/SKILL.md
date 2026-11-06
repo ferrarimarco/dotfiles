@@ -64,6 +64,14 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   ("Dependency failed for ...") and leaves the dependent inactive, so a
   failed-unit alert never fires for it; alert on the dependency (an
   expected-mount alert) instead.
+- **`Requires=` propagates stops and restarts:** a unit that requires a daemon
+  is stopped or restarted whenever that daemon is explicitly stopped or
+  restarted (systemd.unit(5)), including by a deployment that rebuilt it; a unit
+  holding runtime state that must outlive those restarts (a published export, a
+  running job) uses `Wants=` with `After=` and, under NixOS,
+  `restartIfChanged = false` so a redeploy of its own definition leaves it
+  running too. A timer-driven job that should follow its daemon keeps
+  `Requires=`, as the Timers section says.
 - **A paced restart loop never samples as `failed`:** a unit whose `Restart=`
   pacing stays under the start rate limit (default 5 starts per 10 s;
   `StartLimitIntervalSec=0` disables it) alternates `activating (auto-restart)`
@@ -135,6 +143,13 @@ delivery mechanism (Ansible templates, NixOS modules, plain files).
   run with `ConditionPathIsMountPoint=`.
 - A timer fails to start with a generic "Job failed" when the service it
   activates is invalid: verify the service unit, not only the timer.
+- **A transient timer elapses within `AccuracySec=`, one minute by default:**
+  `systemd-run --on-active=<delay>` fires up to a minute late unless the unit
+  gets `--timer-property=AccuracySec=1s`, so a test asserting the delay sees the
+  lag (systemd.timer(5)).
+- **Cancelling a pending transient run stops the timer and the service:** the
+  timer may already have fired and the service be running, so stop both
+  (`systemctl stop <unit>.timer <unit>.service`) rather than the timer alone.
 
 ## Watchdogs
 

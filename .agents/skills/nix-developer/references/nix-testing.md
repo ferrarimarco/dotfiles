@@ -236,3 +236,19 @@ pkgs.testers.nixosTest {
 
 Using `lib.mkVMOverride` ensures that even if a host defines rigid physical
 properties, the test VM successfully forces QEMU-compatible values.
+
+## 5. Build-Produced Values and Mock Images in Overrides
+
+When an override needs a value only a build yields (the SHA-256 of a mock disk
+image that a role verifies), read it from the derivation output at evaluation
+time, `lib.fileContents "${mock}/sha256"`: import from derivation builds the
+mock during evaluation, which works while `allow-import-from-derivation` is on
+(the default; a runner that disables it, Hydra or
+`--no-allow-import-from-derivation`, fails the check at evaluation), while a CI
+job that only lists attribute names (`nix eval --apply builtins.attrNames`)
+never forces it. Pinning the hash by hand breaks at every change to the mock.
+
+A mock disk image needs no privileges: `mkfs.vfat` plus `mcopy` (mtools) fill a
+FAT partition, `mkfs.ext4 -d <dir>` populates an ext4 one from a directory,
+`sfdisk` writes the partition table, and `dd ... conv=notrunc` places the
+partitions at their offsets.

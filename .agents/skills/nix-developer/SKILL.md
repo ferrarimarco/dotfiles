@@ -61,6 +61,15 @@ concerns by splitting configuration layers:
 - **Expose via Flakes:** Expose the complete target system under
   `nixosConfigurations` in `flake.nix` importing the physical `default.nix`
   entrypoint.
+- **Comment every role option a host file sets:** each value gets a comment with
+  its meaning and the reason for the value (the reservation an address comes
+  from, what an interface restricts); hostnames stay in the values, out of the
+  comments.
+- **Discover per-kind files instead of listing them:** a role whose variants
+  live in files under a directory (platforms, payload types) registers them from
+  `builtins.readDir`, keyed by filename, each taking one shared argument set
+  with `...`, as the flake discovers hosts; option enums derive from the
+  listing.
 
 ### 3. Home Manager (User Environment)
 
@@ -111,6 +120,32 @@ Verify NixOS host configurations with sandboxed VM integration tests:
   that always writes an ACL or password file (as `services.mosquitto` does per
   listener) denies what the daemon's defaults allow, so an open service needs
   explicit permissive settings.
+- **A derivation output carries no ownership or special bits:** the store
+  normalizes every file to root, strips setuid, setgid, and sticky bits, and
+  removes write bits, so an artifact that must exist as an unpacked tree with
+  them (a root filesystem to export over NFS) is produced at runtime by a
+  privileged unit from a pin declared in Nix (URL and hash verified after the
+  download); an image or archive that carries them inside (an ext4 image from
+  `mkfs.ext4 -d` run under `fakeroot`, without which the image records the build
+  user as owner) can still be a derivation.
+- **The configuration's shape cannot depend on `config`:** the set of options a
+  module defines, its `imports`, and the list a `lib.mkMerge` merges cannot be
+  computed from an option at or beneath the level the merge sits at, which at
+  the root of `config` is every option (a root merge list mapped over the
+  declared hosts fails with infinite recursion); list every candidate statically
+  and guard each with `lib.mkIf`. A value under one option may come from
+  `config`, attribute names and a merge list included (a unit per declared host
+  under `systemd.services` evaluates fine).
+- **Activation waits for every unit it starts:** switch-to-configuration blocks
+  on the jobs it submits, so a `Type=oneshot` that downloads or unpacks for
+  minutes holds the deployment; make such a unit `Type=exec` with
+  `RemainAfterExit` and a readiness stamp its consumers check.
+- **A transient unit has none of the declared units' default path:** NixOS gives
+  declared units coreutils and friends through their generated `PATH`, while a
+  `systemd-run` command runs with systemd's compiled-in default, its own `bin`
+  directory (so `systemctl` resolves and `rm` does not); the executable it runs
+  carries every tool it calls (`writeShellApplication` `runtimeInputs`,
+  coreutils included).
 - **Modularity:** Split large configurations into separate modules using the
   `imports = [ ... ];` pattern.
 - **Reviewing Changes:** When modifying configurations, review the resulting
