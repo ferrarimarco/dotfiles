@@ -46,8 +46,9 @@ git -C "$(dirname "$(realpath ~/.agents/AGENTS.md)")" rev-parse --show-toplevel
   `metadata.type` of `user | feedback | project | reference`.
 
 For global configuration, edit only the resolved files inside the dotfiles
-checkout. Never replace a symlink with a regular file, and never edit an
-unlinked copy under the home directory.
+checkout, or a worktree of that repository when step 8 calls for one. Never
+replace a symlink with a regular file, and never edit an unlinked copy under the
+home directory.
 
 ## 2. Mine the Session for Signals
 
@@ -198,8 +199,10 @@ The plan presented for approval must list:
   file, in the same apply step: delete the memory file and its `MEMORY.md` line
   (or rewrite memories that mixed a rule with state to keep only the state and
   note where the rule moved). Leave non-promoted memories untouched.
-- Check each repository's working tree before editing, deferring or coordinating
-  around uncommitted changes from other sessions.
+- Check each repository's working tree before editing: defer or coordinate
+  around uncommitted changes from other sessions, and when the active checkout
+  holds an unrelated in-flight branch or pending changelist, apply in a separate
+  worktree or workspace unless the user directs folding the edits into it.
 - Route edits to a project's own files through that repository's validation
   pipeline and commit conventions; dotfiles edits follow the dotfiles flow. Run
   the formatter before review and inspect its diff (a rewrite beyond the edited
