@@ -183,7 +183,10 @@
   it concerns, not by argument. Skip trivial edits (typos, formatting, version
   bumps, mechanical one-liners). When a change also requires an expensive or
   working-tree-digest-locked evaluation or benchmark, settle design questions,
-  complete the review, apply fixes, and format before launching the evaluation.
+  draft the full commit message (with a placeholder for what the run adds
+  afterward, such as a trailer linking its report), complete the review over
+  both the diff and that message, apply fixes, and format before launching the
+  evaluation.
 - **Expect concurrent sessions in the same checkout:** before staging,
   committing, rebasing, or building generated output, check `git status` and
   `git log` for changes you did not make, keep them out of your work, and report
