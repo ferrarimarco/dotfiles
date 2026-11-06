@@ -3,7 +3,8 @@ name: capture-learnings
 description: >-
   Distill durable lessons from the current session and saved memories into
   version-controlled agent configuration: global and project AGENTS.md files and
-  skills, promoting graduated memories and removing them afterward. Use when the
+  skills, promoting graduated memories, transferring the project state they hold
+  to the project's knowledge base, and removing them afterward. Use when the
   user asks to capture learnings, improve agent instructions or skills, promote
   or clean up memories, or invokes `/capture-learnings`.
 license: MIT
@@ -12,7 +13,8 @@ license: MIT
 # Capture Learnings
 
 Turn what a session taught into durable, version-controlled instructions. The
-output is a set of tightened AGENTS.md files and skills, plus a cleaned-up
+output is a set of tightened AGENTS.md files and skills, project state
+transferred from memories to the project's knowledge base, and a cleaned-up
 memory store; the process is analyze, verify, propose, wait for approval, apply,
 then review.
 
@@ -77,7 +79,7 @@ Route lessons from this run itself (conventions looked up, rules rewritten after
 a check) and any signal kind that matched no bullet above or no destination in
 step 5 to this skill rather than dropping them.
 
-## 3. Review Saved Memories for Promotion
+## 3. Review Saved Memories
 
 Read the current project's `MEMORY.md` and every memory file it lists. If the
 memory directory or `MEMORY.md` does not exist, state that and skip this step.
@@ -87,7 +89,7 @@ memory directory or `MEMORY.md` does not exist, state that and skip this step.
   standing policy rather than point-in-time status.
 - **Retire** a memory whose content no longer holds; list it in the plan for
   deletion.
-- **Move** a memory that records project state (a rollout's progress, paused
+- **Transfer** the project state a memory records (a rollout's progress, paused
   work, incident history, measurements) to the project's knowledge base when the
   project has one (status tables, todo items, guides): the store is unversioned
   and every session rewrites it, so state kept there drifts from the repository.
@@ -101,7 +103,8 @@ memory directory or `MEMORY.md` does not exist, state that and skip this step.
 
 ## 4. Filter for Durability
 
-Propose only changes that generalize beyond the session. Discard:
+Propose only lessons that generalize beyond the session; state transferred out
+of a memory in step 3 is not a lesson and skips this filter. Discard:
 
 - one-off facts, or anything derivable from a repository's own code or docs;
 - anything already covered by existing instructions: search every destination in
@@ -141,9 +144,10 @@ in this priority order, never to both a skill and `AGENTS.md`:
 4. A new skill, only when a recurring task type has no home; propose its name
    and description in the plan.
 5. `~/.claude/CLAUDE.md`, only for rules specific to Claude Code.
-6. The project's operational artifacts (alert rules, runbooks, todo items),
-   through the project's pipeline, when the lesson is a check or procedure the
-   project should run rather than an agent rule.
+6. The project's operational artifacts (alert rules, runbooks, todo items,
+   status tables), through the project's pipeline, when the lesson is a check or
+   procedure the project should run rather than an agent rule. State transferred
+   out of a memory in step 3 goes here and nowhere else.
 
 A defect in how a lesson was captured or routed is a separate finding, routed to
 this skill; the lesson itself takes its own route.
@@ -194,8 +198,8 @@ The plan presented for approval must list:
   (source file and version read, command run, or "expectation"); each finding
   appears under one file only, a move as a hunk in the source and one in the
   destination sharing one row, placed under the destination;
-- the memories to delete or rewrite afterward, as a table with two columns: the
-  action and its rationale.
+- the memories to delete or rewrite afterward and the `MEMORY.md` lines to trim,
+  as a table with two columns: the action and its rationale.
 
 ## 8. Apply the Approved Plan
 
@@ -203,11 +207,12 @@ The plan presented for approval must list:
   lessons in the same section their own bullet with a bold lead and no
   positional reference to a neighbor ("the bullet above"). A net line-count
   reduction is a valid outcome.
-- Remove a promoted or moved memory only after its rule or state is written to
-  the destination file, in the same apply step: delete the memory file and its
-  `MEMORY.md` line, or rewrite a memory that keeps a remainder (state with no
-  home in a repository, a private identifier) to hold only that and note where
-  the rest went. Leave the other memories untouched.
+- Remove a promoted or transferred memory only after its rule or state is
+  written to the destination file, in the same apply step: delete the memory
+  file and its `MEMORY.md` line, or rewrite a memory that keeps a remainder
+  (state with no home in a repository, a private identifier) to hold only that
+  and note where the rest went. Leave the other memories untouched, apart from a
+  `MEMORY.md` line the plan trims.
 - Check each repository's working tree before editing: defer or coordinate
   around uncommitted changes from other sessions, and when the active checkout
   holds an unrelated in-flight branch or pending changelist, apply in a separate

@@ -62,7 +62,8 @@ dotfiles.
 #### Workflow
 
 - `capture-learnings`: Distill durable lessons from the current session and
-  saved memories into version-controlled agent instructions and skills.
+  saved memories into version-controlled agent instructions and skills, and
+  transfer project state out of memories.
 - `create-skill`: Create, improve, consolidate, and diagnose agent skills.
 - `fetch-web-source`: Fetch documentation or source at the version in use when a
   web page does not serve it.
