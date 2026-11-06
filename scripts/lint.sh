@@ -27,6 +27,13 @@ if [ -t 0 ]; then
   )
 fi
 
+# A linked worktree keeps its Git metadata in the main repository: mount that
+# directory at the same path, where the worktree's .git file points.
+GIT_COMMON_DIR="$(git -C "${REPOSITORY_ROOT}" rev-parse --path-format=absolute --git-common-dir)"
+if [ "${GIT_COMMON_DIR}" != "${REPOSITORY_ROOT}/.git" ]; then
+  DOCKER_FLAGS+=(--volume "${GIT_COMMON_DIR}:${GIT_COMMON_DIR}")
+fi
+
 LANGUAGES_WITH_FIX_MODE=(
   "ANSIBLE"
   "BIOME_LINT"
