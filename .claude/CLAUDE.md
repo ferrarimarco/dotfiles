@@ -28,3 +28,9 @@
   state, so never wait on its task output file with a loop that greps for a
   completion marker: the file can stay a stub and the loop outlives the agent
   (observed on Claude Code 2.1.311; `pgrep -af tasks/` lists such loops).
+- Peer sessions address a session by its name, which ListAgents prints on its
+  first line, and the default name (the directory plus two characters) says
+  nothing about the work. The name is the user's to set (`/rename <theme>` in
+  the session, `claude --name <theme>` at launch; the documentation of Claude
+  Code 2.1.311 lists no tool that renames a session): once the session's theme
+  is settled and the name is still the default, suggest the rename once.
