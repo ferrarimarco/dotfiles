@@ -143,11 +143,13 @@ this skill; the lesson itself takes its own route.
 
 - Search the destination and the global instructions for overlapping or
   interacting rules, and for a term the new rule reuses with another meaning,
-  and propose a merge or rewrite of the accreted section instead of a new
-  bullet; resolve a contradiction with an existing rule before the plan, by
-  default in the new rule. Write each rule as condition, mechanism, and action,
-  with at most a parenthetical example; the session narrative, its figures and
-  dates included, stays in the plan's rationale column.
+  and propose a merge or rewrite of the accreted section instead of a new bullet
+  when its bold lead still describes the merged text (a lesson the lead does not
+  describe gets its own bullet beside it); resolve a contradiction with an
+  existing rule before the plan, by default in the new rule. Write each rule as
+  condition, mechanism, and action, with at most a parenthetical example; the
+  session narrative, its figures and dates included, stays in the plan's
+  rationale column.
 - Check any claim about a tool's or module's behavior against its source or
   documentation at the version in use, separating what a CLI wrapper transforms
   from what the underlying tool or API returns, and name the responsible
