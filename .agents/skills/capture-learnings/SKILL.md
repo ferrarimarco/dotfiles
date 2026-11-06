@@ -87,9 +87,17 @@ memory directory or `MEMORY.md` does not exist, state that and skip this step.
   standing policy rather than point-in-time status.
 - **Retire** a memory whose content no longer holds; list it in the plan for
   deletion.
-- **Keep** a memory that records project state, incident history, measurements,
-  or external references (`reference` type). These are facts, not rules. Also
-  keep anything machine-specific.
+- **Move** a memory that records project state (a rollout's progress, paused
+  work, incident history, measurements) to the project's knowledge base when the
+  project has one (status tables, todo items, guides): the store is unversioned
+  and every session rewrites it, so state kept there drifts from the repository.
+  Leave in the memory only what that repository must not hold (a private
+  identifier), with a pointer to where the rest went.
+- **Trim** a `MEMORY.md` line that carries state to a one-line pointer: the
+  index loads into every session.
+- **Keep** a memory that is machine-specific or an external reference
+  (`reference` type), and project state when the project has no knowledge base.
+  These are facts, not rules.
 
 ## 4. Filter for Durability
 
@@ -195,10 +203,11 @@ The plan presented for approval must list:
   lessons in the same section their own bullet with a bold lead and no
   positional reference to a neighbor ("the bullet above"). A net line-count
   reduction is a valid outcome.
-- Remove a promoted memory only after its rule is written to the destination
-  file, in the same apply step: delete the memory file and its `MEMORY.md` line
-  (or rewrite memories that mixed a rule with state to keep only the state and
-  note where the rule moved). Leave non-promoted memories untouched.
+- Remove a promoted or moved memory only after its rule or state is written to
+  the destination file, in the same apply step: delete the memory file and its
+  `MEMORY.md` line, or rewrite a memory that keeps a remainder (state with no
+  home in a repository, a private identifier) to hold only that and note where
+  the rest went. Leave the other memories untouched.
 - Check each repository's working tree before editing: defer or coordinate
   around uncommitted changes from other sessions, and when the active checkout
   holds an unrelated in-flight branch or pending changelist, apply in a separate
