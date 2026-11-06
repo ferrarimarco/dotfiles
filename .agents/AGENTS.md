@@ -24,6 +24,10 @@
 - **Explain the issue before asking for a decision:** when a choice is the
   user's to make, state in plain language what the problem is, why it arose, and
   what each option costs before asking.
+- **Hand work over with its review path:** a step presented for review ends with
+  its files in reading order (with their paths linked) and the gates that remain
+  (tests, lint, commit proposal, review, push, verification), so the reader
+  never has to ask where to look or what comes next.
 - **Tone:** Keep responses concise, direct, and professional. Avoid
   conversational filler or unnecessary apologies.
 - **Show file paths in text:** Because chat UIs collapse `file://` Markdown
@@ -83,6 +87,16 @@
   manager, or an option that silences the check (pip's Python requirement) is
   state that drifts from the host's release and a second package manager to
   maintain; move the host to a release that meets the requirement.
+- **Propose detection with the change:** a plan for a feature or a fix in a
+  project with monitoring names the alerts or probes that would catch the new
+  component failing or lingering (a unit failed, a reachability probe, a state
+  left on longer than its use), or states which existing rules cover it; a
+  component no rule covers is a finding of the plan, not an afterthought.
+- **Trim before review and name what is speculative:** before presenting an
+  implementation, merge wrappers that exist only to call a one-line script and
+  keep descriptions and docstrings to a line; then state which structure exists
+  for cases that do not exist yet (an extension point with one implementation)
+  and its cost, so the reviewer decides whether it stays.
 
 ### File Format
 
@@ -93,8 +107,10 @@
   keep diffs readable.
 - **Re-read before editing again after a formatter ran:** formatters rewrap
   prose, pad table cells, and reflow code, invalidating pre-format exact-match
-  targets. Make all edits first and format once, or re-read after formatting,
-  and match table content by name rather than padded cell text.
+  targets, and re-indent nested blocks after a structural edit, which breaks
+  scripted exact-match replacements too. Make all edits first and format once,
+  or re-read after formatting (or match ignoring indentation), and match table
+  content by name rather than padded cell text.
 - **Comments carry the reason, not the instance:** a variable's or default's
   comment says why it exists and what the value means; hostnames, dates,
   incident references, and values the code or the tool already states belong in
@@ -193,7 +209,9 @@
   (`git ls-remote origin refs/heads/<branch>`, spelling the full ref so
   `refs/for/<branch>` or tags cannot match; a fetch also works) or ask whether
   the user already pushed, and report what the check showed rather than the
-  stale ref.
+  stale ref. A tip that differs is not a tip ahead: after a fetch, compare in
+  both directions (`git log --oneline origin/<branch>..HEAD` and the reverse)
+  before reporting the branch as ahead, behind, or diverged.
 - **Bound CI checkout depth to the commits the diff reads:** in pull-request CI
   jobs that check out the synthetic merge commit (`refs/pull/<N>/merge` in
   GitHub Actions, where `HEAD^1` is the base branch tip and `HEAD^2` is the PR
@@ -223,6 +241,15 @@
   configuration. Look up unfamiliar or fast-moving tool, model, and version
   names as written instead of answering from memory, and label anything
   unverified as an expectation.
+- **A rejection reason must distinguish the options:** before implementing a
+  specification that rejects an alternative, read the vendor's documentation of
+  the rejected path and of the chosen one, since both may share the property the
+  reason names; raise a reason that fails the check before implementing, not
+  after the user asks.
+- **Size an alternative only after walking its transitions:** before giving a
+  line count or an effort for a variant, enumerate what happens on each
+  transition (set, cleared, host reboot, a manual action in between) and label
+  an estimate given before that walk as a guess.
 - **A cached artifact may still be in use:** before proposing to delete a
   container image or store path, check every script, pin file, and CI workflow
   that resolves to it, not just the latest bump commit.
@@ -324,6 +351,21 @@ Agent shells run Zsh with the user's profile.
   opening `$EDITOR`, a pager, or a prompt, verify their non-interactive flags
   from `--help` or the skill reference, and never fall back to a bare invocation
   when a guessed flag fails.
+- **Executed Bash scripts open with a shebang and the long-form options:**
+  `#!/usr/bin/env bash`, then `set -o errexit`, `set -o nounset`, and
+  `set -o pipefail` on separate lines, in every Bash script that runs as its own
+  process, including a fragment a builder wraps with its own header (Nix
+  `writeShellApplication` prepends the same three options, so the repeat is
+  harmless): the file reads and lints as a complete script on its own. A file
+  meant to be sourced (a shell profile fragment, a function library) leaves the
+  three options out, since they would apply to the shell that sources it (an
+  interactive shell then exits on the first failing command).
+- **An EXIT trap set inside a function runs without the function's locals:** on
+  a normal return and on an `errexit` failure alike, the trap fires after the
+  function's scope is gone, so `nounset` fails the trap on the first local it
+  reads and the cleanup never runs; only an explicit `exit` inside the function
+  still sees them (observed on Bash 5.2 and 5.3). Keep the trap's variables
+  global, or run the cleanup and `trap - EXIT` before returning.
 
 ### Terminology
 
